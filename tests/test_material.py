@@ -11,7 +11,7 @@ import os
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from easyDiffractionLib.material import Material
+from easyReflectometryLib.material import Material
 from easyCore.Objects.Base import Parameter 
 
 
@@ -19,6 +19,7 @@ class TestMaterial(unittest.TestCase):
     def test_default(self):
         p = Material.default()
         assert_equal(p.name, 'easyMaterial')
+        assert_equal(p.color, '#96c6df')
         assert_equal(p.interface, None)
         assert_equal(p.sld_value.display_name, 'sld_value')
         assert_equal(str(p.sld_value.unit), '1 / angstrom ** 2')
@@ -36,6 +37,7 @@ class TestMaterial(unittest.TestCase):
     def test_from_pars(self):
         p = Material.from_pars(6.908, -0.278, 'Boron')
         assert_equal(p.name, 'Boron')
+        assert_equal(p.color, '#59a2cf')
         assert_equal(p.interface, None)
         assert_equal(p.sld_value.display_name, 'sld_value')
         assert_equal(str(p.sld_value.unit), '1 / angstrom ** 2')

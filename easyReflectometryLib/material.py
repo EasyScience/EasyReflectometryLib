@@ -2,6 +2,9 @@ __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
 from copy import deepcopy
+
+from matplotlib import cm, colors
+
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
 
@@ -25,12 +28,15 @@ MATERIAL_DETAILS = {
         'fixed':       True
     }
 }
-
+COLOURMAP = cm.get_cmap('Blues', 100)
+MIN_SLD = -3
+MAX_SLD = 15
 
 class Material(BaseObj):
-    def __init__(self, sld_value: Parameter, isld_value: Parameter, label: str='easyMaterial', interface=None):
-        super().__init__(label, sld_value=sld_value, isld_value=isld_value)
+    def __init__(self, sld_value: Parameter, isld_value: Parameter, name: str='easyMaterial', interface=None):
+        super().__init__(name, sld_value=sld_value, isld_value=isld_value)
         self.interface = interface
+        self.color = colors.rgb2hex(COLOURMAP((self.sld - MIN_SLD) / (MAX_SLD - MIN_SLD)))
 
     # Class constructors
     @classmethod
@@ -46,7 +52,7 @@ class Material(BaseObj):
         return cls(sld_value, isld_value, interface=interface)
 
     @classmethod
-    def from_pars(cls, sld_value: float, isld_value: float, label: str='easyMaterial', interface=None) -> "Material":
+    def from_pars(cls, sld_value: float, isld_value: float, name: str='easyMaterial', interface=None) -> "Material":
         """
         Constructor of a reflectometry material where the parameters are known.
 
@@ -64,7 +70,7 @@ class Material(BaseObj):
         sld_value = Parameter('sld_value', sld_value, **default_options['sld_value'])
         isld_value = Parameter('isld_value', isld_value, **default_options['isld_value'])
 
-        return cls(sld_value=sld_value, isld_value=isld_value, label=label, interface=interface)
+        return cls(sld_value=sld_value, isld_value=isld_value, name=name, interface=interface)
 
     # Dynamic properties
     @property
