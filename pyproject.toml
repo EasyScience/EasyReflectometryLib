@@ -1,0 +1,51 @@
+# POETRY CONFIG
+
+[build-system]
+requires = ["poetry>=1.0"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry]
+name = "easyReflectometryLib"
+version = "0.0.1"
+description = 'Making reflectometry data analysis and modelling easy.'
+license = "GPL-3.0-only"
+authors = ["Andrew McCluskey", "Andrew Sazonov", "Simon Ward"]
+readme = "README.md"
+homepage = "https://github.com/easyScience/easyReflectometryLib"
+documentation = "https://github.com/easyScience/easyReflectometryLib"
+include = ["CHANGELOG.md"]
+packages = [ { include = "easyReflectometryLib" } ]
+
+[tool.poetry.dependencies]
+python = "^3.7, <3.8"
+cryspy = "^0.4.11"
+# easyScience
+libsDarwin = { git = 'https://github.com/easyScience/libsDarwin.git', rev = 'main', platform = 'darwin' }
+libsLinux = { git = 'https://github.com/easyScience/libsLinux.git', rev = 'main', platform = 'linux' }
+libsWin32 = { git = 'https://github.com/easyScience/libsWin32.git', rev = 'main', platform = 'win32' }
+easyCore = { git = 'https://github.com/easyScience/easyCore.git', rev = 'develop' }
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+toml = "^0.10"
+requests = '^2.24'
+hvplot = "^0.7.0"
+jupyter = "^1.0.0"
+
+[tool.poetry.scripts]
+easyReflectometryLib = "easyReflectometryLib.main:main"
+
+# CUSTOM CONFIG
+
+[ci.pyinstaller]
+libs = { macos = 'libsDarwin', ubuntu = 'libsLinux', windows = 'libsWin32' }
+
+
+[tool.dephell.main]
+from = {format = "poetry", path = "pyproject.toml"}
+to = {format = "setuppy", path = "setup.py"}
+
+[tool.dephell.requirements]
+from = {format = "poetry", path = "pyproject.toml"}
+to = {format = "pip", path = "requirements.txt"}
