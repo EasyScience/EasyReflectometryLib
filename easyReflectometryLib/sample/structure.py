@@ -6,14 +6,14 @@ from typing import List, Union
 
 from easyCore import np
 from easyCore.Objects.Groups import BaseCollection
-from easyReflectometryLib.structure.item import Item
-from easyReflectometryLib.structure.layer import Layer
+from easyReflectometryLib.sample.item import Item
+from easyReflectometryLib.sample.layer import Layer
 
 
-class Model(BaseCollection):
+class Structure(BaseCollection):
     def __init__(self,
                  items: List[Union[Layer, Item]],
-                 name: str = 'easyModel',
+                 name: str = 'easyStructure',
                  interface=None):
         new_items = []
         for i in items:
@@ -28,12 +28,12 @@ class Model(BaseCollection):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> "Model":
+    def default(cls, interface=None) -> "Structure":
         """
-        Default constructor for the reflectometry model. 
+        Default constructor for the reflectometry structure. 
 
-        :return: Default model container
-        :rtype: Model
+        :return: Default structure container
+        :rtype: Structure
         """
         item1 = Item.default()
         item2 = Item.default()
@@ -42,15 +42,15 @@ class Model(BaseCollection):
     @classmethod
     def from_pars(cls,
                   items: List[Item],
-                  name: str = 'easyModel',
-                  interface=None) -> "Model":
+                  name: str = 'easyStructure',
+                  interface=None) -> "Structure":
         """
-        Constructor of a reflectometry model where the parameters are known.
+        Constructor of a reflectometry structure where the parameters are known.
 
-        :param items: The items in the model
+        :param items: The items in the structure
         :type items: List[easyReflectometryLib.item.Item]
-        :return: Model container
-        :rtype: Model
+        :return: Structure container
+        :rtype: Structure
         """
         return cls(items, name=name, interface=interface)
 

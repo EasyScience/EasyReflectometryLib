@@ -6,8 +6,8 @@ from typing import Union
 
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
-from easyReflectometryLib.structure.layer import Layer
-from easyReflectometryLib.structure.layers import Layers
+from easyReflectometryLib.sample.layer import Layer
+from easyReflectometryLib.sample.layers import Layers
 
 ITEM_DETAILS = {
     'repetitions': {

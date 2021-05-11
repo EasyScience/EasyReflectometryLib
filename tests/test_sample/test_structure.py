@@ -8,17 +8,17 @@ import os
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from easyReflectometryLib.structure.material import Material
-from easyReflectometryLib.structure.layer import Layer
-from easyReflectometryLib.structure.layers import Layers
-from easyReflectometryLib.structure.item import Item
-from easyReflectometryLib.structure.model import Model
+from easyReflectometryLib.sample.material import Material
+from easyReflectometryLib.sample.layer import Layer
+from easyReflectometryLib.sample.layers import Layers
+from easyReflectometryLib.sample.item import Item
+from easyReflectometryLib.sample.structure import Structure
 
 
 class TestItem(unittest.TestCase):
     def test_default(self):
-        p = Model.default()
-        assert_equal(p.name, 'easyModel')
+        p = Structure.default()
+        assert_equal(p.name, 'easyStructure')
         assert_equal(p.interface, None)
         assert_equal(p[0].name, 'easyItem')
         assert_equal(p[1].name, 'easyItem')
@@ -32,12 +32,12 @@ class TestItem(unittest.TestCase):
         ls2 = Layers.from_pars([l2, l1], 'twoLayer2')
         o1 = Item.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = Item.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Model.from_pars([o1, o2], 'myModel')
+        d = Structure.from_pars([o1, o2], 'myModel')
         assert_equal(d.name, 'myModel')
         assert_equal(d.interface, None)
         assert_equal(d[0].name, 'twoLayerItem1')
         assert_equal(d[1].name, 'oneLayerItem2')
 
     def test_repr(self):
-        p = Model.default()
-        assert_equal(p.__repr__(), '<easyModel: A series of 2 items>')
+        p = Structure.default()
+        assert_equal(p.__repr__(), '<easyStructure: A series of 2 items>')
