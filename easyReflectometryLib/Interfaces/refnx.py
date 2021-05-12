@@ -68,8 +68,6 @@ class Refnx(InterfaceTemplate):
         :return: None
         :rtype: noneType
         """
-        if self._borg.debug:
-            print(f'Interface1: Value of {value_label} set to {value}')
         if value_label in self._material_link.keys():
             value_label = self._material_link[value_label]
         self.calculator.update_material(name, **{value_label: value})
@@ -102,8 +100,6 @@ class Refnx(InterfaceTemplate):
         :return: None
         :rtype: noneType
         """
-        if self._borg.debug:
-            print(f'Interface1: Value of {value_label} set to {value}')
         if value_label in self._layer_link.keys():
             value_label = self._layer_link[value_label]
         self.calculator.update_layer(name, **{value_label: value})
@@ -129,6 +125,28 @@ class Refnx(InterfaceTemplate):
         :type layer_name: str
         """
         self.calculator.remove_layer(item_name, layer_name)
+
+    def move_layer_up(self, item_name: str, layer_name: str):
+        """
+        Move a layer up in an item stack
+
+        :param item_name: The item name
+        :type item_name: str
+        :param layer_name: The layer name
+        :type layer_name: str
+        """
+        self.calculator.move_layer_up(item_name, layer_name)
+
+    def move_layer_down(self, item_name: str, layer_name: str):
+        """
+        Move a layer down in an item stack
+
+        :param item_name: The item name
+        :type item_name: str
+        :param layer_name: The layer name
+        :type layer_name: str
+        """
+        self.calculator.move_layer_down(item_name, layer_name)
 
     def get_item_reps(self, name: str) -> float:
         """
@@ -176,8 +194,6 @@ class Refnx(InterfaceTemplate):
         :return: None
         :rtype: noneType
         """
-        if self._borg.debug:
-            print(f'Interface1: Value of {value_label} set to {value}')
         if value_label in self._model_link.keys():
             value_label = self._model_link[value_label]
         self.calculator.update_model(**{value_label: value})
@@ -200,78 +216,25 @@ class Refnx(InterfaceTemplate):
         """
         self.calculator.remove_item(item_name)
 
-    def remove_layer_from_item(self, item_name: str, layer_name: str):
+    def move_item_up(self, item_name: str):
         """
-        Method to remove a layer from an item from the calculator
+        Move a item up in a model
 
-        :param item_name: The name of the item to be added to
+        :param item_name: The item name
         :type item_name: str
-        :param layer_name: The name of the layer to add
+        """
+        self.calculator.move_item_up(item_name)
+
+    def move_item_down(self, item_name: str):
+        """
+        Move a item down in a model
+
+        :param item_name: The item name
+        :type item_name: str
+        :param layer_name: The layer name
         :type layer_name: str
         """
-        self.calculator.remove_layer(item_name, layer_name)
-
-    def get_background_value(self, background, value_label: int) -> float:
-        """
-        Method to get a value from the calculator
-        :param value_label: parameter name to get
-        :type value_label: str
-        :return: associated value
-        :rtype: float
-        """
-        self.calculator.background = background
-        # if value_label <= len(self.calculator.background):
-        #     return self.calculator.background[value_label]
-        # else:
-        #     raise IndexError
-
-    def set_background_value(self, background, value_label: int, value: float):
-        """
-        Method to set a value from the calculator
-        :param value_label: parameter name to get
-        :type value_label: str
-        :param value: new numeric value
-        :type value: float
-        :return: None
-        :rtype: noneType
-        """
-        self.calculator.background = background
-        # if value_label <= len(self.calculator.background):
-        #     self.calculator.background[value_label].set(value)
-        # else:
-        #     raise IndexError
-
-    def set_pattern_value(self, pattern, value_label: int, value: float):
-        """
-        Method to set a value from the calculator
-        :param value_label: parameter name to get
-        :type value_label: str
-        :param value: new numeric value
-        :type value: float
-        :return: None
-        :rtype: noneType
-        """
-        self.calculator.pattern = pattern
-
-    def bulk_update(self, value_label_list: List[str], value_list: List[float], external: bool):
-        """
-        Perform an update of multiple values at once to save time on expensive updates
-
-        :param value_label_list: list of parameters to set
-        :type value_label_list: List[str]
-        :param value_list: list of new numeric values
-        :type value_list: List[float]
-        :param external: should we lookup a name conversion to internal labeling?
-        :type external: bool
-        :return: None
-        :rtype: noneType
-        """
-        for label, value in zip(value_label_list, value_list):
-            # This is a simple case so we will serially update
-            if label in self._sample_link:
-                self.set_value(label, value)
-            elif label in self._instrument_link:
-                self.set_instrument_value(label, value)
+        self.calculator.move_item_down(item_name)
 
     def fit_func(self, x_array: np.ndarray) -> np.ndarray:
         """

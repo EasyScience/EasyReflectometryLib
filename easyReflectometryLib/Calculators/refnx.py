@@ -118,6 +118,34 @@ class Refnx:
         :type layer_name: str
         """
         self.storage['item'][item_name].components.pop(self.storage['item'][item_name].components.index(self.storage['layer'][layer_name]))
+    
+    def move_layer_up(self, item_name, layer_name):
+        """
+        Move a layer up in an item stack
+
+        :param item_name: The item name
+        :type item_name: str
+        :param layer_name: The layer name
+        :type layer_name: str
+        """
+        item_list = self.storage['item'][item_name].components
+        layer_list = self.storage['layer'][layer_name]
+        old_index = item_list.index(layer_list)
+        item_list.insert(old_index-1, item_list.pop(old_index))
+
+    def move_layer_down(self, item_name, layer_name):
+        """
+        Move a layer down in an item stack
+
+        :param item_name: The item name
+        :type item_name: str
+        :param layer_name: The layer name
+        :type layer_name: str
+        """
+        item_list = self.storage['item'][item_name].components
+        layer_list = self.storage['layer'][layer_name]
+        old_index = item_list.index(layer_list)
+        item_list.insert(old_index+1, item_list.pop(old_index))
 
     def update_reps(self, name, reps):
         """
@@ -169,6 +197,30 @@ class Refnx:
         except KeyError:
             self.storage['model'].structure.components.pop(self.storage['model'].structure.components.index(self.storage['layer'][item_name]))
  
+    def move_item_up(self, item_name):
+        """
+        Move an item up in a model
+
+        :param item_name: The item name
+        :type item_name: str
+        """
+        structure_list = self.storage['model'].structure.components
+        item_list = self.storage['item'][item_name]
+        old_index = structure_list.index(item_list)
+        structure_list.insert(old_index-1, structure_list.pop(old_index))
+
+    def move_item_down(self, item_name):
+        """
+        Move an item down in a model
+
+        :param item_name: The item name
+        :type item_name: str
+        """
+        structure_list = self.storage['model'].structure.components
+        item_list = self.storage['item'][item_name]
+        old_index = structure_list.index(item_list)
+        structure_list.insert(old_index+1, structure_list.pop(old_index))
+
     def update_model(self, **kwargs):
         """
         Update the non-structural parameters of the model
