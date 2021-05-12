@@ -5,7 +5,7 @@ from copy import deepcopy
 
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
-from easyReflectometryLib.sample.structure import Structure
+from easyReflectometryLib.Sample.structure import Structure
 
 LAYER_DETAILS = {
     'scale': {

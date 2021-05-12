@@ -5,8 +5,8 @@ from typing import List
 
 import numpy as np
 
-from easyReflectometryLib.interfaces.interfaceTemplate import InterfaceTemplate
-from easyReflectometryLib.calculators.refnx import Refnx as Refnx_calc
+from easyReflectometryLib.Interfaces.interfaceTemplate import InterfaceTemplate
+from easyReflectometryLib.Calculators.refnx import Refnx as Refnx_calc
 
 
 class Refnx(InterfaceTemplate):
@@ -24,25 +24,14 @@ class Refnx(InterfaceTemplate):
         'roughness': 'rough'
     }
 
-    _sample_link = {
-        'cif_str': 'cif_str'}
-
-    _crystal_link = {
-        "length_a": "length_a",
-        "length_b": "length_b",
-        "length_c": "length_c",
-        "angle_alpha": "angle_alpha",
-        "angle_beta": "angle_beta",
-        "angle_gamma": "angle_gamma",
+    _item_like = {
+        'repetitions': 'repeats'
     }
 
-    _instrument_link = {
-        'resolution_u': 'u',
-        'resolution_v': 'v',
-        'resolution_w': 'w',
-        'resolution_x': 'x',
-        'resolution_y': 'y',
-        'wavelength': 'wavelength'
+    _model_link = {
+        'scale': 'scale',
+        'background': 'bkg',
+        'resolution': 'dq'
     }
 
     name = 'refnx'
@@ -51,9 +40,12 @@ class Refnx(InterfaceTemplate):
         self.calculator = Refnx_calc()
         self._namespace = {}
 
-    def get_material_value(self, name, value_label: str) -> float:
+    def get_material_value(self, name: str, value_label: str) -> float:
         """
         Method to get a material value from the calculator
+
+        :param name: The material name
+        :type name: str
         :param value_label: parameter name to get
         :type value_label: str
         :return: associated value
@@ -63,9 +55,12 @@ class Refnx(InterfaceTemplate):
             value_label = self._material_link[value_label]
         return self.calculator.get_material_value(name, value_label)
 
-    def set_material_value(self, name, value_label: str, value: float):
+    def set_material_value(self, name: str, value_label: str, value: float):
         """
         Method to set a material value from the calculator
+
+        :param name: The material name
+        :type name: str
         :param value_label: parameter name to get
         :type value_label: str
         :param value: new numeric value
@@ -79,9 +74,12 @@ class Refnx(InterfaceTemplate):
             value_label = self._material_link[value_label]
         self.calculator.update_material(name, **{value_label: value})
 
-    def get_layer_value(self, value_label: str) -> float:
+    def get_layer_value(self, name: str, value_label: str) -> float:
         """
         Method to get a layer value from the calculator
+
+        :param name: The layer name
+        :type name: str
         :param value_label: parameter name to get
         :type value_label: str
         :return: associated value
@@ -89,11 +87,14 @@ class Refnx(InterfaceTemplate):
         """
         if value_label in self._layer_link.keys():
             value_label = self._layer_link[value_label]
-        return self.calculator['layer'].get(value_label, None)
+        return self.calculator.get_layer_value(name, value_label)
 
-    def set_layer_value(self, value_label: str, value: float):
+    def set_layer_value(self, name: str, value_label: str, value: float):
         """
         Method to set a layer value from the calculator
+        
+        :param name: The layer name
+        :type name: str
         :param value_label: parameter name to get
         :type value_label: str
         :param value: new numeric value
@@ -105,7 +106,110 @@ class Refnx(InterfaceTemplate):
             print(f'Interface1: Value of {value_label} set to {value}')
         if value_label in self._layer_link.keys():
             value_label = self._layer_link[value_label]
-        self.calculator['layer'][value_label] = value
+        self.calculator.update_layer(name, **{value_label: value})
+
+    def add_layer_to_item(self, item_name: str, layer_name: str):
+        """
+        Method to add a layer to an item from the calculator
+
+        :param item_name: The name of the item to be added to
+        :type item_name: str
+        :param layer_name: The name of the layer to add
+        :type layer_name: str
+        """
+        self.calculator.add_layer(item_name, layer_name)
+
+    def remove_layer_from_item(self, item_name: str, layer_name: str):
+        """
+        Method to remove a layer from an item from the calculator
+
+        :param item_name: The name of the item to be removed from
+        :type item_name: str
+        :param layer_name: The name of the layer to remove
+        :type layer_name: str
+        """
+        self.calculator.remove_layer(item_name, layer_name)
+
+    def get_item_reps(self, name: str) -> float:
+        """
+        Method to get an item repeats from the calculator
+
+        :param name: The item name
+        :type name: str
+        :return: Repeats value
+        :rtype: float
+        """
+        return self.calculator.get_reps(name)
+
+    def set_item_reps(self, name: str, value: float):
+        """
+        Method to set an item repeats from the calculator
+
+        :param name: The item name
+        :type name: str
+        :param value: number of repeats
+        :type value: float
+        """
+        self.calculator.update_reps(name, value)
+
+    def get_model_value(self, value_label: str) -> float:
+        """
+        Method to get a model value from the calculator
+
+        :param value_label: parameter name to get
+        :type value_label: str
+        :return: associated value
+        :rtype: float
+        """
+        if value_label in self._model_link.keys():
+            value_label = self._model_link[value_label]
+        return self.calculator.get_model_value(value_label)
+
+    def set_model_value(self, value_label: str, value: float):
+        """
+        Method to set a model value from the calculator
+        
+        :param value_label: parameter name to get
+        :type value_label: str
+        :param value: new numeric value
+        :type value: float
+        :return: None
+        :rtype: noneType
+        """
+        if self._borg.debug:
+            print(f'Interface1: Value of {value_label} set to {value}')
+        if value_label in self._model_link.keys():
+            value_label = self._model_link[value_label]
+        self.calculator.update_model(**{value_label: value})
+
+    def add_item_to_model(self, item_name: str):
+        """
+        Method to add an item to a model from the calculator
+
+        :param item_name: The name of the item to add
+        :type item_name: str
+        """
+        self.calculator.add_item(item_name)
+
+    def remove_item_from_model(self, item_name: str):
+        """
+        Method to remove an item from a model from the calculator
+
+        :param item_name: The name of the item to remove
+        :type item_name: str
+        """
+        self.calculator.remove_item(item_name)
+
+    def remove_layer_from_item(self, item_name: str, layer_name: str):
+        """
+        Method to remove a layer from an item from the calculator
+
+        :param item_name: The name of the item to be added to
+        :type item_name: str
+        :param layer_name: The name of the layer to add
+        :type layer_name: str
+        """
+        self.calculator.remove_layer(item_name, layer_name)
 
     def get_background_value(self, background, value_label: int) -> float:
         """
@@ -179,5 +283,11 @@ class Refnx(InterfaceTemplate):
         """
         return self.calculator.calculate(x_array)
 
-    def get_hkl(self, x_array: np.ndarray = None) -> dict:
-        return self.calculator.get_hkl(x_array)
+    def sld_profile(self) -> tuple:
+        """
+        Return the scattering length density profile.
+
+        :return: z and sld(z)
+        :rtype: tuple[np.ndarray, np.ndarray]
+        """
+        return self.calculator.sld_profile()

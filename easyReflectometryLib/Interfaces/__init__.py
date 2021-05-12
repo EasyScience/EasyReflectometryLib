@@ -25,10 +25,10 @@ import traceback
 #     print('Warning: GSAS-II is not installed')
 
 try:
-    from easyReflectometryLib.interfaces.refnx import Refnx  # noqa: F401
+    from easyReflectometryLib.Interfaces.refnx import Refnx  # noqa: F401
 except Exception:
     traceback.print_exc()
     print('Warning: refnx is not installed')
 
 
-from easyReflectometryLib.interfaces.interfaceTemplate import InterfaceTemplate
+from easyReflectometryLib.Interfaces.interfaceTemplate import InterfaceTemplate

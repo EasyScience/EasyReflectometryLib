@@ -5,7 +5,7 @@ from copy import deepcopy
 
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
-from easyReflectometryLib.sample.material import Material
+from easyReflectometryLib.Sample.material import Material
 
 LAYER_DETAILS = {
     'thickness': {

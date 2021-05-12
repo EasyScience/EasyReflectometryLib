@@ -36,18 +36,30 @@ class Refnx:
             setattr(item, 'value', kwargs[key])
    
     def get_material_value(self, name, key):
+        """
+        A function to get a given material value
+
+        :param name: The material name
+        :type name: str
+        :param key: The given value keys
+        :type name: str
+        :return: The desired value
+        :rtype: float
+        """
         material = self.storage['material'][name]
         item = getattr(material, key)
         return getattr(item, 'value')
 
-    def create_layer(self, name):
+    def create_layer(self, layer_name, material_name):
         """
         Create a layer from the material of the same name.
 
-        :param name: The name of the layer
-        :type name: str
+        :param layer_name: The name of the layer
+        :type layer_name: str
+        :param material_name: The name of the layer
+        :type material_name: str
         """
-        self.storage['layer'][name] = self.storage['material'][name]()
+        self.storage['layer'][layer_name] = self.storage['material'][material_name]()
         
     def update_layer(self, name, **kwargs):
         """
@@ -60,6 +72,21 @@ class Refnx:
         for key in kwargs.keys():
             item = getattr(layer, key)
             setattr(item, 'value', kwargs[key])
+
+    def get_layer_value(self, name, key):
+        """
+        A function to get a given layer value
+
+        :param name: The layer name
+        :type name: str
+        :param key: The given value keys
+        :type name: str
+        :return: The desired value
+        :rtype: float
+        """
+        layer = self.storage['layer'][name]
+        item = getattr(layer, key)
+        return getattr(item, 'value')
 
     def create_item(self, name):
         """
@@ -101,7 +128,16 @@ class Refnx:
         :param reps: Number of repeats
         :type reps: float
         """
-        self.storage['item'][name].repeats.value = reps 
+        self.storage['item'][name].repeats.value = reps
+
+    def get_reps(self, name):
+        """
+        Get the number of repeats for the stack
+
+        :param name: The item name
+        :type name: str
+        """
+        return self.storage['item'][name].repeats.value
 
     def create_model(self):
         """
@@ -141,6 +177,21 @@ class Refnx:
         for key in kwargs.keys():
             item = getattr(model, key)
             setattr(item, 'value', kwargs[key])
+            
+    def get_model_value(self, key):
+        """
+        A function to get a given model value
+
+        :param name: The model name
+        :type name: str
+        :param key: The given value keys
+        :type name: str
+        :return: The desired value
+        :rtype: float
+        """
+        model = self.storage['model']
+        item = getattr(model, key)
+        return getattr(item, 'value')
 
     def calculate(self, x_array: np.ndarray) -> np.ndarray:
         """

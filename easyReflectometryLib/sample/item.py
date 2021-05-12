@@ -6,8 +6,8 @@ from typing import Union
 
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
-from easyReflectometryLib.sample.layer import Layer
-from easyReflectometryLib.sample.layers import Layers
+from easyReflectometryLib.Sample.layer import Layer
+from easyReflectometryLib.Sample.layers import Layers
 
 ITEM_DETAILS = {
     'repetitions': {
@@ -27,7 +27,7 @@ class Item(BaseObj):
                  name: str = 'easyItem',
                  interface=None):
         if isinstance(layers, Layer):
-            layers = Layers([layers])
+            layers = Layers([layers], name=layers.name)
         super().__init__(name, layers=layers, repetitions=repetitions)
         self.interface = interface
 

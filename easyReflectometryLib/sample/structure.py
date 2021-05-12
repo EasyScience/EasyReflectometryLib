@@ -6,8 +6,8 @@ from typing import List, Union
 
 from easyCore import np
 from easyCore.Objects.Groups import BaseCollection
-from easyReflectometryLib.sample.item import Item
-from easyReflectometryLib.sample.layer import Layer
+from easyReflectometryLib.Sample.item import Item
+from easyReflectometryLib.Sample.layer import Layer
 
 
 class Structure(BaseCollection):
@@ -18,7 +18,7 @@ class Structure(BaseCollection):
         new_items = []
         for i in items:
             if isinstance(i, Layer):
-                new_items.append(Item.from_pars(i))
+                new_items.append(Item.from_pars(i, name=i.name))
             elif isinstance(i, Item):
                 new_items.append(i)
             else:

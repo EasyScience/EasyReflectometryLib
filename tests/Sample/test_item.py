@@ -8,10 +8,10 @@ import os
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from easyReflectometryLib.sample.material import Material
-from easyReflectometryLib.sample.layer import Layer
-from easyReflectometryLib.sample.layers import Layers
-from easyReflectometryLib.sample.item import Item
+from easyReflectometryLib.Sample.material import Material
+from easyReflectometryLib.Sample.layer import Layer
+from easyReflectometryLib.Sample.layers import Layers
+from easyReflectometryLib.Sample.item import Item
 
 
 class TestItem(unittest.TestCase):
@@ -44,6 +44,21 @@ class TestItem(unittest.TestCase):
         assert_equal(o.repetitions.max, 9999)
         assert_equal(o.repetitions.fixed, True)
         assert_equal(o.layers.name, 'twoLayer')
+
+    def test_from_pars_layer(self):
+        m = Material.from_pars(6.908, -0.278, 'Boron')
+        k = Material.from_pars(0.487, 0.000, 'Potassium')
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
+        o = Item.from_pars(p, 2.0, 'twoLayerItem')
+        assert_equal(o.name, 'twoLayerItem')
+        assert_equal(o.interface, None)
+        assert_equal(o.repetitions.display_name, 'repetitions')
+        assert_equal(str(o.repetitions.unit), 'dimensionless')
+        assert_equal(o.repetitions.value.n, 2.0)
+        assert_equal(o.repetitions.min, 1)
+        assert_equal(o.repetitions.max, 9999)
+        assert_equal(o.repetitions.fixed, True)
+        assert_equal(o.layers.name, 'thinBoron')
 
     def test_repr(self):
         p = Item.default()

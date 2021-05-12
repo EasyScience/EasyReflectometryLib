@@ -8,11 +8,11 @@ import os
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from easyReflectometryLib.sample.material import Material
-from easyReflectometryLib.sample.layer import Layer
-from easyReflectometryLib.sample.layers import Layers
-from easyReflectometryLib.sample.item import Item
-from easyReflectometryLib.sample.structure import Structure
+from easyReflectometryLib.Sample.material import Material
+from easyReflectometryLib.Sample.layer import Layer
+from easyReflectometryLib.Sample.layers import Layers
+from easyReflectometryLib.Sample.item import Item
+from easyReflectometryLib.Sample.structure import Structure
 
 
 class TestItem(unittest.TestCase):
@@ -37,6 +37,22 @@ class TestItem(unittest.TestCase):
         assert_equal(d.interface, None)
         assert_equal(d[0].name, 'twoLayerItem1')
         assert_equal(d[1].name, 'oneLayerItem2')
+
+    def test_from_pars_layers(self):
+        m1 = Material.from_pars(6.908, -0.278, 'Boron')
+        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+        d = Structure.from_pars([l1, l2], 'myModel')
+        assert_equal(d.name, 'myModel')
+        assert_equal(d.interface, None)
+        assert_equal(d[0].name, 'thinBoron')
+        assert_equal(d[1].name, 'thickPotassium')
+
+    def test_from_pars_error(self):
+        m1 = Material.from_pars(6.908, -0.278, 'Boron')
+        with self.assertRaises(ValueError):
+            _ = Structure.from_pars([m1], 'myModel')
 
     def test_repr(self):
         p = Structure.default()

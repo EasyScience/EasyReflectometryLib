@@ -214,5 +214,5 @@ class InterfaceFactory(InterfaceFactoryTemplate):
             obj().set_pattern_value(pattern, index, value)
         return inner
 
-    def get_hkl(self, x_array=None) -> dict:
-        return self().get_hkl(x_array)
+    def sld_profile(self) -> tuple:
+        return self().sld_profile()

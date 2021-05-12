@@ -5,7 +5,7 @@ from copy import deepcopy
 from typing import List, Union, TypeVar
 
 from easyCore.Objects.Groups import BaseCollection
-from easyReflectometryLib.sample.layer import Layer
+from easyReflectometryLib.Sample.layer import Layer
 
 Item = TypeVar("Item")
 
