@@ -18,18 +18,18 @@ LAYER_DETAILS = {
         'fixed': True
     },
     'background': {
-        'description':
-        'Linear background to include in reflectometry data',
-        'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
+        'description': 'Linear background to include in reflectometry data',
+        'url':
+        'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
         'value': 1e-7,
         'min': 0.0,
         'max': np.Inf,
         'fixed': True
     },
     'resolution': {
-        'description':
-        'Percentage constant dQ/Q resolution smearing.',
-        'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
+        'description': 'Percentage constant dQ/Q resolution smearing.',
+        'url':
+        'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
         'value': 5.0,
         'min': 0.0,
         'max': np.Inf,
@@ -66,7 +66,11 @@ class Model(BaseObj):
         scale = Parameter('scale', **LAYER_DETAILS['scale'])
         background = Parameter('background', **LAYER_DETAILS['background'])
         resolution = Parameter('resolution', **LAYER_DETAILS['resolution'])
-        return cls(structure, scale, background, resolution, interface=interface)
+        return cls(structure,
+                   scale,
+                   background,
+                   resolution,
+                   interface=interface)
 
     @classmethod
     def from_pars(cls,
@@ -95,12 +99,11 @@ class Model(BaseObj):
         del default_options['background']['value']
         del default_options['resolution']['value']
 
-        scale = Parameter('scale', scale,
-                              **default_options['scale'])
+        scale = Parameter('scale', scale, **default_options['scale'])
         background = Parameter('background', background,
-                              **default_options['background'])
+                               **default_options['background'])
         resolution = Parameter('resolution', resolution,
-                              **default_options['resolution'])
+                               **default_options['resolution'])
 
         return cls(structure=structure,
                    scale=scale,

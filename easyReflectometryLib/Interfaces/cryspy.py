@@ -14,8 +14,7 @@ class Cryspy(InterfaceTemplate):
     A simple example interface using CFML
     """
 
-    _sample_link = {
-        'cif_str': 'cif_str'}
+    _sample_link = {'cif_str': 'cif_str'}
 
     _crystal_link = {
         "length_a": "length_a",
@@ -150,7 +149,8 @@ class Cryspy(InterfaceTemplate):
         """
         self.calculator.pattern = pattern
 
-    def bulk_update(self, value_label_list: List[str], value_list: List[float], external: bool):
+    def bulk_update(self, value_label_list: List[str], value_list: List[float],
+                    external: bool):
         """
         Perform an update of multiple values at once to save time on expensive updates
 

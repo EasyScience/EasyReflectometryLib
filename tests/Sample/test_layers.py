@@ -22,7 +22,7 @@ class TestLayers(unittest.TestCase):
         assert_equal(len(p), 2)
         assert_equal(p[0].name, 'easyLayer')
         assert_equal(p[1].name, 'easyLayer')
-    
+
     def test_from_pars(self):
         m = Material.from_pars(6.908, -0.278, 'Boron')
         k = Material.from_pars(0.487, 0.000, 'Potassium')
@@ -39,10 +39,9 @@ class TestLayers(unittest.TestCase):
         m = Material.from_pars(6.908, -0.278, 'Boron')
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
         i = Item.from_pars(Layers.default(), 2)
-        l = Layers.from_pars([p, i], 'twoLayer') 
+        l = Layers.from_pars([p, i], 'twoLayer')
         assert_equal(l.name, 'twoLayer')
         assert_equal(l.interface, None)
-
 
     def test_repr(self):
         p = Layers.default()

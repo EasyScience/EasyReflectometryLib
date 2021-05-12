@@ -14,25 +14,13 @@ class Refnx(InterfaceTemplate):
     A simple interface using refnx
     """
 
-    _material_link = {
-        'sld': 'real',
-        'isld': 'imag'
-    }
+    _material_link = {'sld': 'real', 'isld': 'imag'}
 
-    _layer_link = {
-        'thickness': 'thick',
-        'roughness': 'rough'
-    }
+    _layer_link = {'thickness': 'thick', 'roughness': 'rough'}
 
-    _item_like = {
-        'repetitions': 'repeats'
-    }
+    _item_like = {'repetitions': 'repeats'}
 
-    _model_link = {
-        'scale': 'scale',
-        'background': 'bkg',
-        'resolution': 'dq'
-    }
+    _model_link = {'scale': 'scale', 'background': 'bkg', 'resolution': 'dq'}
 
     name = 'refnx'
 

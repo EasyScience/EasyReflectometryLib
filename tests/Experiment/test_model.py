@@ -78,4 +78,5 @@ class TestModel(unittest.TestCase):
         p = Model.default()
         assert_equal(
             p.__repr__(),
-            "<easyModel: (structure: easyStructure, scale: 1.000, background: 1.000e-07, resolution: 5.00)>")
+            "<easyModel: (structure: easyStructure, scale: 1.000, background: 1.000e-07, resolution: 5.00)>"
+        )
