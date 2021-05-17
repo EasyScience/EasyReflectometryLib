@@ -45,4 +45,7 @@ class TestLayers(unittest.TestCase):
 
     def test_repr(self):
         p = Layers.default()
-        assert_equal(p.__repr__(), '<easyLayers: A series of 2 layers>')
+        assert_equal(
+            p.__repr__(),
+            '<easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>'
+        )

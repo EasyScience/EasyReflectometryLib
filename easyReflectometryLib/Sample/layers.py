@@ -54,4 +54,7 @@ class Layers(BaseCollection):
         :return: a string representation of the layer
         :rtype: str
         """
-        return f"<{self.name}: A series of {len(self)} layers>"
+        string_return = f"<{self.name}: A series of {len(self)} layers>"
+        for i in self:
+            string_return += f"\n  - {i}"
+        return string_return

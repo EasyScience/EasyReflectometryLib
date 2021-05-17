@@ -64,5 +64,5 @@ class TestItem(unittest.TestCase):
         p = Item.default()
         assert_equal(
             p.__repr__(),
-            '<easyItem: (1.0 repetitions of <easyLayers: A series of 2 layers>)>'
+            '<easyItem: (1.0 repetitions of <easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>)>'
         )

@@ -62,4 +62,7 @@ class Structure(BaseCollection):
         :return: a string representation of the layer
         :rtype: str
         """
-        return f"<{self.name}: A series of {len(self)} items>"
+        string_return = f"<{self.name}: A series of {len(self)} items>"
+        for i in self:
+            string_return += f"\n  - {i}"
+        return string_return

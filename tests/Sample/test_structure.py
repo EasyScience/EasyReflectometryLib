@@ -56,4 +56,7 @@ class TestItem(unittest.TestCase):
 
     def test_repr(self):
         p = Structure.default()
-        assert_equal(p.__repr__(), '<easyStructure: A series of 2 items>')
+        assert_equal(
+            p.__repr__(),
+            '<easyStructure: A series of 2 items>\n  - <easyItem: (1.0 repetitions of <easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>)>\n  - <easyItem: (1.0 repetitions of <easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>)>'
+        )
