@@ -34,6 +34,14 @@ class Refnx(InterfaceTemplate):
         self._namespace = {}
 
     def create(self, model):
+        """
+        Creation function
+
+        :param model: Object to be created
+        :type model: Union[Material, Layer, Item, Model]
+        :return: Item containers of the objects
+        :rtype: List[ItemContainer]
+        """
         r_list = []
         t_ = type(model)
         if issubclass(t_, Material):

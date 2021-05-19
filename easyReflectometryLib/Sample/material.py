@@ -80,7 +80,10 @@ class Material(BaseObj):
     @property
     def uid(self):
         """
-        Return a UID from the borg map
+        Return a UID from the borg map.
+
+        :return: Unique id
+        :rtype: int
         """
         return self._borg.map.convert_id_to_key(self)
 
