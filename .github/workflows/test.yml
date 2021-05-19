@@ -49,7 +49,7 @@ jobs:
       run: poetry update
 
     - name: Run main.py
-      run: poetry install
+      run: pip install -r requirements.txt
 
     - name: install pytest
       run: pip install pytest numpy
