@@ -10,7 +10,7 @@ class Refnx:
         self.storage = {
             'material': {},
             'layer': {},
-            'item' : {},
+            'item': {},
             'model': reflect.ReflectModel(reflect.Structure())
         }
 
@@ -70,7 +70,7 @@ class Refnx:
         for key in kwargs.keys():
             ii = getattr(layer, key)
             setattr(ii, 'value', kwargs[key])
-    
+
     def get_layer_value(self, name, key):
         """
         A function to get a given layer value
@@ -106,7 +106,7 @@ class Refnx:
         for key in kwargs.keys():
             ii = getattr(item, key)
             setattr(ii, 'value', kwargs[key])
-    
+
     def get_item_value(self, name, key):
         """
         A function to get a given item value
@@ -153,8 +153,9 @@ class Refnx:
         :param layer_name: The layer name
         :type layer_name: str
         """
-        self.storage['layer'][layer_name].sld = self.storage['material'][material_name]
- 
+        self.storage['layer'][layer_name].sld = self.storage['material'][
+            material_name]
+
     def add_layer_to_item(self, layer_name, item_name):
         """
         Create a layer from the material of the same name, in a given item.
@@ -174,7 +175,8 @@ class Refnx:
         :param item_name: items to add to model
         :type item_name: str
         """
-        self.storage['model'].structure.components.append(self.storage['item'][item_name])
+        self.storage['model'].structure.components.append(
+            self.storage['item'][item_name])
 
     def remove_layer_from_item(self, layer_name, item_name):
         """
@@ -185,7 +187,8 @@ class Refnx:
         :param item_name: The item name
         :type item_name: int
         """
-        layer_idx = self.storage['item'][item_name].components.index(self.storage['layer'][layer_name])
+        layer_idx = self.storage['item'][item_name].components.index(
+            self.storage['layer'][layer_name])
         del self.storage['item'][item_name].components[layer_idx]
 
     def remove_item(self, item_name):
@@ -195,10 +198,11 @@ class Refnx:
         :param item_name: The item name
         :type item_name: int
         """
-        item_idx = self.storage['model'].structure.components.index(self.storage['item'][item_name])
+        item_idx = self.storage['model'].structure.components.index(
+            self.storage['item'][item_name])
         del self.storage['model'].structure.components[item_idx]
         del self.storage['item'][item_name]
-    
+
     def calculate(self, x_array: np.ndarray) -> np.ndarray:
         """
         For a given x calculate the corresponding y.
@@ -209,7 +213,7 @@ class Refnx:
         :rtype: np.ndarray
         """
         structure = _remove_unecessary_stacks(self.storage['model'].structure)
-        model = reflect.ReflectModel(structure, 
+        model = reflect.ReflectModel(structure,
                                      scale=self.storage['model'].scale.value,
                                      bkg=self.storage['model'].bkg.value,
                                      dq=self.storage['model'].dq.value)
@@ -222,7 +226,8 @@ class Refnx:
         :return: z and sld(z)
         :rtype: tuple[np.ndarray, np.ndarray]
         """
-        return _remove_unecessary_stacks(self.storage['model'].structure).sld_profile()
+        return _remove_unecessary_stacks(
+            self.storage['model'].structure).sld_profile()
 
 
 def _remove_unecessary_stacks(current_structure):

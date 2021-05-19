@@ -83,7 +83,7 @@ class Material(BaseObj):
         Return a UID from the borg map
         """
         return self._borg.map.convert_id_to_key(self)
-        
+
     # Representation
     def __repr__(self) -> str:
         """
@@ -93,13 +93,3 @@ class Material(BaseObj):
         :rtype: str
         """
         return f"<{self.name}: (sld: {self.sld.raw_value:.3f}e-6 {self.sld.unit:~P}, isld: {self.isld.raw_value:.3f}e-6 {self.isld.unit:~P})>"
-
-    # Copying
-    def copy(self) -> "Material":
-        """
-        Get a copy of the material.
-
-        :return: A copy of the material
-        :rtype: Material
-        """
-        return deepcopy(self)

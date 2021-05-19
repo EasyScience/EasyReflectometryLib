@@ -48,26 +48,23 @@ class Refnx(InterfaceTemplate):
             self.calculator.create_layer(key)
             r_list.append(
                 ItemContainer(key, self._layer_link,
-                              self.calculator.get_layer_value, 
-                              self.calculator.update_layer)
-            )
+                              self.calculator.get_layer_value,
+                              self.calculator.update_layer))
             self.assign_material_to_layer(model.material.uid, key)
         elif issubclass(t_, Item):
             key = model.uid
             self.calculator.create_item(key)
             r_list.append(
                 ItemContainer(key, self._item_link,
-                              self.calculator.get_item_value, 
-                              self.calculator.update_item)
-            )
+                              self.calculator.get_item_value,
+                              self.calculator.update_item))
             for i in model.layers:
                 self.add_layer_to_item(i.uid, model.uid)
         elif issubclass(t_, Model):
             r_list.append(
-                ItemContainer('model', self._model_link, 
-                              self.calculator.get_model_value, 
-                              self.calculator.update_model)
-            )
+                ItemContainer('model', self._model_link,
+                              self.calculator.get_model_value,
+                              self.calculator.update_model))
             for i in model.structure:
                 self.add_item_to_model(i.uid)
         return r_list
@@ -93,7 +90,7 @@ class Refnx(InterfaceTemplate):
         :type layer_id: int
         """
         self.calculator.add_layer_to_item(layer_id, item_id)
-    
+
     def remove_layer_from_item(self, layer_id: int, item_id: int):
         """
         Remove a layer from an item stack
@@ -104,7 +101,7 @@ class Refnx(InterfaceTemplate):
         :type layer_id: int
         """
         self.calculator.remove_layer_from_item(layer_id, item_id)
-    
+
     def add_item_to_model(self, item_id: int):
         """
         Add a layer to the item stack
@@ -115,7 +112,7 @@ class Refnx(InterfaceTemplate):
         :type layer_id: int
         """
         self.calculator.add_item(item_id)
-    
+
     def remove_item_from_model(self, item_id: int):
         """
         Remove a layer from the item stack
@@ -125,7 +122,7 @@ class Refnx(InterfaceTemplate):
         :param layer_id: The layer id
         :type layer_id: int
         """
-        self.calculator.remove_item(item_id) 
+        self.calculator.remove_item(item_id)
 
     def fit_func(self, x_array: np.ndarray) -> np.ndarray:
         """

@@ -108,7 +108,8 @@ class Item(BaseObj):
         :type idx: int
         """
         if self.interface is not None:
-            self.interface().remove_layer_from_item(self.layers[idx].uid, self.uid)
+            self.interface().remove_layer_from_item(self.layers[idx].uid,
+                                                    self.uid)
         del self.layers[idx]
 
     @property

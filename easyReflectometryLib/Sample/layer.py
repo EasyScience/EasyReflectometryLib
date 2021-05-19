@@ -98,7 +98,8 @@ class Layer(BaseObj):
         """
         self.material = material
         if self.interface is not None:
-            self.interface().assign_material_to_layer(self.material.uid, self.uid)
+            self.interface().assign_material_to_layer(self.material.uid,
+                                                      self.uid)
 
     @property
     def uid(self):
