@@ -71,6 +71,53 @@ class Item(BaseObj):
                    name=name,
                    interface=interface)
 
+    def add_layer(self, *layers):
+        """
+        Add a layer to the item.
+
+        :param *layers: Layers to add to item
+        :type layers: Layer
+        """
+        for arg in layers:
+            if issubclass(arg.__class__, Layer):
+                self.layers.append(arg)
+                if self.interface is not None:
+                    self.interface().add_layer_to_item(arg.uid, self.uid)
+
+    def duplicate_layer(self, idx):
+        """
+        Duplicate a given layer.
+
+        :param idx: index of layer to duplicate
+        :type idx: int
+        """
+        to_duplicate = self.layers[idx]
+        duplicate_layer = Layer.from_pars(
+            material=to_duplicate.material,
+            thickness=to_duplicate.thickness.raw_value,
+            roughness=to_duplicate.roughness.raw_value,
+            name=to_duplicate.name,
+            interface=to_duplicate.interface)
+        self.add_layer(duplicate_layer)
+
+    def remove_layer(self, idx):
+        """
+        Remove a layer from the item.
+
+        :param idx: index of layer to remove
+        :type idx: int
+        """
+        if self.interface is not None:
+            self.interface().remove_layer_from_item(self.layers[idx].uid, self.uid)
+        del self.layers[idx]
+
+    @property
+    def uid(self):
+        """
+        Return a UID from the borg map
+        """
+        return self._borg.map.convert_id_to_key(self)
+
     # Representation
     def __repr__(self) -> str:
         """

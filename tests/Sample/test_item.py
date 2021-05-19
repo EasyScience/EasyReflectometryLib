@@ -7,11 +7,12 @@ Tests for Item class module
 import os
 import unittest
 import numpy as np
-from numpy.testing import assert_almost_equal, assert_equal
+from numpy.testing import assert_almost_equal, assert_equal, assert_raises
 from easyReflectometryLib.Sample.material import Material
 from easyReflectometryLib.Sample.layer import Layer
 from easyReflectometryLib.Sample.layers import Layers
 from easyReflectometryLib.Sample.item import Item
+from easyReflectometryLib.interface import InterfaceFactory
 
 
 class TestItem(unittest.TestCase):
@@ -47,7 +48,6 @@ class TestItem(unittest.TestCase):
 
     def test_from_pars_layer(self):
         m = Material.from_pars(6.908, -0.278, 'Boron')
-        k = Material.from_pars(0.487, 0.000, 'Potassium')
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
         o = Item.from_pars(p, 2.0, 'twoLayerItem')
         assert_equal(o.name, 'twoLayerItem')
@@ -59,6 +59,88 @@ class TestItem(unittest.TestCase):
         assert_equal(o.repetitions.max, 9999)
         assert_equal(o.repetitions.fixed, True)
         assert_equal(o.layers.name, 'thinBoron')
+
+    def test_add_layer(self):
+        m = Material.from_pars(6.908, -0.278, 'Boron')
+        k = Material.from_pars(0.487, 0.000, 'Potassium')
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
+        q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium') 
+        o = Item.from_pars(p, 2.0, 'twoLayerItem')
+        assert_equal(len(o.layers), 1)
+        o.add_layer(q)
+        assert_equal(len(o.layers), 2)
+        assert_equal(o.layers[1].name, 'thickPotassium')
+
+    def test_add_layer_with_interface_refnx(self):
+        interface = InterfaceFactory()
+        m = Material.from_pars(6.908, -0.278, 'Boron', interface=interface)
+        k = Material.from_pars(0.487, 0.000, 'Potassium', interface=interface)
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron', interface=interface)
+        q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium', interface=interface) 
+        o = Item.from_pars(p, 2.0, 'twoLayerItem', interface=interface)
+        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 1)
+        o.add_layer(q)
+        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 2)
+        assert_equal(o.interface().calculator.storage['item'][o.uid].components[1].thick.value, 50.)
+
+    def test_duplicate_layer(self):
+        m = Material.from_pars(6.908, -0.278, 'Boron')
+        k = Material.from_pars(0.487, 0.000, 'Potassium')
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
+        q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium') 
+        o = Item.from_pars(p, 2.0, 'twoLayerItem')
+        assert_equal(len(o.layers), 1)
+        o.add_layer(q)
+        assert_equal(len(o.layers), 2)
+        o.duplicate_layer(1)
+        assert_equal(len(o.layers), 3)
+        assert_equal(o.layers[1].name, 'thickPotassium')
+        assert_equal(o.layers[2].name, 'thickPotassium')
+    
+    def test_duplicate_layer_with_interface_refnx(self):
+        interface = InterfaceFactory()
+        m = Material.from_pars(6.908, -0.278, 'Boron', interface=interface)
+        k = Material.from_pars(0.487, 0.000, 'Potassium', interface=interface)
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron', interface=interface)
+        q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium', interface=interface) 
+        o = Item.from_pars(p, 2.0, 'twoLayerItem', interface=interface)
+        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 1)
+        o.add_layer(q)
+        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 2)
+        assert_equal(o.interface().calculator.storage['item'][o.uid].components[1].thick.value, 50.)
+        o.duplicate_layer(1)
+        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 3)
+        assert_equal(o.interface().calculator.storage['item'][o.uid].components[2].thick.value, 50.)
+        assert_raises(AssertionError, assert_equal, o.interface().calculator.storage['item'][o.uid].components[1].name, o.interface().calculator.storage['item'][o.uid].components[2].name)
+
+    def test_remove_layer(self):
+        m = Material.from_pars(6.908, -0.278, 'Boron')
+        k = Material.from_pars(0.487, 0.000, 'Potassium')
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
+        q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium') 
+        o = Item.from_pars(p, 2.0, 'twoLayerItem')
+        assert_equal(len(o.layers), 1)
+        o.add_layer(q)
+        assert_equal(len(o.layers), 2)
+        assert_equal(o.layers[1].name, 'thickPotassium')
+        o.remove_layer(1)
+        assert_equal(len(o.layers), 1)
+        assert_equal(o.layers[0].name, 'thinBoron')
+
+    def test_remove_layer_with_interface_refnx(self):
+        interface = InterfaceFactory()
+        m = Material.from_pars(6.908, -0.278, 'Boron', interface=interface)
+        k = Material.from_pars(0.487, 0.000, 'Potassium', interface=interface)
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron', interface=interface)
+        q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium', interface=interface)
+        o = Item.from_pars(p, 2.0, 'twoLayerItem', interface=interface)
+        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 1)
+        o.add_layer(q)
+        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 2)
+        assert_equal(o.layers[1].name, 'thickPotassium')
+        o.remove_layer(1)
+        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 1)
+        assert_equal(o.layers[0].name, 'thinBoron')
 
     def test_repr(self):
         p = Item.default()

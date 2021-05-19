@@ -10,6 +10,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
 from easyReflectometryLib.Sample.material import Material
 from easyReflectometryLib.Sample.layer import Layer
+from easyReflectometryLib.interface import InterfaceFactory
 
 
 class TestLayer(unittest.TestCase):
@@ -49,6 +50,28 @@ class TestLayer(unittest.TestCase):
         assert_equal(p.roughness.min, 0.0)
         assert_equal(p.roughness.max, np.Inf)
         assert_equal(p.roughness.fixed, True)
+
+    def test_assign_material(self):
+        m = Material.from_pars(6.908, -0.278, 'Boron')
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
+        k = Material.from_pars(2.074, 0.0, 'Silicon')
+        assert_almost_equal(p.material.sld.raw_value, 6.908)
+        assert_almost_equal(p.material.isld.raw_value, -0.278)
+        p.assign_material(k)
+        assert_almost_equal(p.material.sld.raw_value, 2.074)
+        assert_almost_equal(p.material.isld.raw_value, 0.0)
+
+    def test_assign_material_with_interface_refnx(self):
+        interface = InterfaceFactory()
+        m = Material.from_pars(6.908, -0.278, 'Boron', interface=interface)
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron', interface=interface)
+        k = Material.from_pars(2.074, 0.0, 'Silicon', interface=interface)
+        assert_almost_equal(p.interface().calculator.storage['layer'][p.uid].sld.real.value, 6.908)
+        assert_almost_equal(p.interface().calculator.storage['layer'][p.uid].sld.imag.value, -0.278)
+        p.assign_material(k)
+        assert_almost_equal(p.interface().calculator.storage['layer'][p.uid].sld.real.value, 2.074)
+        assert_almost_equal(p.interface().calculator.storage['layer'][p.uid].sld.imag.value, 0.0)
+
 
     def test_repr(self):
         p = Layer.default()

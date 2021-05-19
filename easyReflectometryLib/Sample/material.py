@@ -77,6 +77,13 @@ class Material(BaseObj):
 
         return cls(sld=sld, isld=isld, name=name, interface=interface)
 
+    @property
+    def uid(self):
+        """
+        Return a UID from the borg map
+        """
+        return self._borg.map.convert_id_to_key(self)
+        
     # Representation
     def __repr__(self) -> str:
         """

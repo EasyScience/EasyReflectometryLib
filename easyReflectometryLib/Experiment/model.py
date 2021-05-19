@@ -6,6 +6,9 @@ from copy import deepcopy
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
 from easyReflectometryLib.Sample.structure import Structure
+from easyReflectometryLib.Sample.item import Item
+from easyReflectometryLib.Sample.layer import Layer
+from easyReflectometryLib.Sample.layers import Layers
 
 LAYER_DETAILS = {
     'scale': {
@@ -111,6 +114,58 @@ class Model(BaseObj):
                    resolution=resolution,
                    name=name,
                    interface=interface)
+
+    def add_item(self, *items):
+        """
+        Add a layer or item to the model structure.
+
+        :param *items: Layers or items to add to model structure
+        :type items: Union[Layer, Item]
+        """
+        for arg in items:
+            if issubclass(arg.__class__, Item):
+                self.structure.append(arg)
+                if self.interface is not None:
+                    self.interface().add_item_to_model(arg.uid)
+
+    def duplicate_item(self, idx):
+        """
+        Duplicate a given item or layer in a structure.
+
+        :param idx: Index of the item or layer to duplicate
+        :type idx: int
+        """
+        to_duplicate = self.structure[idx]
+        duplicate_layers = []
+        for i in to_duplicate.layers:
+            duplicate_layers.append(
+                Layer.from_pars(material=i.material,
+                                thickness=i.thickness.raw_value,
+                                roughness=i.roughness.raw_value,
+                                name=i.name,
+                                interface=i.interface))
+        duplicate = Item.from_pars(Layers.from_pars(
+            duplicate_layers, name=to_duplicate.layers.name),
+                                    name=to_duplicate.name)
+        self.add_item(duplicate)
+
+    def remove_item(self, idx):
+        """
+        Remove an item from the model.
+
+        :param idx: Index of the item to remove
+        :type idx: int
+        """
+        if self.interface is not None:
+            self.interface().remove_item_from_model(self.structure[idx].uid)
+        del self.structure[idx]
+
+    @property
+    def uid(self):
+        """
+        Return a UID from the borg map
+        """
+        return self._borg.map.convert_id_to_key(self)
 
     # Representation
     def __repr__(self) -> str:

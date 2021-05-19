@@ -14,6 +14,7 @@ from easyReflectometryLib.Sample.layer import Layer
 from easyReflectometryLib.Sample.layers import Layers
 from easyReflectometryLib.Sample.item import Item
 from easyReflectometryLib.Sample.structure import Structure
+from easyReflectometryLib.interface import InterfaceFactory
 
 
 class TestModel(unittest.TestCase):
@@ -73,6 +74,99 @@ class TestModel(unittest.TestCase):
         assert_equal(mod.resolution.min, 0.0)
         assert_equal(mod.resolution.max, np.Inf)
         assert_equal(mod.resolution.fixed, True)
+
+    def test_add_item(self):
+        m1 = Material.from_pars(6.908, -0.278, 'Boron')
+        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+        ls1 = Layers.from_pars([l1, l2], 'twoLayer1')
+        ls2 = Layers.from_pars([l2, l1], 'twoLayer2')
+        o1 = Item.from_pars(ls1, 2.0, 'twoLayerItem1')
+        o2 = Item.from_pars(ls2, 1.0, 'oneLayerItem2')
+        d = Structure.from_pars([o1], 'myModel')
+        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel') 
+        assert_equal(len(mod.structure), 1)
+        mod.add_item(o2)
+        assert_equal(len(mod.structure), 2)
+        assert_equal(mod.structure[1].name, 'oneLayerItem2')
+        assert_equal(issubclass(mod.structure[1].__class__, Item), True)
+
+    def test_add_item_with_interface_refnx(self):
+        interface = InterfaceFactory()
+        m1 = Material.from_pars(6.908, -0.278, 'Boron')
+        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+        ls1 = Layers.from_pars([l1, l2], 'twoLayer1')
+        ls2 = Layers.from_pars([l2, l1], 'twoLayer2')
+        o1 = Item.from_pars(ls1, 2.0, 'twoLayerItem1')
+        o2 = Item.from_pars(ls2, 1.0, 'oneLayerItem2')
+        d = Structure.from_pars([o1], 'myModel')
+        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+        assert_equal(len(mod.interface().calculator.storage['item']), 1)
+        assert_equal(len(mod.interface().calculator.storage['layer']), 2)
+        mod.add_item(o2)
+        assert_equal(len(mod.interface().calculator.storage['item']), 2)
+        assert_equal(len(mod.interface().calculator.storage['layer']), 2)
+
+    def test_duplicate_item(self):
+        m1 = Material.from_pars(6.908, -0.278, 'Boron')
+        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+        ls1 = Layers.from_pars([l1, l2], 'twoLayer1')
+        ls2 = Layers.from_pars([l2, l1], 'twoLayer2')
+        o1 = Item.from_pars(ls1, 2.0, 'twoLayerItem1')
+        o2 = Item.from_pars(ls2, 1.0, 'oneLayerItem2')
+        d = Structure.from_pars([o1], 'myModel')
+        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel') 
+        assert_equal(len(mod.structure), 1)
+        mod.add_item(o2)
+        assert_equal(len(mod.structure), 2)
+        mod.duplicate_item(1)
+        assert_equal(len(mod.structure), 3)
+        assert_equal(mod.structure[2].name, 'oneLayerItem2')
+        assert_equal(issubclass(mod.structure[2].__class__, Item), True)
+
+    def test_duplicate_item_with_interface_refnx(self):
+        interface = InterfaceFactory()
+        m1 = Material.from_pars(6.908, -0.278, 'Boron')
+        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+        ls1 = Layers.from_pars([l1, l2], 'twoLayer1')
+        ls2 = Layers.from_pars([l2, l1], 'twoLayer2')
+        o1 = Item.from_pars(ls1, 2.0, 'twoLayerItem1')
+        o2 = Item.from_pars(ls2, 1.0, 'oneLayerItem2')
+        d = Structure.from_pars([o1], 'myModel')
+        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface) 
+        assert_equal(len(mod.interface().calculator.storage['item']), 1)
+        mod.add_item(o2)
+        assert_equal(len(mod.interface().calculator.storage['item']), 2)
+        mod.duplicate_item(1)
+        assert_equal(len(mod.interface().calculator.storage['item']), 3)
+
+    def test_remove_item_with_interface_refnx(self):
+        interface = InterfaceFactory()
+        m1 = Material.from_pars(6.908, -0.278, 'Boron')
+        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+        ls1 = Layers.from_pars([l1, l2], 'twoLayer1')
+        ls2 = Layers.from_pars([l2, l1], 'twoLayer2')
+        o1 = Item.from_pars(ls1, 2.0, 'twoLayerItem1')
+        o2 = Item.from_pars(ls2, 1.0, 'oneLayerItem2')
+        d = Structure.from_pars([o1], 'myModel')
+        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+        assert_equal(len(mod.interface().calculator.storage['item']), 1)
+        assert_equal(len(mod.interface().calculator.storage['layer']), 2)
+        mod.add_item(o2)
+        assert_equal(len(mod.interface().calculator.storage['item']), 2)
+        assert_equal(len(mod.interface().calculator.storage['layer']), 2)
+        mod.remove_item(0)
+        assert_equal(len(mod.interface().calculator.storage['item']), 1)
+        assert_equal(len(mod.interface().calculator.storage['layer']), 2)
 
     def test_repr(self):
         p = Model.default()

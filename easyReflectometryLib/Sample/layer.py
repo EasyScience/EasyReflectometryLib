@@ -92,6 +92,21 @@ class Layer(BaseObj):
                    name=name,
                    interface=interface)
 
+    def assign_material(self, material):
+        """
+        Assign a material to the layer interface
+        """
+        self.material = material
+        if self.interface is not None:
+            self.interface().assign_material_to_layer(self.material.uid, self.uid)
+
+    @property
+    def uid(self):
+        """
+        Return a UID from the borg map
+        """
+        return self._borg.map.convert_id_to_key(self)
+
     # Representation
     def __repr__(self) -> str:
         """
