@@ -52,7 +52,7 @@ jobs:
       run: poetry install
 
     - name: install pytest
-      run: pip install pytest
+      run: pip install pytest numpy
     
     - name: run pytest
       run: pytest
