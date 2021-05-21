@@ -19,6 +19,7 @@ class TestItem(unittest.TestCase):
     def test_default(self):
         p = Item.default()
         assert_equal(p.name, 'easyItem')
+        assert_equal(p.type, 'Layer')
         assert_equal(p.interface, None)
         assert_equal(len(p.layers), 2)
         assert_equal(p.repetitions.display_name, 'repetitions')
@@ -35,8 +36,9 @@ class TestItem(unittest.TestCase):
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
         q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium')
         l = Layers.from_pars([p, q], 'twoLayer')
-        o = Item.from_pars(l, 2.0, 'twoLayerItem')
+        o = Item.from_pars(l, 2.0, 'twoLayerItem', 'Multi-Layer')
         assert_equal(o.name, 'twoLayerItem')
+        assert_equal(o.type, 'Multi-Layer')
         assert_equal(o.interface, None)
         assert_equal(o.repetitions.display_name, 'repetitions')
         assert_equal(str(o.repetitions.unit), 'dimensionless')
@@ -146,5 +148,5 @@ class TestItem(unittest.TestCase):
         p = Item.default()
         assert_equal(
             p.__repr__(),
-            '<easyItem: (1.0 repetitions of <easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>)>'
+            '<easyItem: (1.0 repetitions of <easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>)>'
         )

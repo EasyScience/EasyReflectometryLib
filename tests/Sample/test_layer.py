@@ -27,7 +27,7 @@ class TestLayer(unittest.TestCase):
         assert_equal(p.thickness.fixed, True)
         assert_equal(p.roughness.display_name, 'roughness')
         assert_equal(str(p.roughness.unit), 'angstrom')
-        assert_equal(p.roughness.value.n, 1.2)
+        assert_equal(p.roughness.value.n, 3.3)
         assert_equal(p.roughness.min, 0.0)
         assert_equal(p.roughness.max, np.Inf)
         assert_equal(p.roughness.fixed, True)
@@ -77,5 +77,5 @@ class TestLayer(unittest.TestCase):
         p = Layer.default()
         assert_equal(
             p.__repr__(),
-            '<easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 1.200 Å)>'
+            '<easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>'
         )

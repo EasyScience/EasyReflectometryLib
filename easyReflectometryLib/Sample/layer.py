@@ -22,7 +22,7 @@ LAYER_DETAILS = {
         'description':
         'The interfacial roughness, Nevot-Croce, for the layer in angstroms.',
         'url': 'https://doi.org/10.1051/rphysap:01980001503076100',
-        'value': 1.2,
+        'value': 3.3,
         'units': 'angstrom',
         'min': 0.0,
         'max': np.Inf,

@@ -25,15 +25,18 @@ class Item(BaseObj):
                  layers: Union[Layers, Layer],
                  repetitions: Parameter,
                  name: str = 'easyItem',
+                 type: str = 'Layer',
                  interface=None):
         if isinstance(layers, Layer):
             layers = Layers([layers], name=layers.name)
+            type = 'Layer'
         super().__init__(name, layers=layers, repetitions=repetitions)
         self.interface = interface
+        self.type = type
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> "Item":
+    def default(cls, type='Layer', interface=None) -> "Item":
         """
         Default constructor for the reflectometry item. 
 
@@ -42,13 +45,14 @@ class Item(BaseObj):
         """
         layers = Layers.default()
         repetitions = Parameter('repetitions', **ITEM_DETAILS['repetitions'])
-        return cls(layers, repetitions, interface=interface)
+        return cls(layers, repetitions, type=type, interface=interface)
 
     @classmethod
     def from_pars(cls,
                   layers: Layers,
                   repetitions: float = 1.0,
                   name: str = 'easyItem',
+                  type: str = 'Layer',
                   interface=None) -> "Item":
         """
         Constructor of a reflectometry item where the parameters are known.
@@ -69,6 +73,7 @@ class Item(BaseObj):
         return cls(layers=layers,
                    repetitions=repetitions,
                    name=name,
+                   type=type,
                    interface=interface)
 
     def add_layer(self, *layers):
