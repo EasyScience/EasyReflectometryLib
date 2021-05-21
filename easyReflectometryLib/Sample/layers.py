@@ -12,10 +12,11 @@ Item = TypeVar("Item")
 
 class Layers(BaseCollection):
     def __init__(self,
-                 layers: List[Union[Layer, Item]],
+                 *args: List[Union[Layer, Item]],
                  name: str = 'easyLayers',
-                 interface=None):
-        super().__init__(name, *layers)
+                 interface=None,
+                 **kwargs):
+        super().__init__(name, *args, **kwargs)
         self.interface = interface
 
     # Class constructors
@@ -29,22 +30,22 @@ class Layers(BaseCollection):
         """
         layer1 = Layer.default()
         layer2 = Layer.default()
-        return cls([layer1, layer2], interface=interface)
+        return cls(layer1, layer2, interface=interface)
 
     @classmethod
     def from_pars(cls,
-                  layers: List[Layer],
+                  *args: List[Layer],
                   name: str = 'easyLayer',
                   interface=None) -> "Layer":
         """
         Constructor of a reflectometry layers where the parameters are known.
 
-        :param layers: The series of layers
-        :type layers: List[Union[easyReflectometryLib.layer.Layer, easyReflectometryLib.Item.Item]]
+        :param args: The series of layers
+        :type args: List[Union[easyReflectometryLib.layer.Layer, easyReflectometryLib.Item.Item]]
         :return: Layers container
         :rtype: Layers
         """
-        return cls(layers=layers, name=name, interface=interface)
+        return cls(*args, name=name, interface=interface)
 
     # Representation
     def __repr__(self) -> str:

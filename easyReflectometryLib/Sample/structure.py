@@ -12,18 +12,19 @@ from easyReflectometryLib.Sample.layer import Layer
 
 class Structure(BaseCollection):
     def __init__(self,
-                 items: List[Union[Layer, Item]],
+                 *args: List[Union[Layer, Item]],
                  name: str = 'easyStructure',
-                 interface=None):
+                 interface=None,
+                 **kwargs):
         new_items = []
-        for i in items:
-            if isinstance(i, Layer):
-                new_items.append(Item.from_pars(i, name=i.name))
-            elif isinstance(i, Item):
-                new_items.append(i)
-            else:
-                raise ValueError('The items must be either a Layer or an Item')
-        super().__init__(name, *new_items)
+        # for i in args:
+        #     if isinstance(i, Layer):
+        #         new_items.append(Item.from_pars(i, name=i.name))
+        #     elif isinstance(i, Item):
+        #         new_items.append(i)
+        #     else:
+        #         raise ValueError('The items must be either a Layer or an Item')
+        super().__init__(name, *args, **kwargs)
         self.interface = interface
 
     # Class constructors
@@ -37,22 +38,22 @@ class Structure(BaseCollection):
         """
         item1 = Item.default()
         item2 = Item.default()
-        return cls([item1, item2], interface=interface)
+        return cls(item1, item2, interface=interface)
 
     @classmethod
     def from_pars(cls,
-                  items: List[Item],
+                  *args: List[Item],
                   name: str = 'easyStructure',
                   interface=None) -> "Structure":
         """
         Constructor of a reflectometry structure where the parameters are known.
 
-        :param items: The items in the structure
-        :type items: List[easyReflectometryLib.item.Item]
+        :param args: The items in the structure
+        :type args: List[easyReflectometryLib.item.Item]
         :return: Structure container
         :rtype: Structure
         """
-        return cls(items, name=name, interface=interface)
+        return cls(*args, name=name, interface=interface)
 
     # Representation
     def __repr__(self) -> str:
