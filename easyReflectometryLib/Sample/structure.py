@@ -17,14 +17,14 @@ class Structure(BaseCollection):
                  interface=None,
                  **kwargs):
         new_items = []
-        # for i in args:
-        #     if isinstance(i, Layer):
-        #         new_items.append(Item.from_pars(i, name=i.name))
-        #     elif isinstance(i, Item):
-        #         new_items.append(i)
-        #     else:
-        #         raise ValueError('The items must be either a Layer or an Item')
-        super().__init__(name, *args, **kwargs)
+        for i in args:
+            if isinstance(i, Layer):
+                new_items.append(Item.from_pars(i, name=i.name))
+            elif isinstance(i, Item):
+                new_items.append(i)
+            else:
+                raise ValueError('The items must be either a Layer or an Item')
+        super().__init__(name, *new_items, **kwargs)
         self.interface = interface
 
     # Class constructors

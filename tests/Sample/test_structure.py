@@ -28,11 +28,11 @@ class TestItem(unittest.TestCase):
         m2 = Material.from_pars(0.487, 0.000, 'Potassium')
         l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
         l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
-        ls1 = Layers.from_pars([l1, l2], 'twoLayer1')
-        ls2 = Layers.from_pars([l2, l1], 'twoLayer2')
+        ls1 = Layers.from_pars(l1, l2, name='twoLayer1')
+        ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
         o1 = Item.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = Item.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars([o1, o2], 'myModel')
+        d = Structure.from_pars(o1, o2, name='myModel')
         assert_equal(d.name, 'myModel')
         assert_equal(d.interface, None)
         assert_equal(d[0].name, 'twoLayerItem1')
@@ -43,7 +43,7 @@ class TestItem(unittest.TestCase):
         m2 = Material.from_pars(0.487, 0.000, 'Potassium')
         l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
         l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
-        d = Structure.from_pars([l1, l2], 'myModel')
+        d = Structure.from_pars(l1, l2, name='myModel')
         assert_equal(d.name, 'myModel')
         assert_equal(d.interface, None)
         assert_equal(d[0].name, 'thinBoron')
@@ -52,7 +52,7 @@ class TestItem(unittest.TestCase):
     def test_from_pars_error(self):
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
         with self.assertRaises(ValueError):
-            _ = Structure.from_pars([m1], 'myModel')
+            _ = Structure.from_pars(m1, name='myModel')
 
     def test_repr(self):
         p = Structure.default()

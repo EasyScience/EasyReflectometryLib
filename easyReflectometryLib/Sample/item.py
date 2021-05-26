@@ -28,7 +28,7 @@ class Item(BaseObj):
                  type: str = 'Layer',
                  interface=None):
         if isinstance(layers, Layer):
-            layers = Layers([layers], name=layers.name)
+            layers = Layers(layers, name=layers.name)
             type = 'Layer'
         super().__init__(name, layers=layers, repetitions=repetitions)
         self.interface = interface

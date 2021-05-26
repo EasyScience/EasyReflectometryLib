@@ -145,7 +145,7 @@ class Model(BaseObj):
                                 name=i.name,
                                 interface=i.interface))
         duplicate = Item.from_pars(Layers.from_pars(
-            duplicate_layers, name=to_duplicate.layers.name),
+            *duplicate_layers, name=to_duplicate.layers.name),
                                    name=to_duplicate.name)
         self.add_item(duplicate)
 

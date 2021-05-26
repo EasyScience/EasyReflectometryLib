@@ -28,7 +28,7 @@ class TestLayers(unittest.TestCase):
         k = Material.from_pars(0.487, 0.000, 'Potassium')
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
         q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium')
-        l = Layers.from_pars([p, q], 'twoLayer')
+        l = Layers.from_pars(p, q, name='twoLayer')
         assert_equal(l.name, 'twoLayer')
         assert_equal(l.interface, None)
         assert_equal(len(l), 2)
@@ -39,7 +39,7 @@ class TestLayers(unittest.TestCase):
         m = Material.from_pars(6.908, -0.278, 'Boron')
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
         i = Item.from_pars(Layers.default(), 2)
-        l = Layers.from_pars([p, i], 'twoLayer')
+        l = Layers.from_pars(p, i, name='twoLayer')
         assert_equal(l.name, 'twoLayer')
         assert_equal(l.interface, None)
 
