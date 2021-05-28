@@ -33,6 +33,12 @@ class Refnx(InterfaceTemplate):
         self.calculator = Refnx_calc()
         self._namespace = {}
 
+    def reset_storage(self):
+        """
+        Reset the storage area of the calculator
+        """
+        self.calculator.reset_storage()
+
     def create(self, model):
         """
         Creation function
@@ -69,6 +75,7 @@ class Refnx(InterfaceTemplate):
             for i in model.layers:
                 self.add_layer_to_item(i.uid, model.uid)
         elif issubclass(t_, Model):
+            self.calculator.create_model()
             r_list.append(
                 ItemContainer('model', self._model_link,
                               self.calculator.get_model_value,

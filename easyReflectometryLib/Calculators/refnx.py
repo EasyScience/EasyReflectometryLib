@@ -11,8 +11,22 @@ class Refnx:
             'material': {},
             'layer': {},
             'item': {},
+            'model': None#reflect.ReflectModel(reflect.Structure())
+        }
+
+    def reset_storage(self):
+        """
+        Reset the storage area to blank.
+        """
+        self.storage = {
+            'material': {},
+            'layer': {},
+            'item': {},
             'model': reflect.ReflectModel(reflect.Structure())
         }
+
+    def create_model(self):
+        self.storage['model'] = reflect.ReflectModel(reflect.Structure())
 
     def create_material(self, name):
         """

@@ -32,6 +32,13 @@ class InterfaceTemplate(MSONable, metaclass=ABCMeta):
             cls._interfaces.append(cls)
 
     @abstractmethod
+    def reset_storage(self) -> None:
+        """
+        Reset the storage for the calculator.
+        """
+        pass
+
+    @abstractmethod
     def fit_func(self, x_array: np.ndarray) -> np.ndarray:
         """
         Function to perform a fit

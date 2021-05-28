@@ -214,5 +214,8 @@ class InterfaceFactory(InterfaceFactoryTemplate):
             obj().set_pattern_value(pattern, index, value)
         return inner
 
+    def reset_storage(self) -> None:
+        return self().reset_storage()
+
     def sld_profile(self) -> tuple:
         return self().sld_profile()
