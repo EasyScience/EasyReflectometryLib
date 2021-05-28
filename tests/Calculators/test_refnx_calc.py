@@ -17,13 +17,6 @@ class TestRefnx(unittest.TestCase):
         p = Refnx()
         assert_equal(list(p.storage.keys()), ['material', 'layer', 'item', 'model'])
         assert_equal(issubclass(p.storage['material'].__class__, dict), True)
-        assert_equal(
-            issubclass(p.storage['model'].__class__, reflect.ReflectModel),
-            True)
-        assert_equal(
-            issubclass(p.storage['model'].structure.__class__,
-                       reflect.Structure), True)
-        assert_equal(len(p.storage['model'].structure.components), 0)
 
     def test_create_material(self):
         p = Refnx()
@@ -93,6 +86,7 @@ class TestRefnx(unittest.TestCase):
 
     def test_update_model(self):
         p = Refnx()
+        p.create_model()
         p.update_model('model', scale=2, bkg=1e-3, dq=2.0)
         assert_almost_equal(p.storage['model'].scale.value, 2)
         assert_almost_equal(p.storage['model'].bkg.value, 1e-3)
@@ -100,6 +94,7 @@ class TestRefnx(unittest.TestCase):
 
     def test_get_model_value(self):
         p = Refnx()
+        p.create_model()
         p.update_model('model', scale=2, bkg=1e-3, dq=2.0)
         assert_almost_equal(p.get_model_value('model', 'scale'), 2)
         assert_almost_equal(p.get_model_value('model', 'bkg'), 1e-3)
@@ -122,6 +117,7 @@ class TestRefnx(unittest.TestCase):
         p.update_material('Material2', real=2.000, imag=0.000)
         p.create_material('Material3')
         p.update_material('Material3', real=4.000, imag=0.000)
+        p.create_model()
         p.create_layer('Layer1')
         p.assign_material_to_layer('Material1', 'Layer1')
         p.create_layer('Layer2')
@@ -151,6 +147,7 @@ class TestRefnx(unittest.TestCase):
         p.update_material('Material2', real=2.000, imag=0.000)
         p.create_material('Material3')
         p.update_material('Material3', real=4.000, imag=0.000)
+        p.create_model()
         p.create_layer('Layer1')
         p.assign_material_to_layer('Material1', 'Layer1')
         p.create_layer('Layer2')
@@ -185,6 +182,7 @@ class TestRefnx(unittest.TestCase):
         p.update_material('Material2', real=2.000, imag=0.000)
         p.create_material('Material3')
         p.update_material('Material3', real=4.000, imag=0.000)
+        p.create_model()
         p.create_layer('Layer1')
         p.assign_material_to_layer('Material1', 'Layer1')
         p.create_layer('Layer2')
