@@ -25,18 +25,18 @@ class Item(BaseObj):
                  layers: Union[Layers, Layer],
                  repetitions: Parameter,
                  name: str = 'easyItem',
-                 type: str = 'Layer',
+                 type: str = 'Multi-layer',
                  interface=None):
         if isinstance(layers, Layer):
             layers = Layers(layers, name=layers.name)
-            type = 'Layer'
+            type = 'Multi-layer'
         super().__init__(name, layers=layers, repetitions=repetitions)
         self.interface = interface
         self.type = type
 
     # Class constructors
     @classmethod
-    def default(cls, type='Layer', interface=None) -> "Item":
+    def default(cls, type='Multi-layer', interface=None) -> "Item":
         """
         Default constructor for the reflectometry item. 
 
@@ -52,7 +52,7 @@ class Item(BaseObj):
                   layers: Layers,
                   repetitions: float = 1.0,
                   name: str = 'easyItem',
-                  type: str = 'Layer',
+                  type: str = 'Multi-layer',
                   interface=None) -> "Item":
         """
         Constructor of a reflectometry item where the parameters are known.
