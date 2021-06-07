@@ -25,9 +25,6 @@ class Refnx:
             'model': reflect.ReflectModel(reflect.Structure())
         }
 
-    def create_model(self):
-        self.storage['model'] = reflect.ReflectModel(reflect.Structure())
-
     def create_material(self, name):
         """
         Create a material using SLD.
@@ -135,6 +132,12 @@ class Refnx:
         item = self.storage['item'][name]
         item = getattr(item, key)
         return getattr(item, 'value')
+    
+    def create_model(self):
+        """
+        Create a model for analysis
+        """
+        self.storage['model'] = reflect.ReflectModel(reflect.Structure())
 
     def update_model(self, name, **kwargs):
         """

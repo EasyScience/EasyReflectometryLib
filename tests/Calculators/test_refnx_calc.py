@@ -60,7 +60,6 @@ class TestRefnx(unittest.TestCase):
 
     def test_get_layer_value(self):
         p = Refnx()
-        p = Refnx()
         p.create_layer('Si')
         p.update_layer('Si', thick=10, rough=5)
         assert_almost_equal(p.get_layer_value('Si', 'thick'), 10)
@@ -83,6 +82,11 @@ class TestRefnx(unittest.TestCase):
         p.create_item('SiNi')
         p.update_item('SiNi', repeats=10)
         assert_almost_equal(p.get_item_value('SiNi', 'repeats'), 10)
+
+    def test_create_model(self):
+        p = Refnx()
+        p.create_model()
+        assert_equal(isinstance(p.storage['model'], reflect.ReflectModel), True)
 
     def test_update_model(self):
         p = Refnx()
@@ -108,6 +112,58 @@ class TestRefnx(unittest.TestCase):
         p.assign_material_to_layer('B', 'B_layer')
         assert_almost_equal(p.storage['layer']['B_layer'].sld.real.value, 6.908)
         assert_almost_equal(p.storage['layer']['B_layer'].sld.imag.value, -0.278)
+
+    def test_add_layer_to_item(self): 
+        p = Refnx()
+        p.create_material('B')
+        p.update_material('B', real=6.908, imag=-0.278)
+        p.create_layer('B_layer')
+        p.assign_material_to_layer('B', 'B_layer')
+        p.create_item('B_item')
+        assert_equal(len(p.storage['item']['B_item']), 0)
+        p.add_layer_to_item('B_layer', 'B_item')
+        assert_equal(len(p.storage['item']['B_item']), 1)
+        assert_equal(p.storage['item']['B_item'][0].name, 'B_layer')
+
+    def test_add_item(self):
+        p = Refnx()
+        p.create_material('B')
+        p.update_material('B', real=6.908, imag=-0.278)
+        p.create_layer('B_layer')
+        p.assign_material_to_layer('B', 'B_layer')
+        p.create_item('B_item')
+        p.add_layer_to_item('B_layer', 'B_item')
+        p.create_model()
+        assert_equal(len(p.storage['model'].structure.components), 0)
+        p.add_item('B_item')
+        assert_equal(len(p.storage['model'].structure.components), 1)
+        assert_equal(p.storage['model'].structure.components[0].name, 'B_item')
+
+    def test_remove_layer_from_item(self):
+        p = Refnx()
+        p.create_material('B')
+        p.update_material('B', real=6.908, imag=-0.278)
+        p.create_layer('B_layer')
+        p.assign_material_to_layer('B', 'B_layer')
+        p.create_item('B_item')
+        p.add_layer_to_item('B_layer', 'B_item')
+        assert_equal(len(p.storage['item']['B_item']), 1)
+        p.remove_layer_from_item('B_layer', 'B_item')
+        assert_equal(len(p.storage['item']['B_item']), 0)
+
+    def test_remove_item(self):
+        p = Refnx()
+        p.create_material('B')
+        p.update_material('B', real=6.908, imag=-0.278)
+        p.create_layer('B_layer')
+        p.assign_material_to_layer('B', 'B_layer')
+        p.create_item('B_item')
+        p.add_layer_to_item('B_layer', 'B_item')
+        p.create_model()
+        p.add_item('B_item')
+        assert_equal(len(p.storage['model'].structure.components), 1)
+        p.remove_item('B_item')
+        assert_equal(len(p.storage['model'].structure.components), 0)
 
     def test_calculate(self):
         p = Refnx()
