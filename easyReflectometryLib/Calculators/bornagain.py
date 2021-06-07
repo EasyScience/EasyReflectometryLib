@@ -210,8 +210,10 @@ class BornAgain:
         :param item_name: The item name
         :type item_name: int
         """
-        layers_idx = self.storage['item'][item_name].index([self.storage['layer'][layer_name], self.storage['roughness'][layer_name]])
+        layers_idx = self.storage['item'][item_name].index(layer_name)
+        del self.storage['layer'][layer_name]
         del self.storage['item'][item_name][layers_idx]
+        del self.storage['layer_material'][layer_name]
 
     def remove_item(self, item_name):
         """
