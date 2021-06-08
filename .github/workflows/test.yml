@@ -96,7 +96,6 @@ jobs:
         CCACHE_MAXSIZE: "400M"
         QT_QPA_PLATFORM: offscreen
       run: |
-        source validate/bin/activate
         git clone --single-branch --branch develop https://jugit.fz-juelich.de/mlz/bornagain.git
         pushd bornagain
         git submodule update
@@ -113,7 +112,6 @@ jobs:
 
     - name: Source BA
       run: |
-        source validate/bin/activate
         source /usr/local/bin/thisbornagain.sh
 
     - name: install pytest
