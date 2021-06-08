@@ -1,5 +1,5 @@
 refnx==0.1.15
-git+https://github.com/easyScience/easyCore.git@InterfacingRedux#egg=easyCore
+git+https://github.com/easyScience/easyCore.git@develop#egg=easyCore
 hvplot==0.*,>=0.7.0
 jupyter==1.*,>=1.0.0
 git+https://github.com/easyScience/libsDarwin.git@main#egg=libsDarwin; sys_platform == "darwin"
