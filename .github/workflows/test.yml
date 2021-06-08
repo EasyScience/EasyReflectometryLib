@@ -51,6 +51,72 @@ jobs:
     - name: Run main.py
       run: pip install -r requirements.txt
 
+    - name: setup apt dependencies
+      run: |
+        sudo apt-get update
+        #        sudo add-apt-repository ppa:deadsnakes/ppa
+        #        sudo apt-get install -y --no-install-recommends python${{ matrix.python-version }}-dev python${{ matrix.python-version }}-distutils
+        #        PATH="/usr/local/bin:${PATH}"
+        #        PYLOC=`which python${{ matrix.python-version }}`
+        #        sudo ln -s $PYLOC /usr/local/bin/python3
+        sudo apt-get install -y --no-install-recommends python3-dev python3-pip python3-venv
+        sudo apt-get install -y --no-install-recommends build-essential \
+          gfortran cmake ccache \
+          libgsl-dev libboost-all-dev libfftw3-dev libtiff5-dev libcerf-dev libeigen3-dev \
+          qt5-default libqt5designercomponents5 qttools5-dev libqt5svg5-dev libqt5opengl5-dev libx11-xcb1
+          
+    - name: Install Python packages
+      run: |
+        python3 -m venv validate
+        source validate/bin/activate
+        python3 -m pip install --upgrade pip
+        python3 -m pip install wheel setuptools
+        python3 -m pip install numpy scipy cython pytest
+
+    # use ccache for building BornAgain, might save time
+    - name: Prepare ccache timestamp
+      id: ccache_cache_timestamp
+      shell: cmake -P {0}
+      run: |
+        string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
+        message("::set-output name=timestamp::${current_date}")
+
+    - name: ccache cache files for BornAgain
+      uses: actions/cache@v1.1.0
+      with:
+        path: .ccache
+        key: bornagain-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+        restore-keys: |
+          bornagain-ccache-
+
+    - name: Build BornAgain
+      env:
+        CCACHE_DIR: $GITHUB_WORKSPACE/.ccache
+        CCACHE_COMPRESS: "true"
+        CCACHE_COMPRESSLEVEL: "6"
+        CCACHE_MAXSIZE: "400M"
+        QT_QPA_PLATFORM: offscreen
+      run: |
+        source validate/bin/activate
+        git clone --single-branch --branch develop https://jugit.fz-juelich.de/mlz/bornagain.git
+        pushd bornagain
+        git submodule update
+        mkdir build && pushd build
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache ../
+        make package_source
+        make -j4
+        sudo make install
+        # print statistics for ccache
+        ccache -s
+        cd $GITHUB_WORKSPACE
+        sudo rm -rf BornAgain
+
+    - name: Source BA
+      run: |
+        source validate/bin/activate
+        source /usr/local/bin/thisbornagain.sh
+
     - name: install pytest
       run: pip install pytest numpy
     
