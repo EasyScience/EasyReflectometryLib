@@ -102,7 +102,7 @@ jobs:
         git submodule update
         mkdir build && pushd build
         cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DPython3_EXECUTABLE=$pythonLocation ../
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DPython3_EXECUTABLE=$pythonLocation/bin/python3 ../
         make package_source
         make -j4
         sudo make install
