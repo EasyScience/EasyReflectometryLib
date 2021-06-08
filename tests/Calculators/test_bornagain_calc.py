@@ -14,7 +14,7 @@ import bornagain as ba
 class TestBornAgain(unittest.TestCase):
     def test_init(self):
         p = BornAgain()
-        assert_equal(list(p.storage.keys()), ['material', 'layer', 'roughness', 'item', 'item_repeats', 'model', 'model_items', 'model_parameters'])
+        assert_equal(list(p.storage.keys()), ['material', 'layer', 'layer_material', 'roughness', 'item', 'item_repeats', 'model', 'model_items', 'model_parameters'])
         assert_equal(issubclass(p.storage['material'].__class__, dict), True)
 
     def test_create_material(self):
@@ -46,8 +46,8 @@ class TestBornAgain(unittest.TestCase):
         p.create_material('B')
         p.update_material('B', real=6.908, imag=0.278)
         assert_equal(list(p.storage['material'].keys()), ['B'])
-        assert_almost_equal(p.get_material_value('B', 'real'), 6.908e-6)
-        assert_almost_equal(p.get_material_value('B', 'imag'), 0.278e-6)
+        assert_almost_equal(p.get_material_value('B', 'real'), 6.908)
+        assert_almost_equal(p.get_material_value('B', 'imag'), 0.278)
 
     def test_create_layer(self):
         p = BornAgain()
@@ -58,14 +58,18 @@ class TestBornAgain(unittest.TestCase):
 
     def test_update_layer(self):
         p = BornAgain()
+        p.create_material('Si')
         p.create_layer('Si')
+        p.assign_material_to_layer('Si', 'Si')
         p.update_layer('Si', thickness=10, sigma=5)
         assert_almost_equal(p.storage['layer']['Si'].thickness(), 1)
         assert_almost_equal(p.storage['roughness']['Si'].getSigma(), 0.5)
 
     def test_get_layer_value(self):
         p = BornAgain()
+        p.create_material('Si')
         p.create_layer('Si')
+        p.assign_material_to_layer('Si', 'Si')
         p.update_layer('Si', thickness=10, sigma=5)
         assert_almost_equal(p.get_layer_value('Si', 'thickness'), 10)
         assert_almost_equal(p.get_layer_value('Si', 'sigma'), 5)
@@ -119,9 +123,9 @@ class TestBornAgain(unittest.TestCase):
         p.create_layer('B_layer')
         p.assign_material_to_layer('B', 'B_layer')
         assert_almost_equal(
-            p.storage['layer']['B_layer'].material().materialData().real, 6.908e-6)
+            p.storage['material'][p.storage['layer_material']['B_layer']].materialData().real, 6.908e-6)
         assert_almost_equal(
-            p.storage['layer']['B_layer'].material().materialData().imag, 0.278e-6)
+            p.storage['material'][p.storage['layer_material']['B_layer']].materialData().imag, 0.278e-6)
 
     def test_add_layer_to_item(self):
         p = BornAgain()

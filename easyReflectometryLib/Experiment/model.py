@@ -35,7 +35,7 @@ LAYER_DETAILS = {
         'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
         'value': 5.0,
         'min': 0.0,
-        'max': np.Inf,
+        'max': 100.0,
         'fixed': True
     }
 }

@@ -19,7 +19,7 @@ class TestItem(unittest.TestCase):
     def test_default(self):
         p = Item.default()
         assert_equal(p.name, 'easyItem')
-        assert_equal(p.type, 'Layer')
+        assert_equal(p.type, 'Multi-layer')
         assert_equal(p.interface, None)
         assert_equal(len(p.layers), 2)
         assert_equal(p.repetitions.display_name, 'repetitions')

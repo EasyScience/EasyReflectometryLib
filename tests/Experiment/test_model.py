@@ -39,7 +39,7 @@ class TestModel(unittest.TestCase):
         assert_equal(str(p.resolution.unit), 'dimensionless')
         assert_almost_equal(p.resolution.value.n, 5.0)
         assert_equal(p.resolution.min, 0.0)
-        assert_equal(p.resolution.max, np.Inf)
+        assert_equal(p.resolution.max, 100.0)
         assert_equal(p.resolution.fixed, True)
 
     def test_from_pars(self):
@@ -72,7 +72,7 @@ class TestModel(unittest.TestCase):
         assert_equal(str(mod.resolution.unit), 'dimensionless')
         assert_almost_equal(mod.resolution.value.n, 2.0)
         assert_equal(mod.resolution.min, 0.0)
-        assert_equal(mod.resolution.max, np.Inf)
+        assert_equal(mod.resolution.max, 100.0)
         assert_equal(mod.resolution.fixed, True)
 
     def test_add_item(self):
