@@ -6,7 +6,7 @@ from copy import deepcopy
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
 from easyReflectometryLib.Sample.structure import Structure
-from easyReflectometryLib.Sample.item import Item
+from easyReflectometryLib.Sample.item import MultiLayer, RepeatingMultiLayer
 from easyReflectometryLib.Sample.layer import Layer
 from easyReflectometryLib.Sample.layers import Layers
 
@@ -120,10 +120,10 @@ class Model(BaseObj):
         Add a layer or item to the model structure.
 
         :param *items: Layers or items to add to model structure
-        :type items: Union[Layer, Item]
+        :type items: Union[Layer, RepeatingMultiLayer]
         """
         for arg in items:
-            if issubclass(arg.__class__, Item):
+            if (issubclass(arg.__class__, RepeatingMultiLayer) or issubclass(arg.__class__, MultiLayer)):
                 self.structure.append(arg)
                 if self.interface is not None:
                     self.interface().add_item_to_model(arg.uid)
@@ -144,7 +144,7 @@ class Model(BaseObj):
                                 roughness=i.roughness.raw_value,
                                 name=i.name,
                                 interface=i.interface))
-        duplicate = Item.from_pars(Layers.from_pars(
+        duplicate = RepeatingMultiLayer.from_pars(Layers.from_pars(
             *duplicate_layers, name=to_duplicate.layers.name),
                                    name=to_duplicate.name)
         self.add_item(duplicate)
