@@ -242,7 +242,7 @@ class BornAgain:
         distr = ba.RangedDistributionGaussian(n_samples, n_sig)
 
         scan = ba.QSpecScan(x_array / ba.angstrom)
-        scan.setAbsoluteQResolution(distr, x_array / ba.angstrom * (self.storage['model_parameters']['resolution'] / 100))
+        scan.setAbsoluteQResolution(distr, x_array / ba.angstrom * (self.storage['model_parameters']['resolution'] * 0.5 / 100))
 
         simulation = ba.SpecularSimulation()
         simulation.setScan(scan)
@@ -259,7 +259,7 @@ class BornAgain:
         simulation.setSample(total_model)
         simulation.runSimulation()
 
-        return self.storage['model_parameters']['scale'] * simulation.result().array() + self.storage['model_parameters']['background']
+        return (self.storage['model_parameters']['scale'] * simulation.result().array() + self.storage['model_parameters']['background'])
 
     def sld_profile(self) -> np.ndarray:
         """
