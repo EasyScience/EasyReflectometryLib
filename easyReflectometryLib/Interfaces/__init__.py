@@ -16,4 +16,10 @@ except Exception:
     traceback.print_exc()
     print('Warning: BornAgain python is not installed')
 
+try:
+    from easyReflectometryLib.Interfaces.refl1d import Refl1d  # noqa: F401
+except Exception:
+    traceback.print_exc()
+    print('Warning: refl1d is not installed')
+
 from easyReflectometryLib.Interfaces.interfaceTemplate import InterfaceTemplate

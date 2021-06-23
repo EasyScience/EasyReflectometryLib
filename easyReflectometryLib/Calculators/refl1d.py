@@ -2,16 +2,16 @@ __author__ = "github.com/arm61"
 __version__ = "0.0.1"
 
 from easyCore import np
-from refnx import reflect
+from refl1d import names, model, experiment
 
 
-class Refnx:
+class Refl1d:
     def __init__(self):
         self.storage = {
             'material': {},
             'layer': {},
             'item': {},
-            'model': None#reflect.ReflectModel(reflect.Structure())
+            'model': {}
         }
 
     def reset_storage(self):
@@ -22,7 +22,7 @@ class Refnx:
             'material': {},
             'layer': {},
             'item': {},
-            'model': None  # reflect.ReflectModel(reflect.Structure())
+            'model': {}
         }
 
     def create_material(self, name):
@@ -32,7 +32,7 @@ class Refnx:
         :param name: The name of the material
         :type name: str
         """
-        self.storage['material'][name] = reflect.SLD(0, name=name)
+        self.storage['material'][name] = names.SLD(str(name))
 
     def update_material(self, name, **kwargs):
         """
@@ -68,7 +68,7 @@ class Refnx:
         :param name: The name of the layer
         :type name: str
         """
-        self.storage['layer'][name] = reflect.Slab(0, 0, 0, name=name)
+        self.storage['layer'][name] = model.Slab(name=str(name))
 
     def update_layer(self, name, **kwargs):
         """
@@ -99,12 +99,13 @@ class Refnx:
 
     def create_item(self, name):
         """
-        Create an item using Stack.
+        Create an item using Repeat.
 
         :param name: The name of the item
         :type name: str
         """
-        self.storage['item'][name] = reflect.Stack(name=name)
+        self.storage['item'][name] = model.Repeat(model.Stack(model.Slab(names.SLD(), thickness=0, interface=0)), name=str(name))
+        del self.storage['item'][name].stack[0]
 
     def update_item(self, name, **kwargs):
         """
@@ -132,12 +133,12 @@ class Refnx:
         item = self.storage['item'][name]
         item = getattr(item, key)
         return getattr(item, 'value')
-    
+
     def create_model(self):
         """
         Create a model for analysis
         """
-        self.storage['model'] = reflect.ReflectModel(reflect.Structure())
+        self.storage['model'] = {'scale': 1, 'bkg': 0, 'dq': 0, 'items': []}
 
     def update_model(self, name, **kwargs):
         """
@@ -145,8 +146,7 @@ class Refnx:
         """
         model = self.storage[name]
         for key in kwargs.keys():
-            item = getattr(model, key)
-            setattr(item, 'value', kwargs[key])
+            model[key] = kwargs[key]
 
     def get_model_value(self, name, key):
         """
@@ -158,8 +158,7 @@ class Refnx:
         :rtype: float
         """
         model = self.storage[name]
-        item = getattr(model, key)
-        return getattr(item, 'value')
+        return model[key]
 
     def assign_material_to_layer(self, material_name, layer_name):
         """
@@ -170,7 +169,7 @@ class Refnx:
         :param layer_name: The layer name
         :type layer_name: str
         """
-        self.storage['layer'][layer_name].sld = self.storage['material'][
+        self.storage['layer'][layer_name].material = self.storage['material'][
             material_name]
 
     def add_layer_to_item(self, layer_name, item_name):
@@ -183,7 +182,7 @@ class Refnx:
         :type item_name: int
         """
         item = self.storage['item'][item_name]
-        item.append(self.storage['layer'][layer_name])
+        item.stack.add(self.storage['layer'][layer_name])
 
     def add_item(self, item_name):
         """
@@ -192,7 +191,7 @@ class Refnx:
         :param item_name: items to add to model
         :type item_name: str
         """
-        self.storage['model'].structure.components.append(
+        self.storage['model']['items'].append(
             self.storage['item'][item_name])
 
     def remove_layer_from_item(self, layer_name, item_name):
@@ -204,20 +203,20 @@ class Refnx:
         :param item_name: The item name
         :type item_name: int
         """
-        layer_idx = self.storage['item'][item_name].components.index(
+        layer_idx = list(self.storage['item'][item_name].stack).index(
             self.storage['layer'][layer_name])
-        del self.storage['item'][item_name].components[layer_idx]
+        del self.storage['item'][item_name].stack[layer_idx]
 
     def remove_item(self, item_name):
         """
-        Remove a given item.
+            Remove a given item.
 
-        :param item_name: The item name
-        :type item_name: int
-        """
-        item_idx = self.storage['model'].structure.components.index(
+            :param item_name: The item name
+            :type item_name: int
+            """
+        item_idx = self.storage['model']['items'].index(
             self.storage['item'][item_name])
-        del self.storage['model'].structure.components[item_idx]
+        del self.storage['model']['items'][item_idx]
         del self.storage['item'][item_name]
 
     def calculate(self, x_array: np.ndarray) -> np.ndarray:
@@ -229,12 +228,31 @@ class Refnx:
         :return: points calculated at `x`
         :rtype: np.ndarray
         """
-        structure = _remove_unecessary_stacks(self.storage['model'].structure)
-        model = reflect.ReflectModel(structure,
-                                     scale=self.storage['model'].scale.value,
-                                     bkg=self.storage['model'].bkg.value,
-                                     dq=self.storage['model'].dq.value)
-        return model(x_array)
+        structure = model.Stack()
+        for i in self.storage['model']['items'][::-1]:
+            if i.repeat.value == 1:
+                for j in range(len(i.stack))[::-1]:
+                    structure |= i.stack[j]
+            else:
+                stack = model.Stack()
+                for j in range(len(i.stack))[::-1]:
+                    stack |= i.stack[j]
+                structure |= model.Repeat(stack, repeat=i.repeat.value) 
+
+        argmin = np.argmin(x_array)
+        argmax = np.argmax(x_array)
+        dq_vector = x_array * self.storage['model']['dq'] / 100 / (2 * np.sqrt(2 * np.log(2)))
+
+        q = names.QProbe(x_array, dq_vector,
+                         intensity=self.storage['model']['scale'], 
+                         background=self.storage['model']['bkg'])
+        q.calc_Qo = np.linspace(
+            x_array[argmin] - 3.5 * dq_vector[argmin],
+            x_array[argmax] + 3.5 * dq_vector[argmax],
+            21 * len(x_array),
+        )
+        R = names.Experiment(probe=q, sample=structure).reflectivity()[1]
+        return R
 
     def sld_profile(self) -> np.ndarray:
         """
@@ -243,24 +261,19 @@ class Refnx:
         :return: z and sld(z)
         :rtype: tuple[np.ndarray, np.ndarray]
         """
-        return _remove_unecessary_stacks(
-            self.storage['model'].structure).sld_profile()
+        structure = model.Stack()
+        for i in self.storage['model']['items'][::-1]:
+            if i.repeat.value == 1:
+                for j in range(len(i.stack))[::-1]:
+                    structure |= i.stack[j]
+            else:
+                stack = model.Stack()
+                for j in range(len(i.stack))[::-1]:
+                    stack |= i.stack[j]
+                structure |= model.Repeat(stack, repeat=i.repeat.value)
 
-
-def _remove_unecessary_stacks(current_structure):
-    """
-    Removed unnecessary reflect.Stack objects from the structure.
-
-    :param current_structure: The current structure
-    :type current_structure: reflect.Structure
-    :return: The structre without the unnecessary Stacks
-    :rtype: reflect.structure
-    """
-    structure = []
-    for i in current_structure.components:
-        if i.repeats.value == 1:
-            for j in i.components:
-                structure.append(j)
-        else:
-            structure.append(i)
-    return reflect.Structure(structure)
+        q = names.QProbe(np.linspace(0.001, 0.3, 10), np.linspace(0.001, 0.3, 10),
+                         intensity=self.storage['model']['scale'],
+                         background=self.storage['model']['bkg'])
+        z, sld, _ = names.Experiment(probe=q, sample=structure).smooth_profile()
+        return z, sld[::-1]
