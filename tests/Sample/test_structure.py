@@ -20,8 +20,8 @@ class TestStructure(unittest.TestCase):
         p = Structure.default()
         assert_equal(p.name, 'easyStructure')
         assert_equal(p.interface, None)
-        assert_equal(p[0].name, 'easyRepeatingMultiLayer')
-        assert_equal(p[1].name, 'easyRepeatingMultiLayer')
+        assert_equal(p[0].name, 'easyMultiLayer')
+        assert_equal(p[1].name, 'easyMultiLayer')
 
     def test_from_pars(self):
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
@@ -58,5 +58,5 @@ class TestStructure(unittest.TestCase):
         p = Structure.default()
         assert_equal(
             p.__repr__(),
-            '<easyStructure: A series of 2 items>\n  - <easyRepeatingMultiLayer: (1.0 repetitions of <easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>)>\n  - <easyRepeatingMultiLayer: (1.0 repetitions of <easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>)>'
+            '<easyStructure: A series of 2 items>\n  - <easyMultiLayer: (<easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>)>\n  - <easyMultiLayer: (<easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>)>'
         )

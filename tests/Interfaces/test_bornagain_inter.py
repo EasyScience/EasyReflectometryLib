@@ -88,9 +88,9 @@ class TestBornAgain(unittest.TestCase):
         p.calculator.update_item('Item2', repeats=10)
         p.calculator.update_model('model', background=1e-7, resolution=5)
         q = np.linspace(0.001, 0.3, 10)
-        expected = [1.000000e+00, 2.888561e-05, 1.236200e-04, 3.006435e-06,
-                    6.595184e-06, 9.388028e-07, 1.131831e-06, 4.176241e-07,
-                    3.644256e-07, 2.351847e-07]
+        expected = [1.000000e+00, 1.814452e-05, 1.225890e-04, 2.454331e-06,
+                    6.676318e-06, 8.362728e-07, 1.141096e-06, 4.090968e-07,
+                    3.489857e-07, 2.470789e-07]
         assert_allclose(p.fit_func(q), expected, rtol=0.01)
 
     def test_sld_profile(self):

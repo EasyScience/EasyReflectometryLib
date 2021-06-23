@@ -6,21 +6,21 @@ from typing import List, Union
 
 from easyCore import np
 from easyCore.Objects.Groups import BaseCollection
-from easyReflectometryLib.Sample.item import RepeatingMultiLayer
+from easyReflectometryLib.Sample.item import MultiLayer, RepeatingMultiLayer
 from easyReflectometryLib.Sample.layer import Layer
 
 
 class Structure(BaseCollection):
     def __init__(self,
-                 *args: List[Union[Layer, RepeatingMultiLayer]],
+                 *args: List[Union[Layer, MultiLayer, RepeatingMultiLayer]],
                  name: str = 'easyStructure',
                  interface=None,
                  **kwargs):
         new_items = []
         for i in args:
             if isinstance(i, Layer):
-                new_items.append(RepeatingMultiLayer.from_pars(i, name=i.name))
-            elif isinstance(i, RepeatingMultiLayer):
+                new_items.append(MultiLayer.from_pars(i, name=i.name))
+            elif isinstance(i, MultiLayer):
                 new_items.append(i)
             else:
                 raise ValueError('The items must be either a Layer or an Item')
@@ -36,13 +36,13 @@ class Structure(BaseCollection):
         :return: Default structure container
         :rtype: Structure
         """
-        item1 = RepeatingMultiLayer.default()
-        item2 = RepeatingMultiLayer.default()
+        item1 = MultiLayer.default()
+        item2 = MultiLayer.default()
         return cls(item1, item2, interface=interface)
 
     @classmethod
     def from_pars(cls,
-                  *args: List[RepeatingMultiLayer],
+                  *args: List[Union[MultiLayer, RepeatingMultiLayer]],
                   name: str = 'easyStructure',
                   interface=None) -> "Structure":
         """
