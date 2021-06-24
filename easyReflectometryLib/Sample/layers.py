@@ -7,12 +7,12 @@ from typing import List, Union, TypeVar
 from easyCore.Objects.Groups import BaseCollection
 from easyReflectometryLib.Sample.layer import Layer
 
-Item = TypeVar("Item")
+RepeatingMultiLayer = TypeVar("RepeatingMultiLayer")
 
 
 class Layers(BaseCollection):
     def __init__(self,
-                 *args: List[Union[Layer, Item]],
+                 *args: List[Union[Layer, RepeatingMultiLayer]],
                  name: str = 'easyLayers',
                  interface=None,
                  **kwargs):

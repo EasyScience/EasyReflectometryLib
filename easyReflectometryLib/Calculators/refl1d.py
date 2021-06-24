@@ -191,8 +191,7 @@ class Refl1d:
         :param item_name: items to add to model
         :type item_name: str
         """
-        self.storage['model']['items'].append(
-            self.storage['item'][item_name])
+        self.storage['model']['items'].append(self.storage['item'][item_name])
 
     def remove_layer_from_item(self, layer_name, item_name):
         """

@@ -10,7 +10,7 @@ from easyReflectometryLib.Interfaces.interfaceTemplate import InterfaceTemplate
 from easyReflectometryLib.Calculators.refl1d import Refl1d as Refl1d_calc
 from easyReflectometryLib.Sample.material import Material
 from easyReflectometryLib.Sample.layer import Layer
-from easyReflectometryLib.Sample.item import Item
+from easyReflectometryLib.Sample.item import RepeatingMultiLayer, MultiLayer
 from easyReflectometryLib.Experiment.model import Model
 
 
@@ -65,7 +65,7 @@ class Refl1d(InterfaceTemplate):
                               self.calculator.get_layer_value,
                               self.calculator.update_layer))
             self.assign_material_to_layer(model.material.uid, key)
-        elif issubclass(t_, Item):
+        elif (issubclass(t_, RepeatingMultiLayer) or issubclass(t_, MultiLayer)):
             key = model.uid
             self.calculator.create_item(key)
             r_list.append(
@@ -123,8 +123,6 @@ class Refl1d(InterfaceTemplate):
 
         :param item_id: The item id
         :type item_id: int
-        :param layer_id: The layer id
-        :type layer_id: int
         """
         self.calculator.add_item(item_id)
 
@@ -134,8 +132,6 @@ class Refl1d(InterfaceTemplate):
 
         :param item_id: The item id
         :type item_id: int
-        :param layer_id: The layer id
-        :type layer_id: int
         """
         self.calculator.remove_item(item_id)
 

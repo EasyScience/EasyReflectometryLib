@@ -9,7 +9,7 @@ from easyCore.Objects.Base import Parameter, BaseObj
 from easyReflectometryLib.Sample.layer import Layer
 from easyReflectometryLib.Sample.layers import Layers
 
-ITEM_DETAILS = {
+REPEATINGMULTILAYER_DETAILS = {
     'repetitions': {
         'description': 'Number of repetitions of the given series of layers',
         'value': 1,
@@ -20,61 +20,37 @@ ITEM_DETAILS = {
 }
 
 
-class Item(BaseObj):
-    def __init__(self,
-                 layers: Union[Layers, Layer],
-                 repetitions: Parameter,
-                 name: str = 'easyItem',
-                 type: str = 'Multi-layer',
-                 interface=None):
+class MultiLayer(BaseObj):
+    def __init__(self, layers: Union[Layers, Layer], name: str = 'easyMultiLayer', interface=None):
         if isinstance(layers, Layer):
             layers = Layers(layers, name=layers.name)
-            type = 'Multi-layer'
-        super().__init__(name, layers=layers, repetitions=repetitions)
+        self.type = 'Multi-layer'
+        super().__init__(name, layers=layers)
         self.interface = interface
-        self.type = type
 
     # Class constructors
     @classmethod
-    def default(cls, type='Multi-layer', interface=None) -> "Item":
+    def default(cls, interface=None) -> "MultiLayer":
         """
-        Default constructor for the reflectometry item. 
+        Default constructor for a multi-layer item.
 
-        :return: Default item container
-        :rtype: Item
+        :return: MultiLayer container
+        :rtype: MultiLayer
         """
         layers = Layers.default()
-        repetitions = Parameter('repetitions', **ITEM_DETAILS['repetitions'])
-        return cls(layers, repetitions, type=type, interface=interface)
+        return cls(layers, interface=interface)
 
     @classmethod
-    def from_pars(cls,
-                  layers: Layers,
-                  repetitions: float = 1.0,
-                  name: str = 'easyItem',
-                  type: str = 'Multi-layer',
-                  interface=None) -> "Item":
+    def from_pars(cls, layers: Layers, name: str = "easyMultiLayer", interface=None) -> "MultiLayer":
         """
-        Constructor of a reflectometry item where the parameters are known.
+        Constructor of a multi-layer item where the parameters are known.
 
-        :param layers: The layers in the item
+        :param layers: The layers in the multi-layer
         :type layers: easyReflectometryLib.layers.Layers
-        :param repetitions: Number of repetitions 
-        :type repetitions: float
-        :return: Item container
-        :rtype: Item
+        :return: MultiLayer container
+        :rtype: MultiLayer
         """
-        default_options = deepcopy(ITEM_DETAILS)
-        del default_options['repetitions']['value']
-
-        repetitions = Parameter('repetitions', repetitions,
-                                **default_options['repetitions'])
-
-        return cls(layers=layers,
-                   repetitions=repetitions,
-                   name=name,
-                   type=type,
-                   interface=interface)
+        return cls(layers=layers, name=name, interface=interface)
 
     def add_layer(self, *layers):
         """
@@ -116,6 +92,77 @@ class Item(BaseObj):
             self.interface().remove_layer_from_item(self.layers[idx].uid,
                                                     self.uid)
         del self.layers[idx]
+
+    @property
+    def uid(self):
+        """
+        Return a UID from the borg map
+        """
+        return self._borg.map.convert_id_to_key(self)
+
+    # Representation
+    def __repr__(self) -> str:
+        """
+        String representation of the layer.
+
+        :return: a string representation of the layer
+        :rtype: str
+        """
+        return f"<{self.name}: ({self.layers.__repr__()})>"
+
+
+class RepeatingMultiLayer(MultiLayer):
+    def __init__(self,
+                 layers: Union[Layers, Layer],
+                 repetitions: Parameter,
+                 name: str = 'easyRepeatingMultiLayer',
+                 interface=None):
+        if isinstance(layers, Layer):
+            layers = Layers(layers, name=layers.name)
+        super().__init__(layers, name, interface)
+        self._add_component("repetitions", repetitions)
+        self.interface = interface
+        self.type = 'Repeating Multi-layer'
+
+    # Class constructors
+    @classmethod
+    def default(cls, type='Multi-layer', interface=None) -> "RepeatingMultiLayer":
+        """
+        Default constructor for the reflectometry repeating multi layer. 
+
+        :return: Default repeating multi-layer container
+        :rtype: RepeatingMultiLayer
+        """
+        layers = Layers.default()
+        repetitions = Parameter('repetitions', **REPEATINGMULTILAYER_DETAILS['repetitions'])
+        return cls(layers, repetitions, interface=interface)
+
+    @classmethod
+    def from_pars(cls,
+                  layers: Layers,
+                  repetitions: float = 1.0,
+                  name: str = 'easyRepeatingMultiLayer',
+                  interface=None) -> "RepeatingMultiLayer":
+        """
+        Constructor of a reflectometry repeating multi layer where the parameters are known.
+
+        :param layers: The layers in the repeating multi layer
+        :type layers: easyReflectometryLib.layers.Layers
+        :param repetitions: Number of repetitions 
+        :type repetitions: float
+        :return: Repeating multi-layer container
+        :rtype: RepeatingMultiLayer
+        """
+        default_options = deepcopy(REPEATINGMULTILAYER_DETAILS)
+        del default_options['repetitions']['value']
+
+        repetitions = Parameter('repetitions', repetitions,
+                                **default_options['repetitions'])
+
+        return cls(layers=layers,
+                   repetitions=repetitions,
+                   name=name,
+                   interface=interface)
 
     @property
     def uid(self):

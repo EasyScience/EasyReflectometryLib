@@ -192,8 +192,7 @@ class Refnx:
         :param item_name: items to add to model
         :type item_name: str
         """
-        self.storage['model'].structure.components.append(
-            self.storage['item'][item_name])
+        self.storage['model'].structure.components.append(self.storage['item'][item_name])
 
     def remove_layer_from_item(self, layer_name, item_name):
         """

@@ -29,6 +29,22 @@ class BornAgain:
         """
         self.storage['material'][name] = ba.MaterialBySLD(str(name), 0., 0.)
 
+    def reset_storage(self):
+        """
+        Reset the storage area to blank.
+        """
+        self.storage = {
+            'material': {},
+            'layer': {},
+            'layer_material': {},
+            'roughness': {},
+            'item': {},
+            'item_repeats': {},
+            'model': None,
+            'model_items': [],
+            'model_parameters': {}
+        }
+
     def update_material(self, name, **kwargs):
         """
         Update a material.
