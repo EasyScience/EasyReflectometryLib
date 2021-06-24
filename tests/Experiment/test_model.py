@@ -12,7 +12,7 @@ from easyReflectometryLib.Experiment.model import Model
 from easyReflectometryLib.Sample.material import Material
 from easyReflectometryLib.Sample.layer import Layer
 from easyReflectometryLib.Sample.layers import Layers
-from easyReflectometryLib.Sample.item import RepeatingMultiLayer
+from easyReflectometryLib.Sample.item import RepeatingMultiLayer, MultiLayer
 from easyReflectometryLib.Sample.structure import Structure
 from easyReflectometryLib.interface import InterfaceFactory
 
@@ -167,6 +167,40 @@ class TestModel(unittest.TestCase):
         mod.remove_item(0)
         assert_equal(len(mod.interface().calculator.storage['item']), 1)
         assert_equal(len(mod.interface().calculator.storage['layer']), 2)
+
+    def test_change_item_to_repeating_multi_layer(self):
+        m1 = Material.from_pars(6.908, -0.278, 'Boron')
+        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+        ls1 = Layers.from_pars(l1, l2, name='twoLayer1')
+        o1 = MultiLayer.from_pars(ls1, 'twoLayerItem1')
+        d = Structure.from_pars(o1, name='myModel')
+        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
+        assert_equal(issubclass(mod.structure[0].__class__, MultiLayer), True)
+        mod.change_item_to_repeating_multi_layer(0)
+        assert_equal(issubclass(mod.structure[0].__class__, RepeatingMultiLayer), True)
+
+    def test_change_item_to_repeating_multi_layer_with_interface_refnx(self):
+        interface = InterfaceFactory()
+        m1 = Material.from_pars(6.908, -0.278, 'Boron')
+        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+        ls1 = Layers.from_pars(l1, l2, name='twoLayer1')
+        o1 = MultiLayer.from_pars(ls1, 'twoLayerItem1')
+        d = Structure.from_pars(o1, name='myModel')
+        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+        assert_equal(len(mod.interface().calculator.storage['item']), 1)
+        assert_equal(len(mod.interface().calculator.storage['item'][list(mod.interface(
+        ).calculator.storage['item'].keys())[0]].components), 2)
+        assert_equal(issubclass(mod.structure[0].__class__, MultiLayer), True)
+        mod.change_item_to_repeating_multi_layer(0)
+        assert_equal(len(mod.interface().calculator.storage['item']), 1)
+        assert_equal(len(mod.interface().calculator.storage['item'][list(mod.interface(
+        ).calculator.storage['item'].keys())[0]].components), 2)
+        assert_equal(issubclass(
+            mod.structure[0].__class__, RepeatingMultiLayer), True)
 
     def test_uid(self):
         p = Model.default()

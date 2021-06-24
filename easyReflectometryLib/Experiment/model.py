@@ -144,7 +144,7 @@ class Model(BaseObj):
                                 roughness=i.roughness.raw_value,
                                 name=i.name,
                                 interface=i.interface))
-        duplicate = RepeatingMultiLayer.from_pars(Layers.from_pars(
+        duplicate = to_duplicate.__class__.from_pars(Layers.from_pars(
             *duplicate_layers, name=to_duplicate.layers.name),
                                    name=to_duplicate.name)
         self.add_item(duplicate)
@@ -159,6 +159,13 @@ class Model(BaseObj):
         if self.interface is not None:
             self.interface().remove_item_from_model(self.structure[idx].uid)
         del self.structure[idx]
+
+    def change_item_to_repeating_multi_layer(self, idx):
+        current_uid = self.structure[idx].uid
+        self.structure[idx] = RepeatingMultiLayer.from_pars(
+            self.structure[idx].layers, 1, self.structure[idx].name)
+        if self.interface is not None:
+            self.interface().change_item_to_repeating_multi_layer(self.structure[idx].uid, current_uid)
 
     @property
     def uid(self):

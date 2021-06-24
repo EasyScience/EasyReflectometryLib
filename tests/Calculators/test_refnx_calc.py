@@ -171,6 +171,23 @@ class TestRefnx(unittest.TestCase):
         assert_equal(len(p.storage['model'].structure.components), 1)
         p.remove_item('B_item')
         assert_equal(len(p.storage['model'].structure.components), 0)
+    
+    def test_change_item_to_repeating_multi_layer(self):
+        p = Refnx()
+        p.create_material('B')
+        p.update_material('B', real=6.908, imag=-0.278)
+        p.create_layer('B_layer')
+        p.assign_material_to_layer('B', 'B_layer')
+        p.create_item('B_item')
+        p.add_layer_to_item('B_layer', 'B_item')
+        p.create_model()
+        p.add_item('B_item')
+        p.create_item('B_item2')
+        p.add_layer_to_item('B_layer', 'B_item2')
+        p.change_item_to_repeating_multi_layer('B_item2', 'B_item')
+        assert_equal(len(p.storage['model'].structure.components), 1)
+        assert_equal(p.storage['model'].structure.components[0].name, 'B_item')
+        assert_equal(p.storage['model'].structure.components[0][0].name, 'B_layer')
 
     def test_calculate(self):
         p = Refnx()

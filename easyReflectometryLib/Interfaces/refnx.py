@@ -139,6 +139,15 @@ class Refnx(InterfaceTemplate):
         """
         self.calculator.remove_item(item_id)
 
+    def change_item_to_repeating_multi_layer(self, item_id: int, old_id: int):
+        """
+        Change a given item to a repeating multi layer
+        
+        :param item_name: The item name
+        :type item_name: int
+        """
+        self.calculator.change_item_to_repeating_multi_layer(item_id, old_id)
+
     def fit_func(self, x_array: np.ndarray) -> np.ndarray:
         """
         Function to perform a fit
