@@ -19,6 +19,7 @@ packages = [ { include = "easyReflectometryLib" } ]
 [tool.poetry.dependencies]
 python = "^3.7, <3.8"
 refnx = "0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx which use PEP 517 and cannot be installed directly"
+refl1d = "0.8.14"
 # easyScience
 libsDarwin = { git = 'https://github.com/easyScience/libsDarwin.git', rev = 'main', platform = 'darwin' }
 libsLinux = { git = 'https://github.com/easyScience/libsLinux.git', rev = 'main', platform = 'linux' }
