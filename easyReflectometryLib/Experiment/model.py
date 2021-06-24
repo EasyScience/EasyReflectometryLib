@@ -160,13 +160,6 @@ class Model(BaseObj):
             self.interface().remove_item_from_model(self.structure[idx].uid)
         del self.structure[idx]
 
-    def change_item_to_repeating_multi_layer(self, idx):
-        current_uid = self.structure[idx].uid
-        self.structure[idx] = RepeatingMultiLayer.from_pars(
-            self.structure[idx].layers, 1, self.structure[idx].name)
-        if self.interface is not None:
-            self.interface().change_item_to_repeating_multi_layer(self.structure[idx].uid, current_uid)
-
     @property
     def uid(self):
         """

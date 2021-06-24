@@ -123,8 +123,6 @@ class Refl1d(InterfaceTemplate):
 
         :param item_id: The item id
         :type item_id: int
-        :param layer_id: The layer id
-        :type layer_id: int
         """
         self.calculator.add_item(item_id)
 
@@ -134,8 +132,6 @@ class Refl1d(InterfaceTemplate):
 
         :param item_id: The item id
         :type item_id: int
-        :param layer_id: The layer id
-        :type layer_id: int
         """
         self.calculator.remove_item(item_id)
 

@@ -192,8 +192,7 @@ class Refnx:
         :param item_name: items to add to model
         :type item_name: str
         """
-        self.storage['model'].structure.components.append(
-            self.storage['item'][item_name])
+        self.storage['model'].structure.components.append(self.storage['item'][item_name])
 
     def remove_layer_from_item(self, layer_name, item_name):
         """
@@ -219,17 +218,6 @@ class Refnx:
             self.storage['item'][item_name])
         del self.storage['model'].structure.components[item_idx]
         del self.storage['item'][item_name]
-
-    def change_item_to_repeating_multi_layer(self, item_name, old_id):
-        """
-        Change a given item to a repeating multi layer
-        
-        :param item_name: The item name
-        :type item_name: int
-        """
-        current_item = self.storage['item'][item_name]
-        del self.storage['item'][old_id]
-        self.storage['item'][item_name] = reflect.Stack(current_item.components, name=item_name)
 
     def calculate(self, x_array: np.ndarray) -> np.ndarray:
         """

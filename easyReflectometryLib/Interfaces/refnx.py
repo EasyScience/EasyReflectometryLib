@@ -123,8 +123,6 @@ class Refnx(InterfaceTemplate):
 
         :param item_id: The item id
         :type item_id: int
-        :param layer_id: The layer id
-        :type layer_id: int
         """
         self.calculator.add_item(item_id)
 
