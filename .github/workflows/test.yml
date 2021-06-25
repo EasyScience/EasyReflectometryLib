@@ -35,6 +35,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
           python-version: 3.7
+    
+    - name: install Miniconda
+      uses: conda-incubator/setup-miniconda@v2
 
     - name: Some logging
       shell: bash
@@ -53,6 +56,13 @@ jobs:
 
     - name: install pytest
       run: pip install pytest numpy
+
+    - name: install Bornagain
+      run: |
+        conda install -y -c andyfaff bornagain
+        pushd $CONDA_PREFIX/bin
+        source thisbornagain.sh
+        popd
     
     - name: run pytest
       run: pytest tests/
