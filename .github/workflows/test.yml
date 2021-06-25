@@ -63,6 +63,10 @@ jobs:
 
     - name: install Bornagain
       run: |
+        conda create --name bornagain_env python=3.9 pip
+        conda activate bornagain_env
+        which python
+        python --version
         conda install -y -c andyfaff bornagain
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
