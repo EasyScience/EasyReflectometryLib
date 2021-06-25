@@ -61,11 +61,15 @@ jobs:
     - name: install pytest
       run: pip install pytest numpy
 
-    - name: install Bornagain
+    - name: Init shell
+      shell: bash
+      run: conda init bash
+
+    - name: Install Bornagain
       shell: bash
       run: |
-        conda create --name bornagain_env python=3.9 pip
         conda init bash
+        conda create --name bornagain_env python=3.9 pip
         conda activate bornagain_env
         which python
         python --version
