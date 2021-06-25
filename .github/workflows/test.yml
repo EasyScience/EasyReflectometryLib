@@ -69,7 +69,7 @@ jobs:
         conda init bash
         source ~/.bashrc
         conda create --name bornagain_env python=3.9 pip
-        conda activate bornagain_env
+      #  conda activate bornagain_env
         which python
         python --version
         conda install -y -c andyfaff bornagain
