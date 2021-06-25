@@ -52,7 +52,9 @@ jobs:
       run: poetry update
 
     - name: Run main.py
-      run: pip install -r requirements.txt
+      run: |
+        poetry export --format requirements.txt --output requirements.txt --without-hashes
+        pip install -r requirements.txt
 
     - name: install pytest
       run: pip install pytest numpy
