@@ -17,13 +17,10 @@ include = ["CHANGELOG.md"]
 packages = [ { include = "easyReflectometryLib" } ]
 
 [tool.poetry.dependencies]
-python = "^3.7, <3.8"
-refnx = "0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx which use PEP 517 and cannot be installed directly"
-refl1d = "0.8.14"
+python = "^3.9"
+refnx = "^0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx which use PEP 517 and cannot be installed directly"
+refl1d = "^0.8.14"
 # easyScience
-libsDarwin = { git = 'https://github.com/easyScience/libsDarwin.git', rev = 'main', platform = 'darwin' }
-libsLinux = { git = 'https://github.com/easyScience/libsLinux.git', rev = 'main', platform = 'linux' }
-libsWin32 = { git = 'https://github.com/easyScience/libsWin32.git', rev = 'main', platform = 'win32' }
 easyScienceCore = { git = 'https://github.com/easyScience/easyCore.git', rev = 'develop' }
 
 [tool.poetry.dev-dependencies]
@@ -37,9 +34,6 @@ jupyter = "^1.0.0"
 easyReflectometryLib = "easyReflectometryLib.main:main"
 
 # CUSTOM CONFIG
-
-[ci.pyinstaller]
-libs = { macos = 'libsDarwin', ubuntu = 'libsLinux', windows = 'libsWin32' }
 
 [tool.dephell.main]
 from = {format = "poetry", path = "pyproject.toml"}

@@ -34,8 +34,8 @@ jobs:
     - name: Set up Python environment
       uses: actions/setup-python@v2
       with:
-          python-version: 3.7
-    
+          python-version: 3.9
+
     - name: install Miniconda
       uses: conda-incubator/setup-miniconda@v2
 
@@ -63,6 +63,6 @@ jobs:
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
         popd
-    
+
     - name: run pytest
       run: pytest tests/
