@@ -45,6 +45,7 @@ jobs:
     - name: Install Bornagain
       shell: bash -l {0}
       run: |
+        conda config --add channels conda-forge
         conda create -n test 
         conda activate test
         conda info
