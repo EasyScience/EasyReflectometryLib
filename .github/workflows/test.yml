@@ -46,10 +46,6 @@ jobs:
       run: |
         which python
         python --version
-        conda init bash
-        source ~/.bashrc
-        which python
-        python --version
         conda install -y -c andyfaff bornagain
         conda activate bornagain_env
         pushd $CONDA_PREFIX/bin
