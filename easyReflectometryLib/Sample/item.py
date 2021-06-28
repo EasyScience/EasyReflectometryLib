@@ -77,8 +77,7 @@ class MultiLayer(BaseObj):
             material=to_duplicate.material,
             thickness=to_duplicate.thickness.raw_value,
             roughness=to_duplicate.roughness.raw_value,
-            name=to_duplicate.name,
-            interface=to_duplicate.interface)
+            name=to_duplicate.name + ' duplicate')
         self.add_layer(duplicate_layer)
 
     def remove_layer(self, idx):

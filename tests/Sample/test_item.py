@@ -83,7 +83,7 @@ class TestMultiLayer(unittest.TestCase):
         o.duplicate_layer(1)
         assert_equal(len(o.layers), 3)
         assert_equal(o.layers[1].name, 'thickPotassium')
-        assert_equal(o.layers[2].name, 'thickPotassium')
+        assert_equal(o.layers[2].name, 'thickPotassium duplicate')
 
     def test_duplicate_layer_with_interface_refnx(self):
         interface = InterfaceFactory()
@@ -233,7 +233,7 @@ class TestRepeatingMultiLayer(unittest.TestCase):
         o.duplicate_layer(1)
         assert_equal(len(o.layers), 3)
         assert_equal(o.layers[1].name, 'thickPotassium')
-        assert_equal(o.layers[2].name, 'thickPotassium')
+        assert_equal(o.layers[2].name, 'thickPotassium duplicate')
     
     def test_duplicate_layer_with_interface_refnx(self):
         interface = InterfaceFactory()

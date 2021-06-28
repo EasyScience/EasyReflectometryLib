@@ -142,11 +142,10 @@ class Model(BaseObj):
                 Layer.from_pars(material=i.material,
                                 thickness=i.thickness.raw_value,
                                 roughness=i.roughness.raw_value,
-                                name=i.name,
-                                interface=i.interface))
+                                name=i.name + ' duplicate'))
         duplicate = to_duplicate.__class__.from_pars(Layers.from_pars(
-            *duplicate_layers, name=to_duplicate.layers.name),
-                                   name=to_duplicate.name)
+            *duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
+            name=to_duplicate.name + ' duplicate')
         self.add_item(duplicate)
 
     def remove_item(self, idx):

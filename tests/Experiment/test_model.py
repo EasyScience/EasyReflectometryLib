@@ -164,7 +164,7 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.structure), 2)
         mod.duplicate_item(1)
         assert_equal(len(mod.structure), 3)
-        assert_equal(mod.structure[2].name, 'oneLayerItem2')
+        assert_equal(mod.structure[2].name, 'oneLayerItem2 duplicate')
         assert_equal(issubclass(mod.structure[2].__class__, RepeatingMultiLayer), True)
 
     def test_duplicate_item_with_interface_refnx(self):
