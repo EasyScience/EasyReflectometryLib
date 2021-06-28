@@ -47,8 +47,8 @@ jobs:
         which python
         python --version
         conda create -y -n test python=3.9
-        conda install -y -n test -c andyfaff bornagain
         conda activate test
+        conda install -y -c andyfaff bornagain
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
         popd
