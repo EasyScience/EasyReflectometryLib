@@ -39,14 +39,11 @@ jobs:
     - name: install Miniconda
       uses: conda-incubator/setup-miniconda@v2
       with:
-          python-version: 3.9
           auto-activate-base: true
 
     - name: Install Bornagain
       shell: bash -l {0}
       run: |
-        which python
-        python --version
         conda install -y -c andyfaff bornagain
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
