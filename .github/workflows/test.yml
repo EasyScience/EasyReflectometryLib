@@ -31,10 +31,10 @@ jobs:
     #  with:
     #    ssh-private-key: ${{ secrets.GH_WEBFACTORY_KEY }}
 
-    - name: Set up Python environment
-      uses: actions/setup-python@v2
-      with:
-          python-version: 3.9
+    # - name: Set up Python environment
+    #   uses: actions/setup-python@v2
+    #   with:
+    #       python-version: 3.9
 
     - name: install Miniconda
       uses: conda-incubator/setup-miniconda@v2
