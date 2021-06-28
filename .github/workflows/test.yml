@@ -41,14 +41,12 @@ jobs:
       with:
           python-version: 3.9
           auto-activate-base: true
-          activate-environment: true
 
     - name: Install Bornagain
       shell: bash
       run: |
         which python
         python --version
-        conda activate true
         conda install -y -c andyfaff bornagain
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
