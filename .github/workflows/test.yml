@@ -47,6 +47,7 @@ jobs:
       run: |
         conda create -n test 
         conda activate test
+        echo "pythonLocation: $pythonLocation"
         conda install -y -c andyfaff bornagain
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
