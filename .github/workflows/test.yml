@@ -41,10 +41,9 @@ jobs:
       with:
           python-version: 3.9
           auto-activate-base: true
-      run: which python
 
     - name: Install Bornagain
-      shell: bash
+      shell: bash -l {0}
       run: |
         which python
         python --version
@@ -54,7 +53,7 @@ jobs:
         popd
 
     - name: Some logging
-      shell: bash
+      shell: bash -l {0}
       run: |
         which python
         echo "pythonLocation: $pythonLocation"
