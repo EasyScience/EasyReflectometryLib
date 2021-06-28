@@ -5,8 +5,13 @@ from typing import List
 
 import numpy as np
 
+from easyCore.Objects.Inferface import ItemContainer
 from easyReflectometryLib.Interfaces.interfaceTemplate import InterfaceTemplate
 from easyReflectometryLib.Calculators.refnx import Refnx as Refnx_calc
+from easyReflectometryLib.Sample.material import Material
+from easyReflectometryLib.Sample.layer import Layer
+from easyReflectometryLib.Sample.item import RepeatingMultiLayer, MultiLayer
+from easyReflectometryLib.Experiment.model import Model
 
 
 class Refnx(InterfaceTemplate):
@@ -18,7 +23,7 @@ class Refnx(InterfaceTemplate):
 
     _layer_link = {'thickness': 'thick', 'roughness': 'rough'}
 
-    _item_like = {'repetitions': 'repeats'}
+    _item_link = {'repetitions': 'repeats'}
 
     _model_link = {'scale': 'scale', 'background': 'bkg', 'resolution': 'dq'}
 
@@ -28,201 +33,118 @@ class Refnx(InterfaceTemplate):
         self.calculator = Refnx_calc()
         self._namespace = {}
 
-    def get_material_value(self, name: str, value_label: str) -> float:
+    def reset_storage(self):
         """
-        Method to get a material value from the calculator
+        Reset the storage area of the calculator
+        """
+        self.calculator.reset_storage()
 
-        :param name: The material name
-        :type name: str
-        :param value_label: parameter name to get
-        :type value_label: str
-        :return: associated value
-        :rtype: float
+    def create(self, model):
         """
-        if value_label in self._material_link.keys():
-            value_label = self._material_link[value_label]
-        return self.calculator.get_material_value(name, value_label)
+        Creation function
 
-    def set_material_value(self, name: str, value_label: str, value: float):
+        :param model: Object to be created
+        :type model: Union[Material, Layer, Item, Model]
+        :return: Item containers of the objects
+        :rtype: List[ItemContainer]
         """
-        Method to set a material value from the calculator
+        r_list = []
+        t_ = type(model)
+        if issubclass(t_, Material):
+            key = model.uid
+            self.calculator.create_material(key)
+            r_list.append(
+                ItemContainer(key, self._material_link,
+                              self.calculator.get_material_value,
+                              self.calculator.update_material))
+        elif issubclass(t_, Layer):
+            key = model.uid
+            self.calculator.create_layer(key)
+            r_list.append(
+                ItemContainer(key, self._layer_link,
+                              self.calculator.get_layer_value,
+                              self.calculator.update_layer))
+            self.assign_material_to_layer(model.material.uid, key)
+        elif (issubclass(t_, RepeatingMultiLayer) or issubclass(t_, MultiLayer)):
+            key = model.uid
+            self.calculator.create_item(key)
+            r_list.append(
+                ItemContainer(key, self._item_link,
+                              self.calculator.get_item_value,
+                              self.calculator.update_item))
+            for i in model.layers:
+                self.add_layer_to_item(i.uid, model.uid)
+        elif issubclass(t_, Model):
+            self.calculator.create_model()
+            r_list.append(
+                ItemContainer('model', self._model_link,
+                              self.calculator.get_model_value,
+                              self.calculator.update_model))
+            for i in model.structure:
+                self.add_item_to_model(i.uid)
+        return r_list
 
-        :param name: The material name
-        :type name: str
-        :param value_label: parameter name to get
-        :type value_label: str
-        :param value: new numeric value
-        :type value: float
-        :return: None
-        :rtype: noneType
+    def assign_material_to_layer(self, material_id: int, layer_id: int):
         """
-        if value_label in self._material_link.keys():
-            value_label = self._material_link[value_label]
-        self.calculator.update_material(name, **{value_label: value})
+        Assign a material to a layer.
 
-    def get_layer_value(self, name: str, value_label: str) -> float:
+        :param material_name: The material name
+        :type material_name: str
+        :param layer_name: The layer name
+        :type layer_name: str
         """
-        Method to get a layer value from the calculator
+        self.calculator.assign_material_to_layer(material_id, layer_id)
 
-        :param name: The layer name
-        :type name: str
-        :param value_label: parameter name to get
-        :type value_label: str
-        :return: associated value
-        :rtype: float
+    def add_layer_to_item(self, layer_id: int, item_id: int):
         """
-        if value_label in self._layer_link.keys():
-            value_label = self._layer_link[value_label]
-        return self.calculator.get_layer_value(name, value_label)
+        Add a layer to the item stack
 
-    def set_layer_value(self, name: str, value_label: str, value: float):
+        :param item_id: The item id
+        :type item_id: int
+        :param layer_id: The layer id
+        :type layer_id: int
         """
-        Method to set a layer value from the calculator
+        self.calculator.add_layer_to_item(layer_id, item_id)
+
+    def remove_layer_from_item(self, layer_id: int, item_id: int):
+        """
+        Remove a layer from an item stack
         
-        :param name: The layer name
-        :type name: str
-        :param value_label: parameter name to get
-        :type value_label: str
-        :param value: new numeric value
-        :type value: float
-        :return: None
-        :rtype: noneType
+        :param item_id: The item id
+        :type item_id: int
+        :param layer_id: The layer id
+        :type layer_id: int
         """
-        if value_label in self._layer_link.keys():
-            value_label = self._layer_link[value_label]
-        self.calculator.update_layer(name, **{value_label: value})
+        self.calculator.remove_layer_from_item(layer_id, item_id)
 
-    def add_layer_to_item(self, item_name: str, layer_name: str):
+    def add_item_to_model(self, item_id: int):
         """
-        Method to add a layer to an item from the calculator
+        Add a layer to the item stack
 
-        :param item_name: The name of the item to be added to
-        :type item_name: str
-        :param layer_name: The name of the layer to add
-        :type layer_name: str
+        :param item_id: The item id
+        :type item_id: int
         """
-        self.calculator.add_layer(item_name, layer_name)
+        self.calculator.add_item(item_id)
 
-    def remove_layer_from_item(self, item_name: str, layer_name: str):
+    def remove_item_from_model(self, item_id: int):
         """
-        Method to remove a layer from an item from the calculator
+        Remove a layer from the item stack
 
-        :param item_name: The name of the item to be removed from
-        :type item_name: str
-        :param layer_name: The name of the layer to remove
-        :type layer_name: str
+        :param item_id: The item id
+        :type item_id: int
+        :param layer_id: The layer id
+        :type layer_id: int
         """
-        self.calculator.remove_layer(item_name, layer_name)
+        self.calculator.remove_item(item_id)
 
-    def move_layer_up(self, item_name: str, layer_name: str):
+    def change_item_to_repeating_multi_layer(self, item_id: int, old_id: int):
         """
-        Move a layer up in an item stack
-
-        :param item_name: The item name
-        :type item_name: str
-        :param layer_name: The layer name
-        :type layer_name: str
-        """
-        self.calculator.move_layer_up(item_name, layer_name)
-
-    def move_layer_down(self, item_name: str, layer_name: str):
-        """
-        Move a layer down in an item stack
-
-        :param item_name: The item name
-        :type item_name: str
-        :param layer_name: The layer name
-        :type layer_name: str
-        """
-        self.calculator.move_layer_down(item_name, layer_name)
-
-    def get_item_reps(self, name: str) -> float:
-        """
-        Method to get an item repeats from the calculator
-
-        :param name: The item name
-        :type name: str
-        :return: Repeats value
-        :rtype: float
-        """
-        return self.calculator.get_reps(name)
-
-    def set_item_reps(self, name: str, value: float):
-        """
-        Method to set an item repeats from the calculator
-
-        :param name: The item name
-        :type name: str
-        :param value: number of repeats
-        :type value: float
-        """
-        self.calculator.update_reps(name, value)
-
-    def get_model_value(self, value_label: str) -> float:
-        """
-        Method to get a model value from the calculator
-
-        :param value_label: parameter name to get
-        :type value_label: str
-        :return: associated value
-        :rtype: float
-        """
-        if value_label in self._model_link.keys():
-            value_label = self._model_link[value_label]
-        return self.calculator.get_model_value(value_label)
-
-    def set_model_value(self, value_label: str, value: float):
-        """
-        Method to set a model value from the calculator
+        Change a given item to a repeating multi layer
         
-        :param value_label: parameter name to get
-        :type value_label: str
-        :param value: new numeric value
-        :type value: float
-        :return: None
-        :rtype: noneType
-        """
-        if value_label in self._model_link.keys():
-            value_label = self._model_link[value_label]
-        self.calculator.update_model(**{value_label: value})
-
-    def add_item_to_model(self, item_name: str):
-        """
-        Method to add an item to a model from the calculator
-
-        :param item_name: The name of the item to add
-        :type item_name: str
-        """
-        self.calculator.add_item(item_name)
-
-    def remove_item_from_model(self, item_name: str):
-        """
-        Method to remove an item from a model from the calculator
-
-        :param item_name: The name of the item to remove
-        :type item_name: str
-        """
-        self.calculator.remove_item(item_name)
-
-    def move_item_up(self, item_name: str):
-        """
-        Move a item up in a model
-
         :param item_name: The item name
-        :type item_name: str
+        :type item_name: int
         """
-        self.calculator.move_item_up(item_name)
-
-    def move_item_down(self, item_name: str):
-        """
-        Move a item down in a model
-
-        :param item_name: The item name
-        :type item_name: str
-        :param layer_name: The layer name
-        :type layer_name: str
-        """
-        self.calculator.move_item_down(item_name)
+        self.calculator.change_item_to_repeating_multi_layer(item_id, old_id)
 
     def fit_func(self, x_array: np.ndarray) -> np.ndarray:
         """
