@@ -41,6 +41,21 @@ jobs:
       with:
           python-version: 3.9
 
+    - name: Install Bornagain
+      shell: bash
+      run: |
+        which python
+        python --version
+        conda init bash
+        source ~/.bashrc
+        which python
+        python --version
+        conda install -y -c andyfaff bornagain
+        conda activate bornagain_env
+        pushd $CONDA_PREFIX/bin
+        source thisbornagain.sh
+        popd
+
     - name: Some logging
       shell: bash
       run: |
@@ -59,23 +74,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: install pytest
-      run: pip install pytest numpy
-
-    - name: Install Bornagain
-      shell: bash
-      run: |
-        which python
-        python --version
-        conda init bash
-        source ~/.bashrc
-        conda create --name bornagain_env python=3.9 pip
-        conda activate bornagain_env
-        which python
-        python --version
-        conda install -y -c andyfaff bornagain
-        pushd $CONDA_PREFIX/bin
-        source thisbornagain.sh
-        popd
+      run: pip install pytest numpy   
 
     - name: run pytest
       run: pytest tests/
