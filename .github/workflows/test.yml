@@ -62,7 +62,7 @@ jobs:
 
     - name: Set up python packages manager
       shell: bash -l {0}
-      uses: Gr1N/setup-poetry@v4
+      run: conda install -c conda-forge poetry
 
     - name: Create venv and install dependences
       shell: bash -l {0}
