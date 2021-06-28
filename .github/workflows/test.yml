@@ -40,14 +40,14 @@ jobs:
       uses: conda-incubator/setup-miniconda@v2
       with:
           python-version: 3.9
+          auto-activate-base: true
+          activate-environment: ""
 
     - name: Install Bornagain
       shell: bash
       run: |
         which python
         python --version
-        conda create -y -n test python=3.9
-        source activate test
         conda install -y -c andyfaff bornagain
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
