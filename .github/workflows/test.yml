@@ -46,8 +46,9 @@ jobs:
       run: |
         which python
         python --version
-        conda install -y -c andyfaff bornagain
-        conda activate bornagain_env
+        conda create -y -n test python=3.9.4
+        conda install -y -n test -c andyfaff bornagain
+        conda activate test
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
         popd
