@@ -61,18 +61,23 @@ jobs:
         echo "pythonLocation: $pythonLocation"
 
     - name: Set up python packages manager
+      shell: bash -l {0}
       uses: Gr1N/setup-poetry@v4
 
     - name: Create venv and install dependences
+      shell: bash -l {0}
       run: poetry update
 
     - name: Run main.py
+      shell: bash -l {0}
       run: |
         poetry export --format requirements.txt --output requirements.txt --without-hashes
         pip install -r requirements.txt
 
     - name: install pytest
+      shell: bash -l {0}
       run: pip install pytest numpy   
 
     - name: run pytest
+      shell: bash -l {0}
       run: pytest tests/
