@@ -50,9 +50,6 @@ jobs:
         conda activate test
         conda info
         conda install -y -c andyfaff bornagain
-        pushd $CONDA_PREFIX/bin
-        source thisbornagain.sh
-        popd
 
     - name: Some logging
       shell: bash -l {0}
@@ -89,4 +86,7 @@ jobs:
       shell: bash -l {0}
       run: |
         conda activate test
+        pushd $CONDA_PREFIX/bin
+        source thisbornagain.sh
+        popd
         pytest tests/
