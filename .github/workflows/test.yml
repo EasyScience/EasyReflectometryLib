@@ -48,6 +48,7 @@ jobs:
       run: |
         which python
         python --version
+        conda activate true
         conda install -y -c andyfaff bornagain
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
