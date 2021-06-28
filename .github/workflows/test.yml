@@ -41,7 +41,7 @@ jobs:
       with:
           python-version: 3.9
           auto-activate-base: true
-          activate-environment: ""
+          activate-environment: true
 
     - name: Install Bornagain
       shell: bash
