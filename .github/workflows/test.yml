@@ -45,6 +45,8 @@ jobs:
     - name: Install Bornagain
       shell: bash -l {0}
       run: |
+        conda create -n test 
+        conda activate test
         conda install -y -c andyfaff bornagain
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
