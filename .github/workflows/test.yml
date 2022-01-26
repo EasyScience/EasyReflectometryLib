@@ -57,35 +57,11 @@ jobs:
         which python
         echo "pythonLocation: $pythonLocation"
 
-    - name: Set up python packages manager
-      shell: bash -l {0}
-      run: |
-        conda activate test
-        conda install -c conda-forge poetry
-
-    - name: Create venv and install dependences
-      shell: bash -l {0}
-      run: |
-        conda activate test
-        poetry update
-
     - name: Run main.py
       shell: bash -l {0}
       run: |
         conda activate test
-        poetry export --format requirements.txt --output requirements.txt --without-hashes
-        pip install -r requirements.txt
-
-    - name: install pytest
-      shell: bash -l {0}
-      run: |
-        conda activate test
-        pip install pytest numpy   
-
-    - name: run pytest
-      shell: bash -l {0}
-      run: |
-        conda activate test
+        pip install -e .
         pushd $CONDA_PREFIX/bin
         source thisbornagain.sh
         popd
