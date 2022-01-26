@@ -7,3 +7,5 @@ import scipp as sc
 from orsopy.fileio import orso
 
 
+def load(fname: Union[TextIO, str]) -> sc.Dataset:
+    return orso.load_orso(fname)

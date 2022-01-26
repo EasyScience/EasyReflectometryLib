@@ -5,7 +5,7 @@ from copy import deepcopy
 from typing import List, Union, TypeVar
 
 from easyCore.Objects.Groups import BaseCollection
-from easyReflectometryLib.Sample.material import Material
+from EasyReflectometry.Sample.material import Material
 
 
 class Materials(BaseCollection):
@@ -39,7 +39,7 @@ class Materials(BaseCollection):
         Constructor of materials where the parameters are known.
 
         :param args: The series of material
-        :type args: List[Union[easyReflectometryLib.material.Material]]
+        :type args: List[Union[EasyReflectometry.material.Material]]
         :return: Materials container
         :rtype: Materials
         """

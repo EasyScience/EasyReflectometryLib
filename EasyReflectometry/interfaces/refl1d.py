@@ -6,32 +6,31 @@ from typing import List
 import numpy as np
 
 from easyCore.Objects.Inferface import ItemContainer
-from easyReflectometryLib.Interfaces.interfaceTemplate import InterfaceTemplate
-from easyReflectometryLib.Calculators.bornagain import BornAgain as BornAgain_calc
-from easyReflectometryLib.Sample.material import Material
-from easyReflectometryLib.Sample.layer import Layer
-from easyReflectometryLib.Sample.item import RepeatingMultiLayer, MultiLayer
-from easyReflectometryLib.Experiment.model import Model
+from EasyReflectometry.Interfaces.interfaceTemplate import InterfaceTemplate
+from EasyReflectometry.Calculators.refl1d import Refl1d as Refl1d_calc
+from EasyReflectometry.Sample.material import Material
+from EasyReflectometry.Sample.layer import Layer
+from EasyReflectometry.Sample.item import RepeatingMultiLayer, MultiLayer
+from EasyReflectometry.Experiment.model import Model
 
 
-class BornAgain(InterfaceTemplate):
+class Refl1d(InterfaceTemplate):
     """
-    A simple interface using BornAgain
+    A simple interface using refl1
     """
 
-    _material_link = {'sld': 'real', 'isld': 'imag'}
+    _material_link = {'sld': 'rho', 'isld': 'irho'}
 
-    _layer_link = {'thickness': 'thickness', 'roughness': 'sigma'}
+    _layer_link = {'thickness': 'thickness', 'roughness': 'interface'}
 
-    _item_link = {'repetitions': 'repeats'}
+    _item_link = {'repetitions': 'repeat'}
 
-    _model_link = {'scale': 'scale',
-                   'background': 'background', 'resolution': 'resolution'}
+    _model_link = {'scale': 'scale', 'background': 'bkg', 'resolution': 'dq'}
 
-    name = 'BornAgain'
+    name = 'refl1d'
 
     def __init__(self):
-        self.calculator = BornAgain_calc()
+        self.calculator = Refl1d_calc()
         self._namespace = {}
 
     def reset_storage(self):
@@ -133,8 +132,6 @@ class BornAgain(InterfaceTemplate):
 
         :param item_id: The item id
         :type item_id: int
-        :param layer_id: The layer id
-        :type layer_id: int
         """
         self.calculator.remove_item(item_id)
 

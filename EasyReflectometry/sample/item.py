@@ -6,8 +6,8 @@ from typing import Union
 
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
-from easyReflectometryLib.Sample.layer import Layer
-from easyReflectometryLib.Sample.layers import Layers
+from EasyReflectometry.Sample.layer import Layer
+from EasyReflectometry.Sample.layers import Layers
 
 REPEATINGMULTILAYER_DETAILS = {
     'repetitions': {
@@ -46,7 +46,7 @@ class MultiLayer(BaseObj):
         Constructor of a multi-layer item where the parameters are known.
 
         :param layers: The layers in the multi-layer
-        :type layers: easyReflectometryLib.layers.Layers
+        :type layers: EasyReflectometry.layers.Layers
         :return: MultiLayer container
         :rtype: MultiLayer
         """
@@ -146,7 +146,7 @@ class RepeatingMultiLayer(MultiLayer):
         Constructor of a reflectometry repeating multi layer where the parameters are known.
 
         :param layers: The layers in the repeating multi layer
-        :type layers: easyReflectometryLib.layers.Layers
+        :type layers: EasyReflectometry.layers.Layers
         :param repetitions: Number of repetitions 
         :type repetitions: float
         :return: Repeating multi-layer container

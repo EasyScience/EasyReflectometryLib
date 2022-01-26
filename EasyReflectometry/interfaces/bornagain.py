@@ -6,31 +6,32 @@ from typing import List
 import numpy as np
 
 from easyCore.Objects.Inferface import ItemContainer
-from easyReflectometryLib.Interfaces.interfaceTemplate import InterfaceTemplate
-from easyReflectometryLib.Calculators.refnx import Refnx as Refnx_calc
-from easyReflectometryLib.Sample.material import Material
-from easyReflectometryLib.Sample.layer import Layer
-from easyReflectometryLib.Sample.item import RepeatingMultiLayer, MultiLayer
-from easyReflectometryLib.Experiment.model import Model
+from EasyReflectometry.Interfaces.interfaceTemplate import InterfaceTemplate
+from EasyReflectometry.Calculators.bornagain import BornAgain as BornAgain_calc
+from EasyReflectometry.Sample.material import Material
+from EasyReflectometry.Sample.layer import Layer
+from EasyReflectometry.Sample.item import RepeatingMultiLayer, MultiLayer
+from EasyReflectometry.Experiment.model import Model
 
 
-class Refnx(InterfaceTemplate):
+class BornAgain(InterfaceTemplate):
     """
-    A simple interface using refnx
+    A simple interface using BornAgain
     """
 
     _material_link = {'sld': 'real', 'isld': 'imag'}
 
-    _layer_link = {'thickness': 'thick', 'roughness': 'rough'}
+    _layer_link = {'thickness': 'thickness', 'roughness': 'sigma'}
 
     _item_link = {'repetitions': 'repeats'}
 
-    _model_link = {'scale': 'scale', 'background': 'bkg', 'resolution': 'dq'}
+    _model_link = {'scale': 'scale',
+                   'background': 'background', 'resolution': 'resolution'}
 
-    name = 'refnx'
+    name = 'BornAgain'
 
     def __init__(self):
-        self.calculator = Refnx_calc()
+        self.calculator = BornAgain_calc()
         self._namespace = {}
 
     def reset_storage(self):
@@ -136,15 +137,6 @@ class Refnx(InterfaceTemplate):
         :type layer_id: int
         """
         self.calculator.remove_item(item_id)
-
-    def change_item_to_repeating_multi_layer(self, item_id: int, old_id: int):
-        """
-        Change a given item to a repeating multi layer
-        
-        :param item_name: The item name
-        :type item_name: int
-        """
-        self.calculator.change_item_to_repeating_multi_layer(item_id, old_id)
 
     def fit_func(self, x_array: np.ndarray) -> np.ndarray:
         """

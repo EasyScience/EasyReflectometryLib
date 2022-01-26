@@ -5,21 +5,21 @@ import os, sys
 import traceback
 
 try:
-    from easyReflectometryLib.Interfaces.refnx import Refnx  # noqa: F401
+    from EasyReflectometry.Interfaces.refnx import Refnx  # noqa: F401
 except Exception:
     traceback.print_exc()
     print('Warning: refnx is not installed')
 
 try:
-    from easyReflectometryLib.Interfaces.bornagain import BornAgain  # noqa: F401
+    from EasyReflectometry.Interfaces.bornagain import BornAgain  # noqa: F401
 except Exception:
     traceback.print_exc()
     print('Warning: BornAgain python is not installed')
 
 try:
-    from easyReflectometryLib.Interfaces.refl1d import Refl1d  # noqa: F401
+    from EasyReflectometry.Interfaces.refl1d import Refl1d  # noqa: F401
 except Exception:
     traceback.print_exc()
     print('Warning: refl1d is not installed')
 
-from easyReflectometryLib.Interfaces.interfaceTemplate import InterfaceTemplate
+from EasyReflectometry.Interfaces.interfaceTemplate import InterfaceTemplate

@@ -3,7 +3,7 @@ __version__ = "0.0.1"
 
 from typing import Callable
 
-from easyReflectometryLib.Interfaces import InterfaceTemplate
+from EasyReflectometry.interfaces import InterfaceTemplate
 from easyCore.Objects.Inferface import InterfaceFactoryTemplate
 
 

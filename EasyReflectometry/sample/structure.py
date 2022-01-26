@@ -6,8 +6,8 @@ from typing import List, Union
 
 from easyCore import np
 from easyCore.Objects.Groups import BaseCollection
-from easyReflectometryLib.Sample.item import MultiLayer, RepeatingMultiLayer
-from easyReflectometryLib.Sample.layer import Layer
+from EasyReflectometry.Sample.item import MultiLayer, RepeatingMultiLayer
+from EasyReflectometry.Sample.layer import Layer
 
 
 class Structure(BaseCollection):
@@ -49,7 +49,7 @@ class Structure(BaseCollection):
         Constructor of a reflectometry structure where the parameters are known.
 
         :param args: The items in the structure
-        :type args: List[easyReflectometryLib.item.Item]
+        :type args: List[EasyReflectometry.item.Item]
         :return: Structure container
         :rtype: Structure
         """

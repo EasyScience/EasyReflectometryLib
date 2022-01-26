@@ -6,31 +6,31 @@ from typing import List
 import numpy as np
 
 from easyCore.Objects.Inferface import ItemContainer
-from easyReflectometryLib.Interfaces.interfaceTemplate import InterfaceTemplate
-from easyReflectometryLib.Calculators.refl1d import Refl1d as Refl1d_calc
-from easyReflectometryLib.Sample.material import Material
-from easyReflectometryLib.Sample.layer import Layer
-from easyReflectometryLib.Sample.item import RepeatingMultiLayer, MultiLayer
-from easyReflectometryLib.Experiment.model import Model
+from EasyReflectometry.Interfaces.interfaceTemplate import InterfaceTemplate
+from EasyReflectometry.Calculators.refnx import Refnx as Refnx_calc
+from EasyReflectometry.Sample.material import Material
+from EasyReflectometry.Sample.layer import Layer
+from EasyReflectometry.Sample.item import RepeatingMultiLayer, MultiLayer
+from EasyReflectometry.Experiment.model import Model
 
 
-class Refl1d(InterfaceTemplate):
+class Refnx(InterfaceTemplate):
     """
-    A simple interface using refl1
+    A simple interface using refnx
     """
 
-    _material_link = {'sld': 'rho', 'isld': 'irho'}
+    _material_link = {'sld': 'real', 'isld': 'imag'}
 
-    _layer_link = {'thickness': 'thickness', 'roughness': 'interface'}
+    _layer_link = {'thickness': 'thick', 'roughness': 'rough'}
 
-    _item_link = {'repetitions': 'repeat'}
+    _item_link = {'repetitions': 'repeats'}
 
     _model_link = {'scale': 'scale', 'background': 'bkg', 'resolution': 'dq'}
 
-    name = 'refl1d'
+    name = 'refnx'
 
     def __init__(self):
-        self.calculator = Refl1d_calc()
+        self.calculator = Refnx_calc()
         self._namespace = {}
 
     def reset_storage(self):
@@ -132,8 +132,19 @@ class Refl1d(InterfaceTemplate):
 
         :param item_id: The item id
         :type item_id: int
+        :param layer_id: The layer id
+        :type layer_id: int
         """
         self.calculator.remove_item(item_id)
+
+    def change_item_to_repeating_multi_layer(self, item_id: int, old_id: int):
+        """
+        Change a given item to a repeating multi layer
+        
+        :param item_name: The item name
+        :type item_name: int
+        """
+        self.calculator.change_item_to_repeating_multi_layer(item_id, old_id)
 
     def fit_func(self, x_array: np.ndarray) -> np.ndarray:
         """

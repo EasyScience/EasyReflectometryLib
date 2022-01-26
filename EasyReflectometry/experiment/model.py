@@ -5,10 +5,10 @@ from copy import deepcopy
 
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
-from easyReflectometryLib.Sample.structure import Structure
-from easyReflectometryLib.Sample.item import MultiLayer, RepeatingMultiLayer
-from easyReflectometryLib.Sample.layer import Layer
-from easyReflectometryLib.Sample.layers import Layers
+from EasyReflectometry.Sample.structure import Structure
+from EasyReflectometry.Sample.item import MultiLayer, RepeatingMultiLayer
+from EasyReflectometry.Sample.layer import Layer
+from EasyReflectometry.Sample.layers import Layers
 
 LAYER_DETAILS = {
     'scale': {
@@ -87,7 +87,7 @@ class Model(BaseObj):
         Constructor of a reflectometry experiment model where the parameters are known.
 
         :param structure: The structure being modelled
-        :type structure: easyReflectometryLib.structure.Structure
+        :type structure: EasyReflectometry.structure.Structure
         :param scale: Scaling factor of profile
         :type scale: float
         :param background: Linear background magnitude

@@ -5,7 +5,7 @@ from copy import deepcopy
 from typing import List, Union, TypeVar
 
 from easyCore.Objects.Groups import BaseCollection
-from easyReflectometryLib.Sample.layer import Layer
+from EasyReflectometry.Sample.layer import Layer
 
 RepeatingMultiLayer = TypeVar("RepeatingMultiLayer")
 
@@ -41,7 +41,7 @@ class Layers(BaseCollection):
         Constructor of a reflectometry layers where the parameters are known.
 
         :param args: The series of layers
-        :type args: List[Union[easyReflectometryLib.layer.Layer, easyReflectometryLib.Item.Item]]
+        :type args: List[Union[EasyReflectometry.layer.Layer, EasyReflectometry.Item.Item]]
         :return: Layers container
         :rtype: Layers
         """

@@ -1,6 +1,6 @@
 import os, sys
 
-from easyReflectometryLib.interface import InterfaceFactory
+from EasyReflectometry.interface import InterfaceFactory
 
 def main():
     interface = InterfaceFactory()

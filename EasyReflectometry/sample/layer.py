@@ -5,7 +5,7 @@ from copy import deepcopy
 
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
-from easyReflectometryLib.Sample.material import Material
+from EasyReflectometry.Sample.material import Material
 
 LAYER_DETAILS = {
     'thickness': {
@@ -69,7 +69,7 @@ class Layer(BaseObj):
         Constructor of a reflectometry layer where the parameters are known.
 
         :param material: The material that makes up the layer
-        :type material: easyReflectometryLib.material.Material
+        :type material: EasyReflectometry.material.Material
         :param thickness: Layer thickness in angstrom
         :type thickness: float
         :param roughness: Layer roughness in angstrom
