@@ -1,44 +1,41 @@
-# POETRY CONFIG
-
-[build-system]
-requires = ["poetry>=1.0"]
-build-backend = "poetry.masonry.api"
-
-[tool.poetry]
-name = "easyReflectometryLib"
+[project]
+name = "EasyReflectometry"
 version = "0.0.2"
-description = 'Making reflectometry data analysis and modelling easy.'
+description = "A reflectometry python package built on the EasyScience framework"
+authors = "AUTHORS.rst"
 license = "GPL-3.0-only"
-authors = ["Andrew McCluskey", "Andrew Sazonov", "Simon Ward"]
-readme = "README.md"
-homepage = "https://github.com/easyScience/easyReflectometryLib"
-documentation = "https://github.com/easyScience/easyReflectometryLib"
-include = ["CHANGELOG.md"]
-packages = [ { include = "easyReflectometryLib" } ]
+readme = "README.rst"
+homepage = "https://easyreflectometry.org"
+documentation = "https://EasyReflectometry.readthdocs.io"
+repository = "https://github.com/easyScience/EasyReflectometryLib"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "L"icense :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+    "Development Status :: 3 - Alpha"
+]
 
-[tool.poetry.dependencies]
-python = '^3.9, <3.10'
+[dependencies]
+python = "^3.8"
+python = '^3.8'
 refnx = "^0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx which use PEP 517 and cannot be installed directly"
 refl1d = "^0.8.14"
-# easyScience
+scipp = "^0.11.1"
+orsopy = "^0.0.4"
 easyScienceCore = { git = 'https://github.com/easyScience/easyCore.git', rev = 'develop' }
 
-[tool.poetry.dev-dependencies]
+[dev-dependencies]
 pytest = "^5.2"
+yapf = "^0.31.0"
 toml = "^0.10"
 requests = '^2.24'
 hvplot = "^0.7.0"
 jupyter = "^1.0.0"
 
-[tool.poetry.scripts]
-easyReflectometryLib = "easyReflectometryLib.main:main"
+[build-system]
+requires = ["setuptools", "wheel"]]
+build-backend = "setuptools.build_meta"
 
-# CUSTOM CONFIG
-
-[tool.dephell.main]
-from = {format = "poetry", path = "pyproject.toml"}
-to = {format = "setuppy", path = "setup.py"}
-
-[tool.dephell.requirements]
-from = {format = "poetry", path = "pyproject.toml"}
-to = {format = "pip", path = "requirements.txt"}
+[yapf]
+exclude = docs
