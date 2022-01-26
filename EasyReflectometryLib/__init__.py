@@ -1,2 +1,4 @@
-__author__ = 'github.com/arm61'
-__version__ = '0.0.1'
+MAJOR = 0
+MINOR = 0
+MICRO = 0
+__version__ = f'{MAJOR:d}.{MINOR:d}.{MICRO:d}'
