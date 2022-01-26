@@ -5,7 +5,7 @@ from copy import deepcopy
 from typing import List, Union, TypeVar
 
 from easyCore.Objects.Groups import BaseCollection
-from EasyReflectometry.Sample.layer import Layer
+from EasyReflectometry.sample.layer import Layer
 
 RepeatingMultiLayer = TypeVar("RepeatingMultiLayer")
 

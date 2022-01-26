@@ -6,12 +6,12 @@ from typing import List
 import numpy as np
 
 from easyCore.Objects.Inferface import ItemContainer
-from EasyReflectometry.Interfaces.interfaceTemplate import InterfaceTemplate
-from EasyReflectometry.Calculators.refnx import Refnx as Refnx_calc
-from EasyReflectometry.Sample.material import Material
-from EasyReflectometry.Sample.layer import Layer
-from EasyReflectometry.Sample.item import RepeatingMultiLayer, MultiLayer
-from EasyReflectometry.Experiment.model import Model
+from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
+from EasyReflectometry.calculators.refnx import Refnx as Refnx_calc
+from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.layer import Layer
+from EasyReflectometry.sample.item import RepeatingMultiLayer, MultiLayer
+from EasyReflectometry.experiment.model import Model
 
 
 class Refnx(InterfaceTemplate):

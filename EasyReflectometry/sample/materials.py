@@ -5,7 +5,7 @@ from copy import deepcopy
 from typing import List, Union, TypeVar
 
 from easyCore.Objects.Groups import BaseCollection
-from EasyReflectometry.Sample.material import Material
+from EasyReflectometry.sample.material import Material
 
 
 class Materials(BaseCollection):

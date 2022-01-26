@@ -1,24 +1,9 @@
-asteval==0.9.25; python_full_version >= "3.6.1" and python_version < "4.0" and python_version >= "3.6"
-bumps==0.8.0; python_full_version >= "3.6.1" and python_version < "4.0"
-cycler==0.10.0; python_version >= "3.7"
-dfo-ls==1.2.3; python_full_version >= "3.6.1" and python_version < "4.0"
-easysciencecore @ git+https://github.com/easyScience/easyCore.git@develop ; python_full_version >= "3.6.1" and python_version < "4.0"
-future==0.18.2; python_full_version >= "3.6.1" and python_version < "4.0"
-kiwisolver==1.3.1; python_version >= "3.7"
-lmfit==1.0.2; python_full_version >= "3.6.1" and python_version < "4.0" and python_version >= "3.6"
-matplotlib==3.4.2; python_version >= "3.7"
-numpy==1.21.0; python_full_version >= "3.7.1" and python_version < "3.10" and python_version >= "3.7"
-packaging==20.9; python_full_version >= "3.6.1" and python_version < "4.0" and python_version >= "3.6"
-pandas==1.2.5; python_full_version >= "3.7.1" and python_version < "4.0" and python_version >= "3.6"
-periodictable==1.6.0
-pillow==9.0.0; python_version >= "3.7"
-pint==0.16.1; python_full_version >= "3.6.1" and python_version < "4.0" and python_version >= "3.6"
-pyparsing==2.4.7; python_full_version >= "3.6.1" and python_version >= "3.7" and python_version < "4.0"
-python-dateutil==2.8.1; python_full_version >= "3.7.1" and python_version >= "3.7" and python_version < "4.0"
-pytz==2021.1; python_full_version >= "3.7.1" and python_version < "4.0"
-refl1d==0.8.14
-refnx==0.1.20; python_version >= "3.7"
-scipy==1.7.0; python_version >= "3.7" and python_version < "3.10" and python_full_version >= "3.6.1"
-six==1.16.0; python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.7"
-uncertainties==3.1.5; python_full_version >= "3.6.1" and python_version < "4.0" and python_version >= "3.6"
-xarray==0.16.2; python_full_version >= "3.6.1" and python_version < "4.0" and python_version >= "3.6"
+refnx>=0.1.15
+refl1d>=0.8.14
+scipp>=0.11.1
+orsopy>=0.0.4
+git+https://github.com/easyScience/easyCore.git@develop
+pytest>=5.2
+yapf>=0.31.0
+toml>=0.10
+jupyter>=1.0.0

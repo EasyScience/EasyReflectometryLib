@@ -8,13 +8,13 @@ import os
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from easyReflectometryLib.Experiment.model import Model
-from easyReflectometryLib.Sample.material import Material
-from easyReflectometryLib.Sample.layer import Layer
-from easyReflectometryLib.Sample.layers import Layers
-from easyReflectometryLib.Sample.item import RepeatingMultiLayer, MultiLayer
-from easyReflectometryLib.Sample.structure import Structure
-from easyReflectometryLib.interface import InterfaceFactory
+from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.layer import Layer
+from EasyReflectometry.sample.layers import Layers
+from EasyReflectometry.sample.item import RepeatingMultiLayer, MultiLayer
+from EasyReflectometry.sample.structure import Structure
+from EasyReflectometry.interface import InterfaceFactory
 
 
 class TestModel(unittest.TestCase):
@@ -129,24 +129,24 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.interface().calculator.storage['item']), 2)
         assert_equal(len(mod.interface().calculator.storage['layer']), 2)
 
-    def test_add_item_with_interface_bornagain(self):
-        interface = InterfaceFactory()
-        interface.switch('BornAgain')
-        m1 = Material.from_pars(6.908, 0.278, 'Boron')
-        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
-        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
-        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
-        ls1 = Layers.from_pars(l1, l2, name='twoLayer1')
-        ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
-        o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
-        o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
-        assert_equal(len(mod.interface().calculator.storage['item']), 1)
-        assert_equal(len(mod.interface().calculator.storage['layer']), 2)
-        mod.add_item(o2)
-        assert_equal(len(mod.interface().calculator.storage['item']), 2)
-        assert_equal(len(mod.interface().calculator.storage['layer']), 2)
+    # def test_add_item_with_interface_bornagain(self):
+    #     interface = InterfaceFactory()
+    #     interface.switch('BornAgain')
+    #     m1 = Material.from_pars(6.908, 0.278, 'Boron')
+    #     m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+    #     l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+    #     l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+    #     ls1 = Layers.from_pars(l1, l2, name='twoLayer1')
+    #     ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
+    #     o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
+    #     o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
+    #     d = Structure.from_pars(o1, name='myModel')
+    #     mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+    #     assert_equal(len(mod.interface().calculator.storage['item']), 1)
+    #     assert_equal(len(mod.interface().calculator.storage['layer']), 2)
+    #     mod.add_item(o2)
+    #     assert_equal(len(mod.interface().calculator.storage['item']), 2)
+    #     assert_equal(len(mod.interface().calculator.storage['layer']), 2)
 
     def test_duplicate_item(self):
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
@@ -204,24 +204,24 @@ class TestModel(unittest.TestCase):
         mod.duplicate_item(1)
         assert_equal(len(mod.interface().calculator.storage['item']), 3)
 
-    def test_duplicate_item_with_interface_bornagain(self):
-        interface = InterfaceFactory()
-        interface.switch('BornAgain')
-        m1 = Material.from_pars(6.908, 0.278, 'Boron')
-        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
-        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
-        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
-        ls1 = Layers.from_pars(l1, l2, name='twoLayer1')
-        ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
-        o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
-        o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
-        assert_equal(len(mod.interface().calculator.storage['item']), 1)
-        mod.add_item(o2)
-        assert_equal(len(mod.interface().calculator.storage['item']), 2)
-        mod.duplicate_item(1)
-        assert_equal(len(mod.interface().calculator.storage['item']), 3)
+    # def test_duplicate_item_with_interface_bornagain(self):
+    #     interface = InterfaceFactory()
+    #     interface.switch('BornAgain')
+    #     m1 = Material.from_pars(6.908, 0.278, 'Boron')
+    #     m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+    #     l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+    #     l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+    #     ls1 = Layers.from_pars(l1, l2, name='twoLayer1')
+    #     ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
+    #     o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
+    #     o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
+    #     d = Structure.from_pars(o1, name='myModel')
+    #     mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+    #     assert_equal(len(mod.interface().calculator.storage['item']), 1)
+    #     mod.add_item(o2)
+    #     assert_equal(len(mod.interface().calculator.storage['item']), 2)
+    #     mod.duplicate_item(1)
+    #     assert_equal(len(mod.interface().calculator.storage['item']), 3)
 
     def test_remove_item(self):
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
@@ -283,27 +283,27 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.interface().calculator.storage['item']), 1)
         assert_equal(len(mod.interface().calculator.storage['layer']), 2)
 
-    def test_remove_item_with_interface_bornagain(self):
-        interface = InterfaceFactory()
-        interface.switch('BornAgain')
-        m1 = Material.from_pars(6.908, 0.278, 'Boron')
-        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
-        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
-        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
-        ls1 = Layers.from_pars(l1, l2, name='twoLayer1')
-        ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
-        o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
-        o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
-        assert_equal(len(mod.interface().calculator.storage['item']), 1)
-        assert_equal(len(mod.interface().calculator.storage['layer']), 2)
-        mod.add_item(o2)
-        assert_equal(len(mod.interface().calculator.storage['item']), 2)
-        assert_equal(len(mod.interface().calculator.storage['layer']), 2)
-        mod.remove_item(0)
-        assert_equal(len(mod.interface().calculator.storage['item']), 1)
-        assert_equal(len(mod.interface().calculator.storage['layer']), 2)
+    # def test_remove_item_with_interface_bornagain(self):
+    #     interface = InterfaceFactory()
+    #     interface.switch('BornAgain')
+    #     m1 = Material.from_pars(6.908, 0.278, 'Boron')
+    #     m2 = Material.from_pars(0.487, 0.000, 'Potassium')
+    #     l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
+    #     l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+    #     ls1 = Layers.from_pars(l1, l2, name='twoLayer1')
+    #     ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
+    #     o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
+    #     o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
+    #     d = Structure.from_pars(o1, name='myModel')
+    #     mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+    #     assert_equal(len(mod.interface().calculator.storage['item']), 1)
+    #     assert_equal(len(mod.interface().calculator.storage['layer']), 2)
+    #     mod.add_item(o2)
+    #     assert_equal(len(mod.interface().calculator.storage['item']), 2)
+    #     assert_equal(len(mod.interface().calculator.storage['layer']), 2)
+    #     mod.remove_item(0)
+    #     assert_equal(len(mod.interface().calculator.storage['item']), 1)
+    #     assert_equal(len(mod.interface().calculator.storage['layer']), 2)
 
     def test_uid(self):
         p = Model.default()

@@ -1,34 +1,34 @@
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 """
-Tests for BornAgain class module
+Tests for Refnx class module
 """
 
 import os
 import unittest
 import numpy as np
-from numpy.testing import assert_almost_equal, assert_equal, assert_allclose
-from easyReflectometryLib.Interfaces.bornagain import BornAgain
-from easyReflectometryLib.Sample.material import Material
+from numpy.testing import assert_almost_equal, assert_equal
+from EasyReflectometry.interfaces.refnx import Refnx
+from EasyReflectometry.sample.material import Material
 
 
-class TestBornAgain(unittest.TestCase):
+class TestRefnx(unittest.TestCase):
     def test_init(self):
-        p = BornAgain()
+        p = Refnx()
         assert_equal(list(p.calculator.storage.keys()),
-                     ['material', 'layer', 'layer_material', 'roughness', 'item', 'item_repeats', 'model', 'model_items', 'model_parameters'])
+                     ['material', 'layer', 'item', 'model'])
         assert_equal(p._material_link['sld'], 'real')
         assert_equal(p._material_link['isld'], 'imag')
-        assert_equal(p._layer_link['thickness'], 'thickness')
-        assert_equal(p._layer_link['roughness'], 'sigma')
+        assert_equal(p._layer_link['thickness'], 'thick')
+        assert_equal(p._layer_link['roughness'], 'rough')
         assert_equal(p._item_link['repetitions'], 'repeats')
         assert_equal(p._model_link['scale'], 'scale')
-        assert_equal(p._model_link['background'], 'background')
-        assert_equal(p._model_link['resolution'], 'resolution')
-        assert_equal(p.name, 'BornAgain')
+        assert_equal(p._model_link['background'], 'bkg')
+        assert_equal(p._model_link['resolution'], 'dq')
+        assert_equal(p.name, 'refnx')
 
     def test_fit_func(self):
-        p = BornAgain()
+        p = Refnx()
         p.calculator.create_material('Material1')
         p.calculator.update_material('Material1', real=0.000, imag=0.000)
         p.calculator.create_material('Material2')
@@ -40,26 +40,25 @@ class TestBornAgain(unittest.TestCase):
         p.calculator.assign_material_to_layer('Material1', 'Layer1')
         p.calculator.create_layer('Layer2')
         p.calculator.assign_material_to_layer('Material2', 'Layer2')
-        p.calculator.update_layer('Layer2', thickness=10, sigma=1.0)
+        p.calculator.update_layer('Layer2', thick=10, rough=1.0)
         p.calculator.create_layer('Layer3')
         p.calculator.assign_material_to_layer('Material3', 'Layer3')
-        p.calculator.update_layer('Layer3', sigma=1.0)
+        p.calculator.update_layer('Layer3', rough=1.0)
         p.calculator.create_item('Item')
         p.calculator.add_layer_to_item('Layer1', 'Item')
         p.calculator.add_layer_to_item('Layer2', 'Item')
         p.calculator.add_layer_to_item('Layer3', 'Item')
         p.calculator.add_item('Item')
-        p.calculator.update_model('model', background=1e-7, resolution=5)
         q = np.linspace(0.001, 0.3, 10)
         expected = [
             9.99956517e-01, 2.16286891e-03, 1.14086254e-04, 1.93031759e-05,
             4.94188894e-06, 1.54191953e-06, 5.45592112e-07, 2.26619392e-07,
             1.26726993e-07, 1.01842852e-07
         ]
-        assert_allclose(p.fit_func(q), expected, rtol=0.04)
+        assert_almost_equal(p.fit_func(q), expected)
     
     def test_calculate2(self):
-        p = BornAgain()
+        p = Refnx()
         p.calculator.create_material('Material1')
         p.calculator.update_material('Material1', real=0.000, imag=0.000)
         p.calculator.create_material('Material2')
@@ -71,10 +70,10 @@ class TestBornAgain(unittest.TestCase):
         p.calculator.assign_material_to_layer('Material1', 'Layer1')
         p.calculator.create_layer('Layer2')
         p.calculator.assign_material_to_layer('Material2', 'Layer2')
-        p.calculator.update_layer('Layer2', thickness=10, sigma=1.0)
+        p.calculator.update_layer('Layer2', thick=10, rough=1.0)
         p.calculator.create_layer('Layer3')
         p.calculator.assign_material_to_layer('Material3', 'Layer3')
-        p.calculator.update_layer('Layer3', sigma=1.0)
+        p.calculator.update_layer('Layer3', rough=1.0)
         p.calculator.create_item('Item1')
         p.calculator.add_layer_to_item('Layer1', 'Item1')
         p.calculator.create_item('Item2')
@@ -86,15 +85,14 @@ class TestBornAgain(unittest.TestCase):
         p.calculator.add_item('Item2')
         p.calculator.add_item('Item3')
         p.calculator.update_item('Item2', repeats=10)
-        p.calculator.update_model('model', background=1e-7, resolution=5)
         q = np.linspace(0.001, 0.3, 10)
-        expected = [1.000000e+00, 1.814452e-05, 1.225890e-04, 2.454331e-06,
-                    6.676318e-06, 8.362728e-07, 1.141096e-06, 4.090968e-07,
-                    3.489857e-07, 2.470789e-07]
-        assert_allclose(p.fit_func(q), expected, rtol=0.01)
+        expected = [9.9995652e-01, 1.7096697e-05, 1.2253047e-04, 2.4026928e-06,
+                  6.7117546e-06, 8.3209877e-07, 1.1512901e-06, 4.1468151e-07,
+                  3.4981523e-07, 2.5424356e-07]
+        assert_almost_equal(p.fit_func(q), expected)
 
     def test_sld_profile(self):
-        p = BornAgain()
+        p = Refnx()
         p.calculator.create_material('Material1')
         p.calculator.update_material('Material1', real=0.000, imag=0.000)
         p.calculator.create_material('Material2')
@@ -106,10 +104,10 @@ class TestBornAgain(unittest.TestCase):
         p.calculator.assign_material_to_layer('Material1', 'Layer1')
         p.calculator.create_layer('Layer2')
         p.calculator.assign_material_to_layer('Material2', 'Layer2')
-        p.calculator.update_layer('Layer2', thickness=10, sigma=1.0)
+        p.calculator.update_layer('Layer2', thick=10, rough=1.0)
         p.calculator.create_layer('Layer3')
         p.calculator.assign_material_to_layer('Material3', 'Layer3')
-        p.calculator.update_layer('Layer3', sigma=1.0)
+        p.calculator.update_layer('Layer3', rough=1.0)
         p.calculator.create_item('Item')
         p.calculator.add_layer_to_item('Layer1', 'Item')
         p.calculator.add_layer_to_item('Layer2', 'Item')

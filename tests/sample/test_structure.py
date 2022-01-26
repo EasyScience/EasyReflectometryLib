@@ -8,11 +8,11 @@ import os
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from easyReflectometryLib.Sample.material import Material
-from easyReflectometryLib.Sample.layer import Layer
-from easyReflectometryLib.Sample.layers import Layers
-from easyReflectometryLib.Sample.item import RepeatingMultiLayer
-from easyReflectometryLib.Sample.structure import Structure
+from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.layer import Layer
+from EasyReflectometry.sample.layers import Layers
+from EasyReflectometry.sample.item import RepeatingMultiLayer
+from EasyReflectometry.sample.structure import Structure
 
 
 class TestStructure(unittest.TestCase):

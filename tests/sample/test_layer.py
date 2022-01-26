@@ -8,9 +8,9 @@ import os
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from easyReflectometryLib.Sample.material import Material
-from easyReflectometryLib.Sample.layer import Layer
-from easyReflectometryLib.interface import InterfaceFactory
+from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.layer import Layer
+from EasyReflectometry.interface import InterfaceFactory
 
 
 class TestLayer(unittest.TestCase):

@@ -6,8 +6,8 @@ from typing import List, Union
 
 from easyCore import np
 from easyCore.Objects.Groups import BaseCollection
-from EasyReflectometry.Sample.item import MultiLayer, RepeatingMultiLayer
-from EasyReflectometry.Sample.layer import Layer
+from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
+from EasyReflectometry.sample.layer import Layer
 
 
 class Structure(BaseCollection):
