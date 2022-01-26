@@ -33,5 +33,5 @@ hvplot = "^0.7.0"
 jupyter = "^1.0.0"
 
 [build-system]
-requires = ["setuptools", "wheel"]]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
