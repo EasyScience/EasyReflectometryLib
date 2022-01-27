@@ -20,12 +20,12 @@
      showgrid="false"
      showguides="false"
      inkscape:zoom="0.11439388"
-     inkscape:cx="3501.0614"
-     inkscape:cy="2355.8953"
-     inkscape:window-width="2560"
-     inkscape:window-height="1395"
+     inkscape:cx="2574.4384"
+     inkscape:cy="275.36438"
+     inkscape:window-width="2048"
+     inkscape:window-height="1235"
      inkscape:window-x="0"
-     inkscape:window-y="478"
+     inkscape:window-y="23"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg943" />
   <defs
@@ -99,15 +99,15 @@
      xml:space="preserve"
      id="text1809"
      style="font-size:96px;line-height:1.25;font-family:'Andale Mono';-inkscape-font-specification:'Andale Mono';white-space:pre;shape-inside:url(#rect1811)"
-     transform="matrix(3.980455,0,0,3.980455,-4328.5816,407.87893)"
+     transform="matrix(3.980455,0,0,3.980455,-4288.5816,407.87893)"
      inkscape:export-filename="/Users/andrewmccluskey/software/easyScience/EasyReflectometryLib/docs/_static/logo.png"
      inkscape:export-xdpi="300"
      inkscape:export-ydpi="300"><tspan
        x="1203.0898"
        y="-10.898691"
-       id="tspan6524"><tspan
+       id="tspan855"><tspan
          style="font-family:Nunito;-inkscape-font-specification:Nunito"
-         id="tspan6520">Easy</tspan><tspan
+         id="tspan851">Easy</tspan><tspan
          style="font-weight:bold;font-family:Nunito;-inkscape-font-specification:'Nunito Bold'"
-         id="tspan6522">Reflectometry</tspan></tspan></text>
+         id="tspan853">Reflectometry</tspan></tspan></text>
 </svg>
