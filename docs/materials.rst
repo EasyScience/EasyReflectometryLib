@@ -1,7 +1,7 @@
-Experiment Model
+sample.materials
 ================
 
-.. automodule:: EasyReflectometry.experiment.model
+.. automodule:: EasyReflectometry.sample.materials
     :members:
     :undoc-members:
     :show-inheritance:

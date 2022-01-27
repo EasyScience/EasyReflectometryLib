@@ -1,3 +1,13 @@
+"""The :py:mod:`item` library is the backbone of :py:mod:`EasyReflectometry`.
+An :py:mod:`EasyReflectometry.sample.item` allows for the inclusion of physical and 
+chemical parameterisation into our reflectometry model.  
+
+Current :py:mod:`item` options include: 
+
+* :py:class:`MultiLayer`
+* :py:class:`RepeatingMultiLayer`
+"""
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -21,7 +31,13 @@ REPEATINGMULTILAYER_DETAILS = {
 
 
 class MultiLayer(BaseObj):
-
+    """
+    A :py:class:`MultiLayer` consists of a series of 
+    :py:class:`EasyReflectometry.sample.layer.Layer` or 
+    :py:class:`EasyReflectometry.sample.layers.Layers`. 
+    This :py:mod:`item` will arrange the layers as slabs, one on top of another, 
+    allowing the reflectometry to be determined from them. 
+    """
     def __init__(self,
                  layers: Union[Layers, Layer],
                  name: str = 'easyMultiLayer',
@@ -116,7 +132,13 @@ class MultiLayer(BaseObj):
 
 
 class RepeatingMultiLayer(MultiLayer):
-
+    """
+    A :py:class:`RepeatingMultiLayer` takes a :py:class:`MultiLayer` and repeats
+    it a some number of times. This enables a computational efficiency in many 
+    reflectometry engines as the operation can be performed for a single 
+    :py:class:`MultiLayer` and cheaply combined for the appropriate number of 
+    :py:attr:`repetitions`. 
+    """
     def __init__(self,
                  layers: Union[Layers, Layer],
                  repetitions: Parameter,

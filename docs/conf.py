@@ -91,7 +91,7 @@ pygments_style = 'sphinx'
 todo_include_todos = False
 
 # Ensuring the order in the file is kept.
-autodoc_member_order = 'bysource'
+# autodoc_member_order = 'bysource'
 
 
 # -- Options for HTML output -------------------------------------------
@@ -113,7 +113,7 @@ html_theme_options = {'logo_only': True}
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = []
+html_static_path = ['_static']
 
 
 # -- Options for HTMLHelp output ---------------------------------------
