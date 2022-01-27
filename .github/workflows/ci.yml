@@ -23,5 +23,6 @@ jobs:
     - name: Test with coverage
       run: |
         coverage run --source=EasyReflectometry -m pytest
-    - name: Coveralls
-      uses: AndreMiras/coveralls-python-action@develop
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@1.1.3
+
