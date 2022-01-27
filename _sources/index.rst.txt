@@ -9,8 +9,6 @@
    modules
    contributing
    authors
-   history
-   documents
 
 Indices and tables
 ==================
