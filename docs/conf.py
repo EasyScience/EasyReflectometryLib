@@ -87,7 +87,7 @@ autodoc_member_order = 'bysource'
 # a list of builtin themes.
 #
 html_theme = 'sphinx_book_theme'
-html_logo = 'https://github.com/easyScience/easyReflectometryWww/raw/master/assets/img/logo.png'
+html_logo = os.path.join('_static', 'logo.png')
 html_favicon = os.path.join('_static', 'favicon.ico')
 html_theme_options = {'logo_only': True}
 
