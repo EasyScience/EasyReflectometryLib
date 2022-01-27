@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EasyReflectometry.experiment &#8212; EasyReflectometry 0.0.1 documentation</title>
+    <title>Experiment Model &#8212; EasyReflectometry 0.0.1 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -36,8 +36,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="EasyReflectometry.interfaces" href="interfaces.html" />
-    <link rel="prev" title="EasyReflectometry.calculators" href="calculators.html" />
+    <link rel="next" title="Calculators &amp; Optimisation" href="calculators.html" />
+    <link rel="prev" title="Structure" href="structure.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -93,9 +93,14 @@
    Usage
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials.html">
+   Tutorials
+  </a>
+ </li>
  <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="modules.html">
-   Modules
+   API
   </a>
   <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -104,31 +109,36 @@
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="calculators.html">
-     EasyReflectometry.calculators
+    <a class="reference internal" href="item.html">
+     Items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="material.html">
+     Material
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="layer.html">
+     Layer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="structure.html">
+     Structure
     </a>
    </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     EasyReflectometry.experiment
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="interfaces.html">
-     EasyReflectometry.interfaces
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="measurement.html">
-     EasyReflectometry.measurement
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="sample.html">
-     EasyReflectometry.sample
+     Experiment Model
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="calculators.html">
+   Calculators &amp; Optimisation
+  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="contributing.html">
@@ -213,7 +223,7 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>EasyReflectometry.experiment</h1>
+                <h1>Experiment Model</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -224,8 +234,95 @@
             
               <div>
                 
-  <div class="section" id="module-EasyReflectometry.experiment">
-<span id="easyreflectometry-experiment"></span><h1>EasyReflectometry.experiment<a class="headerlink" href="#module-EasyReflectometry.experiment" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-EasyReflectometry.experiment.model">
+<span id="experiment-model"></span><h1>Experiment Model<a class="headerlink" href="#module-EasyReflectometry.experiment.model" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.experiment.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'easyModel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/experiment/model.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">easyCore.Objects.ObjectClasses.BaseObj</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.add_item">
+<span class="sig-name descname"><span class="pre">add_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/experiment/model.html#Model.add_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.add_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a layer or item to the model structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*items</strong> – <p>Layers or items to add to model structure</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/experiment/model.html#Model.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default constructor for the reflectometry experiment model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Default model container</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.experiment.model.Model" title="EasyReflectometry.experiment.model.Model">Model</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.duplicate_item">
+<span class="sig-name descname"><span class="pre">duplicate_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/experiment/model.html#Model.duplicate_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.duplicate_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate a given item or layer in a structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idx</strong> (<em>int</em>) – Index of the item or layer to duplicate</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.from_pars">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'easyModel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/experiment/model.html#Model.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.from_pars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor of a reflectometry experiment model where the parameters are known.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structure</strong> (<em>EasyReflectometry.structure.Structure</em>) – The structure being modelled</p></li>
+<li><p><strong>scale</strong> (<em>float</em>) – Scaling factor of profile</p></li>
+<li><p><strong>background</strong> (<em>float</em>) – Linear background magnitude</p></li>
+<li><p><strong>background</strong> – Constant resolution smearing percentage</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Model container</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.experiment.model.Model" title="EasyReflectometry.experiment.model.Model">Model</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.remove_item">
+<span class="sig-name descname"><span class="pre">remove_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/experiment/model.html#Model.remove_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.remove_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an item from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idx</strong> (<em>int</em>) – Index of the item to remove</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.uid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uid</span></span><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.uid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a UID from the borg map</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.user_data">
+<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.user_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -234,17 +331,17 @@
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="calculators.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="structure.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">EasyReflectometry.calculators</p>
+            <p class="prev-next-title">Structure</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="interfaces.html" title="next page">
+    <a class='right-next' id="next-link" href="calculators.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">EasyReflectometry.interfaces</p>
+        <p class="prev-next-title">Calculators &amp; Optimisation</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

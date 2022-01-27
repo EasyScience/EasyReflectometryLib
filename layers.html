@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EasyReflectometry.sample &#8212; EasyReflectometry 0.0.1 documentation</title>
+    <title>sample.layers &#8212; EasyReflectometry 0.0.1 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -36,8 +36,6 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Contributing" href="contributing.html" />
-    <link rel="prev" title="EasyReflectometry.measurement" href="measurement.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -82,7 +80,7 @@
   Contents:
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="installation.html">
    Installation
@@ -93,42 +91,52 @@
    Usage
   </a>
  </li>
- <li class="toctree-l1 current active has-children">
-  <a class="reference internal" href="modules.html">
-   Modules
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials.html">
+   Tutorials
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="modules.html">
+   API
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul class="current">
+  <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="calculators.html">
-     EasyReflectometry.calculators
+    <a class="reference internal" href="item.html">
+     Items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="material.html">
+     Material
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="layer.html">
+     Layer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="structure.html">
+     Structure
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="experiment.html">
-     EasyReflectometry.experiment
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="interfaces.html">
-     EasyReflectometry.interfaces
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="measurement.html">
-     EasyReflectometry.measurement
-    </a>
-   </li>
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
-     EasyReflectometry.sample
+     Experiment Model
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="calculators.html">
+   Calculators &amp; Optimisation
+  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="contributing.html">
@@ -181,7 +189,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/sample.rst.txt"><button type="button"
+        <a class="dropdown-buttons" href="_sources/layers.rst.txt"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.rst</button></a>
         <!-- Download PDF via print -->
@@ -213,7 +221,7 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>EasyReflectometry.sample</h1>
+                <h1>sample.layers</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -224,8 +232,50 @@
             
               <div>
                 
-  <div class="section" id="module-EasyReflectometry.sample">
-<span id="easyreflectometry-sample"></span><h1>EasyReflectometry.sample<a class="headerlink" href="#module-EasyReflectometry.sample" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-EasyReflectometry.sample.layers">
+<span id="sample-layers"></span><h1>sample.layers<a class="headerlink" href="#module-EasyReflectometry.sample.layers" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layers.Layers">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.layers.</span></span><span class="sig-name descname"><span class="pre">Layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'easyLayers'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/layers.html#Layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.layers.Layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">easyCore.Objects.Groups.BaseCollection</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layers.Layers.default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/layers.html#Layers.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.layers.Layers.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default constructor for the reflectometry layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Default layers container</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.layers.Layers" title="EasyReflectometry.sample.layers.Layers">Layers</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layers.Layers.from_pars">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'easyLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/layers.html#Layers.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.layers.Layers.from_pars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor of a reflectometry layers where the parameters are known.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>EasyReflectometry.layer.Layer</em><em>, </em><em>EasyReflectometry.Item.Item</em><em>]</em><em>]</em>) – The series of layers</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layers container</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.sample.layers.Layers" title="EasyReflectometry.sample.layers.Layers">Layers</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layers.Layers.user_data">
+<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.layers.Layers.user_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -233,21 +283,7 @@
               
             
                 <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="measurement.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">EasyReflectometry.measurement</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="contributing.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Contributing</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
+<div class='prev-next-area'>
 </div>
             
         </div>

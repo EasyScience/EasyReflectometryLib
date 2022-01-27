@@ -6,14 +6,6 @@ To use EasyReflectometry in a project::
 
     import EasyReflectometry
 
+Details of specific usage of :py:mod:`EasyReflectometry` can be found in the `tutorials`_.
 
-Alternatively, you can clone the `repository`_ and install in a development mode using the following:
-
-.. code-block:: bash
-
-    git clone git@github.com:easyScience/EasyReflectometryLib.git
-    cd EasyReflectometryLib
-    git checkout develop
-    pip install -e ".[dev]"
-
-.. _`repository`: https://github.com/easyScience/EasyReflectometryLib
+.. _`tutorials`: ./tutorials.html

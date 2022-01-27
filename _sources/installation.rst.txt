@@ -12,9 +12,9 @@ To install orsopy, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install orsopy
+    $ pip install EasyReflectometry
 
-This is the preferred method to install orsopy, as it will always install the most recent stable release.
+This is the preferred method to install EasyReflectometry, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -23,29 +23,19 @@ you through the process.
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
 
-From sources
-------------
+Developer Instrutions
+---------------------
 
-The sources for orsopy can be downloaded from the `Github repo`_.
-
-You can either clone the public repository:
+Clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/reflectivity/orsopy
+    $ git clone git://github.com/easyScience/EasyReflectometryLib
 
-Or download the `tarball`_:
-
-.. code-block:: console
-
-    $ curl -OJL https://github.com/reflectivity/orsopy/tarball/master
-
-Once you have a copy of the source, you can install it with:
+And install the latest developer version with:
 
 .. code-block:: console
 
-    $ python setup.py install
-
-
-.. _Github repo: https://github.com/reflectivity/orsopy
-.. _tarball: https://github.com/reflectivity/orsopy/tarball/master
+    $ cd EasyReflectometryLib
+    $ git checkout develop
+    $ pip install -e ".[dev]"
