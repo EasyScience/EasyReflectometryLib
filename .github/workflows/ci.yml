@@ -24,9 +24,12 @@ jobs:
       run: |
         coverage run --source=EasyReflectometry -m pytest
         coverage lcov
-    - name: Coveralls GitHub Action
-      uses: coverallsapp/github-action@1.1.3
+    - name: Upload coverage
+      uses: codecov/codecov-action@v1.0.7
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: "coverage.lcov"
+        name: Pytest coverage
+        env_vars: OS,PYTHON,GITHUB_ACTIONS,GITHUB_ACTION,GITHUB_REF,GITHUB_REPOSITORY,GITHUB_HEAD_REF,GITHUB_RUN_ID,GITHUB_SHA,COVERAGE_FILE
+      env:
+        OS: ${{ matrix.os }}
+        PYTHON: ${{ matrix.python-version }}
 
