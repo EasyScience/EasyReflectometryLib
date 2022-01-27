@@ -22,7 +22,7 @@ jobs:
         pip install -e ".[dev]"
     - name: Test with coverage
       run: |
-        coverage run --source=EasyReflectometry setup.py test
+        coverage run --source=EasyReflectometry -m pytest
     - name: Coveralls
       uses: AndreMiras/coveralls-python-action@develop
       with:
