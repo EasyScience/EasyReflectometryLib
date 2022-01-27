@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>&lt;no title&gt; &#8212; EasyReflectometry 0.0.1 documentation</title>
+    <title>Contributing &#8212; EasyReflectometry 0.0.1 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Credits" href="authors.html" />
-    <link rel="prev" title="Modules" href="modules.html" />
+    <link rel="prev" title="EasyReflectometry.sample" href="sample.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -82,7 +82,7 @@
   Contents:
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="installation.html">
    Installation
@@ -102,8 +102,38 @@
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul class="simple">
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="calculators.html">
+     EasyReflectometry.calculators
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="experiment.html">
+     EasyReflectometry.experiment
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="interfaces.html">
+     EasyReflectometry.interfaces
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="measurement.html">
+     EasyReflectometry.measurement
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sample.html">
+     EasyReflectometry.sample
+    </a>
+   </li>
   </ul>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Contributing
+  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="authors.html">
@@ -180,7 +210,54 @@
                 <i class="fas fa-list"></i> Contents
             </div>
             <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#types-of-contributions">
+   Types of Contributions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#report-bugs">
+     Report Bugs
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fix-bugs">
+     Fix Bugs
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#implement-features">
+     Implement Features
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#write-documentation">
+     Write Documentation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#submit-feedback">
+     Submit Feedback
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-started">
+   Get Started!
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pull-request-guidelines">
+   Pull Request Guidelines
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tips">
+   Tips
+  </a>
+ </li>
 </ul>
 
             </nav>
@@ -191,7 +268,7 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1><no title></h1>
+                <h1>Contributing</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -200,7 +277,54 @@
                             <h2> Contents </h2>
                         </div>
                         <nav aria-label="Page">
-                            <ul class="simple visible nav section-nav flex-column">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#types-of-contributions">
+   Types of Contributions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#report-bugs">
+     Report Bugs
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fix-bugs">
+     Fix Bugs
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#implement-features">
+     Implement Features
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#write-documentation">
+     Write Documentation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#submit-feedback">
+     Submit Feedback
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-started">
+   Get Started!
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pull-request-guidelines">
+   Pull Request Guidelines
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tips">
+   Tips
+  </a>
+ </li>
 </ul>
 
                         </nav>
@@ -210,18 +334,126 @@
             
               <div>
                 
-  
+  <div class="section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<p>Contributions are welcome, and they are greatly appreciated! Every little bit
+helps, and credit will always be given.</p>
+<p>You can contribute in many ways:</p>
+<div class="section" id="types-of-contributions">
+<h2>Types of Contributions<a class="headerlink" href="#types-of-contributions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="report-bugs">
+<h3>Report Bugs<a class="headerlink" href="#report-bugs" title="Permalink to this headline">¶</a></h3>
+<p>Report bugs at <a class="reference external" href="https://github.com/easyScience/EasyReflectometryLib/issues">https://github.com/easyScience/EasyReflectometryLib/issues</a>.</p>
+<p>If you are reporting a bug, please include:</p>
+<ul class="simple">
+<li><p>Your operating system name and version.</p></li>
+<li><p>Any details about your local setup that might be helpful in troubleshooting.</p></li>
+<li><p>Detailed steps to reproduce the bug.</p></li>
+</ul>
+</div>
+<div class="section" id="fix-bugs">
+<h3>Fix Bugs<a class="headerlink" href="#fix-bugs" title="Permalink to this headline">¶</a></h3>
+<p>Look through the GitHub issues for bugs. Anything tagged with “bug” and “help
+wanted” is open to whoever wants to implement it.</p>
+</div>
+<div class="section" id="implement-features">
+<h3>Implement Features<a class="headerlink" href="#implement-features" title="Permalink to this headline">¶</a></h3>
+<p>Look through the GitHub issues for features. Anything tagged with “enhancement”
+and “help wanted” is open to whoever wants to implement it.</p>
+</div>
+<div class="section" id="write-documentation">
+<h3>Write Documentation<a class="headerlink" href="#write-documentation" title="Permalink to this headline">¶</a></h3>
+<p>EasyReflectometry could always use more documentation, whether as part of the
+official EasyReflectometry docs, in docstrings, or even on the web in blog posts,
+articles, and such.</p>
+</div>
+<div class="section" id="submit-feedback">
+<h3>Submit Feedback<a class="headerlink" href="#submit-feedback" title="Permalink to this headline">¶</a></h3>
+<p>The best way to send feedback is to file an issue at <a class="reference external" href="https://github.com/easyScience/EasyReflectometryLib/issues">https://github.com/easyScience/EasyReflectometryLib/issues</a>.</p>
+<p>If you are proposing a feature:</p>
+<ul class="simple">
+<li><p>Explain in detail how it would work.</p></li>
+<li><p>Keep the scope as narrow as possible, to make it easier to implement.</p></li>
+<li><p>Remember that this is a volunteer-driven project, and that contributions
+are welcome :)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="get-started">
+<h2>Get Started!<a class="headerlink" href="#get-started" title="Permalink to this headline">¶</a></h2>
+<p>Ready to contribute? Here’s how to set up <cite>EasyReflectometry</cite> for local development.</p>
+<ol class="arabic">
+<li><p>Fork the <cite>EasyReflectometry</cite> repo on GitHub.</p></li>
+<li><p>Clone your fork locally:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:your_name_here/EasyReflectometry.git
+</pre></div>
+</div>
+</li>
+<li><p>Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ mkvirtualenv EasyReflectometry
+$ <span class="nb">cd</span> EasyReflectometry/
+$ pip install -e <span class="s2">&quot;.[dev]&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a branch for local development:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git checkout -b name-of-your-bugfix-or-feature
+</pre></div>
+</div>
+<p>Now you can make your changes locally.</p>
+</li>
+<li><p>When you’re done making changes, auto format the code and check that your changes pass the unit
+tests and confirms to PEP 8:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ yapf -i EasyReflectometry tests
+$ flake8 --count --show-source --statistics EasyReflectometry tests
+$ pytest
+</pre></div>
+</div>
+<p>To get flake8 and tox, just pip install them into your virtualenv.</p>
+</li>
+<li><p>Commit your changes and push your branch to GitHub:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git add .
+$ git commit -m <span class="s2">&quot;Your detailed description of your changes.&quot;</span>
+$ git push origin name-of-your-bugfix-or-feature
+</pre></div>
+</div>
+</li>
+<li><p>Submit a pull request through the GitHub website.</p></li>
+</ol>
+</div>
+<div class="section" id="pull-request-guidelines">
+<h2>Pull Request Guidelines<a class="headerlink" href="#pull-request-guidelines" title="Permalink to this headline">¶</a></h2>
+<p>Before you submit a pull request, check that it meets these guidelines:</p>
+<ol class="arabic simple">
+<li><p>The pull request should include tests.</p></li>
+<li><p>If the pull request adds functionality, the docs should be updated. Put
+your new functionality into a function with a docstring, and add the
+feature to the list in README.rst.</p></li>
+<li><p>The pull request should work for Python 3.8, 3.9, and 3.10, and for PyPy. Check
+<a class="reference external" href="https://travis-ci.com/easyScience/EasyReflectometryLib/pull_requests">https://travis-ci.com/easyScience/EasyReflectometryLib/pull_requests</a>
+and make sure that the tests pass for all supported Python versions.</p></li>
+</ol>
+</div>
+<div class="section" id="tips">
+<h2>Tips<a class="headerlink" href="#tips" title="Permalink to this headline">¶</a></h2>
+<p>To run a subset of tests:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ pytest tests.test_EasyReflectometry
+</pre></div>
+</div>
+</div>
+</div>
+
 
               </div>
               
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="modules.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="sample.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Modules</p>
+            <p class="prev-next-title">EasyReflectometry.sample</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="authors.html" title="next page">
