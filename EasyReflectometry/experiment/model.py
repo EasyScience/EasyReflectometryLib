@@ -42,6 +42,7 @@ LAYER_DETAILS = {
 
 
 class Model(BaseObj):
+
     def __init__(self,
                  structure: Structure,
                  scale: Parameter,
@@ -69,11 +70,7 @@ class Model(BaseObj):
         scale = Parameter('scale', **LAYER_DETAILS['scale'])
         background = Parameter('background', **LAYER_DETAILS['background'])
         resolution = Parameter('resolution', **LAYER_DETAILS['resolution'])
-        return cls(structure,
-                   scale,
-                   background,
-                   resolution,
-                   interface=interface)
+        return cls(structure, scale, background, resolution, interface=interface)
 
     @classmethod
     def from_pars(cls,
@@ -123,7 +120,8 @@ class Model(BaseObj):
         :type items: Union[Layer, RepeatingMultiLayer]
         """
         for arg in items:
-            if (issubclass(arg.__class__, RepeatingMultiLayer) or issubclass(arg.__class__, MultiLayer)):
+            if (issubclass(arg.__class__, RepeatingMultiLayer)
+                    or issubclass(arg.__class__, MultiLayer)):
                 self.structure.append(arg)
                 if self.interface is not None:
                     self.interface().add_item_to_model(arg.uid)
@@ -143,8 +141,9 @@ class Model(BaseObj):
                                 thickness=i.thickness.raw_value,
                                 roughness=i.roughness.raw_value,
                                 name=i.name + ' duplicate'))
-        duplicate = to_duplicate.__class__.from_pars(Layers.from_pars(
-            *duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
+        duplicate = to_duplicate.__class__.from_pars(
+            Layers.from_pars(*duplicate_layers,
+                             name=to_duplicate.layers.name + ' duplicate'),
             name=to_duplicate.name + ' duplicate')
         self.add_item(duplicate)
 

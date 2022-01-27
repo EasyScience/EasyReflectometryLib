@@ -11,6 +11,7 @@ from EasyReflectometry.sample.layer import Layer
 
 
 class Structure(BaseCollection):
+
     def __init__(self,
                  *args: List[Union[Layer, MultiLayer, RepeatingMultiLayer]],
                  name: str = 'easyStructure',

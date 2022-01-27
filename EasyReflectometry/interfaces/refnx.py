@@ -61,16 +61,14 @@ class Refnx(InterfaceTemplate):
             key = model.uid
             self.calculator.create_layer(key)
             r_list.append(
-                ItemContainer(key, self._layer_link,
-                              self.calculator.get_layer_value,
+                ItemContainer(key, self._layer_link, self.calculator.get_layer_value,
                               self.calculator.update_layer))
             self.assign_material_to_layer(model.material.uid, key)
         elif (issubclass(t_, RepeatingMultiLayer) or issubclass(t_, MultiLayer)):
             key = model.uid
             self.calculator.create_item(key)
             r_list.append(
-                ItemContainer(key, self._item_link,
-                              self.calculator.get_item_value,
+                ItemContainer(key, self._item_link, self.calculator.get_item_value,
                               self.calculator.update_item))
             for i in model.layers:
                 self.add_layer_to_item(i.uid, model.uid)

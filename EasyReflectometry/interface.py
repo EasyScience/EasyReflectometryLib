@@ -8,6 +8,7 @@ from easyCore.Objects.Inferface import InterfaceFactoryTemplate
 
 
 class InterfaceFactory(InterfaceFactoryTemplate):
+
     def __init__(self):
         super(InterfaceFactory, self).__init__(InterfaceTemplate._interfaces)
 

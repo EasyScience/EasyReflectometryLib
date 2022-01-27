@@ -32,6 +32,7 @@ LAYER_DETAILS = {
 
 
 class Layer(BaseObj):
+
     def __init__(self,
                  material: Material,
                  thickness: Parameter,
@@ -81,10 +82,8 @@ class Layer(BaseObj):
         del default_options['thickness']['value']
         del default_options['roughness']['value']
 
-        thickness = Parameter('thickness', thickness,
-                              **default_options['thickness'])
-        roughness = Parameter('roughness', roughness,
-                              **default_options['roughness'])
+        thickness = Parameter('thickness', thickness, **default_options['thickness'])
+        roughness = Parameter('roughness', roughness, **default_options['roughness'])
 
         return cls(material=material,
                    thickness=thickness,
@@ -98,8 +97,7 @@ class Layer(BaseObj):
         """
         self.material = material
         if self.interface is not None:
-            self.interface().assign_material_to_layer(self.material.uid,
-                                                      self.uid)
+            self.interface().assign_material_to_layer(self.material.uid, self.uid)
 
     @property
     def uid(self):

@@ -6,24 +6,15 @@ from refl1d import names, model, experiment
 
 
 class Refl1d:
+
     def __init__(self):
-        self.storage = {
-            'material': {},
-            'layer': {},
-            'item': {},
-            'model': {}
-        }
+        self.storage = {'material': {}, 'layer': {}, 'item': {}, 'model': {}}
 
     def reset_storage(self):
         """
         Reset the storage area to blank.
         """
-        self.storage = {
-            'material': {},
-            'layer': {},
-            'item': {},
-            'model': {}
-        }
+        self.storage = {'material': {}, 'layer': {}, 'item': {}, 'model': {}}
 
     def create_material(self, name):
         """
@@ -104,7 +95,9 @@ class Refl1d:
         :param name: The name of the item
         :type name: str
         """
-        self.storage['item'][name] = model.Repeat(model.Stack(model.Slab(names.SLD(), thickness=0, interface=0)), name=str(name))
+        self.storage['item'][name] = model.Repeat(model.Stack(
+            model.Slab(names.SLD(), thickness=0, interface=0)),
+                                                  name=str(name))
         del self.storage['item'][name].stack[0]
 
     def update_item(self, name, **kwargs):
@@ -213,8 +206,7 @@ class Refl1d:
             :param item_name: The item name
             :type item_name: int
             """
-        item_idx = self.storage['model']['items'].index(
-            self.storage['item'][item_name])
+        item_idx = self.storage['model']['items'].index(self.storage['item'][item_name])
         del self.storage['model']['items'][item_idx]
         del self.storage['item'][item_name]
 
@@ -236,14 +228,16 @@ class Refl1d:
                 stack = model.Stack()
                 for j in range(len(i.stack))[::-1]:
                     stack |= i.stack[j]
-                structure |= model.Repeat(stack, repeat=i.repeat.value) 
+                structure |= model.Repeat(stack, repeat=i.repeat.value)
 
         argmin = np.argmin(x_array)
         argmax = np.argmax(x_array)
-        dq_vector = x_array * self.storage['model']['dq'] / 100 / (2 * np.sqrt(2 * np.log(2)))
+        dq_vector = x_array * self.storage['model']['dq'] / 100 / (
+            2 * np.sqrt(2 * np.log(2)))
 
-        q = names.QProbe(x_array, dq_vector,
-                         intensity=self.storage['model']['scale'], 
+        q = names.QProbe(x_array,
+                         dq_vector,
+                         intensity=self.storage['model']['scale'],
                          background=self.storage['model']['bkg'])
         q.calc_Qo = np.linspace(
             x_array[argmin] - 3.5 * dq_vector[argmin],
@@ -271,7 +265,8 @@ class Refl1d:
                     stack |= i.stack[j]
                 structure |= model.Repeat(stack, repeat=i.repeat.value)
 
-        q = names.QProbe(np.linspace(0.001, 0.3, 10), np.linspace(0.001, 0.3, 10),
+        q = names.QProbe(np.linspace(0.001, 0.3, 10),
+                         np.linspace(0.001, 0.3, 10),
                          intensity=self.storage['model']['scale'],
                          background=self.storage['model']['bkg'])
         z, sld, _ = names.Experiment(probe=q, sample=structure).smooth_profile()

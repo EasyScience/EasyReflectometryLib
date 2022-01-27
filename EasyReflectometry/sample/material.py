@@ -31,6 +31,7 @@ MATERIAL_DETAILS = {
 
 
 class Material(BaseObj):
+
     def __init__(self,
                  sld: Parameter,
                  isld: Parameter,

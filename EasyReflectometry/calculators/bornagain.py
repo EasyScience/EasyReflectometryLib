@@ -7,7 +7,8 @@ import bornagain as ba
 
 
 class BornAgain:
-    def __init__(self): 
+
+    def __init__(self):
         self.storage = {
             'material': {},
             'layer': {},
@@ -59,7 +60,9 @@ class BornAgain:
             real = kwargs['real'] * 1e-6
         if 'imag' in kwargs.keys():
             if kwargs['imag'] < 0:
-                raise ValueError('The BornAgain interface does not support negative imaginary scattering length densities')
+                raise ValueError(
+                    'The BornAgain interface does not support negative imaginary scattering length densities'
+                )
             imag = kwargs['imag'] * 1e-6
         self.storage['material'][name] = ba.MaterialBySLD(str(name), real, imag)
 
@@ -96,7 +99,9 @@ class BornAgain:
         """
         if 'thickness' in kwargs.keys():
             thickness = kwargs['thickness']
-            self.storage['layer'][name] = ba.Layer(self.storage['material'][self.storage['layer_material'][name]], thickness * ba.angstrom)
+            self.storage['layer'][name] = ba.Layer(
+                self.storage['material'][self.storage['layer_material'][name]],
+                thickness * ba.angstrom)
         if 'sigma' in kwargs.keys():
             sigma = kwargs['sigma']
             self.storage['roughness'][name] = ba.LayerRoughness()
@@ -139,7 +144,7 @@ class BornAgain:
         """
         if 'repeats' in kwargs.keys():
             self.storage['item_repeats'][name] = kwargs['repeats']
-    
+
     def get_item_value(self, name, key):
         """
         A function to get a given item value
@@ -184,7 +189,7 @@ class BornAgain:
         """
         model = self.storage[name + '_parameters']
         return model[key]
-    
+
     def assign_material_to_layer(self, material_name, layer_name):
         """
         Assign a material to a layer.
@@ -258,7 +263,9 @@ class BornAgain:
         distr = ba.RangedDistributionGaussian(n_samples, n_sig)
 
         scan = ba.QSpecScan(x_array / ba.angstrom)
-        scan.setAbsoluteQResolution(distr, x_array / ba.angstrom * (self.storage['model_parameters']['resolution'] * 0.5 / 100))
+        scan.setAbsoluteQResolution(
+            distr, x_array / ba.angstrom *
+            (self.storage['model_parameters']['resolution'] * 0.5 / 100))
 
         simulation = ba.SpecularSimulation()
         simulation.setScan(scan)
@@ -268,14 +275,17 @@ class BornAgain:
             for k in range(int(self.storage['item_repeats'][i])):
                 for j in self.storage['item'][i]:
                     layer = ba.Layer(
-                        self.storage['material'][self.storage['layer_material'][j]], self.storage['layer'][j].thickness())
-                    total_model.addLayerWithTopRoughness(
-                        layer, self.storage['roughness'][j])
+                        self.storage['material'][self.storage['layer_material'][j]],
+                        self.storage['layer'][j].thickness())
+                    total_model.addLayerWithTopRoughness(layer,
+                                                         self.storage['roughness'][j])
 
         simulation.setSample(total_model)
         simulation.runSimulation()
 
-        return (self.storage['model_parameters']['scale'] * simulation.result().array() + self.storage['model_parameters']['background'])
+        return (
+            self.storage['model_parameters']['scale'] * simulation.result().array() +
+            self.storage['model_parameters']['background'])
 
     def sld_profile(self) -> np.ndarray:
         """
@@ -288,7 +298,8 @@ class BornAgain:
         """
         number_of_layers = 0
         for i in self.storage['model_items']:
-            number_of_layers += len(self.storage['item'][i]) * self.storage['item_repeats'][i]
+            number_of_layers += len(
+                self.storage['item'][i]) * self.storage['item_repeats'][i]
         layers = np.zeros((int(number_of_layers), 4))
 
         count = 0
@@ -296,10 +307,10 @@ class BornAgain:
             for k in range(int(self.storage['item_repeats'][i])):
                 for j in self.storage['item'][i]:
                     layers[count, 0] = self.storage['layer'][j].thickness()
-                    layers[count, 1] = self.storage['material'][self.storage['layer_material']
-                                                                [j]].materialData().real
-                    layers[count, 2] = self.storage['material'][self.storage['layer_material']
-                                                                [j]].materialData().imag
+                    layers[count, 1] = self.storage['material'][
+                        self.storage['layer_material'][j]].materialData().real
+                    layers[count, 2] = self.storage['material'][
+                        self.storage['layer_material'][j]].materialData().imag
                     layers[count, 3] = self.storage['roughness'][j].getSigma()
                     count += 1
 
@@ -330,6 +341,7 @@ class BornAgain:
             f[new_z <= -scale] = 0
             f[new_z >= scale] = 1
             return f
+
         step_f = step
         erf_f = norm.cdf
         sigma = layers[1:, 3]

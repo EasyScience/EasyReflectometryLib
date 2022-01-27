@@ -11,6 +11,7 @@ RepeatingMultiLayer = TypeVar("RepeatingMultiLayer")
 
 
 class Layers(BaseCollection):
+
     def __init__(self,
                  *args: List[Union[Layer, RepeatingMultiLayer]],
                  name: str = 'easyLayers',

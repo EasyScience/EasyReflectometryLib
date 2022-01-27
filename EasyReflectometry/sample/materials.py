@@ -9,6 +9,7 @@ from EasyReflectometry.sample.material import Material
 
 
 class Materials(BaseCollection):
+
     def __init__(self,
                  *args: List[Material],
                  name: str = 'easyMaterials',

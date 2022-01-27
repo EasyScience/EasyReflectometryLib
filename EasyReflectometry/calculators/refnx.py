@@ -6,12 +6,13 @@ from refnx import reflect
 
 
 class Refnx:
+
     def __init__(self):
         self.storage = {
             'material': {},
             'layer': {},
             'item': {},
-            'model': None#reflect.ReflectModel(reflect.Structure())
+            'model': None  #reflect.ReflectModel(reflect.Structure())
         }
 
     def reset_storage(self):
@@ -132,7 +133,7 @@ class Refnx:
         item = self.storage['item'][name]
         item = getattr(item, key)
         return getattr(item, 'value')
-    
+
     def create_model(self):
         """
         Create a model for analysis
@@ -170,8 +171,7 @@ class Refnx:
         :param layer_name: The layer name
         :type layer_name: str
         """
-        self.storage['layer'][layer_name].sld = self.storage['material'][
-            material_name]
+        self.storage['layer'][layer_name].sld = self.storage['material'][material_name]
 
     def add_layer_to_item(self, layer_name, item_name):
         """
@@ -192,7 +192,8 @@ class Refnx:
         :param item_name: items to add to model
         :type item_name: str
         """
-        self.storage['model'].structure.components.append(self.storage['item'][item_name])
+        self.storage['model'].structure.components.append(
+            self.storage['item'][item_name])
 
     def remove_layer_from_item(self, layer_name, item_name):
         """
@@ -242,8 +243,7 @@ class Refnx:
         :return: z and sld(z)
         :rtype: tuple[np.ndarray, np.ndarray]
         """
-        return _remove_unecessary_stacks(
-            self.storage['model'].structure).sld_profile()
+        return _remove_unecessary_stacks(self.storage['model'].structure).sld_profile()
 
 
 def _remove_unecessary_stacks(current_structure):
