@@ -12,7 +12,7 @@ except Exception:
 
 try:
     from EasyReflectometry.interfaces.bornagain import BornAgain  # noqa: F401
-except Exception:
+except ModuleNotFoundError:
     traceback.print_exc()
     print('Warning: BornAgain python is not installed')
 
