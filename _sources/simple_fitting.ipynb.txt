@@ -371,7 +371,7 @@
    "id": "14bef528-08de-41a6-99cd-c74d40409164",
    "metadata": {},
    "source": [
-    "## Choosing our calculation engine and linking this with the model\n",
+    "## Choosing our calculation engine\n",
     "\n",
     "The `EasyReflectometry` package enables the calculation of the reflectometry profile using either [*refnx*](https://refnx.readthedocs.io/) or [*Refl1D*](https://refl1d.readthedocs.io/en/latest/).\n",
     "For this tutorial, we will stick to the current default, which is *refnx*. \n",
