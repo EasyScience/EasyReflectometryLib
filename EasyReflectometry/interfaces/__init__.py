@@ -10,11 +10,11 @@ except Exception:
     traceback.print_exc()
     print('Warning: refnx is not installed')
 
-try:
-    from EasyReflectometry.interfaces.bornagain import BornAgain  # noqa: F401
-except Exception:
-    traceback.print_exc()
-    print('Warning: BornAgain python is not installed')
+# try:
+#     from EasyReflectometry.interfaces.bornagain import BornAgain  # noqa: F401
+# except Exception:
+#     traceback.print_exc()
+#     print('Warning: BornAgain python is not installed')
 
 try:
     from EasyReflectometry.interfaces.refl1d import Refl1d  # noqa: F401
