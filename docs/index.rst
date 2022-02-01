@@ -8,10 +8,10 @@
    installation
    usage
    tutorials
-   modules
    calculators
    contributing
    authors
+   modules
 
 
 Indices and tables
