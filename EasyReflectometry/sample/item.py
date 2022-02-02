@@ -1,19 +1,17 @@
 """The :py:mod:`item` library is the backbone of :py:mod:`EasyReflectometry`.
 An :py:mod:`EasyReflectometry.sample.item` allows for the inclusion of physical and 
 chemical parameterisation into our reflectometry model.  
+For more information please look at the `item library documentation`_
 
-Current :py:mod:`item` options include: 
-
-* :py:class:`MultiLayer`
-* :py:class:`RepeatingMultiLayer`
+.. _`item library documentation`: ./library.html#multilayer
 """
 
 __author__ = 'github.com/arm61'
-__version__ = '0.0.1'
 
 from copy import deepcopy
 from typing import Union, List
 
+import yaml
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
 from EasyReflectometry.sample.layer import Layer
@@ -42,9 +40,10 @@ class MultiLayer(BaseObj):
 
     .. _`item library documentation`: ./library.html#multilayer
     """
+
     def __init__(self,
                  layers: Union[Layers, Layer, List[Layer]],
-                 name: str = 'easyMultiLayer',
+                 name: str = 'EasyMultiLayer',
                  interface=None):
         if isinstance(layers, Layer):
             layers = Layers(layers, name=layers.name)
@@ -69,7 +68,7 @@ class MultiLayer(BaseObj):
     @classmethod
     def from_pars(cls,
                   layers: Layers,
-                  name: str = "easyMultiLayer",
+                  name: str = "EasyMultiLayer",
                   interface=None) -> "MultiLayer":
         """
         Constructor of a multi-layer item where the parameters are known.
@@ -127,6 +126,15 @@ class MultiLayer(BaseObj):
         return self._borg.map.convert_id_to_key(self)
 
     # Representation
+    @property
+    def _dict_repr(self) -> dict:
+        """
+        A simplified dict representation. 
+        
+        :return: Simple dictionary
+        """
+        return {self.name: self.layers._dict_repr}
+
     def __repr__(self) -> str:
         """
         String representation of the layer.
@@ -134,7 +142,7 @@ class MultiLayer(BaseObj):
         :return: a string representation of the layer
         :rtype: str
         """
-        return f"<{self.name}: ({self.layers.__repr__()})>"
+        return yaml.dump(self._dict_repr, sort_keys=False)
 
 
 class RepeatingMultiLayer(MultiLayer):
@@ -149,10 +157,11 @@ class RepeatingMultiLayer(MultiLayer):
 
     .. _`item library documentation`: ./library.html#repeatingmultilayer
     """
+
     def __init__(self,
                  layers: Union[Layers, Layer, List[Layer]],
                  repetitions: Parameter,
-                 name: str = 'easyRepeatingMultiLayer',
+                 name: str = 'EasyRepeatingMultiLayer',
                  interface=None):
         if isinstance(layers, Layer):
             layers = Layers(layers, name=layers.name)
@@ -181,7 +190,7 @@ class RepeatingMultiLayer(MultiLayer):
     def from_pars(cls,
                   layers: Layers,
                   repetitions: float = 1.0,
-                  name: str = 'easyRepeatingMultiLayer',
+                  name: str = 'EasyRepeatingMultiLayer',
                   interface=None) -> "RepeatingMultiLayer":
         """
         Constructor of a reflectometry repeating multi layer where the parameters are known.
@@ -212,6 +221,17 @@ class RepeatingMultiLayer(MultiLayer):
         return self._borg.map.convert_id_to_key(self)
 
     # Representation
+    @property
+    def _dict_repr(self) -> dict:
+        """
+        A simplified dict representation. 
+        
+        :return: Simple dictionary
+        """
+        d_dict = {self.name: self.layers._dict_repr}
+        d_dict[self.name]['repetitions'] = self.repetitions.raw_value
+        return d_dict
+
     def __repr__(self) -> str:
         """
         String representation of the layer.
@@ -219,4 +239,4 @@ class RepeatingMultiLayer(MultiLayer):
         :return: a string representation of the layer
         :rtype: str
         """
-        return f"<{self.name}: ({self.repetitions.raw_value} repetitions of {self.layers.__repr__()})>"
+        return yaml.dump(self._dict_repr, sort_keys=False)

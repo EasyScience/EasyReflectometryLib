@@ -3,6 +3,7 @@ __version__ = '0.0.1'
 
 from copy import deepcopy
 
+import yaml
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
 from EasyReflectometry.sample.material import Material
@@ -37,7 +38,7 @@ class Layer(BaseObj):
                  material: Material,
                  thickness: Parameter,
                  roughness: Parameter,
-                 name: str = 'easyLayer',
+                 name: str = 'EasyLayer',
                  interface=None):
         super().__init__(name,
                          material=material,
@@ -64,7 +65,7 @@ class Layer(BaseObj):
                   material: Material,
                   thickness: float,
                   roughness: float,
-                  name: str = 'easyLayer',
+                  name: str = 'EasyLayer',
                   interface=None) -> "Layer":
         """
         Constructor of a reflectometry layer where the parameters are known.
@@ -107,6 +108,21 @@ class Layer(BaseObj):
         return self._borg.map.convert_id_to_key(self)
 
     # Representation
+    @property
+    def _dict_repr(self) -> dict:
+        """
+        A simplified dict representation. 
+        
+        :return: Simple dictionary
+        """
+        return {
+            self.name: {
+                'material': self.material._dict_repr,
+                'thickness': f'{self.thickness.raw_value:.3f} {self.thickness.unit}',
+                'roughness': f'{self.roughness.raw_value:.3f} {self.roughness.unit}'
+            }
+        }
+
     def __repr__(self) -> str:
         """
         String representation of the layer.
@@ -114,4 +130,4 @@ class Layer(BaseObj):
         :return: a string representation of the layer
         :rtype: str
         """
-        return f"<{self.name}: (material: {self.material.__repr__()}, thickness: {self.thickness.raw_value:.3f} {self.thickness.unit:~P}, roughness: {self.roughness.raw_value:.3f} {self.roughness.unit:~P})>"
+        return yaml.dump(self._dict_repr, sort_keys=False)

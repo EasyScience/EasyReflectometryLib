@@ -4,6 +4,7 @@ __version__ = '0.0.1'
 from copy import deepcopy
 from typing import List, Union
 
+import yaml
 from easyCore import np
 from easyCore.Objects.Groups import BaseCollection
 from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
@@ -14,7 +15,7 @@ class Structure(BaseCollection):
 
     def __init__(self,
                  *args: List[Union[Layer, MultiLayer, RepeatingMultiLayer]],
-                 name: str = 'easyStructure',
+                 name: str = 'EasyStructure',
                  interface=None,
                  **kwargs):
         new_items = []
@@ -44,7 +45,7 @@ class Structure(BaseCollection):
     @classmethod
     def from_pars(cls,
                   *args: List[Union[MultiLayer, RepeatingMultiLayer]],
-                  name: str = 'easyStructure',
+                  name: str = 'EasyStructure',
                   interface=None) -> "Structure":
         """
         Constructor of a reflectometry structure where the parameters are known.
@@ -57,6 +58,15 @@ class Structure(BaseCollection):
         return cls(*args, name=name, interface=interface)
 
     # Representation
+    @property
+    def _dict_repr(self) -> dict:
+        """
+        A simplified dict representation. 
+        
+        :return: Simple dictionary
+        """
+        return {self.name: [i._dict_repr for i in self]}
+
     def __repr__(self) -> str:
         """
         String representation of the layer.
@@ -64,7 +74,4 @@ class Structure(BaseCollection):
         :return: a string representation of the layer
         :rtype: str
         """
-        string_return = f"<{self.name}: A series of {len(self)} items>"
-        for i in self:
-            string_return += f"\n  - {i}"
-        return string_return
+        return yaml.dump(self._dict_repr, sort_keys=False)

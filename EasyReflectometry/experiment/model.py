@@ -1,8 +1,10 @@
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
+from typing import Union
 from copy import deepcopy
 
+import yaml
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
 from EasyReflectometry.sample.structure import Structure
@@ -48,7 +50,7 @@ class Model(BaseObj):
                  scale: Parameter,
                  background: Parameter,
                  resolution: Parameter,
-                 name: str = 'easyModel',
+                 name: str = 'EasyModel',
                  interface=None):
         super().__init__(name,
                          structure=structure,
@@ -78,21 +80,16 @@ class Model(BaseObj):
                   scale: Parameter,
                   background: Parameter,
                   resolution: Parameter,
-                  name: str = 'easyModel',
+                  name: str = 'EasyModel',
                   interface=None) -> "Model":
         """
         Constructor of a reflectometry experiment model where the parameters are known.
 
         :param structure: The structure being modelled
-        :type structure: EasyReflectometry.structure.Structure
         :param scale: Scaling factor of profile
-        :type scale: float
         :param background: Linear background magnitude
-        :type background: float
         :param background: Constant resolution smearing percentage 
-        :type background: float
         :return: Model container
-        :rtype: Model
         """
         default_options = deepcopy(LAYER_DETAILS)
         del default_options['scale']['value']
@@ -112,12 +109,11 @@ class Model(BaseObj):
                    name=name,
                    interface=interface)
 
-    def add_item(self, *items):
+    def add_item(self, *items: Union[Layer, RepeatingMultiLayer]):
         """
         Add a layer or item to the model structure.
 
         :param *items: Layers or items to add to model structure
-        :type items: Union[Layer, RepeatingMultiLayer]
         """
         for arg in items:
             if (issubclass(arg.__class__, RepeatingMultiLayer)
@@ -126,12 +122,11 @@ class Model(BaseObj):
                 if self.interface is not None:
                     self.interface().add_item_to_model(arg.uid)
 
-    def duplicate_item(self, idx):
+    def duplicate_item(self, idx: int):
         """
         Duplicate a given item or layer in a structure.
 
         :param idx: Index of the item or layer to duplicate
-        :type idx: int
         """
         to_duplicate = self.structure[idx]
         duplicate_layers = []
@@ -166,6 +161,22 @@ class Model(BaseObj):
         return self._borg.map.convert_id_to_key(self)
 
     # Representation
+    @property
+    def _dict_repr(self) -> dict:
+        """
+        A simplified dict representation. 
+        
+        :return: Simple dictionary
+        """
+        return {
+            self.name: {
+                'scale': self.scale.raw_value,
+                'background': self.background.raw_value,
+                'resolution': f'{self.resolution.raw_value} %',
+                'structure': self.structure._dict_repr
+            }
+        }
+
     def __repr__(self) -> str:
         """
         String representation of the layer.
@@ -173,4 +184,4 @@ class Model(BaseObj):
         :return: a string representation of the layer
         :rtype: str
         """
-        return f"<{self.name}: (structure: {self.structure.name}, scale: {self.scale.raw_value:.3f}, background: {self.background.raw_value:.3e}, resolution: {self.resolution.raw_value:.2f})>"
+        return yaml.dump(self._dict_repr, sort_keys=False)

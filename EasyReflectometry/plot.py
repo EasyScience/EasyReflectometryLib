@@ -24,7 +24,12 @@ def plot(data: sc.Dataset) -> ipympl.backend_nbagg.Canvas:
     for i in refl_nums:
         sc.plot(data[f'R{i}'], ax=ax1, norm='log', linestyle='', marker='.')
         try:
-            sc.plot(data[f'R{i}_model'], ax=ax1, norm='log', linestyle='-', color='orange', marker='')
+            sc.plot(data[f'R{i}_model'],
+                    ax=ax1,
+                    norm='log',
+                    linestyle='-',
+                    color='orange',
+                    marker='')
         except sc.NotFoundError:
             pass
     sld_nums = [k[1:] for k, v in data.coords.items() if 'z' == k[0]]
