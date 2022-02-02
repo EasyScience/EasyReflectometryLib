@@ -5,7 +5,7 @@
    "id": "a60117e3-d089-4375-ac7c-12a52ed47271",
    "metadata": {},
    "source": [
-    "# A MultiLayer fitting model\n",
+    "# A multilayer fitting model\n",
     "\n",
     "One of the main tools in `EasyReflectometry` is the [item library](./item.html). \n",
     "This allows the user to define their model, using specific parameters for their system of interest (if it is included in the item library). \n",
