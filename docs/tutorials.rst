@@ -7,3 +7,4 @@ The tutorials associated with using :py:mod:`EasyReflectometry` will be collecte
    :maxdepth: 1
 
    simple_fitting
+   repeating
