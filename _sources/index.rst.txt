@@ -7,6 +7,7 @@
    
    installation
    usage
+   library
    tutorials
    calculators
    contributing
