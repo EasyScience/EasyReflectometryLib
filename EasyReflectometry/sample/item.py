@@ -37,6 +37,10 @@ class MultiLayer(BaseObj):
     :py:class:`EasyReflectometry.sample.layers.Layers`. 
     This :py:mod:`item` will arrange the layers as slabs, one on top of another, 
     allowing the reflectometry to be determined from them. 
+    
+    More information about the usage of this item is available in the `item library documentation`_
+
+    .. _`item library documentation`: ./library.html#multilayer
     """
     def __init__(self,
                  layers: Union[Layers, Layer, List[Layer]],
@@ -140,6 +144,10 @@ class RepeatingMultiLayer(MultiLayer):
     reflectometry engines as the operation can be performed for a single 
     :py:class:`MultiLayer` and cheaply combined for the appropriate number of 
     :py:attr:`repetitions`. 
+
+    More information about the usage of this item is available in the `item library documentation`_
+
+    .. _`item library documentation`: ./library.html#repeatingmultilayer
     """
     def __init__(self,
                  layers: Union[Layers, Layer, List[Layer]],
