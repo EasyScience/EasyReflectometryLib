@@ -14,11 +14,12 @@ from EasyReflectometry.interface import InterfaceFactory
 
 
 class TestLayer(unittest.TestCase):
+
     def test_default(self):
         p = Layer.default()
-        assert_equal(p.name, 'easyLayer')
+        assert_equal(p.name, 'EasyLayer')
         assert_equal(p.interface, None)
-        assert_equal(p.material.name, 'easyMaterial')
+        assert_equal(p.material.name, 'EasyMaterial')
         assert_equal(p.thickness.display_name, 'thickness')
         assert_equal(str(p.thickness.unit), 'angstrom')
         assert_equal(p.thickness.value.n, 10.0)
@@ -66,16 +67,32 @@ class TestLayer(unittest.TestCase):
         m = Material.from_pars(6.908, -0.278, 'Boron', interface=interface)
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron', interface=interface)
         k = Material.from_pars(2.074, 0.0, 'Silicon', interface=interface)
-        assert_almost_equal(p.interface().calculator.storage['layer'][p.uid].sld.real.value, 6.908)
-        assert_almost_equal(p.interface().calculator.storage['layer'][p.uid].sld.imag.value, -0.278)
+        assert_almost_equal(
+            p.interface().calculator.storage['layer'][p.uid].sld.real.value, 6.908)
+        assert_almost_equal(
+            p.interface().calculator.storage['layer'][p.uid].sld.imag.value, -0.278)
         p.assign_material(k)
-        assert_almost_equal(p.interface().calculator.storage['layer'][p.uid].sld.real.value, 2.074)
-        assert_almost_equal(p.interface().calculator.storage['layer'][p.uid].sld.imag.value, 0.0)
+        assert_almost_equal(
+            p.interface().calculator.storage['layer'][p.uid].sld.real.value, 2.074)
+        assert_almost_equal(
+            p.interface().calculator.storage['layer'][p.uid].sld.imag.value, 0.0)
 
+    def test_dict_repr(self):
+        p = Layer.default()
+        assert p._dict_repr == {
+            'EasyLayer': {
+                'material': {
+                    'EasyMaterial': {
+                        'isld': '0.000e-6 1 / angstrom ** 2',
+                        'sld': '4.186e-6 1 / angstrom ** 2'
+                    }
+                },
+                'roughness': '3.300 angstrom',
+                'thickness': '10.000 angstrom'
+            }
+        }
 
     def test_repr(self):
         p = Layer.default()
-        assert_equal(
-            p.__repr__(),
-            '<easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>'
-        )
+        assert p.__repr__(
+        ) == 'EasyLayer:\n  material:\n    EasyMaterial:\n      sld: 4.186e-6 1 / angstrom ** 2\n      isld: 0.000e-6 1 / angstrom ** 2\n  thickness: 10.000 angstrom\n  roughness: 3.300 angstrom\n'

@@ -15,13 +15,14 @@ from EasyReflectometry.sample.item import RepeatingMultiLayer
 
 
 class TestLayers(unittest.TestCase):
+
     def test_default(self):
         p = Layers.default()
-        assert_equal(p.name, 'easyLayers')
+        assert_equal(p.name, 'EasyLayers')
         assert_equal(p.interface, None)
         assert_equal(len(p), 2)
-        assert_equal(p[0].name, 'easyLayer')
-        assert_equal(p[1].name, 'easyLayer')
+        assert_equal(p[0].name, 'EasyLayer')
+        assert_equal(p[1].name, 'EasyLayer')
 
     def test_from_pars(self):
         m = Material.from_pars(6.908, -0.278, 'Boron')
@@ -43,9 +44,36 @@ class TestLayers(unittest.TestCase):
         assert_equal(l.name, 'twoLayer')
         assert_equal(l.interface, None)
 
+    def test_dict_repr(self):
+        p = Layers.default()
+        print(p._dict_repr)
+        assert p._dict_repr == {
+            'EasyLayers': [{
+                'EasyLayer': {
+                    'material': {
+                        'EasyMaterial': {
+                            'sld': '4.186e-6 1 / angstrom ** 2',
+                            'isld': '0.000e-6 1 / angstrom ** 2'
+                        }
+                    },
+                    'thickness': '10.000 angstrom',
+                    'roughness': '3.300 angstrom'
+                }
+            }, {
+                'EasyLayer': {
+                    'material': {
+                        'EasyMaterial': {
+                            'sld': '4.186e-6 1 / angstrom ** 2',
+                            'isld': '0.000e-6 1 / angstrom ** 2'
+                        }
+                    },
+                    'thickness': '10.000 angstrom',
+                    'roughness': '3.300 angstrom'
+                }
+            }]
+        }
+
     def test_repr(self):
         p = Layers.default()
-        assert_equal(
-            p.__repr__(),
-            '<easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>'
-        )
+        assert p.__repr__(
+        ) == 'EasyLayers:\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 10.000 angstrom\n    roughness: 3.300 angstrom\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 10.000 angstrom\n    roughness: 3.300 angstrom\n'

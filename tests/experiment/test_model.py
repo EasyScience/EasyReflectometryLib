@@ -18,11 +18,12 @@ from EasyReflectometry.interface import InterfaceFactory
 
 
 class TestModel(unittest.TestCase):
+
     def test_default(self):
         p = Model.default()
-        assert_equal(p.name, 'easyModel')
+        assert_equal(p.name, 'EasyModel')
         assert_equal(p.interface, None)
-        assert_equal(p.structure.name, 'easyStructure')
+        assert_equal(p.structure.name, 'EasyStructure')
         assert_equal(p.scale.display_name, 'scale')
         assert_equal(str(p.scale.unit), 'dimensionless')
         assert_equal(p.scale.value.n, 1.0)
@@ -85,7 +86,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Structure.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel') 
+        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
         assert_equal(len(mod.structure), 1)
         mod.add_item(o2)
         assert_equal(len(mod.structure), 2)
@@ -158,7 +159,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Structure.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel') 
+        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
         assert_equal(len(mod.structure), 1)
         mod.add_item(o2)
         assert_equal(len(mod.structure), 2)
@@ -178,7 +179,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Structure.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface) 
+        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
         assert_equal(len(mod.interface().calculator.storage['item']), 1)
         mod.add_item(o2)
         assert_equal(len(mod.interface().calculator.storage['item']), 2)
@@ -260,7 +261,7 @@ class TestModel(unittest.TestCase):
         mod.remove_item(0)
         assert_equal(len(mod.interface().calculator.storage['item']), 1)
         assert_equal(len(mod.interface().calculator.storage['layer']), 2)
-    
+
     def test_remove_item_with_interface_refl1d(self):
         interface = InterfaceFactory()
         interface.switch('refl1d')
@@ -308,10 +309,8 @@ class TestModel(unittest.TestCase):
     def test_uid(self):
         p = Model.default()
         assert_equal(p.uid, p._borg.map.convert_id_to_key(p))
-    
+
     def test_repr(self):
         p = Model.default()
-        assert_equal(
-            p.__repr__(),
-            "<easyModel: (structure: easyStructure, scale: 1.000, background: 1.000e-07, resolution: 5.00)>"
-        )
+        assert p.__repr__(
+        ) == "EasyModel:\n  scale: 1.0\n  background: 1.0e-07\n  resolution: 5.0 %\n  structure:\n    EasyStructure:\n    - EasyMultiLayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultiLayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n"

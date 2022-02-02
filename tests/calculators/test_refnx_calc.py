@@ -13,6 +13,7 @@ from refnx import reflect
 
 
 class TestRefnx(unittest.TestCase):
+
     def test_init(self):
         p = Refnx()
         assert_equal(list(p.storage.keys()), ['material', 'layer', 'item', 'model'])
@@ -83,7 +84,7 @@ class TestRefnx(unittest.TestCase):
         p.create_item('SiNi')
         p.update_item('SiNi', repeats=10)
         assert_almost_equal(p.storage['item']['SiNi'].repeats.value, 10)
-    
+
     def test_get_item_value(self):
         p = Refnx()
         p.create_item('SiNi')
@@ -120,7 +121,7 @@ class TestRefnx(unittest.TestCase):
         assert_almost_equal(p.storage['layer']['B_layer'].sld.real.value, 6.908)
         assert_almost_equal(p.storage['layer']['B_layer'].sld.imag.value, -0.278)
 
-    def test_add_layer_to_item(self): 
+    def test_add_layer_to_item(self):
         p = Refnx()
         p.create_material('B')
         p.update_material('B', real=6.908, imag=-0.278)
@@ -231,9 +232,10 @@ class TestRefnx(unittest.TestCase):
         p.add_item('Item3')
         p.update_item('Item2', repeats=10)
         q = np.linspace(0.001, 0.3, 10)
-        expected = [9.9995652e-01, 1.7096697e-05, 1.2253047e-04, 2.4026928e-06,
-                  6.7117546e-06, 8.3209877e-07, 1.1512901e-06, 4.1468151e-07,
-                  3.4981523e-07, 2.5424356e-07]
+        expected = [
+            9.9995652e-01, 1.7096697e-05, 1.2253047e-04, 2.4026928e-06, 6.7117546e-06,
+            8.3209877e-07, 1.1512901e-06, 4.1468151e-07, 3.4981523e-07, 2.5424356e-07
+        ]
         assert_almost_equal(p.calculate(q), expected)
         assert_almost_equal(p.calculate(q), expected)
 

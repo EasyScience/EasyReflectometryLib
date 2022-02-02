@@ -11,7 +11,6 @@ Tests for BornAgain class module
 # from EasyReflectometry.interfaces.bornagain import BornAgain
 # from EasyReflectometry.sample.material import Material
 
-
 # class TestBornAgain(unittest.TestCase):
 #     def test_init(self):
 #         p = BornAgain()
@@ -57,7 +56,7 @@ Tests for BornAgain class module
 #             1.26726993e-07, 1.01842852e-07
 #         ]
 #         assert_allclose(p.fit_func(q), expected, rtol=0.04)
-    
+
 #     def test_calculate2(self):
 #         p = BornAgain()
 #         p.calculator.create_material('Material1')

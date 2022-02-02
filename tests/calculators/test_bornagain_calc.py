@@ -10,7 +10,6 @@ Tests for the bornagain class for calculation.
 # from EasyReflectometry.calculators.bornagain import BornAgain
 # import bornagain as ba
 
-
 # class TestBornAgain(unittest.TestCase):
 #     def test_init(self):
 #         p = BornAgain()
@@ -25,7 +24,7 @@ Tests for the bornagain class for calculation.
 #         assert_almost_equal(p.storage['material']['Si'].materialData().imag, 0.0)
 #         assert_equal(p.storage['material']['Si'].getName(), 'Si')
 
-#     def test_update_material(self): 
+#     def test_update_material(self):
 #         p = BornAgain()
 #         p.create_material('B')
 #         p.update_material('B', real=6.908, imag=0.278)
@@ -81,7 +80,7 @@ Tests for the bornagain class for calculation.
 #         assert_equal(p.storage['item']['SiNi'], [])
 #         assert_equal(p.storage['item_repeats']['SiNi'], 1)
 
-#     def test_update_item(self):     
+#     def test_update_item(self):
 #         p = BornAgain()
 #         p.create_item('SiNi')
 #         p.update_item('SiNi', repeats=10)
@@ -174,7 +173,7 @@ Tests for the bornagain class for calculation.
 #         p.add_layer_to_item('B_layer', 'B_item')
 #         p.create_model()
 #         p.add_item('B_item')
-#         assert_equal(len(p.storage['model_items']), 1)        
+#         assert_equal(len(p.storage['model_items']), 1)
 #         p.remove_item('B_item')
 #         assert_equal(len(p.storage['model_items']), 0)
 

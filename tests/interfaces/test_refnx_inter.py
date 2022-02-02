@@ -13,6 +13,7 @@ from EasyReflectometry.sample.material import Material
 
 
 class TestRefnx(unittest.TestCase):
+
     def test_init(self):
         p = Refnx()
         assert_equal(list(p.calculator.storage.keys()),
@@ -56,7 +57,7 @@ class TestRefnx(unittest.TestCase):
             1.26726993e-07, 1.01842852e-07
         ]
         assert_almost_equal(p.fit_func(q), expected)
-    
+
     def test_calculate2(self):
         p = Refnx()
         p.calculator.create_material('Material1')
@@ -86,9 +87,10 @@ class TestRefnx(unittest.TestCase):
         p.calculator.add_item('Item3')
         p.calculator.update_item('Item2', repeats=10)
         q = np.linspace(0.001, 0.3, 10)
-        expected = [9.9995652e-01, 1.7096697e-05, 1.2253047e-04, 2.4026928e-06,
-                  6.7117546e-06, 8.3209877e-07, 1.1512901e-06, 4.1468151e-07,
-                  3.4981523e-07, 2.5424356e-07]
+        expected = [
+            9.9995652e-01, 1.7096697e-05, 1.2253047e-04, 2.4026928e-06, 6.7117546e-06,
+            8.3209877e-07, 1.1512901e-06, 4.1468151e-07, 3.4981523e-07, 2.5424356e-07
+        ]
         assert_almost_equal(p.fit_func(q), expected)
 
     def test_sld_profile(self):

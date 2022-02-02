@@ -16,12 +16,13 @@ from EasyReflectometry.sample.structure import Structure
 
 
 class TestStructure(unittest.TestCase):
+
     def test_default(self):
         p = Structure.default()
-        assert_equal(p.name, 'easyStructure')
+        assert_equal(p.name, 'EasyStructure')
         assert_equal(p.interface, None)
-        assert_equal(p[0].name, 'easyMultiLayer')
-        assert_equal(p[1].name, 'easyMultiLayer')
+        assert_equal(p[0].name, 'EasyMultiLayer')
+        assert_equal(p[1].name, 'EasyMultiLayer')
 
     def test_from_pars(self):
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
@@ -56,7 +57,5 @@ class TestStructure(unittest.TestCase):
 
     def test_repr(self):
         p = Structure.default()
-        assert_equal(
-            p.__repr__(),
-            '<easyStructure: A series of 2 items>\n  - <easyMultiLayer: (<easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>)>\n  - <easyMultiLayer: (<easyLayers: A series of 2 layers>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>\n  - <easyLayer: (material: <easyMaterial: (sld: 4.186e-6 1/Å², isld: 0.000e-6 1/Å²)>, thickness: 10.000 Å, roughness: 3.300 Å)>)>'
-        )
+        assert p.__repr__(
+        ) == 'EasyStructure:\n- EasyMultiLayer:\n    EasyLayers:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n- EasyMultiLayer:\n    EasyLayers:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n'
