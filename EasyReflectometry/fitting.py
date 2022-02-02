@@ -5,9 +5,11 @@ from easyCore.Fitting.Fitting import Fitter as easyFitter
 
 class Fitter(easyFitter):
 
-    def __init__(self, model: "EasyReflectometry.experiment.model.Model", interface: "EasyReflectometry.interface.InterfaceFactory"):
+    def __init__(self, model: "EasyReflectometry.experiment.model.Model",
+                 interface: "EasyReflectometry.interface.InterfaceFactory"):
         """
-        A convinence class for the :py:class:`easyCore.Fitting.Fitting` which will populate the :py:class:`sc.Dataset` appropriately after the fitting is performed. 
+        A convinence class for the :py:class:`easyCore.Fitting.Fitting` which will populate 
+        the :py:class:`sc.Dataset` appropriately after the fitting is performed. 
 
         :param model: Reflectometry model
         :param interface: Analysis interface
@@ -15,7 +17,7 @@ class Fitter(easyFitter):
         self.interface = interface
         self.easy_f = easyFitter(model, interface.fit_func)
 
-    def fit(self, data: sc.Dataset, method: str='least_squares'):
+    def fit(self, data: sc.Dataset, method: str = 'least_squares'):
         """
         Perform the fitting and populate the datasets with the result.
         
