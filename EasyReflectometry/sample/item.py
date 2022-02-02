@@ -12,7 +12,7 @@ __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
 from copy import deepcopy
-from typing import Union
+from typing import Union, List
 
 from easyCore import np
 from easyCore.Objects.Base import Parameter, BaseObj
@@ -39,11 +39,13 @@ class MultiLayer(BaseObj):
     allowing the reflectometry to be determined from them. 
     """
     def __init__(self,
-                 layers: Union[Layers, Layer],
+                 layers: Union[Layers, Layer, List[Layer]],
                  name: str = 'easyMultiLayer',
                  interface=None):
         if isinstance(layers, Layer):
             layers = Layers(layers, name=layers.name)
+        elif isinstance(layers, list):
+            layers = Layers(*layers, name='/'.join([layer.name for layer in layers]))
         self.type = 'Multi-layer'
         super().__init__(name, layers=layers)
         self.interface = interface
@@ -140,12 +142,14 @@ class RepeatingMultiLayer(MultiLayer):
     :py:attr:`repetitions`. 
     """
     def __init__(self,
-                 layers: Union[Layers, Layer],
+                 layers: Union[Layers, Layer, List[Layer]],
                  repetitions: Parameter,
                  name: str = 'easyRepeatingMultiLayer',
                  interface=None):
         if isinstance(layers, Layer):
             layers = Layers(layers, name=layers.name)
+        elif isinstance(layers, list):
+            layers = Layers(*layers, name='/'.join([layer.name for layer in layers]))
         super().__init__(layers, name, interface)
         self._add_component("repetitions", repetitions)
         self.interface = interface

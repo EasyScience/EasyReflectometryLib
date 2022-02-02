@@ -44,6 +44,16 @@ class TestMultiLayer(unittest.TestCase):
         assert_equal(o.interface, None)
         assert_equal(o.layers.name, 'thinBoron')
 
+    def test_from_pars_layer_list(self):
+        m = Material.from_pars(6.908, -0.278, 'Boron')
+        k = Material.from_pars(0.487, 0.000, 'Potassium')
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
+        q = Layer.from_pars(k, 15.0, 2.0, 'layerPotassium')
+        o = MultiLayer.from_pars([p, q], 'twoLayerItem')
+        assert_equal(o.name, 'twoLayerItem')
+        assert_equal(o.interface, None)
+        assert_equal(o.layers.name, 'thinBoron/layerPotassium')
+
     def test_add_layer(self):
         m = Material.from_pars(6.908, -0.278, 'Boron')
         k = Material.from_pars(0.487, 0.000, 'Potassium')
@@ -196,6 +206,19 @@ class TestRepeatingMultiLayer(unittest.TestCase):
         assert_equal(o.repetitions.max, 9999)
         assert_equal(o.repetitions.fixed, True)
         assert_equal(o.layers.name, 'thinBoron')
+
+    def test_from_pars_layer_list(self):
+        m = Material.from_pars(6.908, -0.278, 'Boron')
+        k = Material.from_pars(0.487, 0.000, 'Potassium')
+        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
+        q = Layer.from_pars(k, 15.0, 2.0, 'layerPotassium')
+        o = RepeatingMultiLayer.from_pars([p, q], 10, 'twoLayerItem')
+        assert_equal(o.name, 'twoLayerItem')
+        assert_equal(o.interface, None)
+        assert_equal(o.layers.name, 'thinBoron/layerPotassium')
+        assert_equal(o.repetitions.value.n, 10.0)
+        assert_equal(o.repetitions.min, 1)
+        assert_equal(o.repetitions.max, 9999)
 
     def test_add_layer(self):
         m = Material.from_pars(6.908, -0.278, 'Boron')
