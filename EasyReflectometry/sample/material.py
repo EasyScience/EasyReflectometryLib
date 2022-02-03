@@ -121,7 +121,7 @@ class Material(BaseObj):
         return yaml.dump(self._dict_repr, sort_keys=False)
 
 
-class MaterialMixture(BaseObj):
+class MaterialMixture(Material):
 
     def __init__(self,
                  sld: Parameter,
@@ -141,12 +141,10 @@ class MaterialMixture(BaseObj):
         material_a.isld.user_constraints['isld'] = iconstraint
         material_b.isld.user_constraints['isld'] = iconstraint
         fraction.user_constraints['isld'] = iconstraint
-        super().__init__(name,
-                         sld=sld,
-                         isld=isld,
-                         material_a=material_a,
-                         material_b=material_b,
-                         fraction=fraction)
+        super().__init__(sld, isld, name, interface)
+        self._add_component('material_a', material_a)
+        self._add_component('material_b', material_b)
+        self._add_component('fraction', fraction)
         self.interface = interface
 
     #Class constructors
