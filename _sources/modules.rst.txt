@@ -6,7 +6,9 @@ API
 
    item
    material
+   materials
    layer
+   layers
    structure
    experiment
    data

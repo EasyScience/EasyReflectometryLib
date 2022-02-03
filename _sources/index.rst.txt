@@ -7,6 +7,7 @@
    
    installation
    usage
+   materials_options
    library
    tutorials
    calculators

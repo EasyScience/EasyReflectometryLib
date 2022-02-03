@@ -93,6 +93,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="../../../materials_options.html">
+   Types of material
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="../../../library.html">
    Item library
   </a>
@@ -115,6 +120,11 @@
    <li class="toctree-l2">
     <a class="reference internal" href="../../../repeating.html">
      A multilayer fitting model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../solvation.html">
+     Using the MaterialMixture
     </a>
    </li>
   </ul>
@@ -155,8 +165,18 @@
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../materials.html">
+     sample.materials
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../layer.html">
      Layer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../layers.html">
+     sample.layers
     </a>
    </li>
    <li class="toctree-l2">
@@ -252,13 +272,13 @@
 
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">easyCore.Objects.Groups</span> <span class="kn">import</span> <span class="n">BaseCollection</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.material</span> <span class="kn">import</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.material</span> <span class="kn">import</span> <span class="n">Material</span><span class="p">,</span> <span class="n">MaterialMixture</span>
 
 
 <div class="viewcode-block" id="Materials"><a class="viewcode-back" href="../../../materials.html#EasyReflectometry.sample.materials.Materials">[docs]</a><span class="k">class</span> <span class="nc">Materials</span><span class="p">(</span><span class="n">BaseCollection</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Material</span><span class="p">],</span>
+                 <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Material</span><span class="p">,</span> <span class="n">MaterialMixture</span><span class="p">]],</span>
                  <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyMaterials&#39;</span><span class="p">,</span>
                  <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -280,7 +300,7 @@
 
 <div class="viewcode-block" id="Materials.from_pars"><a class="viewcode-back" href="../../../materials.html#EasyReflectometry.sample.materials.Materials.from_pars">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_pars</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
-                  <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Material</span><span class="p">],</span>
+                  <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Material</span><span class="p">,</span> <span class="n">MaterialMixture</span><span class="p">]],</span>
                   <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyMaterials&#39;</span><span class="p">,</span>
                   <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Materials&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>

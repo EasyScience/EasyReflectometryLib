@@ -8,3 +8,5 @@ The tutorials associated with using :py:mod:`EasyReflectometry` will be collecte
 
    simple_fitting
    repeating
+   solvation
+   
