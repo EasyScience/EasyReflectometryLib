@@ -10,7 +10,8 @@ from numpy.testing import assert_almost_equal
 import scipp as sc
 from orsopy.fileio import load_orso, Header
 import EasyReflectometry
-from EasyReflectometry.sample import Material, Layer, Structure
+from EasyReflectometry.sample import Layer, Structure
+from EasyReflectometry.sample.material import Material
 from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.data import load
 from EasyReflectometry.interface import InterfaceFactory as Interface
