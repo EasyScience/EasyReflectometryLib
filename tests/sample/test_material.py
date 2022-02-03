@@ -62,21 +62,22 @@ class TestMaterial(unittest.TestCase):
 
 
 class TestMaterialMixture(unittest.TestCase):
+
     def test_default(self):
         p = MaterialMixture.default()
         assert p.fraction.raw_value == 0.5
         assert str(p.fraction.unit) == 'dimensionless'
         assert p.sld.raw_value == Material.default().sld.raw_value
-        assert p.isld.raw_value == Material.default().isld.raw_value 
+        assert p.isld.raw_value == Material.default().isld.raw_value
         assert str(p.sld.unit) == '1 / angstrom ** 2'
         assert str(p.isld.unit) == '1 / angstrom ** 2'
-    
+
     def test_default_constraint(self):
         p = MaterialMixture.default()
         assert p.fraction.raw_value == 0.5
         assert str(p.fraction.unit) == 'dimensionless'
         assert p.sld.raw_value == Material.default().sld.raw_value
-        assert p.isld.raw_value == Material.default().isld.raw_value 
+        assert p.isld.raw_value == Material.default().isld.raw_value
         p.material_a.sld.value = 0
         p.material_b.isld.value = -1
         assert_almost_equal(p.sld.raw_value, 2.093)
@@ -105,4 +106,22 @@ class TestMaterialMixture(unittest.TestCase):
 
     def test_dict_repr(self):
         p = MaterialMixture.default()
-        assert p._dict_repr == {'EasyMaterialMixture': {'fraction': 0.5, 'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.0e-6 1 / angstrom ** 2', 'material1': {'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}}, 'material2': {'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}}}}
+        assert p._dict_repr == {
+            'EasyMaterialMixture': {
+                'fraction': 0.5,
+                'sld': '4.186e-6 1 / angstrom ** 2',
+                'isld': '0.0e-6 1 / angstrom ** 2',
+                'material1': {
+                    'EasyMaterial': {
+                        'sld': '4.186e-6 1 / angstrom ** 2',
+                        'isld': '0.000e-6 1 / angstrom ** 2'
+                    }
+                },
+                'material2': {
+                    'EasyMaterial': {
+                        'sld': '4.186e-6 1 / angstrom ** 2',
+                        'isld': '0.000e-6 1 / angstrom ** 2'
+                    }
+                }
+            }
+        }

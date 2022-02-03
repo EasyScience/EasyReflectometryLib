@@ -50,7 +50,7 @@ class Refl1d(InterfaceTemplate):
         """
         r_list = []
         t_ = type(model)
-        if issubclass(t_, Material) or issubclass(t_, MaterialMixture)
+        if issubclass(t_, Material) or issubclass(t_, MaterialMixture):
             key = model.uid
             self.calculator.create_material(key)
             r_list.append(
