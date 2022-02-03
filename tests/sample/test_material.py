@@ -6,7 +6,8 @@ Tests for Material class module
 
 import unittest
 import numpy as np
-from EasyReflectometry.sample.material import Material
+from numpy.testing import assert_almost_equal
+from EasyReflectometry.sample.material import Material, MaterialMixture
 
 
 class TestMaterial(unittest.TestCase):
@@ -58,3 +59,50 @@ class TestMaterial(unittest.TestCase):
         p = Material.default()
         assert p.__repr__(
         ) == 'EasyMaterial:\n  sld: 4.186e-6 1 / angstrom ** 2\n  isld: 0.000e-6 1 / angstrom ** 2\n'
+
+
+class TestMaterialMixture(unittest.TestCase):
+    def test_default(self):
+        p = MaterialMixture.default()
+        assert p.fraction.raw_value == 0.5
+        assert str(p.fraction.unit) == 'dimensionless'
+        assert p.sld.raw_value == Material.default().sld.raw_value
+        assert p.isld.raw_value == Material.default().isld.raw_value 
+        assert str(p.sld.unit) == '1 / angstrom ** 2'
+        assert str(p.isld.unit) == '1 / angstrom ** 2'
+    
+    def test_default_constraint(self):
+        p = MaterialMixture.default()
+        assert p.fraction.raw_value == 0.5
+        assert str(p.fraction.unit) == 'dimensionless'
+        assert p.sld.raw_value == Material.default().sld.raw_value
+        assert p.isld.raw_value == Material.default().isld.raw_value 
+        p.material_a.sld.value = 0
+        p.material_b.isld.value = -1
+        assert_almost_equal(p.sld.raw_value, 2.093)
+        assert_almost_equal(p.isld.raw_value, -0.5)
+        assert str(p.sld.unit) == '1 / angstrom ** 2'
+        assert str(p.isld.unit) == '1 / angstrom ** 2'
+
+    def test_from_pars(self):
+        p = Material.default()
+        q = Material.from_pars(6.908, -0.278, 'Boron')
+        r = MaterialMixture.from_pars(p, q, 0.2)
+        assert r.fraction.raw_value == 0.2
+        assert str(r.fraction.unit) == 'dimensionless'
+        assert_almost_equal(r.sld.raw_value, 4.7304)
+        assert_almost_equal(r.isld.raw_value, -0.0556)
+        assert str(r.sld.unit) == '1 / angstrom ** 2'
+        assert str(r.isld.unit) == '1 / angstrom ** 2'
+        assert 'sld' in p.sld.user_constraints.keys()
+        assert 'isld' in p.isld.user_constraints.keys()
+        assert 'sld' in q.sld.user_constraints.keys()
+        assert 'isld' in q.isld.user_constraints.keys()
+
+    def test_weighted_average_sld(self):
+        a = MaterialMixture.weighted_average_sld(1, 2, 0.5)
+        assert_almost_equal(a, 1.5)
+
+    def test_dict_repr(self):
+        p = MaterialMixture.default()
+        assert p._dict_repr == {'EasyMaterialMixture': {'fraction': 0.5, 'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.0e-6 1 / angstrom ** 2', 'material1': {'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}}, 'material2': {'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}}}}

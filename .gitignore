@@ -36,7 +36,7 @@ build
 *.dmg
 
 # Docs
-docs/_build/* 
+docs/_build 
 
 # Misc
 ..*

@@ -8,7 +8,7 @@ import numpy as np
 from easyCore.Objects.Inferface import ItemContainer
 from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
 from EasyReflectometry.calculators.refl1d import Refl1d as Refl1d_calc
-from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.material import Material, MaterialMixture
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.item import RepeatingMultiLayer, MultiLayer
 from EasyReflectometry.experiment.model import Model
@@ -50,7 +50,7 @@ class Refl1d(InterfaceTemplate):
         """
         r_list = []
         t_ = type(model)
-        if issubclass(t_, Material):
+        if issubclass(t_, Material) or issubclass(t_, MaterialMixture)
             key = model.uid
             self.calculator.create_material(key)
             r_list.append(

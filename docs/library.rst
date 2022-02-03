@@ -7,7 +7,7 @@ In this page, we will document the items that are available with simple examples
 Full API documentation is also available for the :py:mod:`EasyReflectometry.sample.item` module.
 
 :py:class:`MultiLayer`
----------------------
+----------------------
 
 This item should be used for a series of layers that, for whatever reason, should be thought of as a single object. 
 For example, in the `simple fitting tutorial`_ this item type is used to combine the silicon and silicon dioxide layer that as formed into a single object. 
@@ -31,7 +31,7 @@ To create a :py:class:`MultiLayer` object, we use the following construction.
 This will create a :py:class:`MultiLayer` object named :code:`subphase` which we can use in some :py:class:`Structure` for our analysis. 
 
 :py:class:`RepeatingMultiLayer`
-------------------------------
+-------------------------------
 
 The :py:class:`RepeatingMultiLayer` item type is an extension of the :py:class:`MultiLayer` for the analysis of systems with a multilayer that has some number of repeats. 
 This item type imposes some constraints, specifically that all of the repeats have the exact same structure (i.e. thicknesses, roughnesses, and scattering length densities), 

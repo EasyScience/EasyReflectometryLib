@@ -6,13 +6,13 @@ from typing import List, Union, TypeVar
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
-from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.material import Material, MaterialMixture
 
 
 class Materials(BaseCollection):
 
     def __init__(self,
-                 *args: List[Material],
+                 *args: List[Union[Material, MaterialMixture]],
                  name: str = 'EasyMaterials',
                  interface=None,
                  **kwargs):
@@ -34,7 +34,7 @@ class Materials(BaseCollection):
 
     @classmethod
     def from_pars(cls,
-                  *args: List[Material],
+                  *args: List[Union[Material, MaterialMixture]],
                   name: str = 'EasyMaterials',
                   interface=None) -> "Materials":
         """
