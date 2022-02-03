@@ -387,7 +387,7 @@
         <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="MaterialMixture"><a class="viewcode-back" href="../../../material.html#EasyReflectometry.sample.material.MaterialMixture">[docs]</a><span class="k">class</span> <span class="nc">MaterialMixture</span><span class="p">(</span><span class="n">BaseObj</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialMixture"><a class="viewcode-back" href="../../../material.html#EasyReflectometry.sample.material.MaterialMixture">[docs]</a><span class="k">class</span> <span class="nc">MaterialMixture</span><span class="p">(</span><span class="n">Material</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">sld</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
@@ -407,12 +407,10 @@
         <span class="n">material_a</span><span class="o">.</span><span class="n">isld</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iconstraint</span>
         <span class="n">material_b</span><span class="o">.</span><span class="n">isld</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iconstraint</span>
         <span class="n">fraction</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iconstraint</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
-                         <span class="n">sld</span><span class="o">=</span><span class="n">sld</span><span class="p">,</span>
-                         <span class="n">isld</span><span class="o">=</span><span class="n">isld</span><span class="p">,</span>
-                         <span class="n">material_a</span><span class="o">=</span><span class="n">material_a</span><span class="p">,</span>
-                         <span class="n">material_b</span><span class="o">=</span><span class="n">material_b</span><span class="p">,</span>
-                         <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sld</span><span class="p">,</span> <span class="n">isld</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">interface</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;material_a&#39;</span><span class="p">,</span> <span class="n">material_a</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;material_b&#39;</span><span class="p">,</span> <span class="n">material_b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;fraction&#39;</span><span class="p">,</span> <span class="n">fraction</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span>
 
     <span class="c1">#Class constructors</span>
