@@ -21,7 +21,7 @@ refnx = "^0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx
 refl1d = "^0.8.14"
 scipp = "^0.11.1"
 orsopy = "^0.0.4"
-easyScienceCore = { git = 'https://github.com/easyScience/easyCore.git', rev = 'develop' }
+easyScienceCore = "^0.2.1"
 
 [dev-dependencies]
 pytest = "^5.2"
