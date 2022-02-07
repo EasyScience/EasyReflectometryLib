@@ -25,7 +25,7 @@ As is shown in the `tutorials`_, a material can be used to construct a :py:class
 ---------------------------
 
 Sometimes it is desirable to have a layer that consists of two materials in some ratio.
-An example of this is shown in the `solvation tutorial`_, where a polymer film solvated with D:sub:`2`O is modelled. 
+An example of this is shown in the `solvation tutorial`_, where a polymer film solvated with D:subscript:`2`O is modelled. 
 To produce a material that is described by such a mixture, there is the :py:class:`MaterialMixture` material option. 
 This is constructed from two constituent materials and the fractional amount of the second in the first. 
 So to produce a material that is 20 % D:sub:`2`O in a polymer, the following is used. 
