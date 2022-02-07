@@ -358,7 +358,7 @@ As is shown in the <a class="reference external" href="./tutorials.html">tutoria
 An example of this is shown in the <a class="reference external" href="./solvation.html">solvation tutorial</a>, where a polymer film solvated with D2O is modelled.
 To produce a material that is described by such a mixture, there is the <code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialMixture</span></code> material option.
 This is constructed from two constituent materials and the fractional amount of the second in the first.
-So to produce a material that is 20 % D:sub:<a href="#id1"><span class="problematic" id="id2">`</span></a>2`O in a polymer, the following is used.</p>
+So to produce a material that is 20 % D2O in a polymer, the following is used.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample.material</span> <span class="kn">import</span> <span class="n">Material</span><span class="p">,</span> <span class="n">MaterialMixture</span>
 
 <span class="n">polymer</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="s1">&#39;Polymer&#39;</span><span class="p">)</span>
