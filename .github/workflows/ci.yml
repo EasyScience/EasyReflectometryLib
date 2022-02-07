@@ -20,6 +20,7 @@ jobs:
     - name: Install EasyReflectometry and dependencies
       run: |
         pip install -e ".[dev]"
+        pip install pytest pytest-cov codecov
     - name: Test with coverage
       run: |
         pytest --cov --cov-report=xml
