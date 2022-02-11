@@ -49,6 +49,13 @@ class Layers(BaseCollection):
         """
         return cls(*args, name=name, interface=interface)
 
+    @property
+    def uid(self) -> int:
+        """
+        :return: UID from the borg map
+        """
+        return self._borg.map.convert_id_to_key(self)
+
     # Representation
     @property
     def _dict_repr(self) -> dict:

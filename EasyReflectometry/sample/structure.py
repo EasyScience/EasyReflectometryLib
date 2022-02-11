@@ -14,15 +14,15 @@ from EasyReflectometry.sample.layer import Layer
 class Structure(BaseCollection):
 
     def __init__(self,
-                 *args: List[Union[Layer, MultiLayer, RepeatingMultiLayer]],
+                 *args: List[Union[Layer, MultiLayer]],
                  name: str = 'EasyStructure',
                  interface=None,
                  **kwargs):
         new_items = []
         for i in args:
-            if isinstance(i, Layer):
+            if issubclass(type(i), Layer):
                 new_items.append(MultiLayer.from_pars(i, name=i.name))
-            elif isinstance(i, MultiLayer):
+            elif issubclass(type(i), MultiLayer):
                 new_items.append(i)
             else:
                 raise ValueError('The items must be either a Layer or an Item')
@@ -44,7 +44,7 @@ class Structure(BaseCollection):
 
     @classmethod
     def from_pars(cls,
-                  *args: List[Union[MultiLayer, RepeatingMultiLayer]],
+                  *args: List[Union[MultiLayer]],
                   name: str = 'EasyStructure',
                   interface=None) -> "Structure":
         """
@@ -56,6 +56,13 @@ class Structure(BaseCollection):
         :rtype: Structure
         """
         return cls(*args, name=name, interface=interface)
+
+    @property
+    def uid(self) -> int:
+        """
+        :return: UID from the borg map
+        """
+        return self._borg.map.convert_id_to_key(self)
 
     # Representation
     @property

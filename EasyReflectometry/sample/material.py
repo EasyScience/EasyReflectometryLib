@@ -1,13 +1,15 @@
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
-from collections import defaultdict
+from typing import ClassVar
 from copy import deepcopy
 
 import yaml
 from easyCore import np
-from easyCore.Objects.Base import Parameter, BaseObj
+from easyCore.Objects.ObjectClasses import Parameter, BaseObj
 from easyCore.Fitting.Constraints import FunctionalConstraint
+
+from EasyReflectometry.special.calculations import weighted_average_sld
 
 MATERIAL_DEFAULTS = {
     'sld': {
@@ -45,6 +47,9 @@ MATERIALMIXTURE_DEFAULTS = {
 
 
 class Material(BaseObj):
+
+    sld: ClassVar[Parameter]
+    isld: ClassVar[Parameter]
 
     def __init__(self,
                  sld: Parameter,
@@ -123,20 +128,33 @@ class Material(BaseObj):
 
 class MaterialMixture(Material):
 
+    material_a: ClassVar[Material]
+    material_b: ClassVar[Material]
+    fraction: ClassVar[Parameter]
+
     def __init__(self,
-                 sld: Parameter,
-                 isld: Parameter,
                  material_a: Material,
                  material_b: Material,
                  fraction: Parameter,
                  name: str = "EasyMaterialMixture",
                  interface=None):
-        constraint = FunctionalConstraint(sld, self.weighted_average_sld,
+        default_options = deepcopy(MATERIAL_DEFAULTS)
+        del default_options['sld']['value']
+        del default_options['isld']['value']
+        sld = Parameter(
+            'sld',
+            weighted_average_sld(material_a.sld.raw_value, material_b.sld.raw_value,
+                                 fraction.raw_value), **default_options['sld'])
+        isld = Parameter(
+            'sld',
+            weighted_average_sld(material_a.isld.raw_value, material_b.isld.raw_value,
+                                 fraction.raw_value), **default_options['isld'])
+        constraint = FunctionalConstraint(sld, weighted_average_sld,
                                           [material_a.sld, material_b.sld, fraction])
         material_a.sld.user_constraints['sld'] = constraint
         material_b.sld.user_constraints['sld'] = constraint
         fraction.user_constraints['sld'] = constraint
-        iconstraint = FunctionalConstraint(isld, self.weighted_average_sld,
+        iconstraint = FunctionalConstraint(isld, weighted_average_sld,
                                            [material_a.isld, material_b.isld, fraction])
         material_a.isld.user_constraints['isld'] = iconstraint
         material_b.isld.user_constraints['isld'] = iconstraint
@@ -158,22 +176,7 @@ class MaterialMixture(Material):
         material_a = Material.default()
         material_b = Material.default()
         fraction = Parameter('fraction', **MATERIALMIXTURE_DEFAULTS['fraction'])
-        default_options = deepcopy(MATERIAL_DEFAULTS)
-        del default_options['sld']['value']
-        del default_options['isld']['value']
-        sld = Parameter(
-            'sld',
-            MaterialMixture.weighted_average_sld(material_a.sld.raw_value,
-                                                 material_b.sld.raw_value,
-                                                 fraction.raw_value),
-            **default_options['sld'])
-        isld = Parameter(
-            'sld',
-            MaterialMixture.weighted_average_sld(material_a.isld.raw_value,
-                                                 material_b.isld.raw_value,
-                                                 fraction.raw_value),
-            **default_options['isld'])
-        return cls(sld, isld, material_a, material_b, fraction, interface=interface)
+        return cls(material_a, material_b, fraction, interface=interface)
 
     @classmethod
     def from_pars(cls,
@@ -195,40 +198,12 @@ class MaterialMixture(Material):
 
         fraction = Parameter('fraction', fraction, **default_options['fraction'])
         default_options = deepcopy(MATERIAL_DEFAULTS)
-        del default_options['sld']['value']
-        del default_options['isld']['value']
-        sld = Parameter(
-            'sld',
-            MaterialMixture.weighted_average_sld(material_a.sld.raw_value,
-                                                 material_b.sld.raw_value,
-                                                 fraction.raw_value),
-            **default_options['sld'])
-        isld = Parameter(
-            'sld',
-            MaterialMixture.weighted_average_sld(material_a.isld.raw_value,
-                                                 material_b.isld.raw_value,
-                                                 fraction.raw_value),
-            **default_options['isld'])
 
-        return cls(sld=sld,
-                   isld=isld,
-                   material_a=material_a,
+        return cls(material_a=material_a,
                    material_b=material_b,
                    fraction=fraction,
                    name=name,
                    interface=interface)
-
-    @staticmethod
-    def weighted_average_sld(a: Parameter, b: Parameter, p: Parameter) -> Parameter:
-        """
-        Determine the weighted average SLD between a and b, where p is the weight.
-        
-        :param a: First sld
-        :param b: Second sld
-        :param p: Weight
-        :return: Weighted average
-        """
-        return a * (1 - p) + b * p
 
     @property
     def uid(self) -> int:

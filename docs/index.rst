@@ -7,10 +7,9 @@
    
    installation
    usage
-   materials_options
    library
-   tutorials
    calculators
+   tutorials
    contributing
    authors
    modules

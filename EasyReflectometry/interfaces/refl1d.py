@@ -8,9 +8,9 @@ import numpy as np
 from easyCore.Objects.Inferface import ItemContainer
 from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
 from EasyReflectometry.calculators.refl1d import Refl1d as Refl1d_calc
-from EasyReflectometry.sample.material import Material, MaterialMixture
+from EasyReflectometry.sample.material import Material
 from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.item import RepeatingMultiLayer, MultiLayer
+from EasyReflectometry.sample.item import MultiLayer
 from EasyReflectometry.experiment.model import Model
 
 

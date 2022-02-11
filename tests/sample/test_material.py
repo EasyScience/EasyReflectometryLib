@@ -100,10 +100,6 @@ class TestMaterialMixture(unittest.TestCase):
         assert 'sld' in q.sld.user_constraints.keys()
         assert 'isld' in q.isld.user_constraints.keys()
 
-    def test_weighted_average_sld(self):
-        a = MaterialMixture.weighted_average_sld(1, 2, 0.5)
-        assert_almost_equal(a, 1.5)
-
     def test_dict_repr(self):
         p = MaterialMixture.default()
         assert p._dict_repr == {

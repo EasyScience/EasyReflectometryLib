@@ -116,8 +116,7 @@ class Model(BaseObj):
         :param *items: Layers or items to add to model structure
         """
         for arg in items:
-            if (issubclass(arg.__class__, RepeatingMultiLayer)
-                    or issubclass(arg.__class__, MultiLayer)):
+            if issubclass(arg.__class__, MultiLayer):
                 self.structure.append(arg)
                 if self.interface is not None:
                     self.interface().add_item_to_model(arg.uid)
