@@ -6,7 +6,7 @@ from copy import deepcopy
 
 import yaml
 from easyCore import np
-from easyCore.Objects.Base import Parameter, BaseObj
+from easyCore.Objects.ObjectClasses import Parameter, BaseObj
 from EasyReflectometry.sample.structure import Structure
 from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
 from EasyReflectometry.sample.layer import Layer
@@ -116,8 +116,7 @@ class Model(BaseObj):
         :param *items: Layers or items to add to model structure
         """
         for arg in items:
-            if (issubclass(arg.__class__, RepeatingMultiLayer)
-                    or issubclass(arg.__class__, MultiLayer)):
+            if issubclass(arg.__class__, MultiLayer):
                 self.structure.append(arg)
                 if self.interface is not None:
                     self.interface().add_item_to_model(arg.uid)

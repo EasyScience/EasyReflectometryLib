@@ -100,17 +100,13 @@ class TestMaterialMixture(unittest.TestCase):
         assert 'sld' in q.sld.user_constraints.keys()
         assert 'isld' in q.isld.user_constraints.keys()
 
-    def test_weighted_average_sld(self):
-        a = MaterialMixture.weighted_average_sld(1, 2, 0.5)
-        assert_almost_equal(a, 1.5)
-
     def test_dict_repr(self):
         p = MaterialMixture.default()
         assert p._dict_repr == {
             'EasyMaterialMixture': {
                 'fraction': 0.5,
                 'sld': '4.186e-6 1 / angstrom ** 2',
-                'isld': '0.0e-6 1 / angstrom ** 2',
+                'isld': '0.000e-6 1 / angstrom ** 2',
                 'material1': {
                     'EasyMaterial': {
                         'sld': '4.186e-6 1 / angstrom ** 2',
