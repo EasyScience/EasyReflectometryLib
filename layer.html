@@ -37,8 +37,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="sample.layers" href="layers.html" />
-    <link rel="prev" title="sample.materials" href="materials.html" />
+    <link rel="next" title="Structure" href="structure.html" />
+    <link rel="prev" title="Material" href="material.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -94,22 +94,44 @@
    Usage
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="materials_options.html">
-   Types of material
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="library.html">
+   Libraries
   </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="material_library.html">
+     Materials
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="layer_library.html">
+     Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="item_library.html">
+     Items
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="library.html">
-   Item library
+  <a class="reference internal" href="calculators.html">
+   Calculators &amp; Optimisation
   </a>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="tutorials.html">
    Tutorials
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -129,12 +151,12 @@
      Using the MaterialMixture
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="monolayer.html">
+     Investigation of a surfactant monolayer
+    </a>
+   </li>
   </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="calculators.html">
-   Calculators &amp; Optimisation
-  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="contributing.html">
@@ -150,8 +172,8 @@
   <a class="reference internal" href="modules.html">
    API
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -166,19 +188,9 @@
      Material
     </a>
    </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="materials.html">
-     sample.materials
-    </a>
-   </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
      Layer
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="layers.html">
-     sample.layers
     </a>
    </li>
    <li class="toctree-l2">
@@ -331,13 +343,92 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.layer.Layer.uid">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uid</span></span><a class="headerlink" href="#EasyReflectometry.sample.layer.Layer.uid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a UID from the borg map</p>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#EasyReflectometry.sample.layer.Layer.uid" title="Permalink to this definition">¶</a></dt>
+<dd><p>UID from the borg map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>return</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.layer.Layer.user_data">
 <span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.layer.Layer.user_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.layer.</span></span><span class="sig-name descname"><span class="pre">LayerApm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solvation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyLayerApm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/layer.html#LayerApm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#EasyReflectometry.sample.layer.Layer" title="EasyReflectometry.sample.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.layer.Layer</span></code></a></p>
+<p>The <a class="reference internal" href="#EasyReflectometry.sample.layer.LayerApm" title="EasyReflectometry.sample.layer.LayerApm"><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerApm</span></code></a> class allows a layer to be defined in terms of some chemical
+structure (given as a chemical formula) and area per molecule.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm.area_per_molecule">
+<span class="sig-name descname"><span class="pre">area_per_molecule</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">easyCore.Objects.Variable.Parameter</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.area_per_molecule" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm.default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/layer.html#LayerApm.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default constructor for layer defined from chemical structure and area per molecule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>interface</strong> – Interface object, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.layer.LayerApm" title="EasyReflectometry.sample.layer.LayerApm"><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerApm</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Layer with correct structure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm.from_pars">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solvation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyLayerApm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/layer.html#LayerApm.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.from_pars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor for a layer described with the area per molecule, where the parameters are known.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chemical_structure</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Chemical formula for the material in the layer</p></li>
+<li><p><strong>thickness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Layer thickness</p></li>
+<li><p><strong>solvent</strong> (<a class="reference internal" href="material.html#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a>) – Solvent present in material</p></li>
+<li><p><strong>solvation</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Fraction of solvent present</p></li>
+<li><p><strong>area_per_molecule</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Area per molecule for the chemical material</p></li>
+<li><p><strong>roughness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Upper roughness on the layer</p></li>
+<li><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Identifier, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">EasyLayerApm</span></code></p></li>
+<li><p><strong>interface</strong> – Interface object, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.layer.LayerApm" title="EasyReflectometry.sample.layer.LayerApm"><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerApm</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Layer with correct structure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm.solvation">
+<span class="sig-name descname"><span class="pre">solvation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">easyCore.Objects.Variable.Parameter</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.solvation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm.solvent">
+<span class="sig-name descname"><span class="pre">solvent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="material.html#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><span class="pre">EasyReflectometry.sample.material.Material</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.solvent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm.user_data">
+<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.user_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -350,17 +441,17 @@
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="materials.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="material.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">sample.materials</p>
+            <p class="prev-next-title">Material</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="layers.html" title="next page">
+    <a class='right-next' id="next-link" href="structure.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">sample.layers</p>
+        <p class="prev-next-title">Structure</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

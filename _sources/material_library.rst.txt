@@ -1,5 +1,5 @@
-Types of material
-=================
+Materials
+=========
 
 In order to support a wide range of applications (and to build complex `items`_) there are a few different types of material that can be utilised in :py:mod:`EasyReflectometry`. 
 These can include constraints or enabel the user to define the material based on chemical or physical properties. 

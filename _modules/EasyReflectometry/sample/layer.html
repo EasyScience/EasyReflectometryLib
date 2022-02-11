@@ -92,22 +92,44 @@
    Usage
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../materials_options.html">
-   Types of material
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../library.html">
+   Libraries
   </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../material_library.html">
+     Materials
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../layer_library.html">
+     Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../item_library.html">
+     Items
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../library.html">
-   Item library
+  <a class="reference internal" href="../../../calculators.html">
+   Calculators &amp; Optimisation
   </a>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../../../tutorials.html">
    Tutorials
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -127,12 +149,12 @@
      Using the MaterialMixture
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../monolayer.html">
+     Investigation of a surfactant monolayer
+    </a>
+   </li>
   </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../calculators.html">
-   Calculators &amp; Optimisation
-  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../../../contributing.html">
@@ -148,8 +170,8 @@
   <a class="reference internal" href="../../../modules.html">
    API
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -165,18 +187,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../materials.html">
-     sample.materials
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="../../../layer.html">
      Layer
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../layers.html">
-     sample.layers
     </a>
    </li>
    <li class="toctree-l2">
@@ -265,14 +277,17 @@
                 
   <h1>Source code for EasyReflectometry.sample.layer</h1><div class="highlight"><pre>
 <span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;github.com/arm61&#39;</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.0.1&#39;</span>
 
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">easyCore</span> <span class="kn">import</span> <span class="n">np</span>
-<span class="kn">from</span> <span class="nn">easyCore.Objects.Base</span> <span class="kn">import</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">BaseObj</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.material</span> <span class="kn">import</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">easyCore.Objects.ObjectClasses</span> <span class="kn">import</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">BaseObj</span>
+<span class="kn">from</span> <span class="nn">easyCore.Fitting.Constraints</span> <span class="kn">import</span> <span class="n">FunctionalConstraint</span>
+
+<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.material</span> <span class="kn">import</span> <span class="n">Material</span><span class="p">,</span> <span class="n">MaterialMixture</span><span class="p">,</span> <span class="n">MATERIAL_DEFAULTS</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.special.calculations</span> <span class="kn">import</span> <span class="n">neutron_scattering_length</span><span class="p">,</span> <span class="n">apm_to_sld</span>
 
 <span class="n">LAYER_DETAILS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;thickness&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -292,6 +307,60 @@
         <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">3.3</span><span class="p">,</span>
         <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;angstrom&#39;</span><span class="p">,</span>
         <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span>
+        <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">LAYERAPM_DETAILS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;thickness&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The thickness of the layer in angstroms&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;angstrom&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+        <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;chemical_structure&#39;</span><span class="p">:</span> <span class="s1">&#39;C10H18NO8P&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;roughness&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Conformal roughness&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>
+        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;angstrom&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+        <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;area_per_molecule&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Surface coverage&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">48.2</span><span class="p">,</span>
+        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;angstrom ** 2&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+        <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;solvation&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Fraction of solvent present&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;dimensionless&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;sl&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The real scattering length for a chemical formula in angstrom.&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.ncnr.nist.gov/resources/activation/&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">4.186</span><span class="p">,</span>
+        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;angstrom&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span>
+        <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span>
+        <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;isl&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The real scattering length for a chemical formula in angstrom.&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.ncnr.nist.gov/resources/activation/&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;angstrom&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span>
         <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span>
         <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span>
     <span class="p">}</span>
@@ -367,9 +436,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">()</span><span class="o">.</span><span class="n">assign_material_to_layer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">uid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">uid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a UID from the borg map</span>
+<span class="sd">        :return: UID from the borg map</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_borg</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">convert_id_to_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -395,6 +464,181 @@
 
 <span class="sd">        :return: a string representation of the layer</span>
 <span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LayerApm"><a class="viewcode-back" href="../../../layer.html#EasyReflectometry.sample.layer.LayerApm">[docs]</a><span class="k">class</span> <span class="nc">LayerApm</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The :py:class:`LayerApm` class allows a layer to be defined in terms of some chemical </span>
+<span class="sd">    structure (given as a chemical formula) and area per molecule. </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">area_per_molecule</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span>
+        <span class="n">Parameter</span><span class="p">]</span>  <span class="c1">#= (&#39;area_per_molecule&#39;, LAYERAPM_DETAILS[&#39;area_per_molecule&#39;])</span>
+    <span class="n">solvent</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Material</span><span class="p">]</span>
+    <span class="n">solvation</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">chemical_structure</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">thickness</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
+                 <span class="n">solvent</span><span class="p">:</span> <span class="n">Material</span><span class="p">,</span>
+                 <span class="n">solvation</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
+                 <span class="n">area_per_molecule</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
+                 <span class="n">roughness</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
+                 <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyLayerApm&#39;</span><span class="p">,</span>
+                 <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param chemical_structure: Chemical formula for the material in the layer</span>
+<span class="sd">        :param thickness: Layer thickness</span>
+<span class="sd">        :param solvent: Solvent present in material</span>
+<span class="sd">        :param solvation: Fraction of solvent present</span>
+<span class="sd">        :param area_per_molecule: Area per molecule for the chemical material</span>
+<span class="sd">        :param roughness: Upper roughness on the layer</span>
+<span class="sd">        :param name: Identifier, defaults to :py:attr:`EasyLayerApm`</span>
+<span class="sd">        :param interface: Interface object, defaults to :py:attr:`None`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">scattering_length</span> <span class="o">=</span> <span class="n">neutron_scattering_length</span><span class="p">(</span><span class="n">chemical_structure</span><span class="p">)</span>  <span class="c1">#* 1e6</span>
+        <span class="n">default_options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">LAYERAPM_DETAILS</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;sl&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;isl&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">scattering_length_real</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;scattering_length_real&#39;</span><span class="p">,</span>
+                                           <span class="n">scattering_length</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
+                                           <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;sl&#39;</span><span class="p">])</span>
+        <span class="n">scattering_length_imag</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;scattering_length_imag&#39;</span><span class="p">,</span>
+                                           <span class="n">scattering_length</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span>
+                                           <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;isl&#39;</span><span class="p">])</span>
+        <span class="n">sld</span> <span class="o">=</span> <span class="n">apm_to_sld</span><span class="p">(</span><span class="n">scattering_length_real</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">thickness</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span>
+                         <span class="n">area_per_molecule</span><span class="o">.</span><span class="n">raw_value</span><span class="p">)</span>
+        <span class="n">isld</span> <span class="o">=</span> <span class="n">apm_to_sld</span><span class="p">(</span><span class="n">scattering_length_imag</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">thickness</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span>
+                          <span class="n">area_per_molecule</span><span class="o">.</span><span class="n">raw_value</span><span class="p">)</span>
+
+        <span class="n">material</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">sld</span><span class="p">,</span>
+                                      <span class="n">isld</span><span class="p">,</span>
+                                      <span class="n">name</span><span class="o">=</span><span class="n">chemical_structure</span><span class="p">,</span>
+                                      <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span>
+
+        <span class="n">constraint</span> <span class="o">=</span> <span class="n">FunctionalConstraint</span><span class="p">(</span>
+            <span class="n">material</span><span class="o">.</span><span class="n">sld</span><span class="p">,</span> <span class="n">apm_to_sld</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">scattering_length_real</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">area_per_molecule</span><span class="p">])</span>
+        <span class="n">thickness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;apm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">constraint</span>
+        <span class="n">area_per_molecule</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;apm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">constraint</span>
+        <span class="n">scattering_length_real</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;apm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">constraint</span>
+
+        <span class="n">iconstraint</span> <span class="o">=</span> <span class="n">FunctionalConstraint</span><span class="p">(</span>
+            <span class="n">material</span><span class="o">.</span><span class="n">isld</span><span class="p">,</span> <span class="n">apm_to_sld</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">scattering_length_imag</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">area_per_molecule</span><span class="p">])</span>
+        <span class="n">thickness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;iapm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iconstraint</span>
+        <span class="n">area_per_molecule</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;iapm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iconstraint</span>
+        <span class="n">scattering_length_imag</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;iapm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iconstraint</span>
+
+        <span class="n">solvated_material</span> <span class="o">=</span> <span class="n">MaterialMixture</span><span class="p">(</span><span class="n">material</span><span class="p">,</span>
+                                            <span class="n">solvent</span><span class="p">,</span>
+                                            <span class="n">solvation</span><span class="p">,</span>
+                                            <span class="n">name</span><span class="o">=</span><span class="n">chemical_structure</span> <span class="o">+</span> <span class="s1">&#39; Solv&#39;</span><span class="p">,</span>
+                                            <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">solvated_material</span><span class="p">,</span>
+                         <span class="n">thickness</span><span class="o">=</span><span class="n">thickness</span><span class="p">,</span>
+                         <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span><span class="p">,</span>
+                         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;scattering_length_real&#39;</span><span class="p">,</span> <span class="n">scattering_length_real</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;scattering_length_imag&#39;</span><span class="p">,</span> <span class="n">scattering_length_imag</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;solvent&#39;</span><span class="p">,</span> <span class="n">solvent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;solvation&#39;</span><span class="p">,</span> <span class="n">solvation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;area_per_molecule&#39;</span><span class="p">,</span> <span class="n">area_per_molecule</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;roughness&#39;</span><span class="p">,</span> <span class="n">roughness</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chemical_structure</span> <span class="o">=</span> <span class="n">chemical_structure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span>
+
+    <span class="c1">#Class constructors</span>
+<div class="viewcode-block" id="LayerApm.default"><a class="viewcode-back" href="../../../layer.html#EasyReflectometry.sample.layer.LayerApm.default">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LayerApm&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Default constructor for layer defined from chemical structure and area per molecule.</span>
+
+<span class="sd">        :param interface: Interface object, defaults to :py:attr:`None`</span>
+<span class="sd">        :return: Layer with correct structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">area_per_molecule</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;area_per_molecule&#39;</span><span class="p">,</span>
+                                      <span class="o">**</span><span class="n">LAYERAPM_DETAILS</span><span class="p">[</span><span class="s1">&#39;area_per_molecule&#39;</span><span class="p">])</span>
+        <span class="n">thickness</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">LAYERAPM_DETAILS</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">])</span>
+        <span class="n">roughness</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;roughness&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">LAYERAPM_DETAILS</span><span class="p">[</span><span class="s1">&#39;roughness&#39;</span><span class="p">])</span>
+        <span class="n">solvent</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">6.36</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;D2O&#39;</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span>
+        <span class="n">solvation</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;solvation&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">LAYERAPM_DETAILS</span><span class="p">[</span><span class="s1">&#39;solvation&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">LAYERAPM_DETAILS</span><span class="p">[</span><span class="s1">&#39;chemical_structure&#39;</span><span class="p">],</span>
+                   <span class="n">thickness</span><span class="p">,</span>
+                   <span class="n">solvent</span><span class="p">,</span>
+                   <span class="n">solvation</span><span class="p">,</span>
+                   <span class="n">area_per_molecule</span><span class="p">,</span>
+                   <span class="n">roughness</span><span class="p">,</span>
+                   <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LayerApm.from_pars"><a class="viewcode-back" href="../../../layer.html#EasyReflectometry.sample.layer.LayerApm.from_pars">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_pars</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
+                  <span class="n">chemical_structure</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                  <span class="n">thickness</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">solvent</span><span class="p">:</span> <span class="n">Material</span><span class="p">,</span>
+                  <span class="n">solvation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">area_per_molecule</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">roughness</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyLayerApm&#39;</span><span class="p">,</span>
+                  <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LayerApm&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor for a layer described with the area per molecule, where the parameters are known.</span>
+<span class="sd">        </span>
+<span class="sd">        :param chemical_structure: Chemical formula for the material in the layer</span>
+<span class="sd">        :param thickness: Layer thickness</span>
+<span class="sd">        :param solvent: Solvent present in material</span>
+<span class="sd">        :param solvation: Fraction of solvent present</span>
+<span class="sd">        :param area_per_molecule: Area per molecule for the chemical material</span>
+<span class="sd">        :param roughness: Upper roughness on the layer</span>
+<span class="sd">        :param name: Identifier, defaults to :py:attr:`EasyLayerApm`</span>
+<span class="sd">        :param interface: Interface object, defaults to :py:attr:`None`</span>
+<span class="sd">        :return: Layer with correct structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">default_options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">LAYERAPM_DETAILS</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;area_per_molecule&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;roughness&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;solvation&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;chemical_structure&#39;</span><span class="p">]</span>
+
+        <span class="n">area_per_molecule</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;area_per_molecule&#39;</span><span class="p">,</span> <span class="n">area_per_molecule</span><span class="p">,</span>
+                                      <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;area_per_molecule&#39;</span><span class="p">])</span>
+        <span class="n">thickness</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">])</span>
+        <span class="n">roughness</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;roughness&#39;</span><span class="p">,</span> <span class="n">roughness</span><span class="p">,</span> <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;roughness&#39;</span><span class="p">])</span>
+        <span class="n">solvation</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;solvation&#39;</span><span class="p">,</span> <span class="n">solvation</span><span class="p">,</span> <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;solvation&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">chemical_structure</span><span class="p">,</span>
+                   <span class="n">thickness</span><span class="p">,</span>
+                   <span class="n">solvent</span><span class="p">,</span>
+                   <span class="n">solvation</span><span class="p">,</span>
+                   <span class="n">area_per_molecule</span><span class="p">,</span>
+                   <span class="n">roughness</span><span class="p">,</span>
+                   <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                   <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
+
+    <span class="c1"># NEED GETTER AND SETTER FOR THE CHEMICAL STRUCTURE</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_dict_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dictionary representation of the :py:class:`LayerApm` object. </span>
+<span class="sd">        </span>
+<span class="sd">        :return: Simple dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">layerapm_dict</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_dict_repr</span>
+        <span class="n">layerapm_dict</span><span class="p">[</span><span class="s1">&#39;chemical_structure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chemical_structure</span>
+        <span class="n">layerapm_dict</span><span class="p">[</span>
+            <span class="s1">&#39;area_per_molecule&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">raw_value</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">unit</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="n">layerapm_dict</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        String representation.</span>
+
+<span class="sd">        :return: Descriptive string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 </pre></div>

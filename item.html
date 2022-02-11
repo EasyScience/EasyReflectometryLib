@@ -94,22 +94,44 @@
    Usage
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="materials_options.html">
-   Types of material
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="library.html">
+   Libraries
   </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="material_library.html">
+     Materials
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="layer_library.html">
+     Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="item_library.html">
+     Items
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="library.html">
-   Item library
+  <a class="reference internal" href="calculators.html">
+   Calculators &amp; Optimisation
   </a>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="tutorials.html">
    Tutorials
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -129,12 +151,12 @@
      Using the MaterialMixture
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="monolayer.html">
+     Investigation of a surfactant monolayer
+    </a>
+   </li>
   </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="calculators.html">
-   Calculators &amp; Optimisation
-  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="contributing.html">
@@ -150,8 +172,8 @@
   <a class="reference internal" href="modules.html">
    API
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -167,18 +189,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="materials.html">
-     sample.materials
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="layer.html">
      Layer
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="layers.html">
-     sample.layers
     </a>
    </li>
    <li class="toctree-l2">
@@ -287,17 +299,17 @@
 <p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">item</span></code> library is the backbone of <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code>.
 An <a class="reference internal" href="#module-EasyReflectometry.sample.item" title="EasyReflectometry.sample.item"><code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry.sample.item</span></code></a> allows for the inclusion of physical and
 chemical parameterisation into our reflectometry model.
-For more information please look at the <a href="#id5"><span class="problematic" id="id6">`item library documentation`_</span></a></p>
+For more information please look at the <a href="#id6"><span class="problematic" id="id7">`item library documentation`_</span></a></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.item.MultiLayer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.item.</span></span><span class="sig-name descname"><span class="pre">MultiLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMultiLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#MultiLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.MultiLayer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">easyCore.Objects.ObjectClasses.BaseObj</span></code></p>
 <p>A <a class="reference internal" href="#EasyReflectometry.sample.item.MultiLayer" title="EasyReflectometry.sample.item.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code></a> consists of a series of
 <a class="reference internal" href="layer.html#EasyReflectometry.sample.layer.Layer" title="EasyReflectometry.sample.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.layer.Layer</span></code></a> or
-<a class="reference internal" href="layers.html#EasyReflectometry.sample.layers.Layers" title="EasyReflectometry.sample.layers.Layers"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.layers.Layers</span></code></a>.
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.layers.Layers</span></code>.
 This <code class="xref py py-mod docutils literal notranslate"><span class="pre">item</span></code> will arrange the layers as slabs, one on top of another,
 allowing the reflectometry to be determined from them.</p>
-<p>More information about the usage of this item is available in the <a href="#id7"><span class="problematic" id="id8">`item library documentation`_</span></a></p>
+<p>More information about the usage of this item is available in the <a href="#id8"><span class="problematic" id="id9">`item library documentation`_</span></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.item.MultiLayer.add_layer">
 <span class="sig-name descname"><span class="pre">add_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">layers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#MultiLayer.add_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.MultiLayer.add_layer" title="Permalink to this definition">¶</a></dt>
@@ -385,17 +397,17 @@ it a some number of times. This enables a computational efficiency in many
 reflectometry engines as the operation can be performed for a single
 <a class="reference internal" href="#EasyReflectometry.sample.item.MultiLayer" title="EasyReflectometry.sample.item.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code></a> and cheaply combined for the appropriate number of
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">repetitions</span></code>.</p>
-<p>More information about the usage of this item is available in the <a href="#id9"><span class="problematic" id="id10">`item library documentation`_</span></a></p>
+<p>More information about the usage of this item is available in the <a href="#id10"><span class="problematic" id="id11">`item library documentation`_</span></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.item.RepeatingMultiLayer.default">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Multi-layer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#RepeatingMultiLayer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.RepeatingMultiLayer.default" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#RepeatingMultiLayer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.RepeatingMultiLayer.default" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default constructor for the reflectometry repeating multi layer.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Default repeating multi-layer container</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.sample.item.RepeatingMultiLayer" title="EasyReflectometry.sample.item.RepeatingMultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code></a></p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.item.RepeatingMultiLayer" title="EasyReflectometry.sample.item.RepeatingMultiLayer">RepeatingMultiLayer</a></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Default repeating multi-layer container</p>
 </dd>
 </dl>
 </dd></dl>
@@ -407,28 +419,134 @@ reflectometry engines as the operation can be performed for a single
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>layers</strong> (<em>EasyReflectometry.layers.Layers</em>) – The layers in the repeating multi layer</p></li>
-<li><p><strong>repetitions</strong> (<em>float</em>) – Number of repetitions</p></li>
+<li><p><strong>layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Layers</span></code>) – The layers in the repeating multi layer</p></li>
+<li><p><strong>repetitions</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Number of repetitions, defaults to :py:attr`1`.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Repeating multi-layer container</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.item.RepeatingMultiLayer" title="EasyReflectometry.sample.item.RepeatingMultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code></a></p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.sample.item.RepeatingMultiLayer" title="EasyReflectometry.sample.item.RepeatingMultiLayer">RepeatingMultiLayer</a></p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Repeating multi-layer container</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.item.RepeatingMultiLayer.uid">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uid</span></span><a class="headerlink" href="#EasyReflectometry.sample.item.RepeatingMultiLayer.uid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a UID from the borg map</p>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.RepeatingMultiLayer.uid" title="Permalink to this definition">¶</a></dt>
+<dd><p>UID from the borg map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>return</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.item.RepeatingMultiLayer.user_data">
 <span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.RepeatingMultiLayer.user_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.item.</span></span><span class="sig-name descname"><span class="pre">SurfactantLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasySurfactantLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#SurfactantLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#EasyReflectometry.sample.item.MultiLayer" title="EasyReflectometry.sample.item.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.item.MultiLayer</span></code></a></p>
+<p>A <a class="reference internal" href="#EasyReflectometry.sample.item.SurfactantLayer" title="EasyReflectometry.sample.item.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a> constructs a series of layers representing the head and tail
+groups of a surfactant. This item allows the definition of a surfactant or lipid using the
+chemistry of the head and tail regions, additionally this approach will make the application of
+constraints such as conformal roughness or area per molecule more straight forward.</p>
+<p>More information about the usage of this item is available in the <a href="#id12"><span class="problematic" id="id13">`item library documentation`_</span></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.conformal_roughness">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">conformal_roughness</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.conformal_roughness" title="Permalink to this definition">¶</a></dt>
+<dd><p>is the roughness is the same for both layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>return</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.constrain_apm">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constrain_apm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.constrain_apm" title="Permalink to this definition">¶</a></dt>
+<dd><p>if the area per molecule is constrained</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>return</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.constrain_solvent_roughness">
+<span class="sig-name descname"><span class="pre">constrain_solvent_roughness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solvent_roughness</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#SurfactantLayer.constrain_solvent_roughness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.constrain_solvent_roughness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the constraint to the solvent roughness.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>solvent_roughness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code>) – The solvent roughness parameter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#SurfactantLayer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default constructor for a surfactant layer object. The default lipid type is DPPC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.sample.item.SurfactantLayer" title="EasyReflectometry.sample.item.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Surfactant layer object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.from_pars">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">head_chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_solvation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_solvation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasySurfactantLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#SurfactantLayer.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.from_pars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor for the surfactant layer where the parameters are known.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>head_chemical_structure</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Chemical formula for surfactant head</p></li>
+<li><p><strong>head_thickness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Thicknkess of head group</p></li>
+<li><p><strong>head_solvent</strong> (<a class="reference internal" href="material.html#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a>) – Solvent in head group</p></li>
+<li><p><strong>head_solvation</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Fractional solvation of head group by <code class="xref py py-attr docutils literal notranslate"><span class="pre">head_solvent</span></code></p></li>
+<li><p><strong>head_area_per_molecule</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Area per molecule of head group</p></li>
+<li><p><strong>head_roughness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Roughness of head group layer</p></li>
+<li><p><strong>tail_chemical_structure</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Chemical formula for surfactant tail</p></li>
+<li><p><strong>tail_thickness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Thicknkess of tail group</p></li>
+<li><p><strong>tail_solvent</strong> (<a class="reference internal" href="material.html#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a>) – Solvent in tail group</p></li>
+<li><p><strong>tail_solvation</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Fractional solvation of tail group by <code class="xref py py-attr docutils literal notranslate"><span class="pre">tail_solvent</span></code></p></li>
+<li><p><strong>tail_area_per_molecule</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Area per molecule of tail group</p></li>
+<li><p><strong>tail_roughness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Roughness of tail group layer</p></li>
+<li><p><strong>flip</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Should the surfactant layer be flipped over</p></li>
+<li><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name for surfactant layer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.item.SurfactantLayer" title="EasyReflectometry.sample.item.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.user_data">
+<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.user_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

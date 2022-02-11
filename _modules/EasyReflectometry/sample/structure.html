@@ -92,22 +92,44 @@
    Usage
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../materials_options.html">
-   Types of material
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../library.html">
+   Libraries
   </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../material_library.html">
+     Materials
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../layer_library.html">
+     Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../item_library.html">
+     Items
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../library.html">
-   Item library
+  <a class="reference internal" href="../../../calculators.html">
+   Calculators &amp; Optimisation
   </a>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../../../tutorials.html">
    Tutorials
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -127,12 +149,12 @@
      Using the MaterialMixture
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../monolayer.html">
+     Investigation of a surfactant monolayer
+    </a>
+   </li>
   </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../calculators.html">
-   Calculators &amp; Optimisation
-  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../../../contributing.html">
@@ -148,8 +170,8 @@
   <a class="reference internal" href="../../../modules.html">
    API
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -165,18 +187,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../materials.html">
-     sample.materials
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="../../../layer.html">
      Layer
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../layers.html">
-     sample.layers
     </a>
    </li>
    <li class="toctree-l2">
@@ -273,22 +285,22 @@
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">easyCore</span> <span class="kn">import</span> <span class="n">np</span>
 <span class="kn">from</span> <span class="nn">easyCore.Objects.Groups</span> <span class="kn">import</span> <span class="n">BaseCollection</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.item</span> <span class="kn">import</span> <span class="n">MultiLayer</span><span class="p">,</span> <span class="n">RepeatingMultiLayer</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.item</span> <span class="kn">import</span> <span class="n">MultiLayer</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample.layer</span> <span class="kn">import</span> <span class="n">Layer</span>
 
 
 <div class="viewcode-block" id="Structure"><a class="viewcode-back" href="../../../structure.html#EasyReflectometry.sample.structure.Structure">[docs]</a><span class="k">class</span> <span class="nc">Structure</span><span class="p">(</span><span class="n">BaseCollection</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Layer</span><span class="p">,</span> <span class="n">MultiLayer</span><span class="p">,</span> <span class="n">RepeatingMultiLayer</span><span class="p">]],</span>
+                 <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Layer</span><span class="p">,</span> <span class="n">MultiLayer</span><span class="p">]],</span>
                  <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyStructure&#39;</span><span class="p">,</span>
                  <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">new_items</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">Layer</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">Layer</span><span class="p">):</span>
                 <span class="n">new_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MultiLayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">MultiLayer</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">MultiLayer</span><span class="p">):</span>
                 <span class="n">new_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The items must be either a Layer or an Item&#39;</span><span class="p">)</span>
@@ -310,7 +322,7 @@
 
 <div class="viewcode-block" id="Structure.from_pars"><a class="viewcode-back" href="../../../structure.html#EasyReflectometry.sample.structure.Structure.from_pars">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_pars</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
-                  <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">MultiLayer</span><span class="p">,</span> <span class="n">RepeatingMultiLayer</span><span class="p">]],</span>
+                  <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">MultiLayer</span><span class="p">]],</span>
                   <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyStructure&#39;</span><span class="p">,</span>
                   <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Structure&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -322,6 +334,13 @@
 <span class="sd">        :rtype: Structure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">uid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: UID from the borg map</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_borg</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">convert_id_to_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="c1"># Representation</span>
     <span class="nd">@property</span>

@@ -92,22 +92,44 @@
    Usage
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="materials_options.html">
-   Types of material
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="library.html">
+   Libraries
   </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="material_library.html">
+     Materials
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="layer_library.html">
+     Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="item_library.html">
+     Items
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="library.html">
-   Item library
+  <a class="reference internal" href="calculators.html">
+   Calculators &amp; Optimisation
   </a>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="tutorials.html">
    Tutorials
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -127,12 +149,12 @@
      Using the MaterialMixture
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="monolayer.html">
+     Investigation of a surfactant monolayer
+    </a>
+   </li>
   </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="calculators.html">
-   Calculators &amp; Optimisation
-  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="contributing.html">
@@ -148,8 +170,8 @@
   <a class="reference internal" href="modules.html">
    API
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -165,18 +187,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="materials.html">
-     sample.materials
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="layer.html">
      Layer
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="layers.html">
-     sample.layers
     </a>
    </li>
    <li class="toctree-l2">
@@ -268,15 +280,16 @@
 
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
+ | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
+ | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#U"><strong>U</strong></a>
- | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="A">A</h2>
@@ -284,11 +297,27 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="experiment.html#EasyReflectometry.experiment.model.Model.add_item">add_item() (EasyReflectometry.experiment.model.Model method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="item.html#EasyReflectometry.sample.item.MultiLayer.add_layer">add_layer() (EasyReflectometry.sample.item.MultiLayer method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="layer.html#EasyReflectometry.sample.layer.LayerApm.area_per_molecule">area_per_molecule (EasyReflectometry.sample.layer.LayerApm attribute)</a>
+</li>
       <li><a href="layer.html#EasyReflectometry.sample.layer.Layer.assign_material">assign_material() (EasyReflectometry.sample.layer.Layer method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="item.html#EasyReflectometry.sample.item.SurfactantLayer.conformal_roughness">conformal_roughness (EasyReflectometry.sample.item.SurfactantLayer property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="item.html#EasyReflectometry.sample.item.SurfactantLayer.constrain_apm">constrain_apm (EasyReflectometry.sample.item.SurfactantLayer property)</a>
+</li>
+      <li><a href="item.html#EasyReflectometry.sample.item.SurfactantLayer.constrain_solvent_roughness">constrain_solvent_roughness() (EasyReflectometry.sample.item.SurfactantLayer method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -303,15 +332,15 @@
 </li>
         <li><a href="item.html#EasyReflectometry.sample.item.RepeatingMultiLayer.default">(EasyReflectometry.sample.item.RepeatingMultiLayer class method)</a>
 </li>
+        <li><a href="item.html#EasyReflectometry.sample.item.SurfactantLayer.default">(EasyReflectometry.sample.item.SurfactantLayer class method)</a>
+</li>
         <li><a href="layer.html#EasyReflectometry.sample.layer.Layer.default">(EasyReflectometry.sample.layer.Layer class method)</a>
 </li>
-        <li><a href="layers.html#EasyReflectometry.sample.layers.Layers.default">(EasyReflectometry.sample.layers.Layers class method)</a>
+        <li><a href="layer.html#EasyReflectometry.sample.layer.LayerApm.default">(EasyReflectometry.sample.layer.LayerApm class method)</a>
 </li>
         <li><a href="material.html#EasyReflectometry.sample.material.Material.default">(EasyReflectometry.sample.material.Material class method)</a>
 </li>
         <li><a href="material.html#EasyReflectometry.sample.material.MaterialMixture.default">(EasyReflectometry.sample.material.MaterialMixture class method)</a>
-</li>
-        <li><a href="materials.html#EasyReflectometry.sample.materials.Materials.default">(EasyReflectometry.sample.materials.Materials class method)</a>
 </li>
         <li><a href="structure.html#EasyReflectometry.sample.structure.Structure.default">(EasyReflectometry.sample.structure.Structure class method)</a>
 </li>
@@ -349,6 +378,8 @@
         <li><a href="item.html#module-EasyReflectometry.sample.item">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     EasyReflectometry.sample.layer
 
@@ -356,27 +387,11 @@
         <li><a href="layer.html#module-EasyReflectometry.sample.layer">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    EasyReflectometry.sample.layers
-
-      <ul>
-        <li><a href="layers.html#module-EasyReflectometry.sample.layers">module</a>
-</li>
-      </ul></li>
       <li>
     EasyReflectometry.sample.material
 
       <ul>
         <li><a href="material.html#module-EasyReflectometry.sample.material">module</a>
-</li>
-      </ul></li>
-      <li>
-    EasyReflectometry.sample.materials
-
-      <ul>
-        <li><a href="materials.html#module-EasyReflectometry.sample.materials">module</a>
 </li>
       </ul></li>
       <li>
@@ -392,6 +407,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="material.html#EasyReflectometry.sample.material.MaterialMixture.fraction">fraction (EasyReflectometry.sample.material.MaterialMixture attribute)</a>
+</li>
       <li><a href="experiment.html#EasyReflectometry.experiment.model.Model.from_pars">from_pars() (EasyReflectometry.experiment.model.Model class method)</a>
 
       <ul>
@@ -399,19 +416,27 @@
 </li>
         <li><a href="item.html#EasyReflectometry.sample.item.RepeatingMultiLayer.from_pars">(EasyReflectometry.sample.item.RepeatingMultiLayer class method)</a>
 </li>
+        <li><a href="item.html#EasyReflectometry.sample.item.SurfactantLayer.from_pars">(EasyReflectometry.sample.item.SurfactantLayer class method)</a>
+</li>
         <li><a href="layer.html#EasyReflectometry.sample.layer.Layer.from_pars">(EasyReflectometry.sample.layer.Layer class method)</a>
 </li>
-        <li><a href="layers.html#EasyReflectometry.sample.layers.Layers.from_pars">(EasyReflectometry.sample.layers.Layers class method)</a>
+        <li><a href="layer.html#EasyReflectometry.sample.layer.LayerApm.from_pars">(EasyReflectometry.sample.layer.LayerApm class method)</a>
 </li>
         <li><a href="material.html#EasyReflectometry.sample.material.Material.from_pars">(EasyReflectometry.sample.material.Material class method)</a>
 </li>
         <li><a href="material.html#EasyReflectometry.sample.material.MaterialMixture.from_pars">(EasyReflectometry.sample.material.MaterialMixture class method)</a>
 </li>
-        <li><a href="materials.html#EasyReflectometry.sample.materials.Materials.from_pars">(EasyReflectometry.sample.materials.Materials class method)</a>
-</li>
         <li><a href="structure.html#EasyReflectometry.sample.structure.Structure.from_pars">(EasyReflectometry.sample.structure.Structure class method)</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="material.html#EasyReflectometry.sample.material.Material.isld">isld (EasyReflectometry.sample.material.Material attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -422,7 +447,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="layers.html#EasyReflectometry.sample.layers.Layers">Layers (class in EasyReflectometry.sample.layers)</a>
+      <li><a href="layer.html#EasyReflectometry.sample.layer.LayerApm">LayerApm (class in EasyReflectometry.sample.layer)</a>
 </li>
       <li><a href="data.html#EasyReflectometry.data.load">load() (in module EasyReflectometry.data)</a>
 </li>
@@ -434,9 +459,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="material.html#EasyReflectometry.sample.material.Material">Material (class in EasyReflectometry.sample.material)</a>
 </li>
-      <li><a href="material.html#EasyReflectometry.sample.material.MaterialMixture">MaterialMixture (class in EasyReflectometry.sample.material)</a>
+      <li><a href="material.html#EasyReflectometry.sample.material.MaterialMixture.material_a">material_a (EasyReflectometry.sample.material.MaterialMixture attribute)</a>
 </li>
-      <li><a href="materials.html#EasyReflectometry.sample.materials.Materials">Materials (class in EasyReflectometry.sample.materials)</a>
+      <li><a href="material.html#EasyReflectometry.sample.material.MaterialMixture.material_b">material_b (EasyReflectometry.sample.material.MaterialMixture attribute)</a>
+</li>
+      <li><a href="material.html#EasyReflectometry.sample.material.MaterialMixture">MaterialMixture (class in EasyReflectometry.sample.material)</a>
 </li>
       <li><a href="experiment.html#EasyReflectometry.experiment.model.Model">Model (class in EasyReflectometry.experiment.model)</a>
 </li>
@@ -452,11 +479,7 @@
 </li>
         <li><a href="layer.html#module-EasyReflectometry.sample.layer">EasyReflectometry.sample.layer</a>
 </li>
-        <li><a href="layers.html#module-EasyReflectometry.sample.layers">EasyReflectometry.sample.layers</a>
-</li>
         <li><a href="material.html#module-EasyReflectometry.sample.material">EasyReflectometry.sample.material</a>
-</li>
-        <li><a href="materials.html#module-EasyReflectometry.sample.materials">EasyReflectometry.sample.materials</a>
 </li>
         <li><a href="structure.html#module-EasyReflectometry.sample.structure">EasyReflectometry.sample.structure</a>
 </li>
@@ -485,7 +508,17 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="material.html#EasyReflectometry.sample.material.Material.sld">sld (EasyReflectometry.sample.material.Material attribute)</a>
+</li>
+      <li><a href="layer.html#EasyReflectometry.sample.layer.LayerApm.solvation">solvation (EasyReflectometry.sample.layer.LayerApm attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="layer.html#EasyReflectometry.sample.layer.LayerApm.solvent">solvent (EasyReflectometry.sample.layer.LayerApm attribute)</a>
+</li>
       <li><a href="structure.html#EasyReflectometry.sample.structure.Structure">Structure (class in EasyReflectometry.sample.structure)</a>
+</li>
+      <li><a href="item.html#EasyReflectometry.sample.item.SurfactantLayer">SurfactantLayer (class in EasyReflectometry.sample.item)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -506,6 +539,8 @@
 </li>
         <li><a href="material.html#EasyReflectometry.sample.material.MaterialMixture.uid">(EasyReflectometry.sample.material.MaterialMixture property)</a>
 </li>
+        <li><a href="structure.html#EasyReflectometry.sample.structure.Structure.uid">(EasyReflectometry.sample.structure.Structure property)</a>
+</li>
       </ul></li>
       <li><a href="experiment.html#EasyReflectometry.experiment.model.Model.user_data">user_data (EasyReflectometry.experiment.model.Model attribute)</a>
 
@@ -514,27 +549,19 @@
 </li>
         <li><a href="item.html#EasyReflectometry.sample.item.RepeatingMultiLayer.user_data">(EasyReflectometry.sample.item.RepeatingMultiLayer attribute)</a>
 </li>
+        <li><a href="item.html#EasyReflectometry.sample.item.SurfactantLayer.user_data">(EasyReflectometry.sample.item.SurfactantLayer attribute)</a>
+</li>
         <li><a href="layer.html#EasyReflectometry.sample.layer.Layer.user_data">(EasyReflectometry.sample.layer.Layer attribute)</a>
 </li>
-        <li><a href="layers.html#EasyReflectometry.sample.layers.Layers.user_data">(EasyReflectometry.sample.layers.Layers attribute)</a>
+        <li><a href="layer.html#EasyReflectometry.sample.layer.LayerApm.user_data">(EasyReflectometry.sample.layer.LayerApm attribute)</a>
 </li>
         <li><a href="material.html#EasyReflectometry.sample.material.Material.user_data">(EasyReflectometry.sample.material.Material attribute)</a>
 </li>
         <li><a href="material.html#EasyReflectometry.sample.material.MaterialMixture.user_data">(EasyReflectometry.sample.material.MaterialMixture attribute)</a>
 </li>
-        <li><a href="materials.html#EasyReflectometry.sample.materials.Materials.user_data">(EasyReflectometry.sample.materials.Materials attribute)</a>
-</li>
         <li><a href="structure.html#EasyReflectometry.sample.structure.Structure.user_data">(EasyReflectometry.sample.structure.Structure attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-</tr></table>
-
-<h2 id="W">W</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="material.html#EasyReflectometry.sample.material.MaterialMixture.weighted_average_sld">weighted_average_sld() (EasyReflectometry.sample.material.MaterialMixture static method)</a>
-</li>
   </ul></td>
 </tr></table>
 

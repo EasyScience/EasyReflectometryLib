@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Item library &#8212; EasyReflectometry 0.0.1 documentation</title>
+    <title>Libraries &#8212; EasyReflectometry 0.0.1 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -37,8 +37,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tutorials" href="tutorials.html" />
-    <link rel="prev" title="Types of material" href="materials_options.html" />
+    <link rel="next" title="Materials" href="material_library.html" />
+    <link rel="prev" title="Usage" href="usage.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -94,22 +94,44 @@
    Usage
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="materials_options.html">
-   Types of material
-  </a>
- </li>
- <li class="toctree-l1 current active">
+ <li class="toctree-l1 current active has-children">
   <a class="current reference internal" href="#">
-   Item library
+   Libraries
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="material_library.html">
+     Materials
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="layer_library.html">
+     Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="item_library.html">
+     Items
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="calculators.html">
+   Calculators &amp; Optimisation
   </a>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="tutorials.html">
    Tutorials
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -129,12 +151,12 @@
      Using the MaterialMixture
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="monolayer.html">
+     Investigation of a surfactant monolayer
+    </a>
+   </li>
   </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="calculators.html">
-   Calculators &amp; Optimisation
-  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="contributing.html">
@@ -150,8 +172,8 @@
   <a class="reference internal" href="modules.html">
    API
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -167,18 +189,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="materials.html">
-     sample.materials
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="layer.html">
      Layer
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="layers.html">
-     sample.layers
     </a>
    </li>
    <li class="toctree-l2">
@@ -264,32 +276,6 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show noprint">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#multilayer">
-   <code class="xref py py-class docutils literal notranslate">
-    <span class="pre">
-     MultiLayer
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#repeatingmultilayer">
-   <code class="xref py py-class docutils literal notranslate">
-    <span class="pre">
-     RepeatingMultiLayer
-    </span>
-   </code>
-  </a>
- </li>
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -297,90 +283,27 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Item library</h1>
+                <h1>Libraries</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#multilayer">
-   <code class="xref py py-class docutils literal notranslate">
-    <span class="pre">
-     MultiLayer
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#repeatingmultilayer">
-   <code class="xref py py-class docutils literal notranslate">
-    <span class="pre">
-     RepeatingMultiLayer
-    </span>
-   </code>
-  </a>
- </li>
-</ul>
-
-                        </nav>
                     </div>
                 </div>
             </div>
             
               <div>
                 
-  <div class="section" id="item-library">
-<h1>Item library<a class="headerlink" href="#item-library" title="Permalink to this headline">¶</a></h1>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code> is designed to be used with a broad range of different items.
-These items offer flexibility for the user and enable more powerful analysis by making chemical and pysical constraints available with limited code.
-In this page, we will document the items that are available with simple examples of the constructors that exist.
-Full API documentation is also available for the <a class="reference internal" href="item.html#module-EasyReflectometry.sample.item" title="EasyReflectometry.sample.item"><code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry.sample.item</span></code></a> module.</p>
-<div class="section" id="multilayer">
-<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code><a class="headerlink" href="#multilayer" title="Permalink to this headline">¶</a></h2>
-<p>This item should be used for a series of layers that, for whatever reason, should be thought of as a single object.
-For example, in the <a class="reference external" href="./simple_fitting.html">simple fitting tutorial</a> this item type is used to combine the silicon and silicon dioxide layer that as formed into a single object.
-All of the separate layers in these objects will be fitted individually, i.e. there is no constraints present, however, there is some cognative benefit to grouping layers together.</p>
-<p>To create a <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code> object, we use the following construction.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span><span class="p">,</span> <span class="n">Material</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.item</span> <span class="kn">import</span> <span class="n">MultiLayer</span>
-
-<span class="n">si</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">2.07</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Si&#39;</span><span class="p">)</span>
-<span class="n">sio2</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">3.47</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;SiO2&#39;</span><span class="p">)</span>
-<span class="n">si_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">si</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Si layer&#39;</span><span class="p">)</span>
-<span class="n">sio2_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">sio2</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;SiO2 layer&#39;</span><span class="p">)</span>
-
-<span class="n">subphase</span> <span class="o">=</span> <span class="n">MultiLayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">([</span><span class="n">si_layer</span><span class="p">,</span> <span class="n">sio2_layer</span><span class="p">],</span>
-                                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si/SiO2 subphase&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>This will create a <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code> object named <code class="code docutils literal notranslate"><span class="pre">subphase</span></code> which we can use in some <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code> for our analysis.</p>
-</div>
-<div class="section" id="repeatingmultilayer">
-<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code><a class="headerlink" href="#repeatingmultilayer" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code> item type is an extension of the <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code> for the analysis of systems with a multilayer that has some number of repeats.
-This item type imposes some constraints, specifically that all of the repeats have the exact same structure (i.e. thicknesses, roughnesses, and scattering length densities),
-which brings with it some computational saving as the reflectometry coefficients only needs to be calculated once for this structure and propagated for the correct number of repeats.
-There is a <a class="reference external" href="./repeating.html">tutorial</a> that discusses the utilisation of this item type for a nickel-titanium multilayer system.</p>
-<p>The creation of a <code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code> object is very similar to that for the <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code>, with the addition of a number of repetitions.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span><span class="p">,</span> <span class="n">Material</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.item</span> <span class="kn">import</span> <span class="n">RepeatingMultiLayer</span>
-
-<span class="n">ti</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="o">-</span><span class="mf">1.9493</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ti&#39;</span><span class="p">)</span>
-<span class="n">ni</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">9.4245</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ni&#39;</span><span class="p">)</span>
-<span class="n">ti_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">ti</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ti Layer&#39;</span><span class="p">)</span>
-<span class="n">ni_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ni Layer&#39;</span><span class="p">)</span>
-
-<span class="n">ni_ti</span> <span class="o">=</span> <span class="n">RepeatingMultiLayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">([</span><span class="n">ti_layer</span><span class="p">,</span> <span class="n">ni_layer</span><span class="p">],</span>
-                                      <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Ni/Ti MultiLayer&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The number of repeats is a parameter that can be varied in the optimisation process, however given this is a value that depends on the synthesis of the sample this is unlikely to be necessary.</p>
+  <div class="section" id="libraries">
+<h1>Libraries<a class="headerlink" href="#libraries" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code> package is focused on making easy to use functionality for specific modelling approaches.
+In order to achieve this, we can populating a set of libraries with different functionality.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="material_library.html">Materials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layer_library.html">Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="item_library.html">Items</a></li>
+</ul>
 </div>
 </div>
 
@@ -390,17 +313,17 @@ There is a <a class="reference external" href="./repeating.html">tutorial</a> th
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="materials_options.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="usage.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Types of material</p>
+            <p class="prev-next-title">Usage</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="tutorials.html" title="next page">
+    <a class='right-next' id="next-link" href="material_library.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Tutorials</p>
+        <p class="prev-next-title">Materials</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

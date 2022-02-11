@@ -92,22 +92,44 @@
    Usage
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../materials_options.html">
-   Types of material
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../library.html">
+   Libraries
   </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../material_library.html">
+     Materials
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../layer_library.html">
+     Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../item_library.html">
+     Items
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../library.html">
-   Item library
+  <a class="reference internal" href="../../../calculators.html">
+   Calculators &amp; Optimisation
   </a>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../../../tutorials.html">
    Tutorials
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -127,12 +149,12 @@
      Using the MaterialMixture
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../monolayer.html">
+     Investigation of a surfactant monolayer
+    </a>
+   </li>
   </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../calculators.html">
-   Calculators &amp; Optimisation
-  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../../../contributing.html">
@@ -148,8 +170,8 @@
   <a class="reference internal" href="../../../modules.html">
    API
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -165,18 +187,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../materials.html">
-     sample.materials
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="../../../layer.html">
      Layer
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../layers.html">
-     sample.layers
     </a>
    </li>
    <li class="toctree-l2">
@@ -269,7 +281,7 @@
 <span class="sd">chemical parameterisation into our reflectometry model.  </span>
 <span class="sd">For more information please look at the `item library documentation`_</span>
 
-<span class="sd">.. _`item library documentation`: ./library.html#multilayer</span>
+<span class="sd">.. _`item library documentation`: ./library.html</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;github.com/arm61&#39;</span>
@@ -278,9 +290,13 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">periodictable</span> <span class="k">as</span> <span class="nn">pt</span>
 <span class="kn">from</span> <span class="nn">easyCore</span> <span class="kn">import</span> <span class="n">np</span>
-<span class="kn">from</span> <span class="nn">easyCore.Objects.Base</span> <span class="kn">import</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">BaseObj</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.layer</span> <span class="kn">import</span> <span class="n">Layer</span>
+<span class="kn">from</span> <span class="nn">easyCore.Fitting.Constraints</span> <span class="kn">import</span> <span class="n">ObjConstraint</span>
+<span class="kn">from</span> <span class="nn">easyCore.Objects.ObjectClasses</span> <span class="kn">import</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">BaseObj</span>
+
+<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.material</span> <span class="kn">import</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.sample.layer</span> <span class="kn">import</span> <span class="n">Layer</span><span class="p">,</span> <span class="n">LayerApm</span><span class="p">,</span> <span class="n">LAYERAPM_DETAILS</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample.layers</span> <span class="kn">import</span> <span class="n">Layers</span>
 
 <span class="n">REPEATINGMULTILAYER_DETAILS</span> <span class="o">=</span> <span class="p">{</span>
@@ -304,7 +320,7 @@
 <span class="sd">    </span>
 <span class="sd">    More information about the usage of this item is available in the `item library documentation`_</span>
 
-<span class="sd">    .. _`item library documentation`: ./library.html#multilayer</span>
+<span class="sd">    .. _`item library documentation`: ./item_library.html#multilayer</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -421,7 +437,7 @@
 
 <span class="sd">    More information about the usage of this item is available in the `item library documentation`_</span>
 
-<span class="sd">    .. _`item library documentation`: ./library.html#repeatingmultilayer</span>
+<span class="sd">    .. _`item library documentation`: ./item_library.html#repeatingmultilayer</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -440,12 +456,11 @@
 
     <span class="c1"># Class constructors</span>
 <div class="viewcode-block" id="RepeatingMultiLayer.default"><a class="viewcode-back" href="../../../item.html#EasyReflectometry.sample.item.RepeatingMultiLayer.default">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Multi-layer&#39;</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RepeatingMultiLayer&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RepeatingMultiLayer&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Default constructor for the reflectometry repeating multi layer. </span>
 
 <span class="sd">        :return: Default repeating multi-layer container</span>
-<span class="sd">        :rtype: RepeatingMultiLayer</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layers</span> <span class="o">=</span> <span class="n">Layers</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
         <span class="n">repetitions</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;repetitions&#39;</span><span class="p">,</span>
@@ -462,11 +477,8 @@
 <span class="sd">        Constructor of a reflectometry repeating multi layer where the parameters are known.</span>
 
 <span class="sd">        :param layers: The layers in the repeating multi layer</span>
-<span class="sd">        :type layers: EasyReflectometry.layers.Layers</span>
-<span class="sd">        :param repetitions: Number of repetitions </span>
-<span class="sd">        :type repetitions: float</span>
+<span class="sd">        :param repetitions: Number of repetitions, defaults to :py:attr`1`. </span>
 <span class="sd">        :return: Repeating multi-layer container</span>
-<span class="sd">        :rtype: RepeatingMultiLayer</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">default_options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">REPEATINGMULTILAYER_DETAILS</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;repetitions&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
@@ -480,9 +492,9 @@
                    <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">uid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">uid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a UID from the borg map</span>
+<span class="sd">        :return: UID from the borg map</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_borg</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">convert_id_to_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -503,7 +515,202 @@
 <span class="sd">        String representation of the layer.</span>
 
 <span class="sd">        :return: a string representation of the layer</span>
-<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SurfactantLayer"><a class="viewcode-back" href="../../../item.html#EasyReflectometry.sample.item.SurfactantLayer">[docs]</a><span class="k">class</span> <span class="nc">SurfactantLayer</span><span class="p">(</span><span class="n">MultiLayer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A :py:class:`SurfactantLayer` constructs a series of layers representing the head and tail </span>
+<span class="sd">    groups of a surfactant. This item allows the definition of a surfactant or lipid using the </span>
+<span class="sd">    chemistry of the head and tail regions, additionally this approach will make the application of </span>
+<span class="sd">    constraints such as conformal roughness or area per molecule more straight forward.</span>
+
+<span class="sd">    More information about the usage of this item is available in the `item library documentation`_</span>
+
+<span class="sd">    .. _`item library documentation`: ./item_library.html#surfactantlayer </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">head</span><span class="p">:</span> <span class="n">LayerApm</span><span class="p">,</span>
+                 <span class="n">tail</span><span class="p">:</span> <span class="n">LayerApm</span><span class="p">,</span>
+                 <span class="n">flip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasySurfactantLayer&#39;</span><span class="p">,</span>
+                 <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param head: Head layer object</span>
+<span class="sd">        :param tail: Tail layer object</span>
+<span class="sd">        :param flip: Should the surfactant layer be flipped over</span>
+<span class="sd">        :param name: Name for surfactant layer </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">surfactant</span> <span class="o">=</span> <span class="n">Layers</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span> <span class="n">head</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">flip</span><span class="p">:</span>
+            <span class="n">surfactant</span> <span class="o">=</span> <span class="n">Layers</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">surfactant</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">interface</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;head&#39;</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;tail&#39;</span><span class="p">,</span> <span class="n">tail</span><span class="p">)</span>
+        <span class="n">default_options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">LAYERAPM_DETAILS</span><span class="p">)</span>
+
+        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;area_per_molecule&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">area_per_molecule</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;area_per_molecule&#39;</span><span class="p">,</span>
+                                      <span class="n">head</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span>
+                                      <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;area_per_molecule&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;area_per_molecule&#39;</span><span class="p">,</span> <span class="n">area_per_molecule</span><span class="p">)</span>
+        <span class="n">apm1</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">area_per_molecule</span><span class="p">)</span>
+        <span class="n">apm2</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span><span class="n">tail</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">area_per_molecule</span><span class="p">)</span>
+        <span class="n">area_per_molecule</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;head_apm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">apm1</span>
+        <span class="n">area_per_molecule</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;tail_apm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">apm2</span>
+
+        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;roughness&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">roughness</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;roughness&#39;</span><span class="p">,</span> <span class="n">head</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span>
+                              <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;roughness&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;roughness&#39;</span><span class="p">,</span> <span class="n">roughness</span><span class="p">)</span>
+        <span class="n">rough1</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">roughness</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">roughness</span><span class="p">)</span>
+        <span class="n">rough2</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span><span class="n">tail</span><span class="o">.</span><span class="n">roughness</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">roughness</span><span class="p">)</span>
+        <span class="n">roughness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;head_rough&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rough1</span>
+        <span class="n">roughness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;tail_rough&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rough2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">flip</span> <span class="o">=</span> <span class="n">flip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;Surfactant Layer&quot;</span>
+
+    <span class="c1"># Class constructors</span>
+<div class="viewcode-block" id="SurfactantLayer.default"><a class="viewcode-back" href="../../../item.html#EasyReflectometry.sample.item.SurfactantLayer.default">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SurfactantLayer&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Default constructor for a surfactant layer object. The default lipid type is DPPC.</span>
+
+<span class="sd">        :return: Surfactant layer object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d2o</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">6.36</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;D2O&#39;</span><span class="p">)</span>
+        <span class="n">air</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Air&#39;</span><span class="p">)</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="n">LayerApm</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="s1">&#39;C10H18NO8P&#39;</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="n">d2o</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">48.2</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s1">&#39;DPPC Head&#39;</span><span class="p">)</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="n">LayerApm</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="s1">&#39;C32D64&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">air</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">48.2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;DPPC Tail&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">,</span> <span class="n">flip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;DPPC&#39;</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SurfactantLayer.from_pars"><a class="viewcode-back" href="../../../item.html#EasyReflectometry.sample.item.SurfactantLayer.from_pars">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_pars</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
+                  <span class="n">head_chemical_structure</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                  <span class="n">head_thickness</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">head_solvent</span><span class="p">:</span> <span class="n">Material</span><span class="p">,</span>
+                  <span class="n">head_solvation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">head_area_per_molecule</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">head_roughness</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">tail_chemical_structure</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                  <span class="n">tail_thickness</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">tail_solvent</span><span class="p">:</span> <span class="n">Material</span><span class="p">,</span>
+                  <span class="n">tail_solvation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">tail_area_per_molecule</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">tail_roughness</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">flip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                  <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasySurfactantLayer&#39;</span><span class="p">,</span>
+                  <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SurfactantLayer&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor for the surfactant layer where the parameters are known.</span>
+<span class="sd">    </span>
+<span class="sd">        :param head_chemical_structure: Chemical formula for surfactant head</span>
+<span class="sd">        :param head_thickness: Thicknkess of head group</span>
+<span class="sd">        :param head_solvent: Solvent in head group</span>
+<span class="sd">        :param head_solvation: Fractional solvation of head group by :py:attr:`head_solvent`</span>
+<span class="sd">        :param head_area_per_molecule: Area per molecule of head group</span>
+<span class="sd">        :param head_roughness: Roughness of head group layer</span>
+<span class="sd">        :param tail_chemical_structure: Chemical formula for surfactant tail</span>
+<span class="sd">        :param tail_thickness: Thicknkess of tail group</span>
+<span class="sd">        :param tail_solvent: Solvent in tail group</span>
+<span class="sd">        :param tail_solvation: Fractional solvation of tail group by :py:attr:`tail_solvent`</span>
+<span class="sd">        :param tail_area_per_molecule: Area per molecule of tail group</span>
+<span class="sd">        :param tail_roughness: Roughness of tail group layer</span>
+<span class="sd">        :param flip: Should the surfactant layer be flipped over</span>
+<span class="sd">        :param name: Name for surfactant layer </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="n">LayerApm</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">head_chemical_structure</span><span class="p">,</span>
+                                  <span class="n">head_thickness</span><span class="p">,</span>
+                                  <span class="n">head_solvent</span><span class="p">,</span>
+                                  <span class="n">head_solvation</span><span class="p">,</span>
+                                  <span class="n">head_area_per_molecule</span><span class="p">,</span>
+                                  <span class="n">head_roughness</span><span class="p">,</span>
+                                  <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; Head&#39;</span><span class="p">)</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="n">LayerApm</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">tail_chemical_structure</span><span class="p">,</span>
+                                  <span class="n">tail_thickness</span><span class="p">,</span>
+                                  <span class="n">tail_solvent</span><span class="p">,</span>
+                                  <span class="n">tail_solvation</span><span class="p">,</span>
+                                  <span class="n">tail_area_per_molecule</span><span class="p">,</span>
+                                  <span class="n">tail_roughness</span><span class="p">,</span>
+                                  <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; Tail&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">,</span> <span class="n">flip</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">interface</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">constrain_apm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: if the area per molecule is constrained</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;head_apm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;tail_apm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span><span class="p">)</span>
+
+    <span class="nd">@constrain_apm</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">constrain_apm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the constraint such that the head and tail layers have the same area per molecule. </span>
+
+<span class="sd">        :param x: Boolean description the presence of the constraint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;head_apm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;tail_apm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">x</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">conformal_roughness</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: is the roughness is the same for both layers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;head_rough&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;tail_rough&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span><span class="p">)</span>
+
+    <span class="nd">@conformal_roughness</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">conformal_roughness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the roughness to be the same for both layers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;head_rough&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;tail_rough&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">x</span>
+
+<div class="viewcode-block" id="SurfactantLayer.constrain_solvent_roughness"><a class="viewcode-back" href="../../../item.html#EasyReflectometry.sample.item.SurfactantLayer.constrain_solvent_roughness">[docs]</a>    <span class="k">def</span> <span class="nf">constrain_solvent_roughness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solvent_roughness</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add the constraint to the solvent roughness. </span>
+
+<span class="sd">        :param solvent_roughness: The solvent roughness parameter.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rough</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span><span class="n">solvent_roughness</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">roughness</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;solvent_roughness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rough</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_dict_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A simplified dict representation. </span>
+<span class="sd">        </span>
+<span class="sd">        :return: Simple dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flip</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s1">&#39;head&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span>
+                <span class="s1">&#39;tail&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span>
+                <span class="s1">&#39;area per molecule constrained&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">constrain_apm</span><span class="p">,</span>
+                <span class="s1">&#39;conformal roughness&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">conformal_roughness</span>
+            <span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;head&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span>
+            <span class="s1">&#39;tail&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span>
+            <span class="s1">&#39;area per molecule constrained&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">constrain_apm</span><span class="p">,</span>
+            <span class="s1">&#39;conformal roughness&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">conformal_roughness</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        String representation of the layer.</span>
+
+<span class="sd">        :return: a string representation of the layer</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 </pre></div>
