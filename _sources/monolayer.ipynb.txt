@@ -122,6 +122,8 @@
    "id": "31473f8e-7491-4d9a-8a7f-c1fc51abcc31",
    "metadata": {},
    "source": [
+    "### Building the surfactant monolayer\n",
+    "\n",
     "Now we can create the :py:class:`SurfactantLayer` object, this takes a large number of parameters, that we will introduce gradually. \n",
     "\n",
     "<center>\n",
@@ -291,6 +293,8 @@
    "metadata": {},
    "source": [
     "For the `model` we set the background initially as the minimum value observed in the experimental data. \n",
+    "\n",
+    "## Defining bounds and performing the optimisation\n",
     "\n",
     "The varying parameters can then be defined, in this case we will let the scale factor, the background, the surfactant area per molecule, and head layer solvation vary with the bounds shown below. "
    ]
