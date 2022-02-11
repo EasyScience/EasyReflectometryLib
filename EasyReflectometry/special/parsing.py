@@ -60,7 +60,7 @@ def _parse(formula: str) -> Tuple[dict, int]:
             submol = _dictify(re.findall(ATOM_REGEX, ''.join(q)))
             return _fuse(mol, submol, weight), i
 
-        elif token in OPENERS:
+        if token in OPENERS:
             submol, l = _parse(formula[i + 1:])
             mol = _fuse(mol, submol)
             # skip the already read submol

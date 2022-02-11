@@ -421,13 +421,12 @@ class SurfactantLayer(MultiLayer):
                 'area per molecule constrained': self.constrain_apm,
                 'conformal roughness': self.conformal_roughness
             }
-        else:
-            return {
-                'head': self.layers[1]._dict_repr,
-                'tail': self.layers[0]._dict_repr,
-                'area per molecule constrained': self.constrain_apm,
-                'conformal roughness': self.conformal_roughness
-            }
+        return {
+            'head': self.layers[1]._dict_repr,
+            'tail': self.layers[0]._dict_repr,
+            'area per molecule constrained': self.constrain_apm,
+            'conformal roughness': self.conformal_roughness
+        }
 
     def __repr__(self) -> str:
         """
