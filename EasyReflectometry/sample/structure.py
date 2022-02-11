@@ -7,7 +7,7 @@ from typing import List, Union
 import yaml
 from easyCore import np
 from easyCore.Objects.Groups import BaseCollection
-from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
+from EasyReflectometry.sample.item import MultiLayer
 from EasyReflectometry.sample.layer import Layer
 
 

@@ -401,8 +401,8 @@ class TestSurfactantLayer(unittest.TestCase):
                     'material': {
                         'C10H18NO8P Solv': {
                             'fraction': 0.2,
-                            'sld': '2.269141908713693e-6 1 / angstrom ** 2',
-                            'isld': '0.0e-6 1 / angstrom ** 2',
+                            'sld': '2.269e-6 1 / angstrom ** 2',
+                            'isld': '0.000e-6 1 / angstrom ** 2',
                             'material1': {
                                 'C10H18NO8P': {
                                     'sld': '1.246e-6 1 / angstrom ** 2',
@@ -428,8 +428,8 @@ class TestSurfactantLayer(unittest.TestCase):
                     'material': {
                         'C32D64 Solv': {
                             'fraction': 0.0,
-                            'sld': '8.297261410788384e-6 1 / angstrom ** 2',
-                            'isld': '0.0e-6 1 / angstrom ** 2',
+                            'sld': '8.297e-6 1 / angstrom ** 2',
+                            'isld': '0.000e-6 1 / angstrom ** 2',
                             'material1': {
                                 'C32D64': {
                                     'sld': '8.297e-6 1 / angstrom ** 2',

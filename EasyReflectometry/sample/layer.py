@@ -353,7 +353,7 @@ class LayerApm(Layer):
         layerapm_dict = super()._dict_repr
         layerapm_dict['chemical_structure'] = self.chemical_structure
         layerapm_dict[
-            'area_per_molecule'] = f'{self.area_per_molecule.raw_value} {self.area_per_molecule.unit}'
+            'area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} {self.area_per_molecule.unit}'
         return layerapm_dict
 
     def __repr__(self) -> str:

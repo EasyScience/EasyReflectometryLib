@@ -106,7 +106,7 @@ class TestMaterialMixture(unittest.TestCase):
             'EasyMaterialMixture': {
                 'fraction': 0.5,
                 'sld': '4.186e-6 1 / angstrom ** 2',
-                'isld': '0.0e-6 1 / angstrom ** 2',
+                'isld': '0.000e-6 1 / angstrom ** 2',
                 'material1': {
                     'EasyMaterial': {
                         'sld': '4.186e-6 1 / angstrom ** 2',

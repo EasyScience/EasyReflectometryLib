@@ -225,8 +225,8 @@ class MaterialMixture(Material):
         return {
             self.name: {
                 'fraction': self.fraction.raw_value,
-                'sld': f'{self.sld.raw_value}e-6 {self.sld.unit}',
-                'isld': f'{self.isld.raw_value}e-6 {self.isld.unit}',
+                'sld': f'{self.sld.raw_value:.3f}e-6 {self.sld.unit}',
+                'isld': f'{self.isld.raw_value:.3f}e-6 {self.isld.unit}',
                 'material1': self.material_a._dict_repr,
                 'material2': self.material_b._dict_repr
             }
