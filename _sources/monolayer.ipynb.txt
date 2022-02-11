@@ -8,7 +8,7 @@
     "# Investigation of a surfactant monolayer\n",
     "\n",
     "A common system that is studied with neutron and X-ray reflectometry are surfactant monolayers. \n",
-    "In this tutorial, we will look at how the :py:mod:`EasyReflectometry` item :py:class:`SurfactantLayer` ([detailed here](./item_library.html#surfactantlayer)) can be used to model a phospholipid bilayer. \n",
+    "In this tutorial, we will look at how the `EasyReflectometry` item `SurfactantLayer` ([detailed here](./item_library.html#surfactantlayer)) can be used to model a phospholipid bilayer. \n",
     "First, we will import the relevant packages and functions."
    ]
   },
@@ -81,7 +81,7 @@
     "## Building the model\n",
     "\n",
     "The study of surfactant monolayers is very popular in the literature, including the models based on [functional descriptions](#hollinshead2009), [slab models](#campbell2018), and [molecular dynamics simulations](#mccluskey2019). \n",
-    "In :py:mod:`EasyReflectometry`, we use a slab model description taht has become particularly commonplace. \n",
+    "In `EasyReflectometry`, we use a slab model description taht has become particularly commonplace. \n",
     "A graphical representation of the slab model for a phosphoplipid monolayer is shown below.\n",
     "\n",
     "<center>\n",
@@ -103,7 +103,7 @@
     "\n",
     "Finally, we can constrain the roughness between head-tail and tail-superphase layers to be the same value, as it is unlikely that it would be different. \n",
     "\n",
-    "Before we create the :py:class:`SurfactantLayer` object, we will create simple :py:class:`Material` objects for the sub- and super-phase. "
+    "Before we create the `SurfactantLayer` object, we will create simple `Material` objects for the sub- and super-phase. "
    ]
   },
   {
@@ -124,7 +124,7 @@
    "source": [
     "### Building the surfactant monolayer\n",
     "\n",
-    "Now we can create the :py:class:`SurfactantLayer` object, this takes a large number of parameters, that we will introduce gradually. \n",
+    "Now we can create the `SurfactantLayer` object, this takes a large number of parameters, that we will introduce gradually. \n",
     "\n",
     "<center>\n",
     "    <img src='_static/dspc.png' alt='The chemical structure for the DSPC molecule.' width='400px'></img>\n",
@@ -211,7 +211,7 @@
    "id": "b0eda06d-17bb-4209-abc8-a2d0a585766e",
    "metadata": {},
    "source": [
-    "Having created the necessary initial values, we can use these to create a :py:class:`SurfactantLayer` object. \n",
+    "Having created the necessary initial values, we can use these to create a `SurfactantLayer` object. \n",
     "Note that the area per molecule and roughness for both layers are the same (as these are constrained on creation. \n",
     "We can also print information about our surfactant system."
    ]
@@ -273,7 +273,7 @@
    "id": "9adc7c34-958e-4f45-9d63-876a83b64961",
    "metadata": {},
    "source": [
-    "Now that the surfactant layer and sub- and super-phases are available and the necessary constraints present, we construct our :py:class:`Structure` and :py:class:`Model` objects. "
+    "Now that the surfactant layer and sub- and super-phases are available and the necessary constraints present, we construct our `Structure` and `Model` objects. "
    ]
   },
   {
@@ -318,7 +318,7 @@
    "id": "514afa7a-cfa4-4ef9-a2c9-105c4d56ec6a",
    "metadata": {},
    "source": [
-    "Finally, as with other [tutorials](./tutorials.html), we create the :py:class:`Interface` (and connect this to our model) and :py:class:`Fitter` objects and perform the fit. "
+    "Finally, as with other [tutorials](./tutorials.html), we create the `Interface` (and connect this to our model) and `Fitter` objects and perform the fit. "
    ]
   },
   {
