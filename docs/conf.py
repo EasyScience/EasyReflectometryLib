@@ -115,6 +115,10 @@ html_theme_options = {'logo_only': True}
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+nbsphinx_execute_arguments = [
+    "--Session.metadata=scipp_docs_build=True",
+]
+
 
 # -- Options for HTMLHelp output ---------------------------------------
 
@@ -176,6 +180,4 @@ texinfo_documents = [
      'One line description of project.',
      'Miscellaneous'),
 ]
-
-
 
