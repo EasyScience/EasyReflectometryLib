@@ -3,6 +3,7 @@ import ipympl
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
+color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
 def plot(data: sc.Dataset) -> ipympl.backend_nbagg.Canvas:
     """
@@ -20,19 +21,25 @@ def plot(data: sc.Dataset) -> ipympl.backend_nbagg.Canvas:
         gs = GridSpec(2, 1, figure=fig)
         ax2 = fig.add_subplot(gs[1, 0])
     ax1 = fig.add_subplot(gs[0, 0])
-    refl_nums = [k[2:] for k, v in data.coords.items() if 'Qz' == k[:2]]
-    for i in refl_nums:
-        sc.plot(data[f'R{i}'], ax=ax1, norm='log', linestyle='', marker='.')
+    refl_nums = [k[3:] for k, v in data.coords.items() if 'Qz' == k[:2]]
+    for i, name in enumerate(refl_nums):
+        copy = data[f'R_{name}'].copy()
+        copy.data *= sc.scalar(10. ** i, unit=copy.unit)
+        sc.plot(copy, ax=ax1, norm='log', linestyle='', marker='.', color=color_cycle[i])
         try:
-            sc.plot(data[f'R{i}_model'],
+            copy = data[f'R_{name}_model'].copy()
+            copy.data *= sc.scalar(10. ** float(i))
+            sc.plot(copy,
                     ax=ax1,
                     norm='log',
-                    linestyle='-',
-                    color='orange',
+                    linestyle='--',
+                    color=color_cycle[i],
                     marker='')
-        except sc.NotFoundError:
+        except sc.KeyError:
             pass
-    sld_nums = [k[1:] for k, v in data.coords.items() if 'z' == k[0]]
-    for i in sld_nums:
-        sc.plot(data[f'SLD{i}'], ax=ax2, linestyle='-', color='orange', marker='')
+    sld_nums = [k[2:] for k, v in data.coords.items() if 'z' == k[0]]
+    for i, name in enumerate(sld_nums):
+        copy = data[f'SLD_{name}'].copy()
+        copy.data += sc.scalar(10. * i, unit=copy.unit)
+        sc.plot(data[f'SLD_{i}'], ax=ax2, linestyle='-', color=color_cycle[i], marker='')
     return fig.canvas

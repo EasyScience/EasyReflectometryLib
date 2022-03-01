@@ -31,22 +31,25 @@ def _load_orso(fname: Union[TextIO, str]) -> sc.Dataset:
     data = {}
     f_data = orso.load_orso(fname)
     for i, o in enumerate(f_data):
+        name = i
+        if o.info.data_set is not None: 
+            name = o.info.data_set
         coords = {}
-        coords[f'Qz{i}'] = sc.array(dims=[f'{o.info.columns[0].name}{i}'],
+        coords[f'Qz_{name}'] = sc.array(dims=[f'{o.info.columns[0].name}_{name}'],
                                     values=o.data[:, 0],
                                     variances=np.square(o.data[:, 3]),
                                     unit=sc.Unit(o.info.columns[0].unit))
         try:
-            ordinate = sc.array(dims=[f'{o.info.columns[0].name}{i}'],
+            ordinate = sc.array(dims=[f'{o.info.columns[0].name}_{name}'],
                                 values=o.data[:, 1],
                                 variances=np.square(o.data[:, 2]),
                                 unit=sc.Unit(o.info.columns[1].unit))
         except TypeError:
-            ordinate = sc.array(dims=[f'{o.info.columns[0].name}{i}'],
+            ordinate = sc.array(dims=[f'{o.info.columns[0].name}_{name}'],
                                 values=o.data[:, 1],
                                 variances=np.square(o.data[:, 2]))
         attrs = {'orso_header': sc.scalar(Header.asdict(o.info))}
-        data[f'R{i}'] = sc.DataArray(data=ordinate, coords=coords, attrs=attrs)
+        data[f'R_{name}'] = sc.DataArray(data=ordinate, coords=coords, attrs=attrs)
     return sc.Dataset(data=data)
 
 
@@ -60,13 +63,13 @@ def _load_txt(fname: Union[TextIO, str]) -> sc.Dataset:
     """
     f_data = np.loadtxt(fname)
     data = {
-        'R0': sc.array(dims=['Qz0'],
+        'R_0': sc.array(dims=['Qz_0'],
                        values=f_data[:, 1],
                        variances=np.square(f_data[:, 2]))
     }
     coords = {
-        data['R0'].dims[0]:
-        sc.array(dims=['Qz0'],
+        data['R_0'].dims[0]:
+        sc.array(dims=['Qz_0'],
                  values=f_data[:, 0],
                  variances=np.square(f_data[:, 3]),
                  unit=sc.Unit('1/angstrom'))

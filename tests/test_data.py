@@ -22,12 +22,12 @@ class TestData(unittest.TestCase):
             'tests/_static/test_example1.ort')
         er_data = load(fpath)
         o_data = load_orso(fpath)
-        assert er_data['R0'].attrs['orso_header'].value == Header.asdict(o_data[0].info)
-        assert_almost_equal(er_data['R0'].data.values, o_data[0].data[:, 1])
-        assert_almost_equal(er_data.coords['Qz0'].values, o_data[0].data[:, 0])
-        assert_almost_equal(er_data['R0'].data.variances, np.square(o_data[0].data[:,
+        assert er_data['R_spin_up'].attrs['orso_header'].value == Header.asdict(o_data[0].info)
+        assert_almost_equal(er_data['R_spin_up'].data.values, o_data[0].data[:, 1])
+        assert_almost_equal(er_data.coords['Qz_spin_up'].values, o_data[0].data[:, 0])
+        assert_almost_equal(er_data['R_spin_up'].data.variances, np.square(o_data[0].data[:,
                                                                                    2]))
-        assert_almost_equal(er_data.coords['Qz0'].variances,
+        assert_almost_equal(er_data.coords['Qz_spin_up'].variances,
                             np.square(o_data[0].data[:, 3]))
 
     def test_load_with_txt(self):
@@ -36,10 +36,10 @@ class TestData(unittest.TestCase):
             'tests/_static/test_example1.txt')
         er_data = load(fpath)
         n_data = np.loadtxt(fpath)
-        assert_almost_equal(er_data['R0'].data.values, n_data[:, 1])
-        assert_almost_equal(er_data.coords['Qz0'].values, n_data[:, 0])
-        assert_almost_equal(er_data['R0'].data.variances, np.square(n_data[:, 2]))
-        assert_almost_equal(er_data.coords['Qz0'].variances, np.square(n_data[:, 3]))
+        assert_almost_equal(er_data['R_0'].data.values, n_data[:, 1])
+        assert_almost_equal(er_data.coords['Qz_0'].values, n_data[:, 0])
+        assert_almost_equal(er_data['R_0'].data.variances, np.square(n_data[:, 2]))
+        assert_almost_equal(er_data.coords['Qz_0'].variances, np.square(n_data[:, 3]))
 
     def test_orso1(self):
         fpath = os.path.join(
@@ -47,12 +47,12 @@ class TestData(unittest.TestCase):
             'tests/_static/test_example1.ort')
         er_data = _load_orso(fpath)
         o_data = load_orso(fpath)
-        assert er_data['R0'].attrs['orso_header'].value == Header.asdict(o_data[0].info)
-        assert_almost_equal(er_data['R0'].data.values, o_data[0].data[:, 1])
-        assert_almost_equal(er_data.coords['Qz0'].values, o_data[0].data[:, 0])
-        assert_almost_equal(er_data['R0'].data.variances, np.square(o_data[0].data[:,
+        assert er_data['R_spin_up'].attrs['orso_header'].value == Header.asdict(o_data[0].info)
+        assert_almost_equal(er_data['R_spin_up'].data.values, o_data[0].data[:, 1])
+        assert_almost_equal(er_data.coords['Qz_spin_up'].values, o_data[0].data[:, 0])
+        assert_almost_equal(er_data['R_spin_up'].data.variances, np.square(o_data[0].data[:,
                                                                                    2]))
-        assert_almost_equal(er_data.coords['Qz0'].variances,
+        assert_almost_equal(er_data.coords['Qz_spin_up'].variances,
                             np.square(o_data[0].data[:, 3]))
 
     def test_orso2(self):
@@ -62,12 +62,12 @@ class TestData(unittest.TestCase):
         er_data = _load_orso(fpath)
         o_data = load_orso(fpath)
         for i, o in enumerate(o_data):
-            assert er_data[f'R{i}'].attrs['orso_header'].value == Header.asdict(o.info)
-            assert_almost_equal(er_data[f'R{i}'].data.values, o.data[:, 1])
-            assert_almost_equal(er_data.coords[f'Qz{i}'].values, o.data[:, 0])
-            assert_almost_equal(er_data[f'R{i}'].data.variances, np.square(o.data[:,
+            assert er_data[f'R_{o.info.data_set}'].attrs['orso_header'].value == Header.asdict(o.info)
+            assert_almost_equal(er_data[f'R_{o.info.data_set}'].data.values, o.data[:, 1])
+            assert_almost_equal(er_data.coords[f'Qz_{o.info.data_set}'].values, o.data[:, 0])
+            assert_almost_equal(er_data[f'R_{o.info.data_set}'].data.variances, np.square(o.data[:,
                                                                                   2]))
-            assert_almost_equal(er_data.coords[f'Qz{i}'].variances,
+            assert_almost_equal(er_data.coords[f'Qz_{o.info.data_set}'].variances,
                                 np.square(o.data[:, 3]))
 
     def test_orso3(self):
@@ -77,12 +77,12 @@ class TestData(unittest.TestCase):
         er_data = _load_orso(fpath)
         o_data = load_orso(fpath)
         for i, o in enumerate(o_data):
-            assert er_data[f'R{i}'].attrs['orso_header'].value == Header.asdict(o.info)
-            assert_almost_equal(er_data[f'R{i}'].data.values, o.data[:, 1])
-            assert_almost_equal(er_data.coords[f'Qz{i}'].values, o.data[:, 0])
-            assert_almost_equal(er_data[f'R{i}'].data.variances, np.square(o.data[:,
+            assert er_data[f'R_{o.info.data_set}'].attrs['orso_header'].value == Header.asdict(o.info)
+            assert_almost_equal(er_data[f'R_{o.info.data_set}'].data.values, o.data[:, 1])
+            assert_almost_equal(er_data.coords[f'Qz_{o.info.data_set}'].values, o.data[:, 0])
+            assert_almost_equal(er_data[f'R_{o.info.data_set}'].data.variances, np.square(o.data[:,
                                                                                   2]))
-            assert_almost_equal(er_data.coords[f'Qz{i}'].variances,
+            assert_almost_equal(er_data.coords[f'Qz_{o.info.data_set}'].variances,
                                 np.square(o.data[:, 3]))
 
     def test_orso4(self):
@@ -92,12 +92,13 @@ class TestData(unittest.TestCase):
         er_data = _load_orso(fpath)
         o_data = load_orso(fpath)
         for i, o in enumerate(o_data):
-            assert er_data[f'R{i}'].attrs['orso_header'].value == Header.asdict(o.info)
-            assert_almost_equal(er_data[f'R{i}'].data.values, o.data[:, 1])
-            assert_almost_equal(er_data.coords[f'Qz{i}'].values, o.data[:, 0])
-            assert_almost_equal(er_data[f'R{i}'].data.variances, np.square(o.data[:,
+            print(list(er_data.keys()))
+            assert er_data[f'R_{o.info.data_set}'].attrs['orso_header'].value == Header.asdict(o.info)
+            assert_almost_equal(er_data[f'R_{o.info.data_set}'].data.values, o.data[:, 1])
+            assert_almost_equal(er_data.coords[f'Qz_{o.info.data_set}'].values, o.data[:, 0])
+            assert_almost_equal(er_data[f'R_{o.info.data_set}'].data.variances, np.square(o.data[:,
                                                                                   2]))
-            assert_almost_equal(er_data.coords[f'Qz{i}'].variances,
+            assert_almost_equal(er_data.coords[f'Qz_{o.info.data_set}'].variances,
                                 np.square(o.data[:, 3]))
 
     def test_txt(self):
@@ -106,7 +107,7 @@ class TestData(unittest.TestCase):
             'tests/_static/test_example1.txt')
         er_data = _load_txt(fpath)
         n_data = np.loadtxt(fpath)
-        assert_almost_equal(er_data['R0'].data.values, n_data[:, 1])
-        assert_almost_equal(er_data.coords['Qz0'].values, n_data[:, 0])
-        assert_almost_equal(er_data['R0'].data.variances, np.square(n_data[:, 2]))
-        assert_almost_equal(er_data.coords['Qz0'].variances, np.square(n_data[:, 3]))
+        assert_almost_equal(er_data['R_0'].data.values, n_data[:, 1])
+        assert_almost_equal(er_data.coords['Qz_0'].values, n_data[:, 0])
+        assert_almost_equal(er_data['R_0'].data.variances, np.square(n_data[:, 2]))
+        assert_almost_equal(er_data.coords['Qz_0'].variances, np.square(n_data[:, 3]))

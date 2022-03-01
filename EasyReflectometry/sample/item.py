@@ -137,6 +137,8 @@ class MultiLayer(BaseObj):
         
         :return: Simple dictionary
         """
+        if len(self.layers) == 1:
+            return self.layers[0]._dict_repr
         return {self.name: self.layers._dict_repr}
 
     def __repr__(self) -> str:
