@@ -510,15 +510,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d_dict</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">}</span>
         <span class="n">d_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;repetitions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repetitions</span><span class="o">.</span><span class="n">raw_value</span>
-        <span class="k">return</span> <span class="n">d_dict</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        String representation of the layer.</span>
-
-<span class="sd">        :return: a string representation of the layer</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">d_dict</span></div>
 
 
 <div class="viewcode-block" id="SurfactantLayer"><a class="viewcode-back" href="../../../item.html#EasyReflectometry.sample.item.SurfactantLayer">[docs]</a><span class="k">class</span> <span class="nc">SurfactantLayer</span><span class="p">(</span><span class="n">MultiLayer</span><span class="p">):</span>
@@ -706,15 +698,7 @@
             <span class="s1">&#39;tail&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span>
             <span class="s1">&#39;area per molecule constrained&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">constrain_apm</span><span class="p">,</span>
             <span class="s1">&#39;conformal roughness&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">conformal_roughness</span>
-        <span class="p">}</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        String representation of the layer.</span>
-
-<span class="sd">        :return: a string representation of the layer</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="p">}</span></div>
 </pre></div>
 
               </div>

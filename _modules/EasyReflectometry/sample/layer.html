@@ -632,15 +632,7 @@
         <span class="n">layerapm_dict</span><span class="p">[</span><span class="s1">&#39;chemical_structure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chemical_structure</span>
         <span class="n">layerapm_dict</span><span class="p">[</span>
             <span class="s1">&#39;area_per_molecule&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">raw_value</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">unit</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="k">return</span> <span class="n">layerapm_dict</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        String representation.</span>
-
-<span class="sd">        :return: Descriptive string</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">layerapm_dict</span></div>
 </pre></div>
 
               </div>

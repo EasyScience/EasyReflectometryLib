@@ -291,6 +291,15 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#materialdensity">
+   <code class="xref py py-class docutils literal notranslate">
+    <span class="pre">
+     MaterialDensity
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#materialmixture">
    <code class="xref py py-class docutils literal notranslate">
     <span class="pre">
@@ -324,6 +333,15 @@
    <code class="xref py py-class docutils literal notranslate">
     <span class="pre">
      Material
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#materialdensity">
+   <code class="xref py py-class docutils literal notranslate">
+    <span class="pre">
+     MaterialDensity
     </span>
    </code>
   </a>
@@ -363,6 +381,19 @@ The construction of a <code class="xref py py-class docutils literal notranslate
 </div>
 <p>The above object will have the properties of <code class="xref py py-attr docutils literal notranslate"><span class="pre">sld</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">isld</span></code>, which will have values of <code class="code docutils literal notranslate"><span class="pre">6.908</span> <span class="pre">1</span> <span class="pre">/</span> <span class="pre">angstrom</span> <span class="pre">**</span> <span class="pre">2</span></code> and <code class="code docutils literal notranslate"><span class="pre">-0.278</span> <span class="pre">1</span> <span class="pre">/</span> <span class="pre">angstrom</span> <span class="pre">**</span> <span class="pre">2</span></code> respectively.
 As is shown in the <a class="reference external" href="./tutorials.html">tutorials</a>, a material can be used to construct a <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code> from which <a class="reference external" href="https://www.reflectometry.org/isis_school/3_reflectometry_slab_models/the_slab_model.html">slab models</a> are created.</p>
+</div>
+<div class="section" id="materialdensity">
+<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialDensity</span></code><a class="headerlink" href="#materialdensity" title="Permalink to this headline">¶</a></h2>
+<p>In addition to defining a material by its scattering length density, it may be useful to define a material by the mass density and chemical formula.
+This is possible with the <code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialDensity</span></code> material type, which uses the scattering length and atomic mass from the chemical formula and the density to determine the scattering length density.
+It is then possible to vary the density, which defines the scattering length density in turn.
+The <code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialDensity</span></code> material can be create as follows.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample.material</span> <span class="kn">import</span> <span class="n">MaterialDensity</span>
+
+<span class="n">si</span> <span class="o">=</span> <span class="n">MaterialDensity</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="s1">&#39;SiO2&#39;</span><span class="p">,</span> <span class="mf">2.65</span><span class="p">,</span> <span class="s1">&#39;SiO2 Material&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The density should be in units of grams per cubic centimeter and the scattering length is calculated from <code class="code docutils literal notranslate"><span class="pre">'SiO2'</span></code>.</p>
 </div>
 <div class="section" id="materialmixture">
 <h2><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialMixture</span></code><a class="headerlink" href="#materialmixture" title="Permalink to this headline">¶</a></h2>

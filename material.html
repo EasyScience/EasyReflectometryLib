@@ -366,6 +366,54 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.material.MaterialDensity">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.material.</span></span><span class="sig-name descname"><span class="pre">MaterialDensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMaterialDensity'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/material.html#MaterialDensity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.material.MaterialDensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.material.Material</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.material.MaterialDensity.default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/material.html#MaterialDensity.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.material.MaterialDensity.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default constructor for the material defined by density and chemical structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>interface</strong> – Interface object, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.material.MaterialDensity" title="EasyReflectometry.sample.material.MaterialDensity"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialDensity</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Material container</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.material.MaterialDensity.density">
+<span class="sig-name descname"><span class="pre">density</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">easyCore.Objects.Variable.Parameter</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#EasyReflectometry.sample.material.MaterialDensity.density" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.material.MaterialDensity.from_pars">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMaterialDensity'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/material.html#MaterialDensity.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.material.MaterialDensity.from_pars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor for a material based on the mass density and chemical structure, where these are known.
+:type chemical_structure: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>
+:param chemical_structure: Chemical formula for the material
+:type density: <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>
+:param density: Mass density for the material
+:type name: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>
+:param name: Identifier, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">EasyMaterialDensity</span></code>
+:param interface: Interface object, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code>
+:rtype: <a class="reference internal" href="#EasyReflectometry.sample.material.MaterialDensity" title="EasyReflectometry.sample.material.MaterialDensity"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialDensity</span></code></a>
+:return: Material container</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.material.MaterialDensity.user_data">
+<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.material.MaterialDensity.user_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.material.MaterialMixture">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.material.</span></span><span class="sig-name descname"><span class="pre">MaterialMixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMaterialMixture'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/material.html#MaterialMixture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.material.MaterialMixture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.material.Material</span></code></a></p>
