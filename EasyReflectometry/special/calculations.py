@@ -1,7 +1,5 @@
 __author__ = 'github.com/arm61'
 
-from typing import Tuple
-
 import periodictable as pt
 from easyCore.Objects.ObjectClasses import Parameter
 
@@ -20,7 +18,7 @@ def weighted_average_sld(a: Parameter, b: Parameter, p: Parameter) -> Parameter:
     return a * (1 - p) + b * p
 
 
-def neutron_scattering_length(formula: str) -> Tuple[Parameter, Parameter]:
+def neutron_scattering_length(formula: str) -> complex:
     """
     Determine the neutron scattering length for a chemical formula.
 
@@ -39,6 +37,20 @@ def neutron_scattering_length(formula: str) -> Tuple[Parameter, Parameter]:
     return scattering_length * 1e-5
 
 
+def molecular_weight(formula: str) -> float:
+    """
+    Determine the molecular weight for a chemical formula.
+    
+    :param formula: Chemical formula
+    :return: Molecular weight of the material in kilograms.
+    """
+    formula_as_dict = parse_formula(formula)
+    mw = 0
+    for key, value in formula_as_dict.items():
+        mw += (pt.elements.symbol(key).mass * value)
+    return mw
+
+
 def apm_to_sld(scattering_length: float, thickness: Parameter,
                area_per_molecule: Parameter) -> Parameter:
     """
@@ -50,3 +62,17 @@ def apm_to_sld(scattering_length: float, thickness: Parameter,
     :return: Scattering length density of layer in e-6 1/angstrom ** 2. 
     """
     return scattering_length / (thickness * area_per_molecule) * 1e6
+
+
+def density_to_sld(scattering_length: float, molecular_weight: float,
+                   density: Parameter):
+    """
+    Find the scattering length density from the mass density of a material.
+    
+    :param scattering_length: Scattering length of component, in angstrom.
+    :param molecular_weight: Molecular weight of component, in u.
+    :param density: Mass density of the component, in gram centimeter^-3.
+    :return: Scattering length density of layer in e-6 1/angstrom ** 2.
+    """
+    # 0.602214076 is avogadros constant times 1e-24
+    return 0.602214076e6 * density * scattering_length / molecular_weight

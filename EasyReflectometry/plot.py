@@ -5,6 +5,7 @@ from matplotlib.gridspec import GridSpec
 
 color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
+
 def plot(data: sc.Dataset) -> ipympl.backend_nbagg.Canvas:
     """
     A general plotting function for EasyReflectometry.
@@ -24,11 +25,16 @@ def plot(data: sc.Dataset) -> ipympl.backend_nbagg.Canvas:
     refl_nums = [k[3:] for k, v in data.coords.items() if 'Qz' == k[:2]]
     for i, name in enumerate(refl_nums):
         copy = data[f'R_{name}'].copy()
-        copy.data *= sc.scalar(10. ** i, unit=copy.unit)
-        sc.plot(copy, ax=ax1, norm='log', linestyle='', marker='.', color=color_cycle[i])
+        copy.data *= sc.scalar(10.**i, unit=copy.unit)
+        sc.plot(copy,
+                ax=ax1,
+                norm='log',
+                linestyle='',
+                marker='.',
+                color=color_cycle[i])
         try:
             copy = data[f'R_{name}_model'].copy()
-            copy.data *= sc.scalar(10. ** float(i))
+            copy.data *= sc.scalar(10.**float(i))
             sc.plot(copy,
                     ax=ax1,
                     norm='log',
@@ -41,5 +47,9 @@ def plot(data: sc.Dataset) -> ipympl.backend_nbagg.Canvas:
     for i, name in enumerate(sld_nums):
         copy = data[f'SLD_{name}'].copy()
         copy.data += sc.scalar(10. * i, unit=copy.unit)
-        sc.plot(data[f'SLD_{i}'], ax=ax2, linestyle='-', color=color_cycle[i], marker='')
+        sc.plot(data[f'SLD_{i}'],
+                ax=ax2,
+                linestyle='-',
+                color=color_cycle[i],
+                marker='')
     return fig.canvas

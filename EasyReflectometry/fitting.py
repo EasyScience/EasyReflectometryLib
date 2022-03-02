@@ -31,11 +31,11 @@ class Fitter(easyFitter):
                                  weights=1 / np.sqrt(data[f'R_{id}'].data.variances),
                                  method=method)
         new_data[f'R_{id}_model'] = sc.array(dims=[f'Qz_{id}'],
-                                            values=self.interface.fit_func(
-                                                data.coords[f'Qz_{id}'].values))
+                                             values=self.interface.fit_func(
+                                                 data.coords[f'Qz_{id}'].values))
         new_data[f'SLD_{id}'] = sc.array(dims=[f'z_{id}'],
-                                        values=self.interface.sld_profile()[1] * 1e-6,
-                                        unit=sc.Unit('1/angstrom')**2)
+                                         values=self.interface.sld_profile()[1] * 1e-6,
+                                         unit=sc.Unit('1/angstrom')**2)
         new_data[f'R_{id}_model'].attrs['model'] = sc.scalar(
             self.easy_f._fit_object.as_dict())
         new_data.coords[f'z_{id}'] = sc.array(

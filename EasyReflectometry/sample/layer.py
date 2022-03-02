@@ -355,11 +355,3 @@ class LayerApm(Layer):
         layerapm_dict[
             'area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} {self.area_per_molecule.unit}'
         return layerapm_dict
-
-    def __repr__(self) -> str:
-        """
-        String representation.
-
-        :return: Descriptive string
-        """
-        return yaml.dump(self._dict_repr, sort_keys=False)
