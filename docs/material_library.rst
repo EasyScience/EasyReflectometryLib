@@ -21,6 +21,22 @@ The construction of a :py:class:`Material` is achieved as shown below.
 The above object will have the properties of :py:attr:`sld` and :py:attr:`isld`, which will have values of :code:`6.908 1 / angstrom ** 2` and :code:`-0.278 1 / angstrom ** 2` respectively. 
 As is shown in the `tutorials`_, a material can be used to construct a :py:class:`Layer` from which `slab models`_ are created.
 
+:py:class:`MaterialDensity`
+---------------------------
+
+In addition to defining a material by its scattering length density, it may be useful to define a material by the mass density and chemical formula. 
+This is possible with the :py:class:`MaterialDensity` material type, which uses the scattering length and atomic mass from the chemical formula and the density to determine the scattering length density. 
+It is then possible to vary the density, which defines the scattering length density in turn. 
+The :py:class:`MaterialDensity` material can be create as follows. 
+
+.. code-block:: python 
+
+    from EasyReflectometry.sample.material import MaterialDensity 
+
+    si = MaterialDensity.from_pars('SiO2', 2.65, 'SiO2 Material')
+
+The density should be in units of grams per cubic centimeter and the scattering length is calculated from :code:`'SiO2'`. 
+
 :py:class:`MaterialMixture`
 ---------------------------
 

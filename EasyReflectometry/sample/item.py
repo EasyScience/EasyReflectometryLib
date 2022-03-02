@@ -234,14 +234,6 @@ class RepeatingMultiLayer(MultiLayer):
         d_dict[self.name]['repetitions'] = self.repetitions.raw_value
         return d_dict
 
-    def __repr__(self) -> str:
-        """
-        String representation of the layer.
-
-        :return: a string representation of the layer
-        """
-        return yaml.dump(self._dict_repr, sort_keys=False)
-
 
 class SurfactantLayer(MultiLayer):
     """
@@ -429,11 +421,3 @@ class SurfactantLayer(MultiLayer):
             'area per molecule constrained': self.constrain_apm,
             'conformal roughness': self.conformal_roughness
         }
-
-    def __repr__(self) -> str:
-        """
-        String representation of the layer.
-
-        :return: a string representation of the layer
-        """
-        return yaml.dump(self._dict_repr, sort_keys=False)

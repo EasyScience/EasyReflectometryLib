@@ -7,7 +7,7 @@ Tests for Material class module
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal
-from EasyReflectometry.sample.material import Material, MaterialMixture
+from EasyReflectometry.sample.material import Material, MaterialDensity, MaterialMixture
 
 
 class TestMaterial(unittest.TestCase):
@@ -59,6 +59,45 @@ class TestMaterial(unittest.TestCase):
         p = Material.default()
         assert p.__repr__(
         ) == 'EasyMaterial:\n  sld: 4.186e-6 1 / angstrom ** 2\n  isld: 0.000e-6 1 / angstrom ** 2\n'
+
+
+class TestMaterialDensity(unittest.TestCase):
+
+    def test_default(self):
+        p = MaterialDensity.default()
+        assert p.name == 'EasyMaterialDensity'
+        assert p.interface == None
+        assert p.density.display_name == 'density'
+        assert str(p.density.unit) == 'gram / centimeter ** 3'
+        assert p.density.value.n == 2.33
+        assert p.density.min == 0
+        assert p.density.max == np.Inf
+        assert p.density.fixed == True
+
+    def test_default_constraint(self):
+        p = MaterialDensity.default()
+        assert p.density.value.n == 2.33
+        assert_almost_equal(p.sld.value.n, 2.073705382)
+        p.density.value = 2
+        assert_almost_equal(p.sld.value.n, 1.780004619)
+
+    def test_from_pars(self):
+        p = MaterialDensity.from_pars('Co', 8.9, 'Cobalt')
+        assert p.density.value.n == 8.9
+        assert_almost_equal(p.sld.value.n, 2.2645412328256)
+        assert p.chemical_structure == 'Co'
+
+    def test_dict_repr(self):
+        p = MaterialDensity.default()
+        print(p._dict_repr)
+        assert p._dict_repr == {
+            'EasyMaterialDensity': {
+                'sld': '2.074e-6 1 / angstrom ** 2',
+                'isld': '0.000e-6 1 / angstrom ** 2'
+            },
+            'chemical_structure': 'Si',
+            'density': '2.33e+00 gram / centimeter ** 3'
+        }
 
 
 class TestMaterialMixture(unittest.TestCase):
