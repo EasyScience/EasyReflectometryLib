@@ -5,4 +5,8 @@ New style setup script. All configuration options are within setup.cfg, pyprojec
 
 import setuptools
 
-setuptools.setup()
+setup_kwargs = {
+    "name": "EasyReflectometryLib",
+}
+
+setuptools.setup(**setup_kwargs)

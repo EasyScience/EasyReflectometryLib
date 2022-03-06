@@ -1,4 +1,5 @@
 [project]
+name = "EasyReflectometryLib"
 description = "A reflectometry python package built on the EasyScience framework"
 authors = "AUTHORS.rst"
 license = "GPL-3.0-only"
@@ -21,7 +22,6 @@ refnx = "^0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx
 refl1d = "^0.8.14"
 scipp = "^0.11.1"
 orsopy = "^0.0.4"
-easyScienceCore = "^0.2.1"
 
 [dev-dependencies]
 pytest = "^5.2"
