@@ -2,19 +2,17 @@ __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
 from copy import deepcopy
-from typing import List, Union, TypeVar
+from typing import List, Union
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 from EasyReflectometry.sample.layer import Layer
 
-RepeatingMultiLayer = TypeVar("RepeatingMultiLayer")
-
 
 class Layers(BaseCollection):
 
     def __init__(self,
-                 *args: List[Union[Layer, RepeatingMultiLayer]],
+                 *args: List[Layer],
                  name: str = 'EasyLayers',
                  interface=None,
                  **kwargs):
@@ -23,12 +21,11 @@ class Layers(BaseCollection):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> "Layers":
+    def default(cls, interface=None) -> 'Layers':
         """
         Default constructor for the reflectometry layers. 
 
         :return: Default layers container
-        :rtype: Layers
         """
         layer1 = Layer.default()
         layer2 = Layer.default()
@@ -38,14 +35,12 @@ class Layers(BaseCollection):
     def from_pars(cls,
                   *args: List[Layer],
                   name: str = 'EasyLayer',
-                  interface=None) -> "Layer":
+                  interface=None) -> 'Layer':
         """
         Constructor of a reflectometry layers where the parameters are known.
 
         :param args: The series of layers
-        :type args: List[Union[EasyReflectometry.layer.Layer, EasyReflectometry.Item.Item]]
         :return: Layers container
-        :rtype: Layers
         """
         return cls(*args, name=name, interface=interface)
 
