@@ -55,7 +55,6 @@ class TestFitting(unittest.TestCase):
         interface = Interface()
         model.interface = interface
         fitter = Fitter(model, interface)
-        assert fitter.interface == interface
         analysed = fitter.fit(data)
         assert 'R_0_model' in analysed.keys()
         assert 'SLD_0' in analysed.keys()
