@@ -49,13 +49,12 @@ class TestFitting(unittest.TestCase):
         # Scattering length density
         film.sld.bounds = (0.1, 3)
         # Background
-        model.background.bounds = (1e-8, 1e-5)
+        model.background.bounds = (1e-7, 1e-5)
         # Scale
         model.scale.bounds = (0.5, 1.5)
         interface = Interface()
         model.interface = interface
-        fitter = Fitter(model, interface)
-        assert fitter.interface == interface
+        fitter = Fitter(model, interface.fit_func)
         analysed = fitter.fit(data)
         assert 'R_0_model' in analysed.keys()
         assert 'SLD_0' in analysed.keys()

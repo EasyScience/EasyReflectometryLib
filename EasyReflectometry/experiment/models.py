@@ -1,19 +1,18 @@
 __author__ = 'github.com/arm61'
-__version__ = '0.0.1'
 
 from copy import deepcopy
-from typing import List, Union
+from typing import List, Union, TypeVar
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
-from EasyReflectometry.sample.layer import Layer
+from EasyReflectometry.experiment.model import Model
 
 
-class Layers(BaseCollection):
+class Models(BaseCollection):
 
     def __init__(self,
-                 *args: List[Layer],
-                 name: str = 'EasyLayers',
+                 *args: List[Model],
+                 name: str = 'EasyModels',
                  interface=None,
                  **kwargs):
         super().__init__(name, *args, **kwargs)
@@ -21,33 +20,33 @@ class Layers(BaseCollection):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> 'Layers':
+    def default(cls, interface=None) -> 'Models':
         """
-        Default constructor for the reflectometry layers. 
-
-        :return: Default layers container
+        Default constructor for the models
+        
+        :return: Default models container
         """
-        layer1 = Layer.default()
-        layer2 = Layer.default()
-        return cls(layer1, layer2, interface=interface)
+        model1 = Model.default()
+        model2 = Model.default()
+        return cls(model1, model2, interface=interface)
 
     @classmethod
     def from_pars(cls,
-                  *args: List[Layer],
-                  name: str = 'EasyLayer',
-                  interface=None) -> 'Layer':
+                  *args: List[Model],
+                  name: str = 'EasyModels',
+                  interface=None) -> 'Models':
         """
-        Constructor of a reflectometry layers where the parameters are known.
-
-        :param args: The series of layers
-        :return: Layers container
+        Constructor for the models where models are being given. 
+        
+        :param args: The series of models
+        :return: Models container
         """
         return cls(*args, name=name, interface=interface)
 
     @property
     def uid(self) -> int:
         """
-        :return: UID from the borg map
+        :return: UID from borg map
         """
         return self._borg.map.convert_id_to_key(self)
 

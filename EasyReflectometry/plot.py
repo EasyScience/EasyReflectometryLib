@@ -1,3 +1,4 @@
+import numpy as np
 import scipp as sc
 import ipympl
 import matplotlib.pyplot as plt
@@ -43,13 +44,26 @@ def plot(data: sc.Dataset) -> ipympl.backend_nbagg.Canvas:
                     marker='')
         except KeyError:
             pass
+    ax1.autoscale(True)
+    ax1.relim()
+    ax1.autoscale_view()
+
     sld_nums = [k[2:] for k, v in data.coords.items() if 'z' == k[0]]
-    for i, name in enumerate(sld_nums):
-        copy = data[f'SLD_{name}'].copy()
-        copy.data += sc.scalar(10. * i, unit=copy.unit)
-        sc.plot(data[f'SLD_{i}'],
-                ax=ax2,
-                linestyle='-',
-                color=color_cycle[i],
-                marker='')
+    for i, name in enumerate(refl_nums):
+        try:
+            copy = data[f'SLD_{name}'].copy()
+            copy.data += sc.scalar(10. * i, unit=copy.unit)
+            sc.plot(data[f'SLD_{name}'],
+                    ax=ax2,
+                    linestyle='-',
+                    color=color_cycle[i],
+                    marker='')
+        except KeyError:
+            pass
+    try:
+        ax2.autoscale(True)
+        ax2.relim()
+        ax2.autoscale_view()
+    except UnboundLocalError:
+        pass
     return fig.canvas
