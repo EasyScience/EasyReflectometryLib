@@ -154,6 +154,11 @@
      Investigation of a surfactant monolayer
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../multi_contrast.html">
+     Analysis of multiple isotopic contrasts
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1">
@@ -674,10 +679,57 @@
 <span class="sd">        Add the constraint to the solvent roughness. </span>
 
 <span class="sd">        :param solvent_roughness: The solvent roughness parameter.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rough</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span><span class="n">solvent_roughness</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">roughness</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span><span class="s1">&#39;solvent_roughness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rough</span></div>
+
+<div class="viewcode-block" id="SurfactantLayer.constain_multiple_contrast"><a class="viewcode-back" href="../../../item.html#EasyReflectometry.sample.item.SurfactantLayer.constain_multiple_contrast">[docs]</a>    <span class="k">def</span> <span class="nf">constain_multiple_contrast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                   <span class="n">another_contrast</span><span class="p">:</span> <span class="s1">&#39;SurfactantLayer&#39;</span><span class="p">,</span>
+                                   <span class="n">head_thickness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">tail_thickness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">head_area_per_molecule</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">tail_area_per_molecule</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">head_fraction</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">tail_fraction</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constrain structural parameters between surfactant layer objects.</span>
+
+<span class="sd">        :param another_contrast: The surfactant layer to constrain</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">head_thickness</span><span class="p">:</span>
+            <span class="n">head_thickness_constraint</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                                      <span class="n">another_contrast</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">thickness</span><span class="p">)</span>
+            <span class="n">another_contrast</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">another_contrast</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">head_thickness_constraint</span>
+        <span class="k">if</span> <span class="n">tail_thickness</span><span class="p">:</span>
+            <span class="n">tail_thickness_constraint</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                                      <span class="n">another_contrast</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">thickness</span><span class="p">)</span>
+            <span class="n">another_contrast</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">another_contrast</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tail_thickness_constraint</span>
+        <span class="k">if</span> <span class="n">head_area_per_molecule</span><span class="p">:</span>
+            <span class="n">head_area_per_molecule_constraint</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="n">another_contrast</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="p">)</span>
+            <span class="n">another_contrast</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">another_contrast</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">head_area_per_molecule_constraint</span>
+        <span class="k">if</span> <span class="n">tail_area_per_molecule</span><span class="p">:</span>
+            <span class="n">tail_area_per_molecule_constraint</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="n">another_contrast</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="p">)</span>
+            <span class="n">another_contrast</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">another_contrast</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tail_area_per_molecule_constraint</span>
+        <span class="k">if</span> <span class="n">head_fraction</span><span class="p">:</span>
+            <span class="n">head_fraction_constraint</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">fraction</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="n">another_contrast</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">fraction</span><span class="p">)</span>
+            <span class="n">another_contrast</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">fraction</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">another_contrast</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">head_fraction_constraint</span>
+        <span class="k">if</span> <span class="n">tail_fraction</span><span class="p">:</span>
+            <span class="n">tail_fraction_constraint</span> <span class="o">=</span> <span class="n">ObjConstraint</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">fraction</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="n">another_contrast</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">fraction</span><span class="p">)</span>
+            <span class="n">another_contrast</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">fraction</span><span class="o">.</span><span class="n">user_constraints</span><span class="p">[</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">another_contrast</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tail_fraction_constraint</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_dict_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>

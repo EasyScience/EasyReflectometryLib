@@ -327,7 +327,7 @@
    "source": [
     "interface = Interface()\n",
     "model.interface = interface\n",
-    "fitter = Fitter(model, interface)\n",
+    "fitter = Fitter(model, interface.fit_func)\n",
     "analysed = fitter.fit(data)"
    ]
   },

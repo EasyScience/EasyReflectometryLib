@@ -10,3 +10,4 @@ The tutorials associated with using :py:mod:`EasyReflectometry` will be collecte
    repeating
    solvation
    monolayer
+   multi_contrast
