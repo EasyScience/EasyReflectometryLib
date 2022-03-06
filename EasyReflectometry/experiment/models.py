@@ -10,11 +10,15 @@ from EasyReflectometry.experiment.model import Model
 
 class Models(BaseCollection):
 
-    def __init__(self, *args: List[Model], name: str='EasyModels', interface=None, **kwargs):
+    def __init__(self,
+                 *args: List[Model],
+                 name: str = 'EasyModels',
+                 interface=None,
+                 **kwargs):
         super().__init__(name, *args, **kwargs)
         self.interface = interface
 
-    # Class constructors 
+    # Class constructors
     @classmethod
     def default(cls, interface=None) -> 'Models':
         """
@@ -27,7 +31,10 @@ class Models(BaseCollection):
         return cls(model1, model2, interface=interface)
 
     @classmethod
-    def from_pars(cls, *args: List[Model], name: str = 'EasyModels', interface=None) -> 'Models':
+    def from_pars(cls,
+                  *args: List[Model],
+                  name: str = 'EasyModels',
+                  interface=None) -> 'Models':
         """
         Constructor for the models where models are being given. 
         

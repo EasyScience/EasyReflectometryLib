@@ -47,7 +47,7 @@ def plot(data: sc.Dataset) -> ipympl.backend_nbagg.Canvas:
     ax1.autoscale(True)
     ax1.relim()
     ax1.autoscale_view()
-    
+
     sld_nums = [k[2:] for k, v in data.coords.items() if 'z' == k[0]]
     for i, name in enumerate(refl_nums):
         try:

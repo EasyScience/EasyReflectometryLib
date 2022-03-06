@@ -400,32 +400,53 @@ class SurfactantLayer(MultiLayer):
         rough = ObjConstraint(solvent_roughness, '', self.roughness)
         self.roughness.user_constraints['solvent_roughness'] = rough
 
-    def constain_multiple_contrast(self, another_contrast: 'SurfactantLayer', head_thickness: bool = True, tail_thickness: bool = True, head_area_per_molecule: bool = True, tail_area_per_molecule: bool = True, head_fraction: bool = True, tail_fraction: bool = True):
+    def constain_multiple_contrast(self,
+                                   another_contrast: 'SurfactantLayer',
+                                   head_thickness: bool = True,
+                                   tail_thickness: bool = True,
+                                   head_area_per_molecule: bool = True,
+                                   tail_area_per_molecule: bool = True,
+                                   head_fraction: bool = True,
+                                   tail_fraction: bool = True):
         """
         Constrain structural parameters between surfactant layer objects.
 
         :param another_contrast: The surfactant layer to constrain
         """
         if head_thickness:
-            head_thickness_constraint = ObjConstraint(self.head.thickness, '', another_contrast.head.thickness)
-            another_contrast.head.thickness.user_constraints[f'{another_contrast.name}'] = head_thickness_constraint
+            head_thickness_constraint = ObjConstraint(self.head.thickness, '',
+                                                      another_contrast.head.thickness)
+            another_contrast.head.thickness.user_constraints[
+                f'{another_contrast.name}'] = head_thickness_constraint
         if tail_thickness:
-            tail_thickness_constraint = ObjConstraint(self.tail.thickness, '', another_contrast.tail.thickness)
-            another_contrast.tail.thickness.user_constraints[f'{another_contrast.name}'] = tail_thickness_constraint
+            tail_thickness_constraint = ObjConstraint(self.tail.thickness, '',
+                                                      another_contrast.tail.thickness)
+            another_contrast.tail.thickness.user_constraints[
+                f'{another_contrast.name}'] = tail_thickness_constraint
         if head_area_per_molecule:
-            head_area_per_molecule_constraint = ObjConstraint(self.head.area_per_molecule, '', another_contrast.head.area_per_molecule)
-            another_contrast.head.area_per_molecule.user_constraints[f'{another_contrast.name}'] = head_area_per_molecule_constraint
+            head_area_per_molecule_constraint = ObjConstraint(
+                self.head.area_per_molecule, '',
+                another_contrast.head.area_per_molecule)
+            another_contrast.head.area_per_molecule.user_constraints[
+                f'{another_contrast.name}'] = head_area_per_molecule_constraint
         if tail_area_per_molecule:
-            tail_area_per_molecule_constraint = ObjConstraint(self.tail.area_per_molecule, '', another_contrast.tail.area_per_molecule)
-            another_contrast.tail.area_per_molecule.user_constraints[f'{another_contrast.name}'] = tail_area_per_molecule_constraint
+            tail_area_per_molecule_constraint = ObjConstraint(
+                self.tail.area_per_molecule, '',
+                another_contrast.tail.area_per_molecule)
+            another_contrast.tail.area_per_molecule.user_constraints[
+                f'{another_contrast.name}'] = tail_area_per_molecule_constraint
         if head_fraction:
-            head_fraction_constraint = ObjConstraint(self.head.material.fraction, '', another_contrast.head.material.fraction)
-            another_contrast.head.material.fraction.user_constraints[f'{another_contrast.name}'] = head_fraction_constraint
+            head_fraction_constraint = ObjConstraint(
+                self.head.material.fraction, '',
+                another_contrast.head.material.fraction)
+            another_contrast.head.material.fraction.user_constraints[
+                f'{another_contrast.name}'] = head_fraction_constraint
         if tail_fraction:
-            tail_fraction_constraint = ObjConstraint(self.tail.material.fraction, '', another_contrast.tail.material.fraction)
-            another_contrast.tail.material.fraction.user_constraints[f'{another_contrast.name}'] = tail_fraction_constraint
-        
-        
+            tail_fraction_constraint = ObjConstraint(
+                self.tail.material.fraction, '',
+                another_contrast.tail.material.fraction)
+            another_contrast.tail.material.fraction.user_constraints[
+                f'{another_contrast.name}'] = tail_fraction_constraint
 
     @property
     def _dict_repr(self) -> dict:
