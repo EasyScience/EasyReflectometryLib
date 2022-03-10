@@ -47,6 +47,13 @@ class Materials(BaseCollection):
         """
         return cls(*args, name=name, interface=interface)
 
+    @property
+    def names(self) -> List:
+        """
+        :returns: List of names for the materials.
+        """
+        return [i.name for i in self]
+
     # Representation
     @property
     def _dict_repr(self) -> dict:
