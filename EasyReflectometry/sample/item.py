@@ -10,6 +10,7 @@ __author__ = 'github.com/arm61'
 
 from copy import deepcopy
 from typing import Union, List
+from xml.dom.minidom import Attr
 
 import yaml
 import periodictable as pt
@@ -370,6 +371,8 @@ class SurfactantLayer(MultiLayer):
 
         :param x: Boolean description the presence of the constraint.
         """
+        self.head.area_per_molecule.value = self.area_per_molecule.value
+        self.tail.area_per_molecule.value = self.area_per_molecule.value
         self.area_per_molecule.user_constraints['head_apm'].enabled = x
         self.area_per_molecule.user_constraints['tail_apm'].enabled = x
         self.head.area_per_molecule.enabled = not x
@@ -390,7 +393,7 @@ class SurfactantLayer(MultiLayer):
         """
         self.roughness.user_constraints['head_rough'].enabled = x
         self.roughness.user_constraints['tail_rough'].enabled = x
-
+    
     def constrain_solvent_roughness(self, solvent_roughness: Parameter):
         """
         Add the constraint to the solvent roughness. 
