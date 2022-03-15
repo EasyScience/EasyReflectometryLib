@@ -1,3 +1,5 @@
+__author__ = 'github.com/arm61'
+
 import numpy as np
 import scipp as sc
 import ipympl

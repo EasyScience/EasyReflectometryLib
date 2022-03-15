@@ -1,3 +1,5 @@
+__author__ = 'github.com/arm61'
+
 from typing import Callable, List, Union
 import numpy as np
 import scipp as sc

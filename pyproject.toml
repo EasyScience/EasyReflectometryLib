@@ -14,13 +14,13 @@ name = "EasyReflectometryLib"
 version = "0.0.1"
 description = "A reflectometry python package built on the EasyScience framework"
 authors = ["Andrew R. McCluskey", "Andrew Sazonov", "Simon Ward"]
-license = "GPL-3.0-only"
+license = "BSD-3-Clause"
 readme = "README.rst"
 homepage = "https://easyreflectometry.org"
 documentation = "https://EasyReflectometry.readthdocs.io"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering",
     "Development Status :: 3 - Alpha"
