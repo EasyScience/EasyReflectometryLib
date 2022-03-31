@@ -383,7 +383,7 @@ class LayerApm(Layer):
        scattering_length = neutron_scattering_length(structure_string)
        self.scattering_length_real.value = scattering_length.real
        self.scattering_length_imag.value = scattering_length.imag
-       self.material.name = structure_string
+       self.material.name = structure_string + '/' + self.material.material_b.name
 
     @property
     def _dict_repr(self) -> dict:

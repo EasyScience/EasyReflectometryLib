@@ -170,6 +170,29 @@ class TestLayerApm(unittest.TestCase):
         assert p.solvent.isld.raw_value == 0
         assert p.solvation.raw_value == 0.5
 
+    def test_chemical_structure_change(self):
+        h2o = Material.from_pars(-0.561, 0, 'H2O')
+        p = LayerApm.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2)
+        assert p.chemical_structure == 'C8O10H12P'
+        assert p.area_per_molecule.raw_value == 50
+        assert_almost_equal(p.material.sld.raw_value, 0.31513666667)
+        assert p.thickness.raw_value == 12
+        assert p.roughness.raw_value == 2
+        assert p.solvent.sld.raw_value == -0.561
+        assert p.solvent.isld.raw_value == 0
+        assert p.solvation.raw_value == 0.5
+        assert p.material.name == 'C8O10H12P/H2O'
+        p.chemical_structure = 'C8O10D12P'
+        assert p.chemical_structure == 'C8O10D12P'
+        assert p.area_per_molecule.raw_value == 50
+        assert_almost_equal(p.material.sld.raw_value, 1.3566266666666666)
+        assert p.thickness.raw_value == 12
+        assert p.roughness.raw_value == 2
+        assert p.solvent.sld.raw_value == -0.561
+        assert p.solvent.isld.raw_value == 0
+        assert p.solvation.raw_value == 0.5 
+        assert p.material.name == 'C8O10D12P/H2O'
+
     def test_dict_repr(self):
         p = LayerApm.default()
         assert p._dict_repr == {
