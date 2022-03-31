@@ -83,13 +83,13 @@ The creation of a :py:class:`SurfactantLayer` object takes a large number argume
     area_per_molecule = 48
     roughness = 3.3
 
-    dppc = SurfactantLayer.from_pars(head_formula, head_thickness, subphase, head_solvation, 
-                                     area_per_molecule, roughness, 
-                                     tail_formula, tail_thickness, superphase, tail_solvation, 
+    dppc = SurfactantLayer.from_pars(tail_formula, tail_thickness, superphase, tail_solvation, 
+                                     area_per_molecule, roughness,
+                                     head_formula, head_thickness, subphase, head_solvation, 
                                      area_per_molecule, roughness)
     
-On creation, the area per molecule and roughness above both the head and tail layers are constrained to be the same. 
-These constraints can be removed by setting :code:`dppc.constrain_apm = False` or :code:`dppc.conformal_roughness = False`. 
+On creation, the area per molecule and roughness above both the head and tail layers can be constrained to be the same. 
+These constraints can be addded by setting :code:`dppc.constrain_apm = True` or :code:`dppc.conformal_roughness = True`. 
 Furthermore, as shown in the `monolayer tutorial`_ the conformal roughness can be defined by that of the subphase. 
 The use of the :py:class:`SurfactantLayer` in multiple contrast data analysis is shown in a `multiple contrast tutorial`_. 
 
