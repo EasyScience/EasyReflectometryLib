@@ -2,6 +2,7 @@ __author__ = 'github.com/arm61'
 
 from typing import ClassVar, Tuple
 from copy import deepcopy
+from xxlimited import new
 
 import yaml
 from easyCore import np
@@ -198,7 +199,7 @@ class LayerApm(Layer):
     """
     area_per_molecule: ClassVar[
         Parameter]  #= ('area_per_molecule', LAYERAPM_DETAILS['area_per_molecule'])
-    solvent: ClassVar[Material]
+    _solvent: ClassVar[Material]
     solvation: ClassVar[Parameter]
 
     def __init__(self,
@@ -257,7 +258,7 @@ class LayerApm(Layer):
         solvated_material = MaterialMixture(material,
                                             solvent,
                                             solvation,
-                                            name=chemical_structure + ' Solv',
+                                            name=chemical_structure + '/' + solvent.name,
                                             interface=interface)
         super().__init__(material=solvated_material,
                          thickness=thickness,
@@ -266,12 +267,38 @@ class LayerApm(Layer):
                          interface=interface)
         self._add_component('scattering_length_real', scattering_length_real)
         self._add_component('scattering_length_imag', scattering_length_imag)
-        self._add_component('solvent', solvent)
-        self._add_component('solvation', solvation)
         self._add_component('area_per_molecule', area_per_molecule)
         self._add_component('roughness', roughness)
-        self.chemical_structure = chemical_structure
+        self._chemical_structure = chemical_structure
         self.interface = interface
+
+    @property
+    def solvent(self) -> Material:
+        """
+        :return: Solvent material
+        """
+        return self.material.material_b
+
+    @solvent.setter
+    def solvent(self, new_solvent):
+        """
+        :param new_solvent: New solvent material.
+        """
+        self.material.material_b = new_solvent
+
+    @property
+    def solvation(self) -> Parameter:
+        """
+        :return: Solvation fraction.
+        """
+        return self.material.fraction
+
+    @solvation.setter
+    def solvation(self, fraction: float):
+        """
+        :param fraction: Fraction of solvent.
+        """
+        self.material.fraction = fraction
 
     #Class constructors
     @classmethod
@@ -341,7 +368,23 @@ class LayerApm(Layer):
                    name=name,
                    interface=interface)
 
-    # NEED GETTER AND SETTER FOR THE CHEMICAL STRUCTURE
+    @property
+    def chemical_structure(self) -> str:
+        """
+        :return: Chemical structure
+        """
+        return self._chemical_structure
+    
+    @chemical_structure.setter
+    def chemical_structure(self, structure_string: str):
+       """
+       :param structure_string: String that defines the chemical structure.
+       """ 
+       self._chemical_structure = structure_string
+       scattering_length = neutron_scattering_length(structure_string)
+       self.scattering_length_real.value = scattering_length.real
+       self.scattering_length_imag.value = scattering_length.imag
+       self.material.name = structure_string
 
     @property
     def _dict_repr(self) -> dict:
@@ -351,7 +394,7 @@ class LayerApm(Layer):
         :return: Simple dictionary
         """
         layerapm_dict = super()._dict_repr
-        layerapm_dict['chemical_structure'] = self.chemical_structure
+        layerapm_dict['chemical_structure'] = self._chemical_structure
         layerapm_dict[
             'area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} {self.area_per_molecule.unit}'
         return layerapm_dict

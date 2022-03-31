@@ -225,8 +225,25 @@ class MaterialDensity(Material):
         self._add_component('scattering_length_imag', scattering_length_imag)
         self._add_component('molecular_weight', mw)
         self._add_component('density', density)
-        self.chemical_structure = chemical_structure
+        self._chemical_structure = chemical_structure
         self.interface = interface
+
+    @property
+    def chemical_structure(self) -> str:
+        """
+        :returns: Chemical structure string
+        """
+        return self._chemical_structure
+
+    @chemical_structure.setter
+    def chemical_structure(self, structure_string: str):
+       """
+       :param structure_string: String that defines the chemical structure.
+       """ 
+       self._chemical_structure = structure_string
+       scattering_length = neutron_scattering_length(structure_string)
+       self.scattering_length_real.value = scattering_length.real
+       self.scattering_length_imag.value = scattering_length.imag 
 
     # Class constructors
     @classmethod
@@ -271,23 +288,32 @@ class MaterialDensity(Material):
         :return: Simple dictionary
         """
         mat_dict = super()._dict_repr
-        mat_dict['chemical_structure'] = self.chemical_structure
+        mat_dict['chemical_structure'] = self._chemical_structure
         mat_dict['density'] = f'{self.density.raw_value:.2e} {self.density.unit}'
         return mat_dict
 
 
 class MaterialMixture(Material):
 
-    material_a: ClassVar[Material]
-    material_b: ClassVar[Material]
-    fraction: ClassVar[Parameter]
+    _fraction: ClassVar[Parameter]
 
     def __init__(self,
                  material_a: Material,
                  material_b: Material,
                  fraction: Parameter,
-                 name: str = "EasyMaterialMixture",
-                 interface=None):
+                 name=None,
+                 interface=None):        
+        sld, isld, material_a, material_b, fraction = self._materials_constraints(material_a, material_b, fraction)
+        if name is None:
+            name = material_a.name + '/' + material_b.name
+        super().__init__(sld, isld, name, interface)
+        self._material_a = material_a
+        self._material_b = material_b
+        self._add_component('_fraction', fraction)
+        self.interface = interface
+
+    @staticmethod
+    def _materials_constraints(material_a, material_b, fraction):
         default_options = deepcopy(MATERIAL_DEFAULTS)
         del default_options['sld']['value']
         del default_options['isld']['value']
@@ -309,11 +335,85 @@ class MaterialMixture(Material):
         material_a.isld.user_constraints['isld'] = iconstraint
         material_b.isld.user_constraints['isld'] = iconstraint
         fraction.user_constraints['isld'] = iconstraint
-        super().__init__(sld, isld, name, interface)
-        self._add_component('material_a', material_a)
-        self._add_component('material_b', material_b)
-        self._add_component('fraction', fraction)
-        self.interface = interface
+        return sld, isld, material_a, material_b, fraction
+
+    @property
+    def material_a(self) -> Material:
+        """
+        :return: the first material.
+        """
+        return self._material_a
+
+    @material_a.setter
+    def material_a(self, new_material_a: Material):
+        """
+        Setter for material_a
+        
+        :param new_material_a: New material_a
+        """
+        sld, isld, material_a, material_b, fraction = self._materials_constraints(new_material_a, self._material_b, self.fraction)
+        self.sld.enabled = True
+        self.sld = sld
+        self.sld.enabled = False
+        self.isld.enabled = True
+        self.isld = isld
+        self.isld.enabled = False
+        self._material_a = material_a
+        self._material_b = material_b
+        self._fraction = fraction
+        self.name = material_a.name + '/' + material_b.name
+
+    @property
+    def material_b(self) -> Material:
+        """
+        :return: the second material.
+        """
+        return self._material_b
+
+    @material_b.setter
+    def material_b(self, new_material_b: Material):
+        """
+        Setter for material_b
+        
+        :param new_material_b: New material_b
+        """
+        sld, isld, material_a, material_b, fraction = self._materials_constraints(self._material_a, new_material_b, self.fraction)
+        self.sld.enabled = True
+        self.sld = sld
+        self.sld.enabled = False
+        self.isld.enabled = True
+        self.isld = isld
+        self.isld.enabled = False
+        self._material_a = material_a
+        self._material_b = material_b
+        self._fraction = fraction
+        self.name = material_a.name + '/' + material_b.name
+
+    @property
+    def fraction(self) -> Parameter:
+        """
+        :return: the fraction of material_b in material_a.
+        """
+        return self._fraction
+
+    @fraction.setter
+    def fraction(self, new_fraction: float):
+        """
+        Setter for fraction
+        
+        :param new_fraction: New fraction
+        """
+        default_options = deepcopy(MATERIALMIXTURE_DEFAULTS)
+        del default_options['fraction']['value']
+        new_fraction = Parameter('fraction', float(new_fraction), **default_options['fraction'])
+        sld, isld, material_a, material_b, fraction = self._materials_constraints(self._material_a, self.material_b, new_fraction)
+        self.sld.enabled = True
+        self.sld = sld
+        self.isld.enabled = True
+        self.isld = isld
+        self._material_a = material_a
+        self._material_b = material_b
+        self._fraction = fraction        
 
     #Class constructors
     @classmethod
@@ -333,7 +433,7 @@ class MaterialMixture(Material):
                   material_a: Material,
                   material_b: Material,
                   fraction: float,
-                  name: str = "EasyMaterialMixture",
+                  name=None,
                   interface=None) -> "MaterialMixture":
         """
         Constructor of a mixture of two materials where the parameters are known. 
@@ -374,10 +474,10 @@ class MaterialMixture(Material):
         """
         return {
             self.name: {
-                'fraction': self.fraction.raw_value,
+                'fraction': self._fraction.raw_value,
                 'sld': f'{self.sld.raw_value:.3f}e-6 {self.sld.unit}',
                 'isld': f'{self.isld.raw_value:.3f}e-6 {self.isld.unit}',
-                'material1': self.material_a._dict_repr,
-                'material2': self.material_b._dict_repr
+                'material1': self._material_a._dict_repr,
+                'material2': self._material_b._dict_repr
             }
         }
