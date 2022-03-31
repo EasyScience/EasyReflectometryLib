@@ -2,7 +2,6 @@ __author__ = 'github.com/arm61'
 
 from typing import ClassVar, Tuple
 from copy import deepcopy
-from xxlimited import new
 
 import yaml
 from easyCore import np
