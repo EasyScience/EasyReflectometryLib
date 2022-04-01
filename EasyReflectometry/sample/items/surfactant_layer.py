@@ -42,14 +42,18 @@ class SurfactantLayer(MultiLayer):
         if area_per_molecule is not None:
             self.layers[0].area_per_molecule.enabled = True
             self.layers[1].area_per_molecule.enabled = True
-            self.constrain_apm = True
+            self.constrain_apm = area_per_molecule.enabled
             self.area_per_molecule = area_per_molecule
+            self.layers[0].area_per_molecule.enabled = False
+            self.layers[1].area_per_molecule.enabled = False
         self.roughness = None
         if roughness is not None:
             self.layers[0].roughness.enabled = True
             self.layers[1].roughness.enabled = True
-            self.conformal_roughness = True
+            self.conformal_roughness = roughness.enabled
             self.roughness = roughness
+            self.layers[0].roughness.enabled = False
+            self.layers[1].roughness.enabled = False
 
     # Class constructors
     @classmethod
@@ -171,6 +175,7 @@ class SurfactantLayer(MultiLayer):
             self.roughness.user_constraints['roughness2'] = roughness2
         self.roughness.user_constraints['roughness1'].enabled = x
         self.roughness.user_constraints['roughness2'].enabled = x
+        self.roughness.enabled = x
 
     def constrain_solvent_roughness(self, solvent_roughness: Parameter):
         """

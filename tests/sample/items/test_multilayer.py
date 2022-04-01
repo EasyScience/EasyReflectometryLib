@@ -157,5 +157,4 @@ class TestMultiLayer(unittest.TestCase):
     def test_dict_round_trip(self):
         p = MultiLayer.default()
         q = MultiLayer.from_dict(p.as_dict())
-        assert 1 == 1 
-        # assert p.to_data_dict() == q.to_data_dict()
+        assert p.to_data_dict() == q.to_data_dict()

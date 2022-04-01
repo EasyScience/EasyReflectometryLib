@@ -172,35 +172,31 @@ class TestSurfactantLayer(unittest.TestCase):
     def test_dict_round_trip(self):
         p = SurfactantLayer.default()
         q = SurfactantLayer.from_dict(p.as_dict())
-        assert 1 == 1
-        #assert p.to_data_dict() == q.to_data_dict()
+        assert p.to_data_dict() == q.to_data_dict()
+
 
     def test_dict_round_trip_apm(self):
         p = SurfactantLayer.default()
         p.constrain_apm = True
         q = SurfactantLayer.from_dict(p.as_dict())
-        assert 1 == 1 
-        #assert p.to_data_dict() == q.to_data_dict()
+        assert p.to_data_dict() == q.to_data_dict()
     
     def test_dict_round_trip_apm2(self):
         p = SurfactantLayer.default()
         p.constrain_apm = True
         p.constrain_apm = False
         q = SurfactantLayer.from_dict(p.as_dict())
-        assert 1 == 1 
-        #assert p.to_data_dict() == q.to_data_dict()
+        assert p.to_data_dict() == q.to_data_dict()
 
     def test_dict_round_trip_roughness(self):
         p = SurfactantLayer.default()
         p.conformal_roughness = True
         q = SurfactantLayer.from_dict(p.as_dict())
-        assert 1 == 1 
-        #assert p.to_data_dict() == q.to_data_dict()
+        assert p.to_data_dict() == q.to_data_dict()
 
     def test_dict_round_trip_roughness2(self):
         p = SurfactantLayer.default()
         p.conformal_roughness = True
         p.conformal_roughness = False
         q = SurfactantLayer.from_dict(p.as_dict())
-        assert 1 == 1 
-        #assert p.to_data_dict() == q.to_data_dict()
+        assert p.to_data_dict() == q.to_data_dict()
