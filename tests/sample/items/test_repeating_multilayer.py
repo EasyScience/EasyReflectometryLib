@@ -180,5 +180,4 @@ class TestRepeatingMultiLayer(unittest.TestCase):
     def test_dict_round_trip(self):
         p = RepeatingMultiLayer.default()
         q = RepeatingMultiLayer.from_dict(p.as_dict())
-        assert 1 == 1
-        # assert p.to_data_dict() == q.to_data_dict()
+        assert p.to_data_dict() == q.to_data_dict()

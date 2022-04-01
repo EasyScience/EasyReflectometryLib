@@ -77,3 +77,8 @@ class TestLayers(unittest.TestCase):
         p = Layers.default()
         assert p.__repr__(
         ) == 'EasyLayers:\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 10.000 angstrom\n    roughness: 3.300 angstrom\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 10.000 angstrom\n    roughness: 3.300 angstrom\n'
+
+    def test_dict_round_trip(self):
+        p = Layers.default()
+        q = Layers.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()
