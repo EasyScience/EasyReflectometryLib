@@ -292,6 +292,17 @@ class MaterialDensity(Material):
         mat_dict['density'] = f'{self.density.raw_value:.2e} {self.density.unit}'
         return mat_dict
 
+    def as_dict(self, skip: list=[]) -> dict:
+        """
+        Custom as_dict method to skip necessary things.
+        
+        :return: Cleaned dictionary.
+        """
+        this_dict = super().as_dict(skip=skip)
+        del this_dict['sld'], this_dict['isld'], this_dict['scattering_length_real']
+        del this_dict['scattering_length_imag'], this_dict['molecular_weight']
+        return this_dict
+
 
 class MaterialMixture(Material):
 
@@ -481,3 +492,16 @@ class MaterialMixture(Material):
                 'material2': self._material_b._dict_repr
             }
         }
+
+    def as_dict(self, skip: list=[]) -> dict:
+        """
+        Custom as_dict method to skip necessary things.
+        
+        :return: Cleaned dictionary.
+        """
+        this_dict = super().as_dict(skip=skip)
+        del this_dict['sld']
+        del this_dict['isld']
+        this_dict['fraction'] = this_dict['_fraction']
+        del this_dict['_fraction']
+        return this_dict

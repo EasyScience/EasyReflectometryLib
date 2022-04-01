@@ -97,6 +97,11 @@ class TestLayer(unittest.TestCase):
         assert p.__repr__(
         ) == 'EasyLayer:\n  material:\n    EasyMaterial:\n      sld: 4.186e-6 1 / angstrom ** 2\n      isld: 0.000e-6 1 / angstrom ** 2\n  thickness: 10.000 angstrom\n  roughness: 3.300 angstrom\n'
 
+    def test_dict_round_trip(self):
+        p = Layer.default()
+        q = Layer.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()
+
 
 class TestLayerApm(unittest.TestCase):
 
@@ -222,3 +227,8 @@ class TestLayerApm(unittest.TestCase):
             'chemical_structure': 'C10H18NO8P',
             'area_per_molecule': '48.2 angstrom ** 2'
         }
+
+    def test_dict_round_trip(self):
+        p = LayerApm.default()
+        q = LayerApm.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()

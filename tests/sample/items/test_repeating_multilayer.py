@@ -176,3 +176,8 @@ class TestRepeatingMultiLayer(unittest.TestCase):
         p = RepeatingMultiLayer.default()
         assert p.__repr__(
         ) == "EasyRepeatingMultiLayer:\n  EasyLayers:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n  repetitions: 1.0\n"
+
+    def test_dict_round_trip(self):
+        p = RepeatingMultiLayer.default()
+        q = RepeatingMultiLayer.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()

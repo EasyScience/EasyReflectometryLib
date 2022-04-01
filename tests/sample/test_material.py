@@ -60,6 +60,11 @@ class TestMaterial(unittest.TestCase):
         assert p.__repr__(
         ) == 'EasyMaterial:\n  sld: 4.186e-6 1 / angstrom ** 2\n  isld: 0.000e-6 1 / angstrom ** 2\n'
 
+    def test_dict_round_trip(self):
+        p = Material.default()
+        q = Material.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()
+
 
 class TestMaterialDensity(unittest.TestCase):
 
@@ -110,6 +115,11 @@ class TestMaterialDensity(unittest.TestCase):
             'chemical_structure': 'Si',
             'density': '2.33e+00 gram / centimeter ** 3'
         }
+
+    def test_dict_round_trip(self):
+        p = MaterialDensity.default()
+        q = MaterialDensity.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()
 
 
 class TestMaterialMixture(unittest.TestCase):
@@ -210,3 +220,8 @@ class TestMaterialMixture(unittest.TestCase):
                 }
             }
         }
+
+    def test_dict_round_trip(self):
+        p = MaterialMixture.default()
+        q = MaterialMixture.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()

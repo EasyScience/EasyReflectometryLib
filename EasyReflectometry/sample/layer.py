@@ -397,3 +397,14 @@ class LayerApm(Layer):
         layerapm_dict[
             'area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} {self.area_per_molecule.unit}'
         return layerapm_dict
+
+    def as_dict(self, skip: list=[]) -> dict:
+        """
+        Custom as_dict method to skip necessary things.
+        
+        :return: Cleaned dictionary.
+        """
+        this_dict = super().as_dict(skip=skip)
+        del this_dict['material'], this_dict['scattering_length_real']
+        del this_dict['scattering_length_imag']
+        return this_dict
