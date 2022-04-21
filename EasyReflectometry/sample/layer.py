@@ -198,7 +198,6 @@ class LayerApm(Layer):
     """
     area_per_molecule: ClassVar[
         Parameter]  #= ('area_per_molecule', LAYERAPM_DETAILS['area_per_molecule'])
-    _solvent: ClassVar[Material]
     solvation: ClassVar[Parameter]
 
     def __init__(self,
@@ -220,7 +219,7 @@ class LayerApm(Layer):
         :param name: Identifier, defaults to :py:attr:`EasyLayerApm`
         :param interface: Interface object, defaults to :py:attr:`None`
         """
-        scattering_length = neutron_scattering_length(chemical_structure)  #* 1e6
+        scattering_length = neutron_scattering_length(chemical_structure) 
         default_options = deepcopy(LAYERAPM_DETAILS)
         del default_options['sl']['value']
         del default_options['isl']['value']
@@ -383,7 +382,7 @@ class LayerApm(Layer):
        scattering_length = neutron_scattering_length(structure_string)
        self.scattering_length_real.value = scattering_length.real
        self.scattering_length_imag.value = scattering_length.imag
-       self.material.name = structure_string + '/' + self.material.material_b.name
+       self.material.name = structure_string + '/' + self.material._material_b.name
 
     @property
     def _dict_repr(self) -> dict:

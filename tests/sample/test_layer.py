@@ -6,6 +6,7 @@ Tests for Layer class module
 
 import os
 import unittest
+from EasyReflectometry.special.calculations import apm_to_sld, neutron_scattering_length
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
 from EasyReflectometry.sample.material import Material
@@ -158,6 +159,7 @@ class TestLayerApm(unittest.TestCase):
         p = LayerApm.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
         assert p.chemical_structure == 'C8O10H12P'
         assert p.area_per_molecule.raw_value == 50
+        print(p.material)
         assert_almost_equal(p.material.sld.raw_value, 0.31513666667)
         assert p.thickness.raw_value == 12
         assert p.roughness.raw_value == 2
@@ -200,6 +202,8 @@ class TestLayerApm(unittest.TestCase):
 
     def test_dict_repr(self):
         p = LayerApm.default()
+        print(p.material.sld)
+        print(p.material.isld)
         assert p._dict_repr == {
             'EasyLayerApm': {
                 'material': {

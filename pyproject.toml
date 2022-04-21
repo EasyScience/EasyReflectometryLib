@@ -28,8 +28,9 @@ classifiers = [
 packages = [ { include = "EasyReflectometry" } ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.8,<3.10"
 easyScienceCore = { git = 'https://github.com/easyScience/easyCore.git', rev = 'mutlifitter' }
+#easyScienceCore = { path = '../easyCore'}
 refnx = "^0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx which use PEP 517 and cannot be installed directly"
 refl1d = "^0.8.14"
 scipp = "^0.11.1"

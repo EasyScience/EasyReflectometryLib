@@ -55,21 +55,32 @@ class BornAgain(InterfaceTemplate):
         t_ = type(model)
         if issubclass(t_, Material):
             key = model.uid
-            self.calculator.create_material(key)
+            if key not in self.calculator.storage['material'].keys():
+                self.calculator.create_material(key)
+            r_list.append(
+                ItemContainer(key, self._material_link,
+                              self.calculator.get_material_value,
+                              self.calculator.update_material))
+        elif issubclass(t_, MaterialMixture):
+            key = model.uid
+            if key not in self.calculator.storage['material'].keys():
+                self.calculator.create_material(key)
             r_list.append(
                 ItemContainer(key, self._material_link,
                               self.calculator.get_material_value,
                               self.calculator.update_material))
         elif issubclass(t_, Layer):
             key = model.uid
-            self.calculator.create_layer(key)
+            if key not in self.calculator.storage['layer'].keys():
+                self.calculator.create_layer(key)
             r_list.append(
                 ItemContainer(key, self._layer_link, self.calculator.get_layer_value,
                               self.calculator.update_layer))
             self.assign_material_to_layer(model.material.uid, key)
         elif issubclass(t_, MultiLayer):
             key = model.uid
-            self.calculator.create_item(key)
+            if key not in self.calculator.storage['item'].keys():
+                self.calculator.create_item(key)
             r_list.append(
                 ItemContainer(key, self._item_link, self.calculator.get_item_value,
                               self.calculator.update_item))

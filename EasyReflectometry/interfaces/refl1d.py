@@ -7,7 +7,7 @@ import numpy as np
 from easyCore.Objects.Inferface import ItemContainer
 from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
 from EasyReflectometry.calculators.refl1d import Refl1d as Refl1d_calc
-from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.material import Material, MaterialMixture
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.item import MultiLayer
 from EasyReflectometry.experiment.model import Model
@@ -51,21 +51,32 @@ class Refl1d(InterfaceTemplate):
         t_ = type(model)
         if issubclass(t_, Material):
             key = model.uid
-            self.calculator.create_material(key)
+            if key not in self.calculator.storage['material'].keys():
+                self.calculator.create_material(key)
+            r_list.append(
+                ItemContainer(key, self._material_link,
+                              self.calculator.get_material_value,
+                              self.calculator.update_material))
+        elif issubclass(t_, MaterialMixture):
+            key = model.uid
+            if key not in self.calculator.storage['material'].keys():
+                self.calculator.create_material(key)
             r_list.append(
                 ItemContainer(key, self._material_link,
                               self.calculator.get_material_value,
                               self.calculator.update_material))
         elif issubclass(t_, Layer):
             key = model.uid
-            self.calculator.create_layer(key)
+            if key not in self.calculator.storage['layer'].keys():
+                self.calculator.create_layer(key)
             r_list.append(
                 ItemContainer(key, self._layer_link, self.calculator.get_layer_value,
                               self.calculator.update_layer))
             self.assign_material_to_layer(model.material.uid, key)
         elif issubclass(t_, MultiLayer):
             key = model.uid
-            self.calculator.create_item(key)
+            if key not in self.calculator.storage['item'].keys():
+                self.calculator.create_item(key)
             r_list.append(
                 ItemContainer(key, self._item_link, self.calculator.get_item_value,
                               self.calculator.update_item))

@@ -45,14 +45,14 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.layers[0].name == 'A Test Layer 1'
         assert p.layers[0].chemical_structure == 'C8O10H12P'
         assert p.layers[0].thickness.raw_value == 12
-        assert p.layers[0].solvent == h2o
+        assert p.layers[0].solvent.to_data_dict() == h2o.to_data_dict()
         assert p.layers[0].solvation.raw_value == 0.5
         assert p.layers[0].area_per_molecule.raw_value == 50
         assert p.layers[0].roughness.raw_value == 2
         assert p.layers[1].name == 'A Test Layer 2'
         assert p.layers[1].chemical_structure == 'C10H24'
         assert p.layers[1].thickness.raw_value == 10
-        assert p.layers[1].solvent == noth2o
+        assert p.layers[1].solvent.to_data_dict() == noth2o.to_data_dict()
         assert p.layers[1].solvation.raw_value == 0.2
         assert p.layers[1].area_per_molecule.raw_value == 40
         assert p.name == 'A Test'
