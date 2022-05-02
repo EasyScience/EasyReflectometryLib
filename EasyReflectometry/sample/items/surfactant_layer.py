@@ -250,4 +250,3 @@ class SurfactantLayer(MultiLayer):
             'area per molecule constrained': self.constrain_apm,
             'conformal roughness': self.conformal_roughness
         }
-
