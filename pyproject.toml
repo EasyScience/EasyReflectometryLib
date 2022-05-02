@@ -11,7 +11,7 @@ repo = 'EasyReflectometryLib'
 
 [tool.poetry]
 name = "EasyReflectometryLib"
-version = "0.0.1"
+version = "0.0.2"
 description = "A reflectometry python package built on the EasyScience framework"
 authors = ["Andrew R. McCluskey", "Andrew Sazonov", "Simon Ward"]
 license = "BSD-3-Clause"
