@@ -32,6 +32,7 @@ jobs:
       run: |
         sudo apt install pandoc
         pip install -r requirements-dev.txt
+        pip install .
     - name: Build and Commit
       uses: sphinx-notes/pages@master
       with:
