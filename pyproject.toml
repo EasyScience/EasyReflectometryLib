@@ -33,7 +33,7 @@ easyScienceCore = { git = 'https://github.com/easyScience/easyCore.git', rev = '
 #easyScienceCore = { path = '../easyCore'}
 refnx = "^0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx which use PEP 517 and cannot be installed directly"
 refl1d = "^0.8.14"
-scipp = "^0.11.1"
+scipp = "^0.13.0"
 orsopy = "^0.0.4"
 
 [tool.poetry.dev-dependencies]
