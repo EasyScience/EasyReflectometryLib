@@ -6,6 +6,7 @@ jupyterlab
 coverage
 coveralls
 ipykernel
+ipympl
 nbsphinx
 sphinx_book_theme
 sphinx_autodoc_typehints
