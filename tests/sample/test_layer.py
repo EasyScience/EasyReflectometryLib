@@ -6,6 +6,7 @@ Tests for Layer class module
 
 import os
 import unittest
+from EasyReflectometry.special.calculations import apm_to_sld, neutron_scattering_length
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
 from EasyReflectometry.sample.material import Material
@@ -97,6 +98,11 @@ class TestLayer(unittest.TestCase):
         assert p.__repr__(
         ) == 'EasyLayer:\n  material:\n    EasyMaterial:\n      sld: 4.186e-6 1 / angstrom ** 2\n      isld: 0.000e-6 1 / angstrom ** 2\n  thickness: 10.000 angstrom\n  roughness: 3.300 angstrom\n'
 
+    def test_dict_round_trip(self):
+        p = Layer.default()
+        q = Layer.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()
+
 
 class TestLayerApm(unittest.TestCase):
 
@@ -148,12 +154,60 @@ class TestLayerApm(unittest.TestCase):
         assert p.thickness.raw_value == 10
         assert_almost_equal(p.material.sld.raw_value, 0.910773333)
 
+    def test_solvent_change(self):
+        h2o = Material.from_pars(-0.561, 0, 'H2O')
+        p = LayerApm.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
+        assert p.chemical_structure == 'C8O10H12P'
+        assert p.area_per_molecule.raw_value == 50
+        print(p.material)
+        assert_almost_equal(p.material.sld.raw_value, 0.31513666667)
+        assert p.thickness.raw_value == 12
+        assert p.roughness.raw_value == 2
+        assert p.solvent.sld.raw_value == -0.561
+        assert p.solvent.isld.raw_value == 0
+        assert p.solvation.raw_value == 0.5
+        d2o = Material.from_pars(6.335, 0, 'D2O')
+        p.solvent = d2o
+        assert p.chemical_structure == 'C8O10H12P'
+        assert p.area_per_molecule.raw_value == 50
+        assert_almost_equal(p.material.sld.raw_value, 3.7631366667)
+        assert p.thickness.raw_value == 12
+        assert p.roughness.raw_value == 2
+        assert p.solvent.sld.raw_value == 6.335
+        assert p.solvent.isld.raw_value == 0
+        assert p.solvation.raw_value == 0.5
+
+    def test_chemical_structure_change(self):
+        h2o = Material.from_pars(-0.561, 0, 'H2O')
+        p = LayerApm.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2)
+        assert p.chemical_structure == 'C8O10H12P'
+        assert p.area_per_molecule.raw_value == 50
+        assert_almost_equal(p.material.sld.raw_value, 0.31513666667)
+        assert p.thickness.raw_value == 12
+        assert p.roughness.raw_value == 2
+        assert p.solvent.sld.raw_value == -0.561
+        assert p.solvent.isld.raw_value == 0
+        assert p.solvation.raw_value == 0.5
+        assert p.material.name == 'C8O10H12P/H2O'
+        p.chemical_structure = 'C8O10D12P'
+        assert p.chemical_structure == 'C8O10D12P'
+        assert p.area_per_molecule.raw_value == 50
+        assert_almost_equal(p.material.sld.raw_value, 1.3566266666666666)
+        assert p.thickness.raw_value == 12
+        assert p.roughness.raw_value == 2
+        assert p.solvent.sld.raw_value == -0.561
+        assert p.solvent.isld.raw_value == 0
+        assert p.solvation.raw_value == 0.5 
+        assert p.material.name == 'C8O10D12P/H2O'
+
     def test_dict_repr(self):
         p = LayerApm.default()
+        print(p.material.sld)
+        print(p.material.isld)
         assert p._dict_repr == {
             'EasyLayerApm': {
                 'material': {
-                    'C10H18NO8P Solv': {
+                    'C10H18NO8P/D2O': {
                         'fraction': 0.2,
                         'sld': '2.269e-6 1 / angstrom ** 2',
                         'isld': '0.000e-6 1 / angstrom ** 2',
@@ -177,3 +231,8 @@ class TestLayerApm(unittest.TestCase):
             'chemical_structure': 'C10H18NO8P',
             'area_per_molecule': '48.2 angstrom ** 2'
         }
+
+    def test_dict_round_trip(self):
+        p = LayerApm.default()
+        q = LayerApm.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()

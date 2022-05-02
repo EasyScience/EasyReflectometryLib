@@ -1,5 +1,4 @@
 __author__ = "github.com/arm61"
-__version__ = "0.0.1"
 
 from typing import List
 
@@ -8,7 +7,7 @@ import numpy as np
 from easyCore.Objects.Inferface import ItemContainer
 from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
 from EasyReflectometry.calculators.refnx import Refnx as Refnx_calc
-from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.material import Material, MaterialMixture
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.item import MultiLayer
 from EasyReflectometry.experiment.model import Model
@@ -52,14 +51,24 @@ class Refnx(InterfaceTemplate):
         t_ = type(model)
         if issubclass(t_, Material):
             key = model.uid
-            self.calculator.create_material(key)
+            if key not in self.calculator.storage['material'].keys():
+                self.calculator.create_material(key)
+            r_list.append(
+                ItemContainer(key, self._material_link,
+                              self.calculator.get_material_value,
+                              self.calculator.update_material))
+        elif issubclass(t_, MaterialMixture):
+            key = model.uid
+            if key not in self.calculator.storage['material'].keys():
+                self.calculator.create_material(key)
             r_list.append(
                 ItemContainer(key, self._material_link,
                               self.calculator.get_material_value,
                               self.calculator.update_material))
         elif issubclass(t_, Layer):
             key = model.uid
-            self.calculator.create_layer(key)
+            if key not in self.calculator.storage['layer'].keys():
+                self.calculator.create_layer(key)
             r_list.append(
                 ItemContainer(key, self._layer_link, self.calculator.get_layer_value,
                               self.calculator.update_layer))

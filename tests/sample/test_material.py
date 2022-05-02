@@ -60,6 +60,11 @@ class TestMaterial(unittest.TestCase):
         assert p.__repr__(
         ) == 'EasyMaterial:\n  sld: 4.186e-6 1 / angstrom ** 2\n  isld: 0.000e-6 1 / angstrom ** 2\n'
 
+    def test_dict_round_trip(self):
+        p = Material.default()
+        q = Material.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()
+
 
 class TestMaterialDensity(unittest.TestCase):
 
@@ -87,6 +92,18 @@ class TestMaterialDensity(unittest.TestCase):
         assert_almost_equal(p.sld.value.n, 2.2645412328256)
         assert p.chemical_structure == 'Co'
 
+    def test_chemical_structure_change(self):
+        p = MaterialDensity.from_pars('Co', 8.9, 'Cobolt')
+        assert p.density.value.n == 8.9
+        assert_almost_equal(p.sld.value.n, 2.2645412328256)
+        assert_almost_equal(p.isld.value.n, 0.0)
+        assert p.chemical_structure == 'Co'
+        p.chemical_structure = 'B'
+        assert p.density.value.n == 8.9
+        assert_almost_equal(p.sld.value.n, 4.820107844970)
+        assert_almost_equal(p.isld.value.n, -0.19098540517806603)
+        assert p.chemical_structure == 'B'
+
     def test_dict_repr(self):
         p = MaterialDensity.default()
         print(p._dict_repr)
@@ -98,6 +115,11 @@ class TestMaterialDensity(unittest.TestCase):
             'chemical_structure': 'Si',
             'density': '2.33e+00 gram / centimeter ** 3'
         }
+
+    def test_dict_round_trip(self):
+        p = MaterialDensity.default()
+        q = MaterialDensity.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()
 
 
 class TestMaterialMixture(unittest.TestCase):
@@ -123,6 +145,65 @@ class TestMaterialMixture(unittest.TestCase):
         assert_almost_equal(p.isld.raw_value, -0.5)
         assert str(p.sld.unit) == '1 / angstrom ** 2'
         assert str(p.isld.unit) == '1 / angstrom ** 2'
+    
+    def test_fraction_constraint(self):
+        p = Material.default()
+        q = Material.from_pars(6.908, -0.278, 'Boron')
+        r = MaterialMixture.from_pars(p, q, 0.2)
+        assert r.fraction.raw_value == 0.2
+        assert_almost_equal(r.sld.raw_value, 4.7304)
+        assert_almost_equal(r.isld.raw_value, -0.0556)
+        r.fraction.value = 0.5
+        assert r.fraction.raw_value == 0.5
+        assert_almost_equal(r.sld.raw_value, 5.54700)
+        assert_almost_equal(r.isld.raw_value, -0.1390)
+
+    def test_material_a_change(self):
+        p = MaterialMixture.default()
+        assert p.fraction.raw_value == 0.5
+        assert str(p.fraction.unit) == 'dimensionless'
+        assert p.sld.raw_value == Material.default().sld.raw_value
+        assert p.isld.raw_value == Material.default().isld.raw_value
+        q = Material.from_pars(6.908, -0.278, 'Boron')
+        p.material_a = q
+        assert p.fraction.raw_value == 0.5
+        assert str(p.fraction.unit) == 'dimensionless'
+        assert_almost_equal(p.sld.raw_value, 5.54700)
+        assert_almost_equal(p.isld.raw_value, -0.1390)
+
+    def test_material_b_change(self):
+        p = MaterialMixture.default()
+        assert p.fraction.raw_value == 0.5
+        assert str(p.fraction.unit) == 'dimensionless'
+        assert p.sld.raw_value == Material.default().sld.raw_value
+        assert p.isld.raw_value == Material.default().isld.raw_value
+        q = Material.from_pars(6.908, -0.278, 'Boron')
+        p.material_b = q
+        assert p.fraction.raw_value == 0.5
+        assert str(p.fraction.unit) == 'dimensionless'
+        assert_almost_equal(p.sld.raw_value, 5.54700)
+        assert_almost_equal(p.isld.raw_value, -0.1390)
+
+    def test_material_b_change_double(self):
+        p = MaterialMixture.default()
+        assert p.fraction.raw_value == 0.5
+        assert str(p.fraction.unit) == 'dimensionless'
+        assert p.sld.raw_value == Material.default().sld.raw_value
+        assert p.isld.raw_value == Material.default().isld.raw_value
+        q = Material.from_pars(6.908, -0.278, 'Boron')
+        p.material_b = q
+        assert p.name == 'EasyMaterial/Boron'
+        assert p.fraction.raw_value == 0.5
+        assert str(p.fraction.unit) == 'dimensionless'
+        assert_almost_equal(p.sld.raw_value, 5.54700)
+        assert_almost_equal(p.isld.raw_value, -0.1390)
+        r = Material.from_pars(0.00, 0.00, 'ACMW')
+        p.material_b = r
+        assert p.name == 'EasyMaterial/ACMW'
+        assert p.fraction.raw_value == 0.5
+        assert str(p.fraction.unit) == 'dimensionless'
+        assert_almost_equal(p.sld.raw_value, 2.0930)
+        assert_almost_equal(p.isld.raw_value, 0.0000)
 
     def test_from_pars(self):
         p = Material.default()
@@ -134,15 +215,11 @@ class TestMaterialMixture(unittest.TestCase):
         assert_almost_equal(r.isld.raw_value, -0.0556)
         assert str(r.sld.unit) == '1 / angstrom ** 2'
         assert str(r.isld.unit) == '1 / angstrom ** 2'
-        assert 'sld' in p.sld.user_constraints.keys()
-        assert 'isld' in p.isld.user_constraints.keys()
-        assert 'sld' in q.sld.user_constraints.keys()
-        assert 'isld' in q.isld.user_constraints.keys()
 
     def test_dict_repr(self):
         p = MaterialMixture.default()
         assert p._dict_repr == {
-            'EasyMaterialMixture': {
+            'EasyMaterial/EasyMaterial': {
                 'fraction': 0.5,
                 'sld': '4.186e-6 1 / angstrom ** 2',
                 'isld': '0.000e-6 1 / angstrom ** 2',
@@ -160,3 +237,8 @@ class TestMaterialMixture(unittest.TestCase):
                 }
             }
         }
+
+    def test_dict_round_trip(self):
+        p = MaterialMixture.default()
+        q = MaterialMixture.from_dict(p.as_dict())
+        assert p.to_data_dict() == q.to_data_dict()

@@ -1,9 +1,5 @@
 __author__ = 'github.com/arm61'
-__version__ = '0.0.1'
 
-from ast import Param
-from email.policy import default
-import re
 from typing import ClassVar
 from copy import deepcopy
 
@@ -226,8 +222,25 @@ class MaterialDensity(Material):
         self._add_component('scattering_length_imag', scattering_length_imag)
         self._add_component('molecular_weight', mw)
         self._add_component('density', density)
-        self.chemical_structure = chemical_structure
+        self._chemical_structure = chemical_structure
         self.interface = interface
+
+    @property
+    def chemical_structure(self) -> str:
+        """
+        :returns: Chemical structure string
+        """
+        return self._chemical_structure
+
+    @chemical_structure.setter
+    def chemical_structure(self, structure_string: str):
+       """
+       :param structure_string: String that defines the chemical structure.
+       """ 
+       self._chemical_structure = structure_string
+       scattering_length = neutron_scattering_length(structure_string)
+       self.scattering_length_real.value = scattering_length.real
+       self.scattering_length_imag.value = scattering_length.imag 
 
     # Class constructors
     @classmethod
@@ -272,49 +285,111 @@ class MaterialDensity(Material):
         :return: Simple dictionary
         """
         mat_dict = super()._dict_repr
-        mat_dict['chemical_structure'] = self.chemical_structure
+        mat_dict['chemical_structure'] = self._chemical_structure
         mat_dict['density'] = f'{self.density.raw_value:.2e} {self.density.unit}'
         return mat_dict
 
+    def as_dict(self, skip: list=[]) -> dict:
+        """
+        Custom as_dict method to skip necessary things.
+        
+        :return: Cleaned dictionary.
+        """
+        this_dict = super().as_dict(skip=skip)
+        del this_dict['sld'], this_dict['isld'], this_dict['scattering_length_real']
+        del this_dict['scattering_length_imag'], this_dict['molecular_weight']
+        return this_dict
 
-class MaterialMixture(Material):
 
-    material_a: ClassVar[Material]
-    material_b: ClassVar[Material]
+class MaterialMixture(BaseObj):
+
     fraction: ClassVar[Parameter]
 
     def __init__(self,
                  material_a: Material,
                  material_b: Material,
                  fraction: Parameter,
-                 name: str = "EasyMaterialMixture",
+                 name=None,
                  interface=None):
+        if name is None:
+            name = material_a.name + '/' + material_b.name
+        super().__init__(name, _material_a=material_a, _material_b=material_b, fraction=fraction)
+        sld = weighted_average_sld(self._material_a.sld.raw_value, self._material_b.sld.raw_value, self.fraction.raw_value)
+        isld = weighted_average_sld(self._material_a.isld.raw_value, self._material_b.isld.raw_value, self.fraction.raw_value)
         default_options = deepcopy(MATERIAL_DEFAULTS)
         del default_options['sld']['value']
         del default_options['isld']['value']
-        sld = Parameter(
-            'sld',
-            weighted_average_sld(material_a.sld.raw_value, material_b.sld.raw_value,
-                                 fraction.raw_value), **default_options['sld'])
-        isld = Parameter(
-            'sld',
-            weighted_average_sld(material_a.isld.raw_value, material_b.isld.raw_value,
-                                 fraction.raw_value), **default_options['isld'])
-        constraint = FunctionalConstraint(sld, weighted_average_sld,
-                                          [material_a.sld, material_b.sld, fraction])
-        material_a.sld.user_constraints['sld'] = constraint
-        material_b.sld.user_constraints['sld'] = constraint
-        fraction.user_constraints['sld'] = constraint
-        iconstraint = FunctionalConstraint(isld, weighted_average_sld,
-                                           [material_a.isld, material_b.isld, fraction])
-        material_a.isld.user_constraints['isld'] = iconstraint
-        material_b.isld.user_constraints['isld'] = iconstraint
-        fraction.user_constraints['isld'] = iconstraint
-        super().__init__(sld, isld, name, interface)
-        self._add_component('material_a', material_a)
-        self._add_component('material_b', material_b)
-        self._add_component('fraction', fraction)
+        self._slds = [
+            Parameter('sld', sld, **default_options['sld']),
+            Parameter('isld', isld, **default_options['isld']),
+        ]
+        self._materials_constraints()
         self.interface = interface
+
+    def _get_linkable_attributes(self):
+        return self._slds
+
+    @property
+    def sld(self):
+        return self._slds[0]
+    
+    @property
+    def isld(self):
+        return self._slds[1]
+
+    def _materials_constraints(self):
+        self._slds[0].enabled = True
+        self._slds[1].enabled = True
+        constraint = FunctionalConstraint(self._slds[0], weighted_average_sld, [self._material_a.sld, self._material_b.sld, self.fraction])
+        self._material_a.sld.user_constraints['sld'] = constraint
+        self._material_b.sld.user_constraints['sld'] = constraint
+        self.fraction.user_constraints['sld'] = constraint
+        constraint()
+        iconstraint = FunctionalConstraint(self._slds[1], weighted_average_sld, [self._material_a.isld, self._material_b.isld, self.fraction])
+        self._material_a.isld.user_constraints['isld'] = iconstraint
+        self._material_b.isld.user_constraints['isld'] = iconstraint
+        self.fraction.user_constraints['isld'] = iconstraint
+        iconstraint()
+
+    @property
+    def material_a(self) -> Material:
+        """
+        :return: the first material.
+        """
+        return self._material_a
+
+    @material_a.setter
+    def material_a(self, new_material_a: Material):
+        """
+        Setter for material_a
+        
+        :param new_material_a: New material_a
+        """
+        self.name = new_material_a.name + '/' + self._material_b.name
+        self._material_a = new_material_a
+        self._materials_constraints()
+        if self.interface is not None:
+            self.interface.generate_bindings(self)
+
+    @property
+    def material_b(self) -> Material:
+        """
+        :return: the second material.
+        """
+        return self._material_b
+
+    @material_b.setter
+    def material_b(self, new_material_b: Material):
+        """
+        Setter for material_b
+        
+        :param new_material_b: New material_b
+        """
+        self.name = self._material_a.name + '/' + new_material_b.name
+        self._material_b = new_material_b
+        self._materials_constraints()
+        if self.interface is not None:
+            self.interface.generate_bindings(self)
 
     #Class constructors
     @classmethod
@@ -334,7 +409,7 @@ class MaterialMixture(Material):
                   material_a: Material,
                   material_b: Material,
                   fraction: float,
-                  name: str = "EasyMaterialMixture",
+                  name=None,
                   interface=None) -> "MaterialMixture":
         """
         Constructor of a mixture of two materials where the parameters are known. 
@@ -346,9 +421,7 @@ class MaterialMixture(Material):
         """
         default_options = deepcopy(MATERIALMIXTURE_DEFAULTS)
         del default_options['fraction']['value']
-
         fraction = Parameter('fraction', fraction, **default_options['fraction'])
-        default_options = deepcopy(MATERIAL_DEFAULTS)
 
         return cls(material_a=material_a,
                    material_b=material_b,
@@ -382,3 +455,21 @@ class MaterialMixture(Material):
                 'material2': self.material_b._dict_repr
             }
         }
+
+    def __repr__(self) -> str:
+        """
+        :return: Custom repr
+        """
+        return yaml.dump(self._dict_repr, sort_keys=False)
+
+    def as_dict(self, skip: list=[]) -> dict:
+        """
+        Custom as_dict method to skip necessary things.
+        
+        :return: Cleaned dictionary.
+        """
+        this_dict = super().as_dict(skip=skip)
+        this_dict['material_a'] = self._material_a
+        this_dict['material_b'] = self._material_b
+        del this_dict['_material_a'], this_dict['_material_b']
+        return this_dict

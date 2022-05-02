@@ -1,34 +1,46 @@
-[project]
+[build-system]
+requires = ["setuptools", "wheel", "poetry>=1.0"]
+build-backend = "poetry.masonry.api"
+
+[tool.coverage.run]
+source = ['EasyReflectometry']
+
+[tool.github.info]
+organization = 'easyScience'
+repo = 'EasyReflectometryLib'
+
+[tool.poetry]
+name = "EasyReflectometryLib"
+version = "0.0.2"
 description = "A reflectometry python package built on the EasyScience framework"
-authors = "AUTHORS.rst"
-license = "GPL-3.0-only"
+authors = ["Andrew R. McCluskey", "Andrew Sazonov", "Simon Ward"]
+license = "BSD-3-Clause"
 readme = "README.rst"
 homepage = "https://easyreflectometry.org"
 documentation = "https://EasyReflectometry.readthdocs.io"
-repository = "https://github.com/easyScience/EasyReflectometryLib"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering",
     "Development Status :: 3 - Alpha"
 ]
+packages = [ { include = "EasyReflectometry" } ]
 
-[dependencies]
-python = "^3.8"
-numpy = "^1.20, <1.21"
+[tool.poetry.dependencies]
+python = "^3.8,<3.10"
+easyScienceCore = { git = 'https://github.com/easyScience/easyCore.git', rev = 'mutlifitter' }
+#easyScienceCore = { path = '../easyCore'}
 refnx = "^0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx which use PEP 517 and cannot be installed directly"
 refl1d = "^0.8.14"
 scipp = "^0.11.1"
 orsopy = "^0.0.4"
-easyScienceCore = "^0.2.1"
 
-[dev-dependencies]
+[tool.poetry.dev-dependencies]
 pytest = "^5.2"
 yapf = "^0.31.0"
 toml = "^0.10"
 jupyter = "^1.0.0"
 
-[build-system]
-requires = ["setuptools >= 60.5.0", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.poetry.scripts]
+EasyReflectometryLib = "EasyReflectometry.main:main"

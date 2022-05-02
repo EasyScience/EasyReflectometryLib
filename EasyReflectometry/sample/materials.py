@@ -1,5 +1,4 @@
 __author__ = 'github.com/arm61'
-__version__ = '0.0.1'
 
 from copy import deepcopy
 from typing import List, Union, TypeVar
@@ -46,6 +45,13 @@ class Materials(BaseCollection):
         :rtype: Materials
         """
         return cls(*args, name=name, interface=interface)
+
+    @property
+    def names(self) -> List:
+        """
+        :returns: List of names for the materials.
+        """
+        return [i.name for i in self]
 
     # Representation
     @property

@@ -33,7 +33,7 @@ def neutron_scattering_length(formula: str) -> complex:
             inc = pt.elements.symbol(key).neutron.b_c_i
         else:
             inc = 0
-            scattering_length += inc * 1j * value
+        scattering_length += inc * 1j * value
     return scattering_length * 1e-5
 
 
