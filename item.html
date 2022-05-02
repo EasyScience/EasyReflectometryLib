@@ -4,11 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Items &#8212; EasyReflectometry 0.0.1 documentation</title>
     
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,22 +20,19 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.1/dist/embed-amd.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -46,7 +45,21 @@
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -55,14 +68,10 @@
     <div class="container-xl">
       <div class="row">
           
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
@@ -218,74 +227,123 @@
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
-<div class="sbt-scroll-pixel-helper"></div>
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            <div class="topbar-left">
-                
-                <label class="nav-toggle-button" for="__navigation">
-                    <div class="visually-hidden">Toggle navigation</div>
-                    <i class="fas fa-bars"></i>
-                </label>
-                
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
             </div>
             
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
 
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
         
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/item.rst.txt"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.rst</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/item.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
     </div>
 </div>
 
-            <!-- Source interaction buttons -->
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-        </div>
-    </div>
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Items</h1>
@@ -296,28 +354,29 @@
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
-  <div class="section" id="module-EasyReflectometry.sample.item">
-<span id="items"></span><h1>Items<a class="headerlink" href="#module-EasyReflectometry.sample.item" title="Permalink to this headline">¶</a></h1>
+  <section id="module-EasyReflectometry.sample.item">
+<span id="items"></span><h1>Items<a class="headerlink" href="#module-EasyReflectometry.sample.item" title="Permalink to this headline">#</a></h1>
 <p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">item</span></code> library is the backbone of <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code>.
 An <a class="reference internal" href="#module-EasyReflectometry.sample.item" title="EasyReflectometry.sample.item"><code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry.sample.item</span></code></a> allows for the inclusion of physical and
 chemical parameterisation into our reflectometry model.
 For more information please look at the <a href="#id6"><span class="problematic" id="id7">`item library documentation`_</span></a></p>
-<dl class="py class">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.MultiLayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.item.</span></span><span class="sig-name descname"><span class="pre">MultiLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMultiLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#MultiLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.MultiLayer" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-EasyReflectometry.sample.items.multilayer"></span><dl class="py class">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.multilayer.MultiLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.items.multilayer.</span></span><span class="sig-name descname"><span class="pre">MultiLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMultiLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/multilayer.html#MultiLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.multilayer.MultiLayer" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">easyCore.Objects.ObjectClasses.BaseObj</span></code></p>
-<p>A <a class="reference internal" href="#EasyReflectometry.sample.item.MultiLayer" title="EasyReflectometry.sample.item.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code></a> consists of a series of
+<p>A <a class="reference internal" href="#EasyReflectometry.sample.items.multilayer.MultiLayer" title="EasyReflectometry.sample.items.multilayer.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code></a> consists of a series of
 <a class="reference internal" href="layer.html#EasyReflectometry.sample.layer.Layer" title="EasyReflectometry.sample.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.layer.Layer</span></code></a> or
 <code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.layers.Layers</span></code>.
 This <code class="xref py py-mod docutils literal notranslate"><span class="pre">item</span></code> will arrange the layers as slabs, one on top of another,
 allowing the reflectometry to be determined from them.</p>
 <p>More information about the usage of this item is available in the <a href="#id8"><span class="problematic" id="id9">`item library documentation`_</span></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.MultiLayer.add_layer">
-<span class="sig-name descname"><span class="pre">add_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">layers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#MultiLayer.add_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.MultiLayer.add_layer" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.multilayer.MultiLayer.add_layer">
+<span class="sig-name descname"><span class="pre">add_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">layers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/multilayer.html#MultiLayer.add_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.add_layer" title="Permalink to this definition">#</a></dt>
 <dd><p>Add a layer to the item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -328,22 +387,22 @@ allowing the reflectometry to be determined from them.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.MultiLayer.default">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#MultiLayer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.MultiLayer.default" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.multilayer.MultiLayer.default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/multilayer.html#MultiLayer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.default" title="Permalink to this definition">#</a></dt>
 <dd><p>Default constructor for a multi-layer item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>MultiLayer container</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.item.MultiLayer" title="EasyReflectometry.sample.item.MultiLayer">MultiLayer</a></p>
+<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.items.multilayer.MultiLayer" title="EasyReflectometry.sample.items.multilayer.MultiLayer">MultiLayer</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.MultiLayer.duplicate_layer">
-<span class="sig-name descname"><span class="pre">duplicate_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#MultiLayer.duplicate_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.MultiLayer.duplicate_layer" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.multilayer.MultiLayer.duplicate_layer">
+<span class="sig-name descname"><span class="pre">duplicate_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/multilayer.html#MultiLayer.duplicate_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.duplicate_layer" title="Permalink to this definition">#</a></dt>
 <dd><p>Duplicate a given layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -353,8 +412,8 @@ allowing the reflectometry to be determined from them.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.MultiLayer.from_pars">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMultiLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#MultiLayer.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.MultiLayer.from_pars" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.multilayer.MultiLayer.from_pars">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMultiLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/multilayer.html#MultiLayer.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.from_pars" title="Permalink to this definition">#</a></dt>
 <dd><p>Constructor of a multi-layer item where the parameters are known.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -364,14 +423,14 @@ allowing the reflectometry to be determined from them.</p>
 <dd class="field-even"><p>MultiLayer container</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.sample.item.MultiLayer" title="EasyReflectometry.sample.item.MultiLayer">MultiLayer</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.sample.items.multilayer.MultiLayer" title="EasyReflectometry.sample.items.multilayer.MultiLayer">MultiLayer</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.MultiLayer.remove_layer">
-<span class="sig-name descname"><span class="pre">remove_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#MultiLayer.remove_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.MultiLayer.remove_layer" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.multilayer.MultiLayer.remove_layer">
+<span class="sig-name descname"><span class="pre">remove_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/multilayer.html#MultiLayer.remove_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.remove_layer" title="Permalink to this definition">#</a></dt>
 <dd><p>Remove a layer from the item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -381,35 +440,35 @@ allowing the reflectometry to be determined from them.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.MultiLayer.uid">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uid</span></span><a class="headerlink" href="#EasyReflectometry.sample.item.MultiLayer.uid" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.multilayer.MultiLayer.uid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uid</span></span><a class="headerlink" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.uid" title="Permalink to this definition">#</a></dt>
 <dd><p>Return a UID from the borg map</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.MultiLayer.user_data">
-<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.MultiLayer.user_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.multilayer.MultiLayer.user_data">
+<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.user_data" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.RepeatingMultiLayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.item.</span></span><span class="sig-name descname"><span class="pre">RepeatingMultiLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyRepeatingMultiLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#RepeatingMultiLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.RepeatingMultiLayer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#EasyReflectometry.sample.item.MultiLayer" title="EasyReflectometry.sample.item.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.item.MultiLayer</span></code></a></p>
-<p>A <a class="reference internal" href="#EasyReflectometry.sample.item.RepeatingMultiLayer" title="EasyReflectometry.sample.item.RepeatingMultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code></a> takes a <a class="reference internal" href="#EasyReflectometry.sample.item.MultiLayer" title="EasyReflectometry.sample.item.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code></a> and repeats
+<span class="target" id="module-EasyReflectometry.sample.items.repeating_multilayer"></span><dl class="py class">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.items.repeating_multilayer.</span></span><span class="sig-name descname"><span class="pre">RepeatingMultiLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyRepeatingMultiLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/repeating_multilayer.html#RepeatingMultiLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#EasyReflectometry.sample.items.multilayer.MultiLayer" title="EasyReflectometry.sample.items.multilayer.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.items.multilayer.MultiLayer</span></code></a></p>
+<p>A <a class="reference internal" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer" title="EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code></a> takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code> and repeats
 it a some number of times. This enables a computational efficiency in many
 reflectometry engines as the operation can be performed for a single
-<a class="reference internal" href="#EasyReflectometry.sample.item.MultiLayer" title="EasyReflectometry.sample.item.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code></a> and cheaply combined for the appropriate number of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code> and cheaply combined for the appropriate number of
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">repetitions</span></code>.</p>
 <p>More information about the usage of this item is available in the <a href="#id10"><span class="problematic" id="id11">`item library documentation`_</span></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.RepeatingMultiLayer.default">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#RepeatingMultiLayer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.RepeatingMultiLayer.default" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/repeating_multilayer.html#RepeatingMultiLayer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.default" title="Permalink to this definition">#</a></dt>
 <dd><p>Default constructor for the reflectometry repeating multi layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.sample.item.RepeatingMultiLayer" title="EasyReflectometry.sample.item.RepeatingMultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer" title="EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code></a></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Default repeating multi-layer container</p>
@@ -418,8 +477,8 @@ reflectometry engines as the operation can be performed for a single
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.RepeatingMultiLayer.from_pars">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyRepeatingMultiLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#RepeatingMultiLayer.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.RepeatingMultiLayer.from_pars" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.from_pars">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyRepeatingMultiLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/repeating_multilayer.html#RepeatingMultiLayer.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.from_pars" title="Permalink to this definition">#</a></dt>
 <dd><p>Constructor of a reflectometry repeating multi layer where the parameters are known.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -429,7 +488,7 @@ reflectometry engines as the operation can be performed for a single
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.item.RepeatingMultiLayer" title="EasyReflectometry.sample.item.RepeatingMultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer" title="EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code></a></p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Repeating multi-layer container</p>
@@ -438,8 +497,8 @@ reflectometry engines as the operation can be performed for a single
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.RepeatingMultiLayer.uid">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.RepeatingMultiLayer.uid" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.uid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.uid" title="Permalink to this definition">#</a></dt>
 <dd><p>UID from the borg map</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -452,24 +511,24 @@ reflectometry engines as the operation can be performed for a single
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.RepeatingMultiLayer.user_data">
-<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.RepeatingMultiLayer.user_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.user_data">
+<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.user_data" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.item.</span></span><span class="sig-name descname"><span class="pre">SurfactantLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasySurfactantLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#SurfactantLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#EasyReflectometry.sample.item.MultiLayer" title="EasyReflectometry.sample.item.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.item.MultiLayer</span></code></a></p>
-<p>A <a class="reference internal" href="#EasyReflectometry.sample.item.SurfactantLayer" title="EasyReflectometry.sample.item.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a> constructs a series of layers representing the head and tail
+<span class="target" id="module-EasyReflectometry.sample.items.surfactant_layer"></span><dl class="py class">
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.items.surfactant_layer.</span></span><span class="sig-name descname"><span class="pre">SurfactantLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasySurfactantLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_per_molecule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/surfactant_layer.html#SurfactantLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#EasyReflectometry.sample.items.multilayer.MultiLayer" title="EasyReflectometry.sample.items.multilayer.MultiLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.items.multilayer.MultiLayer</span></code></a></p>
+<p>A <a class="reference internal" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer" title="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a> constructs a series of layers representing the head and tail
 groups of a surfactant. This item allows the definition of a surfactant or lipid using the
 chemistry of the head and tail regions, additionally this approach will make the application of
 constraints such as conformal roughness or area per molecule more straight forward.</p>
 <p>More information about the usage of this item is available in the <a href="#id12"><span class="problematic" id="id13">`item library documentation`_</span></a></p>
 <dl class="py property">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.conformal_roughness">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">conformal_roughness</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.conformal_roughness" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.conformal_roughness">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">conformal_roughness</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.conformal_roughness" title="Permalink to this definition">#</a></dt>
 <dd><p>is the roughness is the same for both layers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -482,19 +541,19 @@ constraints such as conformal roughness or area per molecule more straight forwa
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.constain_multiple_contrast">
-<span class="sig-name descname"><span class="pre">constain_multiple_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">another_contrast</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_area_per_molecule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_area_per_molecule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#SurfactantLayer.constain_multiple_contrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.constain_multiple_contrast" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constain_multiple_contrast">
+<span class="sig-name descname"><span class="pre">constain_multiple_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">another_contrast</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer1_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer1_area_per_molecule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2_area_per_molecule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer1_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/surfactant_layer.html#SurfactantLayer.constain_multiple_contrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constain_multiple_contrast" title="Permalink to this definition">#</a></dt>
 <dd><p>Constrain structural parameters between surfactant layer objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>another_contrast</strong> (<a class="reference internal" href="#EasyReflectometry.sample.item.SurfactantLayer" title="EasyReflectometry.sample.item.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a>) – The surfactant layer to constrain</p>
+<dd class="field-odd"><p><strong>another_contrast</strong> (<a class="reference internal" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer" title="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a>) – The surfactant layer to constrain</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.constrain_apm">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constrain_apm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.constrain_apm" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constrain_apm">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constrain_apm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constrain_apm" title="Permalink to this definition">#</a></dt>
 <dd><p>if the area per molecule is constrained</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -507,8 +566,8 @@ constraints such as conformal roughness or area per molecule more straight forwa
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.constrain_solvent_roughness">
-<span class="sig-name descname"><span class="pre">constrain_solvent_roughness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solvent_roughness</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#SurfactantLayer.constrain_solvent_roughness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.constrain_solvent_roughness" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constrain_solvent_roughness">
+<span class="sig-name descname"><span class="pre">constrain_solvent_roughness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solvent_roughness</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/surfactant_layer.html#SurfactantLayer.constrain_solvent_roughness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constrain_solvent_roughness" title="Permalink to this definition">#</a></dt>
 <dd><p>Add the constraint to the solvent roughness.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -518,12 +577,12 @@ constraints such as conformal roughness or area per molecule more straight forwa
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.default">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#SurfactantLayer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.default" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/surfactant_layer.html#SurfactantLayer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.default" title="Permalink to this definition">#</a></dt>
 <dd><p>Default constructor for a surfactant layer object. The default lipid type is DPPC.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.sample.item.SurfactantLayer" title="EasyReflectometry.sample.item.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer" title="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Surfactant layer object.</p>
@@ -532,49 +591,51 @@ constraints such as conformal roughness or area per molecule more straight forwa
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.from_pars">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">head_chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_solvation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_solvation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasySurfactantLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/item.html#SurfactantLayer.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.from_pars" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor for the surfactant layer where the parameters are known.</p>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.from_pars">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer1_chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer1_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer1_solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer1_solvation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer1_area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer1_roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2_chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2_solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2_solvation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2_area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2_roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasySurfactantLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/surfactant_layer.html#SurfactantLayer.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.from_pars" title="Permalink to this definition">#</a></dt>
+<dd><p>Constructor for the surfactant layer where the parameters are known, layer1 is that
+which the neutrons interact with first.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>head_chemical_structure</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Chemical formula for surfactant head</p></li>
-<li><p><strong>head_thickness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Thicknkess of head group</p></li>
-<li><p><strong>head_solvent</strong> (<a class="reference internal" href="material.html#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a>) – Solvent in head group</p></li>
-<li><p><strong>head_solvation</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Fractional solvation of head group by <code class="xref py py-attr docutils literal notranslate"><span class="pre">head_solvent</span></code></p></li>
-<li><p><strong>head_area_per_molecule</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Area per molecule of head group</p></li>
-<li><p><strong>head_roughness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Roughness of head group layer</p></li>
-<li><p><strong>tail_chemical_structure</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Chemical formula for surfactant tail</p></li>
-<li><p><strong>tail_thickness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Thicknkess of tail group</p></li>
-<li><p><strong>tail_solvent</strong> (<a class="reference internal" href="material.html#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a>) – Solvent in tail group</p></li>
-<li><p><strong>tail_solvation</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Fractional solvation of tail group by <code class="xref py py-attr docutils literal notranslate"><span class="pre">tail_solvent</span></code></p></li>
-<li><p><strong>tail_area_per_molecule</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Area per molecule of tail group</p></li>
-<li><p><strong>tail_roughness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Roughness of tail group layer</p></li>
-<li><p><strong>flip</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Should the surfactant layer be flipped over</p></li>
+<li><p><strong>layer1_chemical_structure</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Chemical formula for first layer</p></li>
+<li><p><strong>layer1_thickness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Thicknkess of first layer</p></li>
+<li><p><strong>layer1_solvent</strong> (<a class="reference internal" href="material.html#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a>) – Solvent in first layer</p></li>
+<li><p><strong>layer1_solvation</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Fractional solvation of first layer by <code class="xref py py-attr docutils literal notranslate"><span class="pre">layer1_solvent</span></code></p></li>
+<li><p><strong>layer1_area_per_molecule</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Area per molecule of first layer</p></li>
+<li><p><strong>layer1_roughness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Roughness of first layer</p></li>
+<li><p><strong>layer2_chemical_structure</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Chemical formula for second layer</p></li>
+<li><p><strong>layer2_thickness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Thicknkess of second layer</p></li>
+<li><p><strong>layer2_solvent</strong> (<a class="reference internal" href="material.html#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a>) – Solvent in second layer</p></li>
+<li><p><strong>layer2_solvation</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Fractional solvation of second layer by <code class="xref py py-attr docutils literal notranslate"><span class="pre">layer2_solvent</span></code></p></li>
+<li><p><strong>layer2_area_per_molecule</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Area per molecule of second layer</p></li>
+<li><p><strong>layer2_roughness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Roughness of second layer</p></li>
 <li><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name for surfactant layer</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.item.SurfactantLayer" title="EasyReflectometry.sample.item.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer" title="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.item.SurfactantLayer.user_data">
-<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.item.SurfactantLayer.user_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.user_data">
+<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.user_data" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="modules.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -590,24 +651,28 @@ constraints such as conformal roughness or area per molecule more straight forwa
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By EasyReflectometry<br/>
+  
+      &copy; Copyright 2022, EasyReflectometry.<br/>
+</p>
+        </footer>
+    </div>
     
-      By EasyReflectometry<br/>
-    
-        &copy; Copyright 2022, EasyReflectometry.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>
