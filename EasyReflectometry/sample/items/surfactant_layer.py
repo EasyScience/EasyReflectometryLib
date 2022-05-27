@@ -25,8 +25,8 @@ class SurfactantLayer(MultiLayer):
     def __init__(self,
                  layers: List[LayerApm],
                  name: str = 'EasySurfactantLayer',
-                 area_per_molecule=None,
-                 roughness=None,
+                 constrain_apm: bool = False,
+                 conformal_roughness: bool = False,
                  interface=None):
         """
         :param head: Head layer object
@@ -38,22 +38,14 @@ class SurfactantLayer(MultiLayer):
 
         self.interface = interface
         self.type = "Surfactant Layer"
-        self.area_per_molecule = None
-        if area_per_molecule is not None:
-            self.layers[0].area_per_molecule.enabled = True
-            self.layers[1].area_per_molecule.enabled = True
-            self.constrain_apm = area_per_molecule.enabled
-            self.area_per_molecule = area_per_molecule
-            self.layers[0].area_per_molecule.enabled = False
-            self.layers[1].area_per_molecule.enabled = False
-        self.roughness = None
-        if roughness is not None:
-            self.layers[0].roughness.enabled = True
-            self.layers[1].roughness.enabled = True
-            self.conformal_roughness = roughness.enabled
-            self.roughness = roughness
-            self.layers[0].roughness.enabled = False
-            self.layers[1].roughness.enabled = False
+        self.layers[1].area_per_molecule.enabled = True
+        apm = ObjConstraint(self.layers[1].area_per_molecule, '', self.layers[0].area_per_molecule)
+        self.layers[0].area_per_molecule.user_constraints['apm'] = apm
+        self.layers[0].area_per_molecule.user_constraints['apm'].enabled = constrain_apm 
+        self.layers[1].roughness.enabled = True
+        roughness = ObjConstraint(self.layers[1].roughness, '', self.layers[0].roughness)
+        self.layers[0].roughness.user_constraints['roughness'] = roughness
+        self.layers[0].roughness.user_constraints['roughness'].enabled = conformal_roughness
 
     # Class constructors
     @classmethod
@@ -124,9 +116,7 @@ class SurfactantLayer(MultiLayer):
         """
         :return: if the area per molecule is constrained
         """
-        if self.area_per_molecule is None:
-            return False
-        return (self.area_per_molecule.user_constraints['apm1'].enabled and self.area_per_molecule.user_constraints['apm2'].enabled)
+        return self.layers[0].area_per_molecule.user_constraints['apm'].enabled
 
     @constrain_apm.setter
     def constrain_apm(self, x: bool):
@@ -135,47 +125,23 @@ class SurfactantLayer(MultiLayer):
 
         :param x: Boolean description the presence of the constraint.
         """
-        if self.area_per_molecule is None:
-            default_options = deepcopy(LAYERAPM_DETAILS)
-            del default_options['area_per_molecule']['value']
-            area_per_molecule = Parameter('area_per_molecule', self.layers[0].area_per_molecule.raw_value, **default_options['area_per_molecule'])
-            self._add_component('area_per_molecule', area_per_molecule)
-            self.layers[1].area_per_molecule.value = self.layers[0].area_per_molecule.raw_value
-            apm1 = ObjConstraint(self.layers[0].area_per_molecule, '', self.area_per_molecule)
-            apm2 = ObjConstraint(self.layers[1].area_per_molecule, '', self.area_per_molecule)
-            self.area_per_molecule.user_constraints['apm1'] = apm1
-            self.area_per_molecule.user_constraints['apm2'] = apm2
-        self.area_per_molecule.user_constraints['apm1'].enabled = x
-        self.area_per_molecule.user_constraints['apm2'].enabled = x
-        self.area_per_molecule.enabled = x
+        self.layers[0].area_per_molecule.user_constraints['apm'].enabled = x
+        self.layers[0].area_per_molecule.value = self.layers[0].area_per_molecule.raw_value
 
     @property
     def conformal_roughness(self) -> bool:
         """
         :return: is the roughness is the same for both layers.
         """
-        if self.roughness is None:
-            return False
-        return (self.roughness.user_constraints['roughness1'].enabled and self.roughness.user_constraints['roughness2'].enabled)
+        return self.layers[0].roughness.user_constraints['roughness'].enabled
 
     @conformal_roughness.setter
     def conformal_roughness(self, x: bool):
         """
         Set the roughness to be the same for both layers.
         """
-        if self.roughness is None:
-            default_options = deepcopy(LAYERAPM_DETAILS)
-            del default_options['roughness']['value']
-            roughness = Parameter('roughness', self.layers[0].roughness.raw_value, **default_options['roughness'])
-            self._add_component('roughness', roughness)
-            self.layers[1].roughness.value = self.layers[0].roughness.raw_value
-            roughness1 = ObjConstraint(self.layers[0].roughness, '', self.roughness)
-            roughness2 = ObjConstraint(self.layers[1].roughness, '', self.roughness)
-            self.roughness.user_constraints['roughness1'] = roughness1
-            self.roughness.user_constraints['roughness2'] = roughness2
-        self.roughness.user_constraints['roughness1'].enabled = x
-        self.roughness.user_constraints['roughness2'].enabled = x
-        self.roughness.enabled = x
+        self.layers[0].roughness.user_constraints['roughness'].enabled = x
+        self.layers[0].roughness.value = self.layers[0].roughness.raw_value
 
     def constrain_solvent_roughness(self, solvent_roughness: Parameter):
         """
@@ -185,9 +151,9 @@ class SurfactantLayer(MultiLayer):
         """
         if not self.conformal_roughness:
             raise ValueError("Roughness must be conformal to use this function.")
-        solvent_roughness.value = self.roughness.value
-        rough = ObjConstraint(solvent_roughness, '', self.roughness)
-        self.roughness.user_constraints['solvent_roughness'] = rough
+        solvent_roughness.value = self.layers[0].roughness.value
+        rough = ObjConstraint(solvent_roughness, '', self.layers[0].roughness)
+        self.layers[0].roughness.user_constraints['solvent_roughness'] = rough
 
     def constain_multiple_contrast(self,
                                    another_contrast: 'SurfactantLayer',
@@ -250,3 +216,14 @@ class SurfactantLayer(MultiLayer):
             'area per molecule constrained': self.constrain_apm,
             'conformal roughness': self.conformal_roughness
         }
+
+    def as_dict(self, skip: list=[]) -> dict:
+        """
+        Custom as_dict method to skip necessary things.
+        
+        :return: Cleaned dictionary.
+        """
+        this_dict = super().as_dict(skip=skip)
+        this_dict['constrain_apm'] = self.constrain_apm
+        this_dict['conformal_roughness'] = self.conformal_roughness
+        return this_dict

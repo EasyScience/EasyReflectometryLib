@@ -66,12 +66,10 @@ class TestSurfactantLayer(unittest.TestCase):
         p.constrain_apm = True
         assert p.layers[0].area_per_molecule.raw_value == 30
         assert p.layers[1].area_per_molecule.raw_value == 30
-        assert p.area_per_molecule.raw_value == 30
         assert p.constrain_apm == True
-        p.area_per_molecule.value = 40
+        p.layers[0].area_per_molecule.value = 40
         assert p.layers[0].area_per_molecule.raw_value == 40
         assert p.layers[1].area_per_molecule.raw_value == 40
-        assert p.area_per_molecule.raw_value == 40
 
     def test_conformal_roughness(self):
         p = SurfactantLayer.default()
@@ -81,12 +79,10 @@ class TestSurfactantLayer(unittest.TestCase):
         p.conformal_roughness = True
         assert p.layers[0].roughness.raw_value == 2
         assert p.layers[1].roughness.raw_value == 2
-        assert p.roughness.raw_value == 2
         assert p.conformal_roughness == True
-        p.roughness.value = 4
+        p.layers[0].roughness.value = 4
         assert p.layers[0].roughness.raw_value == 4
         assert p.layers[1].roughness.raw_value == 4
-        assert p.roughness.raw_value == 4
 
     def test_constain_solvent_roughness(self):
         p = SurfactantLayer.default()
@@ -99,13 +95,11 @@ class TestSurfactantLayer(unittest.TestCase):
         p.constrain_solvent_roughness(l.roughness)
         assert p.layers[0].roughness.raw_value == 2
         assert p.layers[1].roughness.raw_value == 2
-        assert p.roughness.raw_value == 2
         assert l.roughness.raw_value == 2
         assert p.conformal_roughness == True
-        p.roughness.value = 4
+        p.layers[0].roughness.value = 4
         assert p.layers[0].roughness.raw_value == 4
         assert p.layers[1].roughness.raw_value == 4
-        assert p.roughness.raw_value == 4
         assert l.roughness.raw_value == 4
 
     def test_dict_repr(self):
@@ -178,6 +172,7 @@ class TestSurfactantLayer(unittest.TestCase):
     def test_dict_round_trip_apm(self):
         p = SurfactantLayer.default()
         p.constrain_apm = True
+        print(p.as_dict())
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.to_data_dict() == q.to_data_dict()
     
