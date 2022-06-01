@@ -36,8 +36,8 @@ class TestRefl1d(unittest.TestCase):
         p.calculator.update_material('Material2', rho=2.000, irho=0.000)
         p.calculator.create_material('Material3')
         p.calculator.update_material('Material3', rho=4.000, irho=0.000)
-        p.calculator.create_model()
-        p.calculator.update_model('model', bkg=1e-7, dq=5.0)
+        p.calculator.create_model('MyModel')
+        p.calculator.update_model('MyModel', bkg=1e-7, dq=5.0)
         p.calculator.create_layer('Layer1')
         p.calculator.assign_material_to_layer('Material1', 'Layer1')
         p.calculator.create_layer('Layer2')
@@ -50,13 +50,13 @@ class TestRefl1d(unittest.TestCase):
         p.calculator.add_layer_to_item('Layer1', 'Item')
         p.calculator.add_layer_to_item('Layer2', 'Item')
         p.calculator.add_layer_to_item('Layer3', 'Item')
-        p.calculator.add_item('Item')
+        p.calculator.add_item('Item', 'MyModel')
         q = np.linspace(0.001, 0.3, 10)
         expected = [
             1.0000001e+00, 2.1749216e-03, 1.1433942e-04, 1.9337269e-05, 4.9503970e-06,
             1.5447182e-06, 5.4663919e-07, 2.2701724e-07, 1.2687053e-07, 1.0188127e-07
         ]
-        assert_almost_equal(p.fit_func(q), expected)
+        assert_almost_equal(p.fit_func(q, 'MyModel'), expected)
 
     def test_calculate2(self):
         p = Refl1d()
@@ -66,8 +66,8 @@ class TestRefl1d(unittest.TestCase):
         p.calculator.update_material('Material2', rho=2.000, irho=0.000)
         p.calculator.create_material('Material3')
         p.calculator.update_material('Material3', rho=4.000, irho=0.000)
-        p.calculator.create_model()
-        p.calculator.update_model('model', bkg=1e-7, dq=5.0)
+        p.calculator.create_model('MyModel')
+        p.calculator.update_model('MyModel', bkg=1e-7, dq=5.0)
         p.calculator.create_layer('Layer1')
         p.calculator.assign_material_to_layer('Material1', 'Layer1')
         p.calculator.create_layer('Layer2')
@@ -83,16 +83,16 @@ class TestRefl1d(unittest.TestCase):
         p.calculator.add_layer_to_item('Layer1', 'Item2')
         p.calculator.create_item('Item3')
         p.calculator.add_layer_to_item('Layer3', 'Item3')
-        p.calculator.add_item('Item1')
-        p.calculator.add_item('Item2')
-        p.calculator.add_item('Item3')
+        p.calculator.add_item('Item1', 'MyModel')
+        p.calculator.add_item('Item2', 'MyModel')
+        p.calculator.add_item('Item3', 'MyModel')
         p.calculator.update_item('Item2', repeat=10)
         q = np.linspace(0.001, 0.3, 10)
         expected = [
             1.0000001e+00, 1.8923350e-05, 1.2274125e-04, 2.4073165e-06, 6.7232911e-06,
             8.3051185e-07, 1.1546344e-06, 4.1351306e-07, 3.5132221e-07, 2.5347996e-07
         ]
-        assert_almost_equal(p.fit_func(q), expected)
+        assert_almost_equal(p.fit_func(q, 'MyModel'), expected)
 
     def test_sld_profile(self):
         p = Refl1d()
@@ -102,8 +102,8 @@ class TestRefl1d(unittest.TestCase):
         p.calculator.update_material('Material2', rho=2.000, irho=0.000)
         p.calculator.create_material('Material3')
         p.calculator.update_material('Material3', rho=4.000, irho=0.000)
-        p.calculator.create_model()
-        p.calculator.update_model('model', bkg=1e-7, dq=5.0)
+        p.calculator.create_model('MyModel')
+        p.calculator.update_model('MyModel', bkg=1e-7, dq=5.0)
         p.calculator.create_layer('Layer1')
         p.calculator.assign_material_to_layer('Material1', 'Layer1')
         p.calculator.create_layer('Layer2')
@@ -116,6 +116,6 @@ class TestRefl1d(unittest.TestCase):
         p.calculator.add_layer_to_item('Layer1', 'Item')
         p.calculator.add_layer_to_item('Layer2', 'Item')
         p.calculator.add_layer_to_item('Layer3', 'Item')
-        p.calculator.add_item('Item')
-        assert_almost_equal(p.sld_profile()[1][0], 0)
-        assert_almost_equal(p.sld_profile()[1][-1], 4)
+        p.calculator.add_item('Item', 'MyModel')
+        assert_almost_equal(p.sld_profile('MyModel')[1][0], 0)
+        assert_almost_equal(p.sld_profile('MyModel')[1][-1], 4)

@@ -38,7 +38,7 @@ class InterfaceTemplate(MSONable, metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def fit_func(self, x_array: np.ndarray) -> np.ndarray:
+    def fit_func(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
         """
         Function to perform a fit
 
@@ -50,5 +50,5 @@ class InterfaceTemplate(MSONable, metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def sld_profile(self) -> tuple:
+    def sld_profile(self, model_id: str) -> tuple:
         pass

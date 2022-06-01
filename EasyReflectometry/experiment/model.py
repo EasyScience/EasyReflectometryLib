@@ -118,7 +118,7 @@ class Model(BaseObj):
             if issubclass(arg.__class__, MultiLayer):
                 self.structure.append(arg)
                 if self.interface is not None:
-                    self.interface().add_item_to_model(arg.uid)
+                    self.interface().add_item_to_model(arg.uid, self.uid)
 
     def duplicate_item(self, idx: int):
         """
@@ -148,7 +148,7 @@ class Model(BaseObj):
         :type idx: int
         """
         if self.interface is not None:
-            self.interface().remove_item_from_model(self.structure[idx].uid)
+            self.interface().remove_item_from_model(self.structure[idx].uid, self.uid)
         del self.structure[idx]
 
     @property

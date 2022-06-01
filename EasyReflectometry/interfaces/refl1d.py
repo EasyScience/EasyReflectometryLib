@@ -82,13 +82,14 @@ class Refl1d(InterfaceTemplate):
             for i in model.layers:
                 self.add_layer_to_item(i.uid, model.uid)
         elif issubclass(t_, Model):
-            self.calculator.create_model()
+            key = model.uid
+            self.calculator.create_model(key)
             r_list.append(
-                ItemContainer('model', self._model_link,
+                ItemContainer(key, self._model_link,
                               self.calculator.get_model_value,
                               self.calculator.update_model))
             for i in model.structure:
-                self.add_item_to_model(i.uid)
+                self.add_item_to_model(i.uid, key)
         return r_list
 
     def assign_material_to_layer(self, material_id: int, layer_id: int):
@@ -124,25 +125,25 @@ class Refl1d(InterfaceTemplate):
         """
         self.calculator.remove_layer_from_item(layer_id, item_id)
 
-    def add_item_to_model(self, item_id: int):
+    def add_item_to_model(self, item_id: str, model_id: str):
         """
         Add a layer to the item stack
 
         :param item_id: The item id
         :type item_id: int
         """
-        self.calculator.add_item(item_id)
+        self.calculator.add_item(item_id, model_id)
 
-    def remove_item_from_model(self, item_id: int):
+    def remove_item_from_model(self, item_id: str, model_id: str):
         """
         Remove a layer from the item stack
 
         :param item_id: The item id
         :type item_id: int
         """
-        self.calculator.remove_item(item_id)
+        self.calculator.remove_item(item_id, model_id)
 
-    def fit_func(self, x_array: np.ndarray) -> np.ndarray:
+    def fit_func(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
         """
         Function to perform a fit
         :param x_array: points to be calculated at
@@ -150,13 +151,13 @@ class Refl1d(InterfaceTemplate):
         :return: calculated points
         :rtype: np.ndarray
         """
-        return self.calculator.calculate(x_array)
+        return self.calculator.calculate(x_array, model_id)
 
-    def sld_profile(self) -> tuple:
+    def sld_profile(self, model_id: str) -> tuple:
         """
         Return the scattering length density profile.
 
         :return: z and sld(z)
         :rtype: tuple[np.ndarray, np.ndarray]
         """
-        return self.calculator.sld_profile()
+        return self.calculator.sld_profile(model_id)
