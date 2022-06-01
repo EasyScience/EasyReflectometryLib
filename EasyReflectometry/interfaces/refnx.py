@@ -38,14 +38,12 @@ class Refnx(InterfaceTemplate):
         """
         self.calculator.reset_storage()
 
-    def create(self, model):
+    def create(self, model: Union[Material, Layer, MultiLayer, Model]) -> List[ItemContainer]:
         """
         Creation function
 
         :param model: Object to be created
-        :type model: Union[Material, Layer, Item, Model]
         :return: Item containers of the objects
-        :rtype: List[ItemContainer]
         """
         r_list = []
         t_ = type(model)
@@ -92,25 +90,21 @@ class Refnx(InterfaceTemplate):
                 self.add_item_to_model(i.uid, key)
         return r_list
 
-    def assign_material_to_layer(self, material_id: int, layer_id: int):
+    def assign_material_to_layer(self, material_id: str, layer_id: str):
         """
         Assign a material to a layer.
 
         :param material_name: The material name
-        :type material_name: str
         :param layer_name: The layer name
-        :type layer_name: str
         """
         self.calculator.assign_material_to_layer(material_id, layer_id)
 
-    def add_layer_to_item(self, layer_id: int, item_id: int):
+    def add_layer_to_item(self, layer_id: str, item_id: str):
         """
         Add a layer to the item stack
 
         :param item_id: The item id
-        :type item_id: int
         :param layer_id: The layer id
-        :type layer_id: int
         """
         self.calculator.add_layer_to_item(layer_id, item_id)
 
@@ -141,12 +135,12 @@ class Refnx(InterfaceTemplate):
         """
         self.calculator.remove_item(item_id, model_id)
 
-    def change_item_to_repeating_multi_layer(self, item_id: int, old_id: int):
+    def change_item_to_repeating_multi_layer(self, item_id: str, old_id: str):
         """
         Change a given item to a repeating multi layer
         
         :param item_name: The item name
-        :type item_name: int
+        :param old_id: id of old item
         """
         self.calculator.change_item_to_repeating_multi_layer(item_id, old_id)
 

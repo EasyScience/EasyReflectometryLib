@@ -27,109 +27,94 @@ class Refnx:
             'model': {}  # reflect.ReflectModel(reflect.Structure())
         }
 
-    def create_material(self, name):
+    def create_material(self, name: str):
         """
         Create a material using SLD.
 
         :param name: The name of the material
-        :type name: str
         """
         self.storage['material'][name] = reflect.SLD(0, name=name)
 
-    def update_material(self, name, **kwargs):
+    def update_material(self, name: str, **kwargs):
         """
         Update a material.
 
         :param name: The name of the material
-        :type name: str
         """
         material = self.storage['material'][name]
         for key in kwargs.keys():
             item = getattr(material, key)
             setattr(item, 'value', kwargs[key])
 
-    def get_material_value(self, name, key):
+    def get_material_value(self, name: str, key: str) -> float:
         """
         A function to get a given material value
 
         :param name: The material name
-        :type name: str
         :param key: The given value keys
-        :type name: str
         :return: The desired value
-        :rtype: float
         """
         material = self.storage['material'][name]
         item = getattr(material, key)
         return getattr(item, 'value')
 
-    def create_layer(self, name):
+    def create_layer(self, name: str):
         """
         Create a layer using Slab.
 
         :param name: The name of the layer
-        :type name: str
         """
         self.storage['layer'][name] = reflect.Slab(0, 0, 0, name=name)
 
-    def update_layer(self, name, **kwargs):
+    def update_layer(self, name: str, **kwargs):
         """
         Update a layer in a given item.
 
         :param name: The layer name
-        :type name: str
         """
         layer = self.storage['layer'][name]
         for key in kwargs.keys():
             ii = getattr(layer, key)
             setattr(ii, 'value', kwargs[key])
 
-    def get_layer_value(self, name, key):
+    def get_layer_value(self, name: str, key: str) -> float:
         """
         A function to get a given layer value
 
         :param name: The layer name
-        :type name: str
         :param key: The given value keys
-        :type name: str
         :return: The desired value
-        :rtype: float
         """
         layer = self.storage['layer'][name]
         ii = getattr(layer, key)
         return getattr(ii, 'value')
 
-    def create_item(self, name):
+    def create_item(self, name: str):
         """
         Create an item using Stack.
 
         :param name: The name of the item
-        :type name: str
         """
         self.storage['item'][name] = reflect.Stack(name=name)
 
-    def update_item(self, name, **kwargs):
+    def update_item(self, name: str, **kwargs):
         """
         Update a layer.
 
         :param name: The item name
-        :type name: str
         """
         item = self.storage['item'][name]
         for key in kwargs.keys():
             ii = getattr(item, key)
             setattr(ii, 'value', kwargs[key])
 
-    def get_item_value(self, name, key):
+    def get_item_value(self, name: str, key: str) -> float:
         """
         A function to get a given item value
 
         :param name: The item name
-        :type name: str
         :param key: The given value keys
-        :type name: str
         :return: The desired value
-        :rtype: float
         """
         item = self.storage['item'][name]
         item = getattr(item, key)
@@ -166,25 +151,21 @@ class Refnx:
         item = getattr(model, key)
         return getattr(item, 'value')
 
-    def assign_material_to_layer(self, material_name, layer_name):
+    def assign_material_to_layer(self, material_name: str, layer_name: str):
         """
         Assign a material to a layer.
 
         :param material_name: The material name
-        :type material_name: str
         :param layer_name: The layer name
-        :type layer_name: str
         """
         self.storage['layer'][layer_name].sld = self.storage['material'][material_name]
 
-    def add_layer_to_item(self, layer_name, item_name):
+    def add_layer_to_item(self, layer_name: str, item_name: str):
         """
         Create a layer from the material of the same name, in a given item.
 
         :param layer_name: The layer name
-        :type layer_name: int
         :param item_name: The item name
-        :type item_name: int
         """
         item = self.storage['item'][item_name]
         item.append(self.storage['layer'][layer_name])
@@ -199,14 +180,12 @@ class Refnx:
         self.storage['model'][model_name].structure.components.append(
             self.storage['item'][item_name])
 
-    def remove_layer_from_item(self, layer_name, item_name):
+    def remove_layer_from_item(self, layer_name: str, item_name: str):
         """
         Remove a layer in a given item.
 
         :param layer_name: The layer name
-        :type layer_name: int
         :param item_name: The item name
-        :type item_name: int
         """
         layer_idx = self.storage['item'][item_name].components.index(
             self.storage['layer'][layer_name])
@@ -249,12 +228,11 @@ class Refnx:
         return _remove_unecessary_stacks(self.storage['model'][model_name].structure).sld_profile()
 
 
-def _remove_unecessary_stacks(current_structure):
+def _remove_unecessary_stacks(current_structure: reflect.Structure) -> reflect.Structure:
     """
     Removed unnecessary reflect.Stack objects from the structure.
 
     :param current_structure: The current structure
-    :type current_structure: reflect.Structure
     :return: The structre without the unnecessary Stacks
     :rtype: reflect.structure
     """
