@@ -1,6 +1,6 @@
 __author__ = "github.com/arm61"
 
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import numpy as np
 
