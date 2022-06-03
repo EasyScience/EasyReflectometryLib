@@ -1,6 +1,6 @@
 __author__ = "github.com/arm61"
 
-from typing import List
+from typing import List, Tuple, Union
 
 import numpy as np
 
@@ -38,14 +38,12 @@ class Refl1d(InterfaceTemplate):
         """
         self.calculator.reset_storage()
 
-    def create(self, model):
+    def create(self, model: Union[Material, Layer, MultiLayer, Model]) -> List[ItemContainer]:
         """
         Creation function
 
         :param model: Object to be created
-        :type model: Union[Material, Layer, Item, Model]
         :return: Item containers of the objects
-        :rtype: List[ItemContainer]
         """
         r_list = []
         t_ = type(model)
@@ -82,81 +80,75 @@ class Refl1d(InterfaceTemplate):
             for i in model.layers:
                 self.add_layer_to_item(i.uid, model.uid)
         elif issubclass(t_, Model):
-            self.calculator.create_model()
+            key = model.uid
+            self.calculator.create_model(key)
             r_list.append(
-                ItemContainer('model', self._model_link,
+                ItemContainer(key, self._model_link,
                               self.calculator.get_model_value,
                               self.calculator.update_model))
             for i in model.structure:
-                self.add_item_to_model(i.uid)
+                self.add_item_to_model(i.uid, key)
         return r_list
 
-    def assign_material_to_layer(self, material_id: int, layer_id: int):
+    def assign_material_to_layer(self, material_id: str, layer_id: str):
         """
         Assign a material to a layer.
 
         :param material_name: The material name
-        :type material_name: str
         :param layer_name: The layer name
-        :type layer_name: str
         """
         self.calculator.assign_material_to_layer(material_id, layer_id)
 
-    def add_layer_to_item(self, layer_id: int, item_id: int):
+    def add_layer_to_item(self, layer_id: str, item_id: str):
         """
         Add a layer to the item stack
 
         :param item_id: The item id
-        :type item_id: int
         :param layer_id: The layer id
-        :type layer_id: int
         """
         self.calculator.add_layer_to_item(layer_id, item_id)
 
-    def remove_layer_from_item(self, layer_id: int, item_id: int):
+    def remove_layer_from_item(self, layer_id: str, item_id: str):
         """
         Remove a layer from an item stack
         
         :param item_id: The item id
-        :type item_id: int
-        :param layer_id: The layer id
-        :type layer_id: int
+        :type item_id: int        :param layer_id: The layer id
         """
         self.calculator.remove_layer_from_item(layer_id, item_id)
 
-    def add_item_to_model(self, item_id: int):
+    def add_item_to_model(self, item_id: str, model_id: str):
         """
         Add a layer to the item stack
 
         :param item_id: The item id
-        :type item_id: int
+        :param model_id: The model id
         """
-        self.calculator.add_item(item_id)
+        self.calculator.add_item(item_id, model_id)
 
-    def remove_item_from_model(self, item_id: int):
+    def remove_item_from_model(self, item_id: str, model_id: str):
         """
         Remove a layer from the item stack
 
         :param item_id: The item id
-        :type item_id: int
+        :param model_id: The model id
         """
-        self.calculator.remove_item(item_id)
+        self.calculator.remove_item(item_id, model_id)
 
-    def fit_func(self, x_array: np.ndarray) -> np.ndarray:
+    def fit_func(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
         """
         Function to perform a fit
-        :param x_array: points to be calculated at
-        :type x_array: np.ndarray
-        :return: calculated points
-        :rtype: np.ndarray
-        """
-        return self.calculator.calculate(x_array)
 
-    def sld_profile(self) -> tuple:
+        :param x_array: points to be calculated at
+        :param model_id: The name of the model
+        :return: calculated points
+        """
+        return self.calculator.calculate(x_array, model_id)
+
+    def sld_profile(self, model_id: str) -> Tuple[np.ndarray, np.ndarray]:
         """
         Return the scattering length density profile.
 
         :return: z and sld(z)
-        :rtype: tuple[np.ndarray, np.ndarray]
         """
-        return self.calculator.sld_profile()
+        return self.calculator.sld_profile(model_id)
