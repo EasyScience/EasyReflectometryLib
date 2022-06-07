@@ -43,6 +43,22 @@ class Models(BaseCollection):
         """
         return cls(*args, name=name, interface=interface)
 
+    def add_model(self, new_model: Model):
+        """
+        Add a model to the models.
+        
+        :param new_model: New model to be added.
+        """
+        self.append(new_model)
+
+    def remove_model(self, idx: int):
+        """
+        Remove an model from the models.
+
+        :param idx: Index of the model to remove
+        """
+        del self[idx]
+
     @property
     def uid(self) -> int:
         """

@@ -10,7 +10,9 @@
 .. image:: https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib/badge
         :target: https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib
         :alt: CodeFactor
-
+.. image:: https://img.shields.io/badge/docs-built-blue
+        :target: http://docs.reflectometry.org
+        :alt: Docs
 |
 
 What is EasyReflectometry?

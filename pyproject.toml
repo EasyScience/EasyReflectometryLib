@@ -17,7 +17,7 @@ authors = ["Andrew R. McCluskey", "Andrew Sazonov", "Simon Ward"]
 license = "BSD-3-Clause"
 readme = "README.rst"
 homepage = "https://easyreflectometry.org"
-documentation = "https://EasyReflectometry.readthdocs.io"
+documentation = "https://easyscience.github.io/EasyReflectometryLib/"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: BSD License",
