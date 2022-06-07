@@ -1,12 +1,12 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Layer &#8212; EasyReflectometry 0.0.1 documentation</title>
+    <title>Layer &#8212; EasyReflectometry 0.0.2 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -29,6 +29,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -39,7 +40,7 @@
     <link rel="next" title="Structure" href="structure.html" />
     <link rel="prev" title="Material" href="material.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
+    <meta name="docsearch:language" content="en">
     
 
     <!-- Google Analytics -->
@@ -359,11 +360,11 @@ title="Print to PDF"
               <div>
                 
   <section id="module-EasyReflectometry.sample.layer">
-<span id="layer"></span><h1>Layer<a class="headerlink" href="#module-EasyReflectometry.sample.layer" title="Permalink to this headline">#</a></h1>
+<span id="layer"></span><h1>Layer<a class="headerlink" href="#module-EasyReflectometry.sample.layer" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.layer.Layer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.layer.</span></span><span class="sig-name descname"><span class="pre">Layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/layer.html#Layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.layer.Layer" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">easyCore.Objects.ObjectClasses.BaseObj</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseObj</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.layer.Layer.assign_material">
 <span class="sig-name descname"><span class="pre">assign_material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/layer.html#Layer.assign_material"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.layer.Layer.assign_material" title="Permalink to this definition">#</a></dt>
@@ -429,12 +430,12 @@ title="Print to PDF"
 <dl class="py class">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.layer.</span></span><span class="sig-name descname"><span class="pre">LayerApm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chemical_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solvation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyLayerApm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/layer.html#LayerApm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#EasyReflectometry.sample.layer.Layer" title="EasyReflectometry.sample.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">EasyReflectometry.sample.layer.Layer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#EasyReflectometry.sample.layer.Layer" title="EasyReflectometry.sample.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a></p>
 <p>The <a class="reference internal" href="#EasyReflectometry.sample.layer.LayerApm" title="EasyReflectometry.sample.layer.LayerApm"><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerApm</span></code></a> class allows a layer to be defined in terms of some chemical
 structure (given as a chemical formula) and area per molecule.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm.area_per_molecule">
-<span class="sig-name descname"><span class="pre">area_per_molecule</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">easyCore.Objects.Variable.Parameter</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.area_per_molecule" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">area_per_molecule</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Parameter</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.area_per_molecule" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -510,7 +511,7 @@ structure (given as a chemical formula) and area per molecule.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm.solvation">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">solvation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">easyCore.Objects.Variable.Parameter</span></em><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.solvation" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">solvation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.solvation" title="Permalink to this definition">#</a></dt>
 <dd><p>Solvation fraction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -524,7 +525,7 @@ structure (given as a chemical formula) and area per molecule.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.layer.LayerApm.solvent">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">solvent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="material.html#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><span class="pre">EasyReflectometry.sample.material.Material</span></a></em><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.solvent" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">solvent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="material.html#EasyReflectometry.sample.material.Material" title="EasyReflectometry.sample.material.Material"><span class="pre">Material</span></a></em><a class="headerlink" href="#EasyReflectometry.sample.layer.LayerApm.solvent" title="Permalink to this definition">#</a></dt>
 <dd><p>Solvent material</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>

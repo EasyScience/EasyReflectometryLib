@@ -1,12 +1,12 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Items &#8212; EasyReflectometry 0.0.1 documentation</title>
+    <title>Items &#8212; EasyReflectometry 0.0.2 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -29,6 +29,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -39,7 +40,7 @@
     <link rel="next" title="Calculators &amp; Optimisation" href="calculators.html" />
     <link rel="prev" title="Layers" href="layer_library.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
+    <meta name="docsearch:language" content="en">
     
 
     <!-- Google Analytics -->
@@ -440,13 +441,13 @@ title="Print to PDF"
               <div>
                 
   <section id="items">
-<h1>Items<a class="headerlink" href="#items" title="Permalink to this headline">#</a></h1>
+<h1>Items<a class="headerlink" href="#items" title="Permalink to this heading">#</a></h1>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code> is designed to be used with a broad range of different items.
 These items offer flexibility for the user and enable more powerful analysis by making chemical and pysical constraints available with limited code.
 In this page, we will document the items that are available with simple examples of the constructors that exist.
 Full API documentation is also available for the <a class="reference internal" href="item.html#module-EasyReflectometry.sample.item" title="EasyReflectometry.sample.item"><code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry.sample.item</span></code></a> module.</p>
 <section id="multilayer">
-<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code><a class="headerlink" href="#multilayer" title="Permalink to this headline">#</a></h2>
+<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code><a class="headerlink" href="#multilayer" title="Permalink to this heading">#</a></h2>
 <p>This item should be used for a series of layers that, for whatever reason, should be thought of as a single object.
 For example, in the <a class="reference external" href="./simple_fitting.html">simple fitting tutorial</a> this item type is used to combine the silicon and silicon dioxide layer that as formed into a single object.
 All of the separate layers in these objects will be fitted individually, i.e. there is no constraints present, however, there is some cognative benefit to grouping layers together.</p>
@@ -466,7 +467,7 @@ All of the separate layers in these objects will be fitted individually, i.e. th
 <p>This will create a <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code> object named <code class="code docutils literal notranslate"><span class="pre">subphase</span></code> which we can use in some <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code> for our analysis.</p>
 </section>
 <section id="repeatingmultilayer">
-<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code><a class="headerlink" href="#repeatingmultilayer" title="Permalink to this headline">#</a></h2>
+<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code><a class="headerlink" href="#repeatingmultilayer" title="Permalink to this heading">#</a></h2>
 <p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultiLayer</span></code> item type is an extension of the <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiLayer</span></code> for the analysis of systems with a multilayer that has some number of repeats.
 This item type imposes some constraints, specifically that all of the repeats have the exact same structure (i.e. thicknesses, roughnesses, and scattering length densities),
 which brings with it some computational saving as the reflectometry coefficients only needs to be calculated once for this structure and propagated for the correct number of repeats.
@@ -488,7 +489,7 @@ There is a <a class="reference external" href="./repeating.html">tutorial</a> th
 <p>The number of repeats is a parameter that can be varied in the optimisation process, however given this is a value that depends on the synthesis of the sample this is unlikely to be necessary.</p>
 </section>
 <section id="surfactantlayer">
-<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code><a class="headerlink" href="#surfactantlayer" title="Permalink to this headline">#</a></h2>
+<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code><a class="headerlink" href="#surfactantlayer" title="Permalink to this heading">#</a></h2>
 <p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code> item type allows for the creating of a model to describe a monolayer of surfactant at some interface.
 Using this item, we can define our surfactant in terms of the chemistry of the head and tail groups and be confident that the constraints are present to ensure the number density if kept constant.
 The <a class="reference external" href="./monolayer.html">surfactant monolayer tutorial</a> looks in detail at the definition of the scattering length density in the <code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code>.

@@ -1,12 +1,12 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Materials &#8212; EasyReflectometry 0.0.1 documentation</title>
+    <title>Materials &#8212; EasyReflectometry 0.0.2 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -29,6 +29,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -39,7 +40,7 @@
     <link rel="next" title="Layers" href="layer_library.html" />
     <link rel="prev" title="Libraries" href="library.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
+    <meta name="docsearch:language" content="en">
     
 
     <!-- Google Analytics -->
@@ -440,12 +441,12 @@ title="Print to PDF"
               <div>
                 
   <section id="materials">
-<h1>Materials<a class="headerlink" href="#materials" title="Permalink to this headline">#</a></h1>
+<h1>Materials<a class="headerlink" href="#materials" title="Permalink to this heading">#</a></h1>
 <p>In order to support a wide range of applications (and to build complex <a class="reference external" href="./library.html">items</a>) there are a few different types of material that can be utilised in <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code>.
 These can include constraints or enabel the user to define the material based on chemical or physical properties.
 Full API documentation for the <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectoemtry.sample.material</span></code> mdoule is also available, but here we will give some simple uses for them.</p>
 <section id="material">
-<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code><a class="headerlink" href="#material" title="Permalink to this headline">#</a></h2>
+<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code><a class="headerlink" href="#material" title="Permalink to this heading">#</a></h2>
 <p>The simplest type of material that is available is the <code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code>.
 This allows the user to define a single type of material, with a real and imaginary component to the scattering length density.
 The construction of a <code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code> is achieved as shown below.</p>
@@ -458,7 +459,7 @@ The construction of a <code class="xref py py-class docutils literal notranslate
 As is shown in the <a class="reference external" href="./tutorials.html">tutorials</a>, a material can be used to construct a <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code> from which <a class="reference external" href="https://www.reflectometry.org/isis_school/3_reflectometry_slab_models/the_slab_model.html">slab models</a> are created.</p>
 </section>
 <section id="materialdensity">
-<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialDensity</span></code><a class="headerlink" href="#materialdensity" title="Permalink to this headline">#</a></h2>
+<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialDensity</span></code><a class="headerlink" href="#materialdensity" title="Permalink to this heading">#</a></h2>
 <p>In addition to defining a material by its scattering length density, it may be useful to define a material by the mass density and chemical formula.
 This is possible with the <code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialDensity</span></code> material type, which uses the scattering length and atomic mass from the chemical formula and the density to determine the scattering length density.
 It is then possible to vary the density, which defines the scattering length density in turn.
@@ -471,7 +472,7 @@ The <code class="xref py py-class docutils literal notranslate"><span class="pre
 <p>The density should be in units of grams per cubic centimeter and the scattering length is calculated from <code class="code docutils literal notranslate"><span class="pre">'SiO2'</span></code>.</p>
 </section>
 <section id="materialmixture">
-<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialMixture</span></code><a class="headerlink" href="#materialmixture" title="Permalink to this headline">#</a></h2>
+<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialMixture</span></code><a class="headerlink" href="#materialmixture" title="Permalink to this heading">#</a></h2>
 <p>Sometimes it is desirable to have a layer that consists of two materials in some ratio.
 An example of this is shown in the <a class="reference external" href="./solvation.html">solvation tutorial</a>, where a polymer film solvated with D2O is modelled.
 To produce a material that is described by such a mixture, there is the <code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialMixture</span></code> material option.
