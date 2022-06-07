@@ -38,6 +38,8 @@ orsopy = "^0.0.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+pytest-cov = "^3.0.0"
+codecov = "^2.1.11"
 yapf = "^0.31.0"
 toml = "^0.10"
 jupyter = "^1.0.0"
