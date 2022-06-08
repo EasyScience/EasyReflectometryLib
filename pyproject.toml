@@ -38,9 +38,45 @@ orsopy = "^0.0.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+pytest-cov = "^3.0.0"
+codecov = "^2.1.11"
 yapf = "^0.31.0"
 toml = "^0.10"
 jupyter = "^1.0.0"
 
 [tool.poetry.scripts]
 EasyReflectometryLib = "EasyReflectometry.main:main"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+envlist = py{38,39,310,311}
+[gh-actions]
+python =
+    3.8: py38
+    3.9: py39
+    3.10: py310
+    3.11.0-alpha.1: py311
+[gh-actions:env]
+PLATFORM =
+    ubuntu-latest: linux
+    macos-latest: macos
+    windows-latest: windows
+[testenv]
+passenv =
+    CI
+    GITHUB_ACTIONS
+    GITHUB_ACTION
+    GITHUB_REF
+    GITHUB_REPOSITORY
+    GITHUB_HEAD_REF
+    GITHUB_RUN_ID
+    GITHUB_SHA
+    COVERAGE_FILE
+deps = coverage
+whitelist_externals = poetry
+commands =
+    poetry install -vvv
+    poetry run pytest --cov --cov-report=xml
+"""
