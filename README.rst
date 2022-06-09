@@ -11,7 +11,7 @@
         :target: https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib
         :alt: CodeFactor
 .. image:: https://img.shields.io/badge/docs-built-blue
-        :target: http://docs.reflectometry.org
+        :target: http://docs.easyreflectometry.org
         :alt: Docs
 
 |
