@@ -12,7 +12,7 @@ To install EasyReflectometry, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install https://github.com/easyScience/EasyReflectometryLib.git@master
+    $ pip install git+https://github.com/easyScience/EasyReflectometryLib.git@master
 
 This is the preferred method to install EasyReflectometry, soon EasyReflectometry will also be available on PyPI.
 
