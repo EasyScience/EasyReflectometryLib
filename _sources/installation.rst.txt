@@ -8,13 +8,13 @@ Installation
 Stable release
 --------------
 
-To install orsopy, run this command in your terminal:
+To install EasyReflectometry, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install EasyReflectometry
+    $ pip install https://github.com/easyScience/EasyReflectometryLib.git@master
 
-This is the preferred method to install EasyReflectometry, as it will always install the most recent stable release.
+This is the preferred method to install EasyReflectometry, soon EasyReflectometry will also be available on PyPI.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
