@@ -21,7 +21,7 @@ This type of layer is used extensively in the `tutorials`_
 :py:class:`LayerApm`
 --------------------
 
-The :py:class:`LayerApm` layer type is the fundation of the :py:class:`SurfactantLayer` item type (further information on this can be foundin the `item library`_).
+The :py:class:`LayerApm` layer type is the fundation of the :py:class:`SurfactantLayer` item type (further information on this can be found in the `item library`_).
 The purpose of the :py:class:`LayerApm` is to allow a layer to be defined in terms of the chemical formula of the material and the area per molecule of the layer. 
 The area per molecule is a common description of surface density in the surfactant monolayer and bilayer community. 
 
