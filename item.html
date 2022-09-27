@@ -21,7 +21,7 @@
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
@@ -31,9 +31,10 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.1/dist/embed-amd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -220,7 +221,7 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="data.html">
-     Structure
+     Data
     </a>
    </li>
   </ul>
@@ -335,12 +336,235 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     MultiLayer
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.add_layer">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.add_layer()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.default">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.default()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.duplicate_layer">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.duplicate_layer()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.from_pars">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.from_pars()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.remove_layer">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.remove_layer()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.uid">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.uid
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.user_data">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.user_data
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     RepeatingMultiLayer
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.default">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       RepeatingMultiLayer.default()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.from_pars">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       RepeatingMultiLayer.from_pars()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.uid">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       RepeatingMultiLayer.uid
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.user_data">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       RepeatingMultiLayer.user_data
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     SurfactantLayer
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.as_dict">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.as_dict()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.conformal_roughness">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.conformal_roughness
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constain_multiple_contrast">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.constain_multiple_contrast()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constrain_apm">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.constrain_apm
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constrain_solvent_roughness">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.constrain_solvent_roughness()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.default">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.default()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.from_pars">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.from_pars()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.user_data">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.user_data
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
 </div>
     </div>
     <div class="article row">
@@ -352,6 +576,218 @@ title="Print to PDF"
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     MultiLayer
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.add_layer">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.add_layer()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.default">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.default()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.duplicate_layer">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.duplicate_layer()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.from_pars">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.from_pars()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.remove_layer">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.remove_layer()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.uid">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.uid
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.multilayer.MultiLayer.user_data">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MultiLayer.user_data
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     RepeatingMultiLayer
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.default">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       RepeatingMultiLayer.default()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.from_pars">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       RepeatingMultiLayer.from_pars()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.uid">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       RepeatingMultiLayer.uid
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.repeating_multilayer.RepeatingMultiLayer.user_data">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       RepeatingMultiLayer.user_data
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     SurfactantLayer
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.as_dict">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.as_dict()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.conformal_roughness">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.conformal_roughness
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constain_multiple_contrast">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.constain_multiple_contrast()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constrain_apm">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.constrain_apm
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.constrain_solvent_roughness">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.constrain_solvent_roughness()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.default">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.default()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.from_pars">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.from_pars()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#EasyReflectometry.sample.items.surfactant_layer.SurfactantLayer.user_data">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SurfactantLayer.user_data
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -359,13 +795,13 @@ title="Print to PDF"
                 
               <div>
                 
-  <section id="module-EasyReflectometry.sample.item">
-<span id="items"></span><h1>Items<a class="headerlink" href="#module-EasyReflectometry.sample.item" title="Permalink to this heading">#</a></h1>
+  <section id="items">
+<h1>Items<a class="headerlink" href="#items" title="Permalink to this heading">#</a></h1>
 <p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">item</span></code> library is the backbone of <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code>.
 An <a class="reference internal" href="#module-EasyReflectometry.sample.item" title="EasyReflectometry.sample.item"><code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry.sample.item</span></code></a> allows for the inclusion of physical and
 chemical parameterisation into our reflectometry model.
 For more information please look at the <a href="#id6"><span class="problematic" id="id7">`item library documentation`_</span></a></p>
-<span class="target" id="module-EasyReflectometry.sample.items.multilayer"></span><dl class="py class">
+<span class="target" id="module-EasyReflectometry.sample.item"></span><span class="target" id="module-EasyReflectometry.sample.items.multilayer"></span><dl class="py class">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.items.multilayer.MultiLayer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.items.multilayer.</span></span><span class="sig-name descname"><span class="pre">MultiLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMultiLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EasyReflectometry/sample/items/multilayer.html#MultiLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.items.multilayer.MultiLayer" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseObj</span></code></p>
