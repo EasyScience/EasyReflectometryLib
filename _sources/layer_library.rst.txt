@@ -41,4 +41,3 @@ It is expected that the typical user will not interface directly with the :py:cl
 .. _`materials`: ./material_library.html
 .. _`tutorials`: ./tutorials.html
 .. _`item library`: ./item_library.html
-.. _`item library`: ./item_library.html#surfactantlayer
