@@ -1,5 +1,5 @@
-Structure
-=========
+Data
+====
 
 .. automodule:: EasyReflectometry.data
     :members:

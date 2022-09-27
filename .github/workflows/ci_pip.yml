@@ -21,7 +21,8 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - uses: Gr1N/setup-poetry@v4
+    - name: Setup Poetry
+      uses: Gr1N/setup-poetry@v7
 
     - name: Install dependencies
       run: |
@@ -58,7 +59,8 @@ jobs:
       with:
         python-version: 3.9
 
-    - uses: Gr1N/setup-poetry@v4
+    - name: Setup Poetry
+      uses: Gr1N/setup-poetry@v7
 
     - name: Check Build
       run: |
