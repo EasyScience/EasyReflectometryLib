@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://d1y8sb8igg2f8e.cloudfront.net/images/shutterstock_1375463840.width-800.jpg">
+  <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="https://github.com/easyScience/EasyReflectometryLib/raw/main/docs/_static/logo.png">
+</picture>
+
 .. image:: https://github.com/easyScience/EasyReflectometryLib/raw/main/docs/_static/logo.png
         :target: https://easyscience.github.io/EasyReflectometryLib/
 
