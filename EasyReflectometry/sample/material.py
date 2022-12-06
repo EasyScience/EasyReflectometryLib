@@ -8,12 +8,15 @@ from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter, BaseObj
 from easyCore.Fitting.Constraints import FunctionalConstraint
 
-from EasyReflectometry.special.calculations import weighted_average_sld, neutron_scattering_length, molecular_weight, density_to_sld
+from EasyReflectometry.special.calculations import (weighted_average_sld,
+                                                    neutron_scattering_length,
+                                                    molecular_weight, density_to_sld)
 
 MATERIAL_DEFAULTS = {
     'sld': {
         'description':
-        'The real scattering length density for a material in e-6 per squared angstrom.',
+        'The real scattering length density for a '
+        'material in e-6 per squared angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 4.186,
         'units': '1 / angstrom ** 2',
@@ -23,7 +26,8 @@ MATERIAL_DEFAULTS = {
     },
     'isld': {
         'description':
-        'The imaginary scattering length density for a material in e-6 per squared angstrom.',
+        'The imaginary scattering length density for a '
+        'material in e-6 per squared angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 0.0,
         'units': '1 / angstrom ** 2',
@@ -102,7 +106,7 @@ class Material(BaseObj):
     @classmethod
     def default(cls, interface=None) -> "Material":
         """
-        Default constructor for the reflectometry material. 
+        Default constructor for the reflectometry material.
 
         :return: Default material container
         """
@@ -145,8 +149,8 @@ class Material(BaseObj):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         return {
@@ -234,20 +238,20 @@ class MaterialDensity(Material):
 
     @chemical_structure.setter
     def chemical_structure(self, structure_string: str):
-       """
+        """
        :param structure_string: String that defines the chemical structure.
-       """ 
-       self._chemical_structure = structure_string
-       scattering_length = neutron_scattering_length(structure_string)
-       self.scattering_length_real.value = scattering_length.real
-       self.scattering_length_imag.value = scattering_length.imag 
+       """
+        self._chemical_structure = structure_string
+        scattering_length = neutron_scattering_length(structure_string)
+        self.scattering_length_real.value = scattering_length.real
+        self.scattering_length_imag.value = scattering_length.imag
 
     # Class constructors
     @classmethod
     def default(cls, interface=None) -> 'MaterialDensity':
         """
-        Default constructor for the material defined by density and chemical structure. 
-        
+        Default constructor for the material defined by density and chemical structure.
+
         :param interface: Interface object, defaults to :py:attr:`None`
         :return: Material container
         """
@@ -263,7 +267,8 @@ class MaterialDensity(Material):
                   name: str = 'EasyMaterialDensity',
                   interface=None) -> 'MaterialDensity':
         """
-        Constructor for a material based on the mass density and chemical structure, where these are known.
+        Constructor for a material based on the mass density and chemical structure,
+        where these are known.
         :param chemical_structure: Chemical formula for the material
         :param density: Mass density for the material
         :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`
@@ -281,7 +286,7 @@ class MaterialDensity(Material):
     def _dict_repr(self) -> dict:
         """
         Dictionary representation of the :py:class:`MaterialDensity` object.
-        
+
         :return: Simple dictionary
         """
         mat_dict = super()._dict_repr
@@ -289,10 +294,10 @@ class MaterialDensity(Material):
         mat_dict['density'] = f'{self.density.raw_value:.2e} {self.density.unit}'
         return mat_dict
 
-    def as_dict(self, skip: list=[]) -> dict:
+    def as_dict(self, skip: list = []) -> dict:
         """
         Custom as_dict method to skip necessary things.
-        
+
         :return: Cleaned dictionary.
         """
         this_dict = super().as_dict(skip=skip)
@@ -313,9 +318,16 @@ class MaterialMixture(BaseObj):
                  interface=None):
         if name is None:
             name = material_a.name + '/' + material_b.name
-        super().__init__(name, _material_a=material_a, _material_b=material_b, fraction=fraction)
-        sld = weighted_average_sld(self._material_a.sld.raw_value, self._material_b.sld.raw_value, self.fraction.raw_value)
-        isld = weighted_average_sld(self._material_a.isld.raw_value, self._material_b.isld.raw_value, self.fraction.raw_value)
+        super().__init__(name,
+                         _material_a=material_a,
+                         _material_b=material_b,
+                         fraction=fraction)
+        sld = weighted_average_sld(self._material_a.sld.raw_value,
+                                   self._material_b.sld.raw_value,
+                                   self.fraction.raw_value)
+        isld = weighted_average_sld(self._material_a.isld.raw_value,
+                                    self._material_b.isld.raw_value,
+                                    self.fraction.raw_value)
         default_options = deepcopy(MATERIAL_DEFAULTS)
         del default_options['sld']['value']
         del default_options['isld']['value']
@@ -332,7 +344,7 @@ class MaterialMixture(BaseObj):
     @property
     def sld(self):
         return self._slds[0]
-    
+
     @property
     def isld(self):
         return self._slds[1]
@@ -340,12 +352,16 @@ class MaterialMixture(BaseObj):
     def _materials_constraints(self):
         self._slds[0].enabled = True
         self._slds[1].enabled = True
-        constraint = FunctionalConstraint(self._slds[0], weighted_average_sld, [self._material_a.sld, self._material_b.sld, self.fraction])
+        constraint = FunctionalConstraint(
+            self._slds[0], weighted_average_sld,
+            [self._material_a.sld, self._material_b.sld, self.fraction])
         self._material_a.sld.user_constraints['sld'] = constraint
         self._material_b.sld.user_constraints['sld'] = constraint
         self.fraction.user_constraints['sld'] = constraint
         constraint()
-        iconstraint = FunctionalConstraint(self._slds[1], weighted_average_sld, [self._material_a.isld, self._material_b.isld, self.fraction])
+        iconstraint = FunctionalConstraint(
+            self._slds[1], weighted_average_sld,
+            [self._material_a.isld, self._material_b.isld, self.fraction])
         self._material_a.isld.user_constraints['isld'] = iconstraint
         self._material_b.isld.user_constraints['isld'] = iconstraint
         self.fraction.user_constraints['isld'] = iconstraint
@@ -362,7 +378,7 @@ class MaterialMixture(BaseObj):
     def material_a(self, new_material_a: Material):
         """
         Setter for material_a
-        
+
         :param new_material_a: New material_a
         """
         self.name = new_material_a.name + '/' + self._material_b.name
@@ -382,7 +398,7 @@ class MaterialMixture(BaseObj):
     def material_b(self, new_material_b: Material):
         """
         Setter for material_b
-        
+
         :param new_material_b: New material_b
         """
         self.name = self._material_a.name + '/' + new_material_b.name
@@ -391,12 +407,12 @@ class MaterialMixture(BaseObj):
         if self.interface is not None:
             self.interface.generate_bindings(self)
 
-    #Class constructors
+    # Class constructors
     @classmethod
     def default(cls, interface=None) -> "MaterialMixture":
         """
         Default constructor for a mixture of two materials.
-        
+
         :return: Default material mixture container.
         """
         material_a = Material.default()
@@ -412,8 +428,8 @@ class MaterialMixture(BaseObj):
                   name=None,
                   interface=None) -> "MaterialMixture":
         """
-        Constructor of a mixture of two materials where the parameters are known. 
-        
+        Constructor of a mixture of two materials where the parameters are known.
+
         :param material_a: The first material
         :param material_b: The second material
         :param fraction: The fraction of material_b in material_a
@@ -442,8 +458,8 @@ class MaterialMixture(BaseObj):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         return {
@@ -462,10 +478,10 @@ class MaterialMixture(BaseObj):
         """
         return yaml.dump(self._dict_repr, sort_keys=False)
 
-    def as_dict(self, skip: list=[]) -> dict:
+    def as_dict(self, skip: list = []) -> dict:
         """
         Custom as_dict method to skip necessary things.
-        
+
         :return: Cleaned dictionary.
         """
         this_dict = super().as_dict(skip=skip)

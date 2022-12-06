@@ -1,7 +1,6 @@
 __author__ = 'github.com/wardsimon'
 __version__ = '0.0.1'
 
-import os, sys
 import traceback
 
 try:
@@ -23,3 +22,5 @@ except Exception:
     print('Warning: refl1d is not installed')
 
 from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
+
+_ = InterfaceTemplate

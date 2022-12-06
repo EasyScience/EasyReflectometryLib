@@ -13,7 +13,7 @@ class Refnx:
             'material': {},
             'layer': {},
             'item': {},
-            'model': {}  #reflect.ReflectModel(reflect.Structure())
+            'model': {}
         }
 
     def reset_storage(self):
@@ -24,7 +24,7 @@ class Refnx:
             'material': {},
             'layer': {},
             'item': {},
-            'model': {}  # reflect.ReflectModel(reflect.Structure())
+            'model': {}
         }
 
     def create_material(self, name: str):
@@ -211,11 +211,13 @@ class Refnx:
         :param model_name: Name for the model
         :return: points calculated at `x`
         """
-        structure = _remove_unecessary_stacks(self.storage['model'][model_name].structure)
-        model = reflect.ReflectModel(structure,
-                                     scale=self.storage['model'][model_name].scale.value,
-                                     bkg=self.storage['model'][model_name].bkg.value,
-                                     dq=self.storage['model'][model_name].dq.value)
+        structure = _remove_unecessary_stacks(
+            self.storage['model'][model_name].structure)
+        model = reflect.ReflectModel(
+            structure,
+            scale=self.storage['model'][model_name].scale.value,
+            bkg=self.storage['model'][model_name].bkg.value,
+            dq=self.storage['model'][model_name].dq.value)
         return model(x_array)
 
     def sld_profile(self, model_name: str) -> Tuple[np.ndarray, np.ndarray]:
@@ -225,10 +227,12 @@ class Refnx:
         :param model_name: Name for the model
         :return: z and sld(z)
         """
-        return _remove_unecessary_stacks(self.storage['model'][model_name].structure).sld_profile()
+        return _remove_unecessary_stacks(
+            self.storage['model'][model_name].structure).sld_profile()
 
 
-def _remove_unecessary_stacks(current_structure: reflect.Structure) -> reflect.Structure:
+def _remove_unecessary_stacks(
+        current_structure: reflect.Structure) -> reflect.Structure:
     """
     Removed unnecessary reflect.Stack objects from the structure.
 

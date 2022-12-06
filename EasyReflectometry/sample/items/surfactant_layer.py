@@ -1,25 +1,25 @@
-from copy import deepcopy
-from typing import Union, List
-import yaml
+from typing import List
 
 from easyCore.Fitting.Constraints import ObjConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 from EasyReflectometry.sample.material import Material
-from EasyReflectometry.sample.layer import Layer, LayerApm, LAYERAPM_DETAILS
+from EasyReflectometry.sample.layer import LayerApm
 from EasyReflectometry.sample.layers import Layers
 from .multilayer import MultiLayer
 
 
 class SurfactantLayer(MultiLayer):
     """
-    A :py:class:`SurfactantLayer` constructs a series of layers representing the head and tail 
-    groups of a surfactant. This item allows the definition of a surfactant or lipid using the 
-    chemistry of the head and tail regions, additionally this approach will make the application of 
-    constraints such as conformal roughness or area per molecule more straight forward.
+    A :py:class:`SurfactantLayer` constructs a series of layers representing the
+    head and tail groups of a surfactant. This item allows the definition of a
+    surfactant or lipid using the chemistry of the head and tail regions, additionally
+    this approach will make the application of constraints such as conformal roughness
+    or area per molecule more straight forward.
 
-    More information about the usage of this item is available in the `item library documentation`_
+    More information about the usage of this item is available in the
+    `item library documentation`_
 
-    .. _`item library documentation`: ./item_library.html#surfactantlayer 
+    .. _`item library documentation`: ./item_library.html#surfactantlayer
     """
 
     def __init__(self,
@@ -31,7 +31,7 @@ class SurfactantLayer(MultiLayer):
         """
         :param head: Head layer object
         :param tail: Tail layer object
-        :param name: Name for surfactant layer 
+        :param name: Name for surfactant layer
         """
         surfactant = Layers(layers[0], layers[1], name=name)
         super().__init__(surfactant, name, interface)
@@ -39,19 +39,23 @@ class SurfactantLayer(MultiLayer):
         self.interface = interface
         self.type = "Surfactant Layer"
         self.layers[1].area_per_molecule.enabled = True
-        apm = ObjConstraint(self.layers[1].area_per_molecule, '', self.layers[0].area_per_molecule)
+        apm = ObjConstraint(self.layers[1].area_per_molecule, '',
+                            self.layers[0].area_per_molecule)
         self.layers[0].area_per_molecule.user_constraints['apm'] = apm
-        self.layers[0].area_per_molecule.user_constraints['apm'].enabled = constrain_apm 
+        self.layers[0].area_per_molecule.user_constraints['apm'].enabled = constrain_apm
         self.layers[1].roughness.enabled = True
-        roughness = ObjConstraint(self.layers[1].roughness, '', self.layers[0].roughness)
+        roughness = ObjConstraint(self.layers[1].roughness, '',
+                                  self.layers[0].roughness)
         self.layers[0].roughness.user_constraints['roughness'] = roughness
-        self.layers[0].roughness.user_constraints['roughness'].enabled = conformal_roughness
+        self.layers[0].roughness.user_constraints[
+            'roughness'].enabled = conformal_roughness
 
     # Class constructors
     @classmethod
     def default(cls, interface=None) -> "SurfactantLayer":
         """
-        Default constructor for a surfactant layer object. The default lipid type is DPPC.
+        Default constructor for a surfactant layer object. The default lipid
+        type is DPPC.
 
         :return: Surfactant layer object.
         """
@@ -78,22 +82,24 @@ class SurfactantLayer(MultiLayer):
                   name: str = 'EasySurfactantLayer',
                   interface=None) -> "SurfactantLayer":
         """
-        Constructor for the surfactant layer where the parameters are known, layer1 is that 
-        which the neutrons interact with first. 
-    
+        Constructor for the surfactant layer where the parameters are known,
+        :py:attr:`layer1` is that which the neutrons interact with first.
+
         :param layer1_chemical_structure: Chemical formula for first layer
         :param layer1_thickness: Thicknkess of first layer
         :param layer1_solvent: Solvent in first layer
-        :param layer1_solvation: Fractional solvation of first layer by :py:attr:`layer1_solvent`
+        :param layer1_solvation: Fractional solvation of first layer by
+            :py:attr:`layer1_solvent`
         :param layer1_area_per_molecule: Area per molecule of first layer
         :param layer1_roughness: Roughness of first layer
         :param layer2_chemical_structure: Chemical formula for second layer
         :param layer2_thickness: Thicknkess of second layer
         :param layer2_solvent: Solvent in second layer
-        :param layer2_solvation: Fractional solvation of second layer by :py:attr:`layer2_solvent`
+        :param layer2_solvation: Fractional solvation of second layer by
+            :py:attr:`layer2_solvent`
         :param layer2_area_per_molecule: Area per molecule of second layer
         :param layer2_roughness: Roughness of second layer
-        :param name: Name for surfactant layer 
+        :param name: Name for surfactant layer
         """
         layer1 = LayerApm.from_pars(layer1_chemical_structure,
                                     layer1_thickness,
@@ -121,12 +127,14 @@ class SurfactantLayer(MultiLayer):
     @constrain_apm.setter
     def constrain_apm(self, x: bool):
         """
-        Set the constraint such that the head and tail layers have the same area per molecule. 
+        Set the constraint such that the head and tail layers have the
+        same area per molecule.
 
         :param x: Boolean description the presence of the constraint.
         """
         self.layers[0].area_per_molecule.user_constraints['apm'].enabled = x
-        self.layers[0].area_per_molecule.value = self.layers[0].area_per_molecule.raw_value
+        self.layers[0].area_per_molecule.value = self.layers[
+            0].area_per_molecule.raw_value
 
     @property
     def conformal_roughness(self) -> bool:
@@ -145,7 +153,7 @@ class SurfactantLayer(MultiLayer):
 
     def constrain_solvent_roughness(self, solvent_roughness: Parameter):
         """
-        Add the constraint to the solvent roughness. 
+        Add the constraint to the solvent roughness.
 
         :param solvent_roughness: The solvent roughness parameter.
         """
@@ -169,13 +177,13 @@ class SurfactantLayer(MultiLayer):
         :param another_contrast: The surfactant layer to constrain
         """
         if layer1_thickness:
-            layer1_thickness_constraint = ObjConstraint(self.layers[0].thickness, '',
-                                                      another_contrast.layers[0].thickness)
+            layer1_thickness_constraint = ObjConstraint(
+                self.layers[0].thickness, '', another_contrast.layers[0].thickness)
             another_contrast.layers[0].thickness.user_constraints[
                 f'{another_contrast.name}'] = layer1_thickness_constraint
         if layer2_thickness:
-            layer2_thickness_constraint = ObjConstraint(self.layers[1].thickness, '',
-                                                      another_contrast.layers[1].thickness)
+            layer2_thickness_constraint = ObjConstraint(
+                self.layers[1].thickness, '', another_contrast.layers[1].thickness)
             another_contrast.layers[1].thickness.user_constraints[
                 f'{another_contrast.name}'] = layer2_thickness_constraint
         if layer1_area_per_molecule:
@@ -206,8 +214,8 @@ class SurfactantLayer(MultiLayer):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         return {
@@ -217,10 +225,10 @@ class SurfactantLayer(MultiLayer):
             'conformal roughness': self.conformal_roughness
         }
 
-    def as_dict(self, skip: list=[]) -> dict:
+    def as_dict(self, skip: list = []) -> dict:
         """
         Custom as_dict method to skip necessary things.
-        
+
         :return: Cleaned dictionary.
         """
         this_dict = super().as_dict(skip=skip)
