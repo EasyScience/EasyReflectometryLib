@@ -63,4 +63,4 @@ class TestStructure(unittest.TestCase):
     def test_dict_round_trip(self):
         p = Structure.default()
         q = Structure.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()
