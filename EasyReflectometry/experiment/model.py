@@ -25,7 +25,7 @@ LAYER_DETAILS = {
         'description': 'Linear background to include in reflectometry data',
         'url':
         'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
-        'value': 1e-7,
+        'value': 1e-8,
         'min': 0.0,
         'max': np.Inf,
         'fixed': True
