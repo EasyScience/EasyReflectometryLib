@@ -471,5 +471,4 @@ class MaterialMixture(BaseObj):
         this_dict = super().as_dict(skip=skip)
         this_dict['material_a'] = self._material_a
         this_dict['material_b'] = self._material_b
-        del this_dict['_material_a'], this_dict['_material_b']
         return this_dict

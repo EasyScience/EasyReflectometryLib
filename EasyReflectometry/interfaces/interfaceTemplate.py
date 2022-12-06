@@ -4,10 +4,10 @@ import numpy as np
 from abc import ABCMeta, abstractmethod
 
 from easyCore import borg
-from easyCore.Utils.json import MSONable
+from easyCore.Objects.core import ComponentSerializer
 
 
-class InterfaceTemplate(MSONable, metaclass=ABCMeta):
+class InterfaceTemplate(ComponentSerializer, metaclass=ABCMeta):
     """
     This class is a template and defines all properties that an interface should have.
     """
