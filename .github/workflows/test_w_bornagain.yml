@@ -1,0 +1,68 @@
+name: Tests
+
+# Trigger the workflow on push or pull request
+on: [push, pull_request]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  # This workflow contains a single job called "build"
+  build:
+
+    # CI skip conditions
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+
+    # Build matrix for different platforms
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+    - name: Check-out repository
+      uses: actions/checkout@v2
+
+    #- name: Set up access to private repos
+    #  uses: webfactory/ssh-agent@v0.4.1
+    #  with:
+    #    ssh-private-key: ${{ secrets.GH_WEBFACTORY_KEY }}
+
+    # - name: Set up Python environment
+    #   uses: actions/setup-python@v2
+    #   with:
+    #       python-version: 3.9
+
+    - name: install Miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+          auto-activate-base: true
+          activate-environment: ""
+
+    - name: Install Bornagain
+      shell: bash -l {0}
+      run: |
+        conda config --add channels conda-forge
+        conda create -n test 
+        conda activate test
+        conda info
+        conda install -y -c andyfaff bornagain
+
+    - name: Some logging
+      shell: bash -l {0}
+      run: |
+        which python
+        echo "pythonLocation: $pythonLocation"
+
+    - name: Run main.py
+      shell: bash -l {0}
+      run: |
+        conda activate test
+        pip install -e .
+        pushd $CONDA_PREFIX/bin
+        source thisbornagain.sh
+        popd
+        pytest tests/

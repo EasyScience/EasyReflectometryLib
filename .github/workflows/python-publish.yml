@@ -25,10 +25,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        poetry update
+        pip install -e '.[dev]'
     - name: Build
       run: |
-        poetry build
+        pip install build
     - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@master
       with:

@@ -1,23 +1,21 @@
 [build-system]
-requires = ["setuptools", "wheel", "poetry>=1.0"]
-build-backend = "poetry.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.coverage.run]
-source = ['EasyReflectometry']
-
-[tool.github.info]
-organization = 'easyScience'
-repo = 'EasyReflectometryLib'
-
-[tool.poetry]
+[project]
 name = "EasyReflectometryLib"
 version = "0.0.2"
 description = "A reflectometry python package built on the EasyScience framework"
-authors = ["Andrew R. McCluskey", "Andrew Sazonov", "Simon Ward"]
-license = "BSD-3-Clause"
 readme = "README.rst"
-homepage = "https://easyreflectometry.org"
-documentation = "https://easyscience.github.io/EasyReflectometryLib/"
+authors = [
+    {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}, 
+    {name = "Andrew Sazonov"}, 
+    {name = "Simon Ward"}
+]
+maintainers = [
+    {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}
+]
+license = "BSD-3-Clause"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: BSD License",
@@ -25,27 +23,42 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Development Status :: 3 - Alpha"
 ]
-packages = [ { include = "EasyReflectometry" } ]
+requires-python = ">3.7"
+dependencies = [
+    "easyScienceCore @ git+https://github.com/easyScience/easyCore.git@mutlifitter",
+    "refnx>=0.1.15",
+    "refl1d>=0.8.14",
+    "scipp>=0.13.0",
+    "orsopy>=0.0.4"
+]
 
-[tool.poetry.dependencies]
-python = "^3.8,<3.10"
-easyScienceCore = { git = 'https://github.com/easyScience/easyCore.git', rev = 'mutlifitter' }
-#easyScienceCore = { path = '../easyCore'}
-refnx = "^0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx which use PEP 517 and cannot be installed directly"
-refl1d = "^0.8.14"
-scipp = "^0.13.0"
-orsopy = "^0.0.4"
+[tool.hatch.metadata]
+allow-direct-references = true
 
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-pytest-cov = "^3.0.0"
-codecov = "^2.1.11"
-yapf = "^0.31.0"
-toml = "^0.10"
-jupyter = "^1.0.0"
+[project.optional-dependencies]
+dev = [
+    "pytest>=5.2",
+    "pytest-cov>=3.0.0",
+    "codecov>=2.1.11",
+    "yapf>=0.31.0",
+    "toml>=0.10",
+    "jupyter>=1.0.0",
+    "flake8>=6.0.0"
+]
 
-[tool.poetry.scripts]
+[project.urls]
+homepage = "https://docs.easyreflectometry.org"
+documentation = "https://docs.easyreflectometry.org"
+
+[project.scripts]
 EasyReflectometryLib = "EasyReflectometry.main:main"
+
+[tool.coverage.run]
+source = ['EasyReflectometry']
+
+[tool.github.info]
+organization = 'easyScience'
+repo = 'EasyReflectometryLib'
 
 [tool.tox]
 legacy_tox_ini = """
@@ -75,8 +88,7 @@ passenv =
     GITHUB_SHA
     COVERAGE_FILE
 deps = coverage
-whitelist_externals = poetry
 commands =
-    poetry install -vvv
-    poetry run pytest --cov --cov-report=xml
+    pip install -e '.[dev]'
+    pytest --cov --cov-report=xml
 """
