@@ -23,7 +23,7 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Development Status :: 3 - Alpha"
 ]
-requires-python = ">3.7"
+requires-python = ">=3.8,<3.11"
 dependencies = [
     "easyScienceCore @ git+https://github.com/easyScience/easyCore.git@mutlifitter",
     "refnx>=0.1.15",
