@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "EasyReflectometryLib"
 version = "0.0.2"
-description = "A reflectometry python package built on the EasyScience framework"
+description = "A reflectometry python package built on the EasyScience framework."
 readme = "README.rst"
 authors = [
     {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}, 
