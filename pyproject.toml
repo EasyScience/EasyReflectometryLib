@@ -32,9 +32,6 @@ dependencies = [
     "orsopy>=0.0.4"
 ]
 
-[tool.hatch.metadata]
-allow-direct-references = true
-
 [project.optional-dependencies]
 dev = [
     "pytest>=5.2",
@@ -43,15 +40,22 @@ dev = [
     "yapf>=0.31.0",
     "toml>=0.10",
     "jupyter>=1.0.0",
-    "flake8>=6.0.0"
+    "flake8>=6.0.0",
+    "jupyterlab",
+    "coverage",
+    "coveralls",
+    "ipykernel",
+    "nbsphinx",
+    "sphinx_book_theme",
+    "sphinx_autodoc_typehints"
 ]
 
 [project.urls]
 homepage = "https://docs.easyreflectometry.org"
 documentation = "https://docs.easyreflectometry.org"
 
-[project.scripts]
-EasyReflectometryLib = "EasyReflectometry.main:main"
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.coverage.run]
 source = ['EasyReflectometry']
