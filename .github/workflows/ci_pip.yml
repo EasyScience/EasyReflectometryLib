@@ -16,15 +16,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
     - uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-
     - name: Install dependencies
       run: |
         pip install -e '.[dev]'
-        
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -58,18 +55,10 @@ jobs:
 
     - name: install pypa/build
       run: >- 
-        python -m 
-        pip install 
-        build 
-        --user
+        python -m pip install build --user
     - name: build a binary wheel and source tarball
       run: >- 
-        python -m 
-        build 
-        --sdist
-        --wheel
-        --outdir dist/
-        .
+        python -m build --sdist --wheel --outdir dist/ .
 
     - name: Check Build
       run: |
