@@ -239,8 +239,8 @@ class MaterialDensity(Material):
     @chemical_structure.setter
     def chemical_structure(self, structure_string: str):
         """
-       :param structure_string: String that defines the chemical structure.
-       """
+        :param structure_string: String that defines the chemical structure.
+        """
         self._chemical_structure = structure_string
         scattering_length = neutron_scattering_length(structure_string)
         self.scattering_length_real.value = scattering_length.real

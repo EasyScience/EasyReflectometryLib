@@ -41,8 +41,8 @@ def _parse(formula: str) -> Tuple[dict, int]:
     :return: Tuple containing; formula as a dictwith occurences
         of each atom and an iterator.
     """
-    q = []
-    mol = {}
+    token_list = []
+    molecule_dict = {}
     i = 0
 
     while i < len(formula):
@@ -59,15 +59,15 @@ def _parse(formula: str) -> Tuple[dict, int]:
                 weight = 1
 
             submol = _dictify(re.findall(ATOM_REGEX, ''.join(q)))
-            return _fuse(mol, submol, weight), i
+            return _fuse(molecule_dict, submol, weight), i
 
         if token in OPENERS:
             submol, letter = _parse(formula[i + 1:])
-            mol = _fuse(mol, submol)
+            molecule_dict = _fuse(molecule_dict, submol)
             # skip the already read submol
             i += letter + 1
         else:
-            q.append(token)
+            token_list.append(token)
 
         i += 1
 
