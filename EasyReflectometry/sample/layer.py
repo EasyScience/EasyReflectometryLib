@@ -400,12 +400,14 @@ class LayerApm(Layer):
                                    f'{self.area_per_molecule.unit}'
         return layerapm_dict
 
-    def as_dict(self, skip: list = []) -> dict:
+    def as_dict(self, skip: list = None) -> dict:
         """
         Custom as_dict method to skip necessary things.
 
         :return: Cleaned dictionary.
         """
+        if skip is None:
+            skip = []
         this_dict = super().as_dict(skip=skip)
         del this_dict['material'], this_dict['scattering_length_real']
         del this_dict['scattering_length_imag']
