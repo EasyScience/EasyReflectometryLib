@@ -1,6 +1,6 @@
 __author__ = 'github.com/arm61'
 
-from typing import Union, TextIO, List, Dict
+from typing import Union, TextIO
 import numpy as np
 import scipp as sc
 from orsopy.fileio import orso, Header
@@ -8,10 +8,10 @@ from orsopy.fileio import orso, Header
 
 def load(fname: Union[TextIO, str]) -> sc.Dataset:
     """
-    Load data from an ORSO .ort file. 
+    Load data from an ORSO .ort file.
 
-    :param fname: The file to be read. 
-    
+    :param fname: The file to be read.
+
     :return: A scipp Dataset for the loaded datasets.
     """
     try:
@@ -23,10 +23,10 @@ def load(fname: Union[TextIO, str]) -> sc.Dataset:
 def _load_orso(fname: Union[TextIO, str]) -> sc.Dataset:
     """
     Load from an ORSO compatible file.
-    
+
     :param fname: The path for the file to be read.
 
-    :return: A populated scipp dataset. 
+    :return: A populated scipp dataset.
     """
     data = {}
     f_data = orso.load_orso(fname)
@@ -56,10 +56,10 @@ def _load_orso(fname: Union[TextIO, str]) -> sc.Dataset:
 def _load_txt(fname: Union[TextIO, str]) -> sc.Dataset:
     """
     Load data from a simple txt file.
-    
+
     :param fname: The path for the file to be read.
 
-    :return: A populated scipp dataset. 
+    :return: A populated scipp dataset.
     """
     f_data = np.loadtxt(fname)
     data = {

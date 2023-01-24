@@ -1,6 +1,6 @@
 __author__ = 'github.com/arm61'
 
-from typing import ClassVar, Tuple
+from typing import ClassVar
 from copy import deepcopy
 
 import yaml
@@ -8,7 +8,7 @@ from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter, BaseObj
 from easyCore.Fitting.Constraints import FunctionalConstraint
 
-from EasyReflectometry.sample.material import Material, MaterialMixture, MATERIAL_DEFAULTS
+from EasyReflectometry.sample.material import Material, MaterialMixture
 from EasyReflectometry.special.calculations import neutron_scattering_length, apm_to_sld
 
 LAYER_DETAILS = {
@@ -107,7 +107,7 @@ class Layer(BaseObj):
     @classmethod
     def default(cls, interface=None) -> "Layer":
         """
-        Default constructor for the reflectometry layer. 
+        Default constructor for the reflectometry layer.
 
         :return: Default layer container
         :rtype: Layer
@@ -168,8 +168,8 @@ class Layer(BaseObj):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         return {
@@ -192,12 +192,11 @@ class Layer(BaseObj):
 
 class LayerApm(Layer):
     """
-    The :py:class:`LayerApm` class allows a layer to be defined in terms of some chemical 
-    structure (given as a chemical formula) and area per molecule. 
+    The :py:class:`LayerApm` class allows a layer to be defined in terms of some
+    chemical structure (given as a chemical formula) and area per molecule.
 
     """
-    area_per_molecule: ClassVar[
-        Parameter]  #= ('area_per_molecule', LAYERAPM_DETAILS['area_per_molecule'])
+    area_per_molecule: ClassVar[Parameter]
     solvation: ClassVar[Parameter]
 
     def __init__(self,
@@ -219,7 +218,7 @@ class LayerApm(Layer):
         :param name: Identifier, defaults to :py:attr:`EasyLayerApm`
         :param interface: Interface object, defaults to :py:attr:`None`
         """
-        scattering_length = neutron_scattering_length(chemical_structure) 
+        scattering_length = neutron_scattering_length(chemical_structure)
         default_options = deepcopy(LAYERAPM_DETAILS)
         del default_options['sl']['value']
         del default_options['isl']['value']
@@ -256,7 +255,8 @@ class LayerApm(Layer):
         solvated_material = MaterialMixture(material,
                                             solvent,
                                             solvation,
-                                            name=chemical_structure + '/' + solvent.name,
+                                            name=chemical_structure + '/' +
+                                            solvent.name,
                                             interface=interface)
         super().__init__(material=solvated_material,
                          thickness=thickness,
@@ -298,11 +298,12 @@ class LayerApm(Layer):
         """
         self.material.fraction = fraction
 
-    #Class constructors
+    # Class constructors
     @classmethod
     def default(cls, interface=None) -> "LayerApm":
         """
-        Default constructor for layer defined from chemical structure and area per molecule.
+        Default constructor for layer defined from chemical structure
+        and area per molecule.
 
         :param interface: Interface object, defaults to :py:attr:`None`
         :return: Layer with correct structure
@@ -332,8 +333,9 @@ class LayerApm(Layer):
                   name: str = 'EasyLayerApm',
                   interface=None) -> "LayerApm":
         """
-        Constructor for a layer described with the area per molecule, where the parameters are known.
-        
+        Constructor for a layer described with the area per molecule,
+        where the parameters are known.
+
         :param chemical_structure: Chemical formula for the material in the layer
         :param thickness: Layer thickness
         :param solvent: Solvent present in material
@@ -372,37 +374,40 @@ class LayerApm(Layer):
         :return: Chemical structure
         """
         return self._chemical_structure
-    
+
     @chemical_structure.setter
     def chemical_structure(self, structure_string: str):
-       """
+        """
        :param structure_string: String that defines the chemical structure.
-       """ 
-       self._chemical_structure = structure_string
-       scattering_length = neutron_scattering_length(structure_string)
-       self.scattering_length_real.value = scattering_length.real
-       self.scattering_length_imag.value = scattering_length.imag
-       self.material.name = structure_string + '/' + self.material._material_b.name
+       """
+        self._chemical_structure = structure_string
+        scattering_length = neutron_scattering_length(structure_string)
+        self.scattering_length_real.value = scattering_length.real
+        self.scattering_length_imag.value = scattering_length.imag
+        self.material.name = structure_string + '/' + self.material._material_b.name
 
     @property
     def _dict_repr(self) -> dict:
         """
-        Dictionary representation of the :py:class:`LayerApm` object. 
-        
+        Dictionary representation of the :py:class:`LayerApm` object.
+
         :return: Simple dictionary
         """
         layerapm_dict = super()._dict_repr
         layerapm_dict['chemical_structure'] = self._chemical_structure
         layerapm_dict[
-            'area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} {self.area_per_molecule.unit}'
+            'area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} ' \
+                                   f'{self.area_per_molecule.unit}'
         return layerapm_dict
 
-    def as_dict(self, skip: list=[]) -> dict:
+    def as_dict(self, skip: list = None) -> dict:
         """
         Custom as_dict method to skip necessary things.
-        
+
         :return: Cleaned dictionary.
         """
+        if skip is None:
+            skip = []
         this_dict = super().as_dict(skip=skip)
         del this_dict['material'], this_dict['scattering_length_real']
         del this_dict['scattering_length_imag']

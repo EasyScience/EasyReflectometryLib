@@ -63,7 +63,7 @@ class TestMaterial(unittest.TestCase):
     def test_dict_round_trip(self):
         p = Material.default()
         q = Material.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()
 
 
 class TestMaterialDensity(unittest.TestCase):
@@ -119,7 +119,7 @@ class TestMaterialDensity(unittest.TestCase):
     def test_dict_round_trip(self):
         p = MaterialDensity.default()
         q = MaterialDensity.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()
 
 
 class TestMaterialMixture(unittest.TestCase):
@@ -241,4 +241,4 @@ class TestMaterialMixture(unittest.TestCase):
     def test_dict_round_trip(self):
         p = MaterialMixture.default()
         q = MaterialMixture.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()

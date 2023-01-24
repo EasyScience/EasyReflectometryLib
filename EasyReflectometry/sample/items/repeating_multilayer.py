@@ -1,12 +1,10 @@
 from copy import deepcopy
 from typing import Union, List
-import yaml
 
 from easyCore.Objects.ObjectClasses import Parameter
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
 from .multilayer import MultiLayer
-
 
 REPEATINGMULTILAYER_DETAILS = {
     'repetitions': {
@@ -18,15 +16,17 @@ REPEATINGMULTILAYER_DETAILS = {
     }
 }
 
+
 class RepeatingMultiLayer(MultiLayer):
     """
     A :py:class:`RepeatingMultiLayer` takes a :py:class:`MultiLayer` and repeats
-    it a some number of times. This enables a computational efficiency in many 
-    reflectometry engines as the operation can be performed for a single 
-    :py:class:`MultiLayer` and cheaply combined for the appropriate number of 
-    :py:attr:`repetitions`. 
+    it a some number of times. This enables a computational efficiency in many
+    reflectometry engines as the operation can be performed for a single
+    :py:class:`MultiLayer` and cheaply combined for the appropriate number of
+    :py:attr:`repetitions`.
 
-    More information about the usage of this item is available in the `item library documentation`_
+    More information about the usage of this item is available in the
+    `item library documentation`_
 
     .. _`item library documentation`: ./item_library.html#repeatingmultilayer
     """
@@ -49,7 +49,7 @@ class RepeatingMultiLayer(MultiLayer):
     @classmethod
     def default(cls, interface=None) -> "RepeatingMultiLayer":
         """
-        Default constructor for the reflectometry repeating multi layer. 
+        Default constructor for the reflectometry repeating multi layer.
 
         :return: Default repeating multi-layer container
         """
@@ -65,10 +65,11 @@ class RepeatingMultiLayer(MultiLayer):
                   name: str = 'EasyRepeatingMultiLayer',
                   interface=None) -> "RepeatingMultiLayer":
         """
-        Constructor of a reflectometry repeating multi layer where the parameters are known.
+        Constructor of a reflectometry repeating multi layer where the
+        parameters are known.
 
         :param layers: The layers in the repeating multi layer
-        :param repetitions: Number of repetitions, defaults to :py:attr`1`. 
+        :param repetitions: Number of repetitions, defaults to :py:attr`1`.
         :return: Repeating multi-layer container
         """
         default_options = deepcopy(REPEATINGMULTILAYER_DETAILS)
@@ -93,8 +94,8 @@ class RepeatingMultiLayer(MultiLayer):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         d_dict = {self.name: self.layers._dict_repr}

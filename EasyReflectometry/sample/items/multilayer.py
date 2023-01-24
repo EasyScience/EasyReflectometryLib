@@ -8,13 +8,14 @@ from EasyReflectometry.sample.layers import Layers
 
 class MultiLayer(BaseObj):
     """
-    A :py:class:`MultiLayer` consists of a series of 
-    :py:class:`EasyReflectometry.sample.layer.Layer` or 
-    :py:class:`EasyReflectometry.sample.layers.Layers`. 
-    This :py:mod:`item` will arrange the layers as slabs, one on top of another, 
-    allowing the reflectometry to be determined from them. 
-    
-    More information about the usage of this item is available in the `item library documentation`_
+    A :py:class:`MultiLayer` consists of a series of
+    :py:class:`EasyReflectometry.sample.layer.Layer` or
+    :py:class:`EasyReflectometry.sample.layers.Layers`.
+    This :py:mod:`item` will arrange the layers as slabs, one on top of another,
+    allowing the reflectometry to be determined from them.
+
+    More information about the usage of this item is available in the
+    `item library documentation`_
 
     .. _`item library documentation`: ./item_library.html#multilayer
     """
@@ -107,8 +108,8 @@ class MultiLayer(BaseObj):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         if len(self.layers) == 1:

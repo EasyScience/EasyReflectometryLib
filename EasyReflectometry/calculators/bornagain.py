@@ -22,7 +22,7 @@ class BornAgain:
 
     def create_material(self, name):
         """
-        Create a material using SLD. 
+        Create a material using SLD.
 
         :param name: The name of the material
         :type name: str
@@ -60,7 +60,8 @@ class BornAgain:
         if 'imag' in kwargs.keys():
             if kwargs['imag'] < 0:
                 raise ValueError(
-                    'The BornAgain interface does not support negative imaginary scattering length densities'
+                    'The BornAgain interface does not support negative '
+                    'imaginary scattering length densities'
                 )
             imag = kwargs['imag'] * 1e-6
         self.storage['material'][name] = ba.MaterialBySLD(str(name), real, imag)

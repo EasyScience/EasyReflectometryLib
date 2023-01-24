@@ -1,7 +1,6 @@
 __author__ = 'github.com/arm61'
 
-from copy import deepcopy
-from typing import List, Union
+from typing import List
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
@@ -22,7 +21,7 @@ class Layers(BaseCollection):
     @classmethod
     def default(cls, interface=None) -> 'Layers':
         """
-        Default constructor for the reflectometry layers. 
+        Default constructor for the reflectometry layers.
 
         :return: Default layers container
         """
@@ -54,8 +53,8 @@ class Layers(BaseCollection):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         return {self.name: [i._dict_repr for i in self]}

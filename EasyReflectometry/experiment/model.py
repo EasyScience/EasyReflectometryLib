@@ -25,7 +25,7 @@ LAYER_DETAILS = {
         'description': 'Linear background to include in reflectometry data',
         'url':
         'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
-        'value': 1e-7,
+        'value': 1e-8,
         'min': 0.0,
         'max': np.Inf,
         'fixed': True
@@ -62,7 +62,7 @@ class Model(BaseObj):
     @classmethod
     def default(cls, interface=None) -> "Model":
         """
-        Default constructor for the reflectometry experiment model. 
+        Default constructor for the reflectometry experiment model.
 
         :return: Default model container
         :rtype: Model
@@ -87,7 +87,7 @@ class Model(BaseObj):
         :param structure: The structure being modelled
         :param scale: Scaling factor of profile
         :param background: Linear background magnitude
-        :param background: Constant resolution smearing percentage 
+        :param background: Constant resolution smearing percentage
         :return: Model container
         """
         default_options = deepcopy(LAYER_DETAILS)
@@ -162,8 +162,8 @@ class Model(BaseObj):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         return {

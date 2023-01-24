@@ -1,6 +1,5 @@
 __author__ = 'github.com/arm61'
 
-import numpy as np
 import scipp as sc
 import ipympl
 import matplotlib.pyplot as plt
@@ -12,9 +11,9 @@ color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
 def plot(data: sc.Dataset) -> ipympl.backend_nbagg.Canvas:
     """
     A general plotting function for EasyReflectometry.
-    
+
     :param data: the Dataset to be plotted.
-    
+
     :returns: The plot canvas.
     """
     if len([i for i in list(data.keys()) if 'SLD' in i]) == 0:
@@ -50,7 +49,6 @@ def plot(data: sc.Dataset) -> ipympl.backend_nbagg.Canvas:
     ax1.relim()
     ax1.autoscale_view()
 
-    sld_nums = [k[2:] for k, v in data.coords.items() if 'z' == k[0]]
     for i, name in enumerate(refl_nums):
         try:
             copy = data[f'SLD_{name}'].copy()
