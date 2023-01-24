@@ -478,12 +478,14 @@ class MaterialMixture(BaseObj):
         """
         return yaml.dump(self._dict_repr, sort_keys=False)
 
-    def as_dict(self, skip: list = []) -> dict:
+    def as_dict(self, skip: list = None) -> dict:
         """
         Custom as_dict method to skip necessary things.
 
         :return: Cleaned dictionary.
         """
+        if skip is None:
+            skip = []
         this_dict = super().as_dict(skip=skip)
         this_dict['material_a'] = self._material_a
         this_dict['material_b'] = self._material_b

@@ -225,12 +225,14 @@ class SurfactantLayer(MultiLayer):
             'conformal roughness': self.conformal_roughness
         }
 
-    def as_dict(self, skip: list = []) -> dict:
+    def as_dict(self, skip: list = None) -> dict:
         """
         Custom as_dict method to skip necessary things.
 
         :return: Cleaned dictionary.
         """
+        if skip is None:
+            skip = []
         this_dict = super().as_dict(skip=skip)
         for i in this_dict['layers']['data']:
             del i['material']
