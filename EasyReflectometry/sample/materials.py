@@ -1,7 +1,6 @@
 __author__ = 'github.com/arm61'
 
-from copy import deepcopy
-from typing import List, Union, TypeVar
+from typing import List, Union
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
@@ -22,7 +21,7 @@ class Materials(BaseCollection):
     @classmethod
     def default(cls, interface=None) -> "Materials":
         """
-        Default constructor for materials. 
+        Default constructor for materials.
 
         :return: Default materials container
         :rtype: Materials
@@ -57,8 +56,8 @@ class Materials(BaseCollection):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         return {self.name: [i._dict_repr for i in self]}

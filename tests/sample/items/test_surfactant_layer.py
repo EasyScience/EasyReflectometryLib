@@ -45,14 +45,14 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.layers[0].name == 'A Test Layer 1'
         assert p.layers[0].chemical_structure == 'C8O10H12P'
         assert p.layers[0].thickness.raw_value == 12
-        assert p.layers[0].solvent.to_data_dict() == h2o.to_data_dict()
+        assert p.layers[0].solvent.as_data_dict() == h2o.as_data_dict()
         assert p.layers[0].solvation.raw_value == 0.5
         assert p.layers[0].area_per_molecule.raw_value == 50
         assert p.layers[0].roughness.raw_value == 2
         assert p.layers[1].name == 'A Test Layer 2'
         assert p.layers[1].chemical_structure == 'C10H24'
         assert p.layers[1].thickness.raw_value == 10
-        assert p.layers[1].solvent.to_data_dict() == noth2o.to_data_dict()
+        assert p.layers[1].solvent.as_data_dict() == noth2o.as_data_dict()
         assert p.layers[1].solvation.raw_value == 0.2
         assert p.layers[1].area_per_molecule.raw_value == 40
         assert p.name == 'A Test'
@@ -166,32 +166,31 @@ class TestSurfactantLayer(unittest.TestCase):
     def test_dict_round_trip(self):
         p = SurfactantLayer.default()
         q = SurfactantLayer.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()
 
 
     def test_dict_round_trip_apm(self):
         p = SurfactantLayer.default()
         p.constrain_apm = True
-        print(p.as_dict())
         q = SurfactantLayer.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()
     
     def test_dict_round_trip_apm2(self):
         p = SurfactantLayer.default()
         p.constrain_apm = True
         p.constrain_apm = False
         q = SurfactantLayer.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()
 
     def test_dict_round_trip_roughness(self):
         p = SurfactantLayer.default()
         p.conformal_roughness = True
         q = SurfactantLayer.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()
 
     def test_dict_round_trip_roughness2(self):
         p = SurfactantLayer.default()
         p.conformal_roughness = True
         p.conformal_roughness = False
         q = SurfactantLayer.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()

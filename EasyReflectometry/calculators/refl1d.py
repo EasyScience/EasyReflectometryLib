@@ -3,7 +3,7 @@ __author__ = "github.com/arm61"
 from typing import Tuple
 
 from easyCore import np
-from refl1d import names, model, experiment
+from refl1d import names, model
 
 
 class Refl1d:
@@ -169,7 +169,8 @@ class Refl1d:
         :param item_name: items to add to model
         :param model_name: name for the model
         """
-        self.storage['model'][model_name]['items'].append(self.storage['item'][item_name])
+        self.storage['model'][model_name]['items'].append(
+            self.storage['item'][item_name])
 
     def remove_layer_from_item(self, layer_name: str, item_name: str):
         """
@@ -189,7 +190,8 @@ class Refl1d:
         :param item_name: The item name
         :param model_name: The model name
         """
-        item_idx = self.storage['model'][model_name]['items'].index(self.storage['item'][item_name])
+        item_idx = self.storage['model'][model_name]['items'].index(
+            self.storage['item'][item_name])
         del self.storage['model'][model_name]['items'][item_idx]
         del self.storage['item'][item_name]
 

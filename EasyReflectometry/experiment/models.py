@@ -1,7 +1,6 @@
 __author__ = 'github.com/arm61'
 
-from copy import deepcopy
-from typing import List, Union, TypeVar
+from typing import List
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
@@ -23,7 +22,7 @@ class Models(BaseCollection):
     def default(cls, interface=None) -> 'Models':
         """
         Default constructor for the models
-        
+
         :return: Default models container
         """
         model1 = Model.default()
@@ -36,8 +35,8 @@ class Models(BaseCollection):
                   name: str = 'EasyModels',
                   interface=None) -> 'Models':
         """
-        Constructor for the models where models are being given. 
-        
+        Constructor for the models where models are being given.
+
         :param args: The series of models
         :return: Models container
         """
@@ -46,7 +45,7 @@ class Models(BaseCollection):
     def add_model(self, new_model: Model):
         """
         Add a model to the models.
-        
+
         :param new_model: New model to be added.
         """
         self.append(new_model)
@@ -70,8 +69,8 @@ class Models(BaseCollection):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         return {self.name: [i._dict_repr for i in self]}

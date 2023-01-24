@@ -53,4 +53,4 @@ class TestLayers(unittest.TestCase):
     def test_dict_round_trip(self):
         p = Materials.default()
         q = Materials.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()

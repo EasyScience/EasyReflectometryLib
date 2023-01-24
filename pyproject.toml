@@ -54,11 +54,30 @@ dev = [
 homepage = "https://docs.easyreflectometry.org"
 documentation = "https://docs.easyreflectometry.org"
 
+<<<<<<< HEAD
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.coverage.run]
 source = ['EasyReflectometry']
+=======
+[tool.poetry.dependencies]
+python = "^3.8,<3.11"
+numpy = "1.23.5"
+easyScienceCore = "^0.3.0"
+refnx = "^0.1.15"  # Freeze "0.1.15" if "ERROR: Could not build wheels for refnx which use PEP 517 and cannot be installed directly"
+refl1d = "^0.8.14"
+scipp = "^0.13.0"
+orsopy = "^0.0.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2"
+pytest-cov = "^4.0.0"
+codecov = "^2.1.11"
+yapf = "^0.31.0"
+toml = "^0.10"
+jupyter = "^1.0.0"
+>>>>>>> develop
 
 [tool.github.info]
 organization = 'easyScience'

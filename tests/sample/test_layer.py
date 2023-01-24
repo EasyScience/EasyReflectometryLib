@@ -101,7 +101,7 @@ class TestLayer(unittest.TestCase):
     def test_dict_round_trip(self):
         p = Layer.default()
         q = Layer.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()
 
 
 class TestLayerApm(unittest.TestCase):
@@ -235,4 +235,4 @@ class TestLayerApm(unittest.TestCase):
     def test_dict_round_trip(self):
         p = LayerApm.default()
         q = LayerApm.from_dict(p.as_dict())
-        assert p.to_data_dict() == q.to_data_dict()
+        assert p.as_data_dict() == q.as_data_dict()

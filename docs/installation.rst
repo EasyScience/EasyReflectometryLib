@@ -38,4 +38,5 @@ And install the latest developer version with:
 
     $ cd EasyReflectometryLib
     $ git checkout develop
-    $ pip install -e ".[dev]"
+    $ pip install -r requirements-dev.txt
+    $ pip install -e .
