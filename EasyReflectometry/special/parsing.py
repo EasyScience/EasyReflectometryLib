@@ -72,7 +72,7 @@ def _parse(formula: str) -> Tuple[dict, int]:
         i += 1
 
     # Fuse in all that's left at base level
-    return _fuse(mol, _dictify(re.findall(ATOM_REGEX, ''.join(q)))), i
+    return _fuse(molecule_dict, _dictify(re.findall(ATOM_REGEX, ''.join(token_list)))), i
 
 
 def parse_formula(formula: str) -> dict:
