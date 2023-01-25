@@ -58,7 +58,7 @@ def _parse(formula: str) -> Tuple[dict, int]:
             else:
                 weight = 1
 
-            submol = _dictify(re.findall(ATOM_REGEX, ''.join(q)))
+            submol = _dictify(re.findall(ATOM_REGEX, ''.join(token_list)))
             return _fuse(molecule_dict, submol, weight), i
 
         if token in OPENERS:
