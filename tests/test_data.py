@@ -10,15 +10,15 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 import scipp as sc
 from orsopy.fileio import load_orso, Header
-import EasyReflectometry
-from EasyReflectometry.data import load, _load_orso, _load_txt
+import EasyReflectometryLib
+from EasyReflectometryLib.data import load, _load_orso, _load_txt
 
 
 class TestData(unittest.TestCase):
 
     def test_load_with_orso(self):
         fpath = os.path.join(
-            os.path.dirname(os.path.dirname(EasyReflectometry.__file__)),
+            os.path.dirname(os.path.dirname(EasyReflectometryLib.__file__)),
             'tests/_static/test_example1.ort')
         er_data = load(fpath)
         o_data = load_orso(fpath)
@@ -33,7 +33,7 @@ class TestData(unittest.TestCase):
 
     def test_load_with_txt(self):
         fpath = os.path.join(
-            os.path.dirname(os.path.dirname(EasyReflectometry.__file__)),
+            os.path.dirname(os.path.dirname(EasyReflectometryLib.__file__)),
             'tests/_static/test_example1.txt')
         er_data = load(fpath)
         n_data = np.loadtxt(fpath)
@@ -44,7 +44,7 @@ class TestData(unittest.TestCase):
 
     def test_orso1(self):
         fpath = os.path.join(
-            os.path.dirname(os.path.dirname(EasyReflectometry.__file__)),
+            os.path.dirname(os.path.dirname(EasyReflectometryLib.__file__)),
             'tests/_static/test_example1.ort')
         er_data = _load_orso(fpath)
         o_data = load_orso(fpath)
@@ -59,7 +59,7 @@ class TestData(unittest.TestCase):
 
     def test_orso2(self):
         fpath = os.path.join(
-            os.path.dirname(os.path.dirname(EasyReflectometry.__file__)),
+            os.path.dirname(os.path.dirname(EasyReflectometryLib.__file__)),
             'tests/_static/test_example2.ort')
         er_data = _load_orso(fpath)
         o_data = load_orso(fpath)
@@ -77,7 +77,7 @@ class TestData(unittest.TestCase):
 
     def test_orso3(self):
         fpath = os.path.join(
-            os.path.dirname(os.path.dirname(EasyReflectometry.__file__)),
+            os.path.dirname(os.path.dirname(EasyReflectometryLib.__file__)),
             'tests/_static/test_example3.ort')
         er_data = _load_orso(fpath)
         o_data = load_orso(fpath)
@@ -95,7 +95,7 @@ class TestData(unittest.TestCase):
 
     def test_orso4(self):
         fpath = os.path.join(
-            os.path.dirname(os.path.dirname(EasyReflectometry.__file__)),
+            os.path.dirname(os.path.dirname(EasyReflectometryLib.__file__)),
             'tests/_static/test_example4.ort')
         er_data = _load_orso(fpath)
         o_data = load_orso(fpath)
@@ -114,7 +114,7 @@ class TestData(unittest.TestCase):
 
     def test_txt(self):
         fpath = os.path.join(
-            os.path.dirname(os.path.dirname(EasyReflectometry.__file__)),
+            os.path.dirname(os.path.dirname(EasyReflectometryLib.__file__)),
             'tests/_static/test_example1.txt')
         er_data = _load_txt(fpath)
         n_data = np.loadtxt(fpath)

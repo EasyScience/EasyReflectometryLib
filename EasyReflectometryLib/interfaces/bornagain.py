@@ -1,35 +1,37 @@
 __author__ = "github.com/arm61"
 
-from typing import List, Tuple, Union
-
 import numpy as np
 
 from easyCore.Objects.Inferface import ItemContainer
-from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
-from EasyReflectometry.calculators.refl1d import Refl1d as Refl1d_calc
-from EasyReflectometry.sample.material import Material, MaterialMixture
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.item import MultiLayer
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometryLib.interfaces.interfaceTemplate import InterfaceTemplate
+from EasyReflectometryLib.calculators.bornagain import BornAgain as BornAgain_calc
+from EasyReflectometryLib.sample.material import Material, MaterialMixture
+from EasyReflectometryLib.sample.layer import Layer
+from EasyReflectometryLib.sample.item import MultiLayer
+from EasyReflectometryLib.experiment.model import Model
 
 
-class Refl1d(InterfaceTemplate):
+class BornAgain(InterfaceTemplate):
     """
-    A simple interface using refl1
+    A simple interface using BornAgain
     """
 
-    _material_link = {'sld': 'rho', 'isld': 'irho'}
+    _material_link = {'sld': 'real', 'isld': 'imag'}
 
-    _layer_link = {'thickness': 'thickness', 'roughness': 'interface'}
+    _layer_link = {'thickness': 'thickness', 'roughness': 'sigma'}
 
-    _item_link = {'repetitions': 'repeat'}
+    _item_link = {'repetitions': 'repeats'}
 
-    _model_link = {'scale': 'scale', 'background': 'bkg', 'resolution': 'dq'}
+    _model_link = {
+        'scale': 'scale',
+        'background': 'background',
+        'resolution': 'resolution'
+    }
 
-    name = 'refl1d'
+    name = 'BornAgain'
 
     def __init__(self):
-        self.calculator = Refl1d_calc()
+        self.calculator = BornAgain_calc()
         self._namespace = {}
 
     def reset_storage(self):
@@ -38,13 +40,14 @@ class Refl1d(InterfaceTemplate):
         """
         self.calculator.reset_storage()
 
-    def create(self, model: Union[Material, Layer, MultiLayer,
-                                  Model]) -> List[ItemContainer]:
+    def create(self, model):
         """
         Creation function
 
         :param model: Object to be created
+        :type model: Union[Material, Layer, Item, Model]
         :return: Item containers of the objects
+        :rtype: List[ItemContainer]
         """
         r_list = []
         t_ = type(model)
@@ -81,74 +84,83 @@ class Refl1d(InterfaceTemplate):
             for i in model.layers:
                 self.add_layer_to_item(i.uid, model.uid)
         elif issubclass(t_, Model):
-            key = model.uid
-            self.calculator.create_model(key)
+            self.calculator.create_model()
             r_list.append(
-                ItemContainer(key, self._model_link, self.calculator.get_model_value,
+                ItemContainer('model', self._model_link,
+                              self.calculator.get_model_value,
                               self.calculator.update_model))
             for i in model.structure:
-                self.add_item_to_model(i.uid, key)
+                self.add_item_to_model(i.uid)
         return r_list
 
-    def assign_material_to_layer(self, material_id: str, layer_id: str):
+    def assign_material_to_layer(self, material_id: int, layer_id: int):
         """
         Assign a material to a layer.
 
         :param material_name: The material name
+        :type material_name: str
         :param layer_name: The layer name
+        :type layer_name: str
         """
         self.calculator.assign_material_to_layer(material_id, layer_id)
 
-    def add_layer_to_item(self, layer_id: str, item_id: str):
+    def add_layer_to_item(self, layer_id: int, item_id: int):
         """
         Add a layer to the item stack
 
         :param item_id: The item id
+        :type item_id: int
         :param layer_id: The layer id
+        :type layer_id: int
         """
         self.calculator.add_layer_to_item(layer_id, item_id)
 
-    def remove_layer_from_item(self, layer_id: str, item_id: str):
+    def remove_layer_from_item(self, layer_id: int, item_id: int):
         """
         Remove a layer from an item stack
 
         :param item_id: The item id
-        :type item_id: int        :param layer_id: The layer id
+        :type item_id: int
+        :param layer_id: The layer id
+        :type layer_id: int
         """
         self.calculator.remove_layer_from_item(layer_id, item_id)
 
-    def add_item_to_model(self, item_id: str, model_id: str):
+    def add_item_to_model(self, item_id: int):
         """
         Add a layer to the item stack
 
         :param item_id: The item id
-        :param model_id: The model id
+        :type item_id: int
         """
-        self.calculator.add_item(item_id, model_id)
+        self.calculator.add_item(item_id)
 
-    def remove_item_from_model(self, item_id: str, model_id: str):
+    def remove_item_from_model(self, item_id: int):
         """
         Remove a layer from the item stack
 
         :param item_id: The item id
-        :param model_id: The model id
+        :type item_id: int
+        :param layer_id: The layer id
+        :type layer_id: int
         """
-        self.calculator.remove_item(item_id, model_id)
+        self.calculator.remove_item(item_id)
 
-    def fit_func(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
+    def fit_func(self, x_array: np.ndarray) -> np.ndarray:
         """
         Function to perform a fit
-
         :param x_array: points to be calculated at
-        :param model_id: The name of the model
+        :type x_array: np.ndarray
         :return: calculated points
+        :rtype: np.ndarray
         """
-        return self.calculator.calculate(x_array, model_id)
+        return self.calculator.calculate(x_array)
 
-    def sld_profile(self, model_id: str) -> Tuple[np.ndarray, np.ndarray]:
+    def sld_profile(self) -> tuple:
         """
         Return the scattering length density profile.
 
         :return: z and sld(z)
+        :rtype: tuple[np.ndarray, np.ndarray]
         """
-        return self.calculator.sld_profile(model_id)
+        return self.calculator.sld_profile()

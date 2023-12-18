@@ -9,20 +9,20 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 import scipp as sc
 from orsopy.fileio import load_orso, Header
-import EasyReflectometry
-from EasyReflectometry.sample import Layer, Structure
-from EasyReflectometry.sample.material import Material
-from EasyReflectometry.experiment.model import Model
-from EasyReflectometry.data import load
-from EasyReflectometry.interface import InterfaceFactory as Interface
-from EasyReflectometry.fitting import Fitter
+import EasyReflectometryLib
+from EasyReflectometryLib.sample import Layer, Structure
+from EasyReflectometryLib.sample.material import Material
+from EasyReflectometryLib.experiment.model import Model
+from EasyReflectometryLib.data import load
+from EasyReflectometryLib.interface import InterfaceFactory as Interface
+from EasyReflectometryLib.fitting import Fitter
 
 
 class TestFitting(unittest.TestCase):
 
     def test_fitting(self):
         fpath = os.path.join(
-            os.path.dirname(os.path.dirname(EasyReflectometry.__file__)),
+            os.path.dirname(os.path.dirname(EasyReflectometryLib.__file__)),
             'tests/_static/example.ort')
         data = load(fpath)
         si = Material.from_pars(2.07, 0, 'Si')

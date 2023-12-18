@@ -4,7 +4,7 @@ from typing import List
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometryLib.experiment.model import Model
 
 
 class Models(BaseCollection):

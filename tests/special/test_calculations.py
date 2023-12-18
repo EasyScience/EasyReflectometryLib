@@ -4,7 +4,7 @@ import unittest
 
 from numpy.testing import assert_almost_equal
 
-from EasyReflectometry.special.calculations import weighted_average_sld
+from EasyReflectometryLib.special.calculations import weighted_average_sld
 
 
 class TestMaterialMixture(unittest.TestCase):

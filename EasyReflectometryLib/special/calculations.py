@@ -3,7 +3,7 @@ __author__ = 'github.com/arm61'
 import periodictable as pt
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.special.parsing import parse_formula
+from EasyReflectometryLib.special.parsing import parse_formula
 
 
 def weighted_average_sld(a: Parameter, b: Parameter, p: Parameter) -> Parameter:

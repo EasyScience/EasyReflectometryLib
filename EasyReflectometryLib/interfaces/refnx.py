@@ -5,12 +5,12 @@ from typing import List, Tuple, Union
 import numpy as np
 
 from easyCore.Objects.Inferface import ItemContainer
-from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
-from EasyReflectometry.calculators.refnx import Refnx as Refnx_calc
-from EasyReflectometry.sample.material import Material, MaterialMixture
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.item import MultiLayer
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometryLib.interfaces.interfaceTemplate import InterfaceTemplate
+from EasyReflectometryLib.calculators.refnx import Refnx as Refnx_calc
+from EasyReflectometryLib.sample.material import Material, MaterialMixture
+from EasyReflectometryLib.sample.layer import Layer
+from EasyReflectometryLib.sample.item import MultiLayer
+from EasyReflectometryLib.experiment.model import Model
 
 
 class Refnx(InterfaceTemplate):

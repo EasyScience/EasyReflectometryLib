@@ -2,9 +2,9 @@ from typing import List
 
 from easyCore.Fitting.Constraints import ObjConstraint
 from easyCore.Objects.ObjectClasses import Parameter
-from EasyReflectometry.sample.material import Material
-from EasyReflectometry.sample.layer import LayerApm
-from EasyReflectometry.sample.layers import Layers
+from EasyReflectometryLib.sample.material import Material
+from EasyReflectometryLib.sample.layer import LayerApm
+from EasyReflectometryLib.sample.layers import Layers
 from .multilayer import MultiLayer
 
 

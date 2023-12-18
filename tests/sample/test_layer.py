@@ -6,12 +6,12 @@ Tests for Layer class module
 
 import os
 import unittest
-from EasyReflectometry.special.calculations import apm_to_sld, neutron_scattering_length
+from EasyReflectometryLib.special.calculations import apm_to_sld, neutron_scattering_length
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from EasyReflectometry.sample.material import Material
-from EasyReflectometry.sample.layer import Layer, LayerApm
-from EasyReflectometry.interface import InterfaceFactory
+from EasyReflectometryLib.sample.material import Material
+from EasyReflectometryLib.sample.layer import Layer, LayerApm
+from EasyReflectometryLib.interface import InterfaceFactory
 
 
 class TestLayer(unittest.TestCase):

@@ -8,7 +8,7 @@ from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter, BaseObj
 from easyCore.Fitting.Constraints import FunctionalConstraint
 
-from EasyReflectometry.special.calculations import (weighted_average_sld,
+from EasyReflectometryLib.special.calculations import (weighted_average_sld,
                                                     neutron_scattering_length,
                                                     molecular_weight, density_to_sld)
 

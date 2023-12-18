@@ -4,8 +4,8 @@ from typing import List, Union
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
-from EasyReflectometry.sample.item import MultiLayer
-from EasyReflectometry.sample.layer import Layer
+from EasyReflectometryLib.sample.item import MultiLayer
+from EasyReflectometryLib.sample.layer import Layer
 
 
 class Structure(BaseCollection):

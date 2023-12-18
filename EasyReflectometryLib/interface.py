@@ -1,6 +1,6 @@
 __author__ = "github.com/wardsimon"
 
-from EasyReflectometry.interfaces import InterfaceTemplate
+from EasyReflectometryLib.interfaces import InterfaceTemplate
 from easyCore.Objects.Inferface import InterfaceFactoryTemplate
 
 

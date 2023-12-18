@@ -1,4 +1,4 @@
-from EasyReflectometry.interface import InterfaceFactory
+from EasyReflectometryLib.interface import InterfaceFactory
 
 
 def main():

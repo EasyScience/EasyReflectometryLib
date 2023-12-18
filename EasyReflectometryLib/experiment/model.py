@@ -6,10 +6,10 @@ from copy import deepcopy
 import yaml
 from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter, BaseObj
-from EasyReflectometry.sample.structure import Structure
-from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.layers import Layers
+from EasyReflectometryLib.sample.structure import Structure
+from EasyReflectometryLib.sample.item import MultiLayer, RepeatingMultiLayer
+from EasyReflectometryLib.sample.layer import Layer
+from EasyReflectometryLib.sample.layers import Layers
 
 LAYER_DETAILS = {
     'scale': {

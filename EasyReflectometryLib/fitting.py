@@ -5,7 +5,7 @@ import scipp as sc
 
 from easyCore.Fitting.Fitting import MultiFitter as easyFitter
 
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometryLib.experiment.model import Model
 
 
 class Fitter:

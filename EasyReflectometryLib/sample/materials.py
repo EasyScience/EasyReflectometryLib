@@ -4,7 +4,7 @@ from typing import List, Union
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
-from EasyReflectometry.sample.material import Material, MaterialMixture
+from EasyReflectometryLib.sample.material import Material, MaterialMixture
 
 
 class Materials(BaseCollection):

@@ -8,11 +8,11 @@ import os
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal, assert_raises
-from EasyReflectometry.sample.material import Material
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.layers import Layers
-from EasyReflectometry.sample.item import RepeatingMultiLayer, MultiLayer, SurfactantLayer
-from EasyReflectometry.interface import InterfaceFactory
+from EasyReflectometryLib.sample.material import Material
+from EasyReflectometryLib.sample.layer import Layer
+from EasyReflectometryLib.sample.layers import Layers
+from EasyReflectometryLib.sample.item import RepeatingMultiLayer, MultiLayer, SurfactantLayer
+from EasyReflectometryLib.interface import InterfaceFactory
 
 
 class TestSurfactantLayer(unittest.TestCase):

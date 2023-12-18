@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling<=1.18.0"]  
+requires = ["hatchling"]  
 build-backend = "hatchling.build"
 
 [project]
@@ -28,7 +28,7 @@ dependencies = [
     "easyScienceCore @ git+https://github.com/easyscience/easycore.git@failed_unit_check",
     "refnx>=0.1.15",
     "refl1d>=0.8.14",
-    "scipp==0.13.0",
+    "scipp==23.08.0",
     "orsopy>=0.0.4"
 ]
 

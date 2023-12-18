@@ -8,8 +8,8 @@ from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter, BaseObj
 from easyCore.Fitting.Constraints import FunctionalConstraint
 
-from EasyReflectometry.sample.material import Material, MaterialMixture
-from EasyReflectometry.special.calculations import neutron_scattering_length, apm_to_sld
+from EasyReflectometryLib.sample.material import Material, MaterialMixture
+from EasyReflectometryLib.special.calculations import neutron_scattering_length, apm_to_sld
 
 LAYER_DETAILS = {
     'thickness': {
