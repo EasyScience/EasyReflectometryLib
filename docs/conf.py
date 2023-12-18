@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# EasyReflectometry documentation build configuration file, created by
+# EasyReflectometryLib documentation build configuration file, created by
 # sphinx-quickstart on Fri Jun  9 13:47:02 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -153,7 +153,7 @@ latex_elements = {
 # [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'EasyReflectometry.tex',
-     'EasyReflectometry Documentation',
+     'EasyReflectometryLib Documentation',
      'Andrew R. McCluskey', 'manual'),
 ]
 
@@ -164,7 +164,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'EasyReflectometry',
-     'EasyReflectometry Documentation',
+     'EasyReflectometryLib Documentation',
      [author], 1)
 ]
 
@@ -176,7 +176,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'EasyReflectometry',
-     'EasyReflectometry Documentation',
+     'EasyReflectometryLib Documentation',
      author,
      'EasyReflectometry',
      'One line description of project.',

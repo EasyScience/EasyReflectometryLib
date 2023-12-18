@@ -19,7 +19,7 @@
 What is EasyReflectometry?
 --------------------------
 
-EasyReflectometry is a reflectometry analysis package built on the `easyScience framework`_.
+EasyReflectometryLib is a reflectometry analysis package built on the `easyScience framework`_.
 
 
 .. _`easyScience framework`: https://easyscience.software

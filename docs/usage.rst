@@ -2,7 +2,7 @@
 Usage
 =====
 
-To use EasyReflectometry in a project::
+To use EasyReflectometryLib in a project::
 
     import EasyReflectometry
 

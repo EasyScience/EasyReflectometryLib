@@ -38,8 +38,8 @@ and "help wanted" is open to whoever wants to implement it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-EasyReflectometry could always use more documentation, whether as part of the
-official EasyReflectometry docs, in docstrings, or even on the web in blog posts,
+EasyReflectometryLib could always use more documentation, whether as part of the
+official EasyReflectometryLib docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 Submit Feedback
@@ -79,8 +79,8 @@ Ready to contribute? Here's how to set up `EasyReflectometry` for local developm
 5. When you're done making changes, auto format the code and check that your changes pass the unit
    tests and confirms to PEP 8::
 
-    $ yapf -i EasyReflectometry tests
-    $ flake8 --count --show-source --statistics EasyReflectometry tests
+    $ yapf -i EasyReflectometryLib tests
+    $ flake8 --count --show-source --statistics EasyReflectometryLib tests
     $ pytest
 
    To get flake8 and tox, just pip install them into your virtualenv.
