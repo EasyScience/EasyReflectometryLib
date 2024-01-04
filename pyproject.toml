@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling<=1.18.0"]  
+requires = ["hatchling<=1.21.0"]  
 build-backend = "hatchling.build"
 
 [project]
@@ -63,6 +63,9 @@ source = ['EasyReflectometry']
 [tool.github.info]
 organization = 'easyScience'
 repo = 'EasyReflectometryLib'
+
+[tool.hatch.build.targets.wheel]
+packages = ["EasyReflectometry"]
 
 [tool.tox]
 legacy_tox_ini = """
