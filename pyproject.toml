@@ -34,20 +34,21 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=5.2",
-    "pytest-cov>=3.0.0",
     "codecov>=2.1.11",
-    "yapf>=0.31.0",
-    "toml>=0.10",
-    "jupyter>=1.0.0",
-    "flake8>=6.0.0",
-    "jupyterlab",
     "coverage",
     "coveralls",
+    "flake8>=6.0.0",
     "ipykernel",
+    "ipympl",
+    "jupyter>=1.0.0",
+    "jupyterlab",
     "nbsphinx",
+    "pytest>=5.2",
+    "pytest-cov>=3.0.0",
     "sphinx_book_theme",
-    "sphinx_autodoc_typehints"
+    "sphinx_autodoc_typehints",
+    "toml>=0.10",
+    "yapf>=0.31.0",
 ]
 
 [project.urls]
