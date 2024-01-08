@@ -43,6 +43,7 @@ dev = [
     "jupyter>=1.0.0",
     "jupyterlab",
     "nbsphinx",
+    "plopp",
     "pytest>=5.2",
     "pytest-cov>=3.0.0",
     "sphinx_book_theme",
