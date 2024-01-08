@@ -39,7 +39,6 @@ dev = [
     "coveralls",
     "flake8>=6.0.0",
     "ipykernel",
-    "ipympl",
     "jupyter>=1.0.0",
     "jupyterlab",
     "nbsphinx",
