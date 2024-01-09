@@ -13,7 +13,7 @@ class Fitter:
     def __init__(self, *args: Model):
         """
         A convinence class for the :py:class:`easyCore.Fitting.Fitting`
-        which will populate the :py:class:`sc.Dataset` appropriately
+        which will populate the :py:class:`sc.DataGroup` appropriately
         after the fitting is performed.
 
         :param model: Reflectometry model
@@ -32,35 +32,41 @@ class Fitter:
         self._models = args
         self.easy_f = easyFitter(args, self._fit_func)
 
-    def fit(self, data: sc.Dataset, method: str = 'least_squares', id=0):
+    def fit(self, data: sc.DataGroup, method: str = 'least_squares', id: int = 0) -> sc.DataGroup:
         """
-        Perform the fitting and populate the datasets with the result.
+        Perform the fitting and populate the DataGroups with the result.
 
-        :param data: Dataset to be fitted to and populated
+        :param data: DataGroup to be fitted to and populated
         :param method: Optimisation method
         """
-        refl_nums = [k[3:] for k, v in data.coords.items() if 'Qz' == k[:2]]
-        x = [data.coords[f'Qz_{i}'].values for i in refl_nums]
-        y = [data[f'R_{i}'].data.values for i in refl_nums]
-        dy = [1 / np.sqrt(data[f'R_{i}'].data.variances) for i in refl_nums]
+        refl_nums = [k[3:] for k in data['coords'].keys() if 'Qz' == k[:2]]
+        x = [data['coords'][f'Qz_{i}'].values for i in refl_nums]
+        y = [data['data'][f'R_{i}'].values for i in refl_nums]
+        dy = [1 / np.sqrt(data['data'][f'R_{i}'].variances) for i in refl_nums]
         result = self.easy_f.fit(x, y, weights=dy, method=method)
         new_data = data.copy()
         for i, _ in enumerate(result):
             id = refl_nums[i]
-            new_data[f'R_{id}_model'] = sc.array(dims=[f'Qz_{id}'],
-                                                 values=self._fit_func[i](
-                                                     data.coords[f'Qz_{id}'].values))
+            new_data[f'R_{id}_model'] = sc.array(
+                dims=[f'Qz_{id}'],
+                values=self._fit_func[i](
+                    data['coords'][f'Qz_{id}'].values)
+            )
             sld_profile = self.easy_f._fit_objects[i].interface.sld_profile(
                 self._models[i].uid)
-            new_data[f'SLD_{id}'] = sc.array(dims=[f'z_{id}'],
-                                             values=sld_profile[1] * 1e-6,
-                                             unit=sc.Unit('1/angstrom')**2)
-            new_data[f'R_{id}_model'].attrs['model'] = sc.scalar(
-                self._models[i].as_dict())
-            new_data.coords[f'z_{id}'] = sc.array(
+            new_data[f'SLD_{id}'] = sc.array(
+                dims=[f'z_{id}'],
+                values=sld_profile[1] * 1e-6,
+                unit=sc.Unit('1/angstrom')**2
+            )
+            new_data['attrs'][f'R_{id}_model'] = {
+                'model' : sc.scalar(self._models[i].as_dict())
+            }
+            new_data['coords'][f'z_{id}'] = sc.array(
                 dims=[f'z_{id}'],
                 values=sld_profile[0],
-                unit=(1 / new_data.coords[f'Qz_{id}'].unit).unit)
+                unit=(1 / new_data['coords'][f'Qz_{id}'].unit).unit
+            )
         return new_data
 
 
