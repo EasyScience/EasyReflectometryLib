@@ -9,7 +9,7 @@
 #         start_date: 2021-05-12
 #         title: Example data file from refnx docs
 #         instrument: platypus
-#         probe: neutron
+#         probe: neutrons
 #     sample:
 #         name: Polymer Film
 #         category: solid / liquid
