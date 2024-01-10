@@ -12,8 +12,6 @@ def plot(data: sc.DataGroup) -> None:
     A general plotting function for EasyReflectometry.
 
     :param data: the DataGroup to be plotted.
-
-    :returns: The plot canvas.
     """
     if len([i for i in list(data.keys()) if 'SLD' in i]) == 0:
         plot_sld = False
