@@ -10,7 +10,7 @@
 #         start_date: 2021-05-12
 #         title: Generation of input for formatting purposes
 #         instrument: Amor
-#         probe: neutron
+#         probe: neutrons
 #     sample:
 #         name: Ni1000
 #         description: air | material Ni, thickness 100 nm | Si
