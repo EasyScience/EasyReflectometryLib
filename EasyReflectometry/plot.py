@@ -27,8 +27,8 @@ def plot(data: sc.DataGroup) -> None:
     for i, refl_num in enumerate(refl_nums):
         plot_data = sc.DataArray(
             name=f'R_{refl_num}',
-            data=data['data'][f'R_{refl_num}'],
-            coords={f'Qz_{refl_num}': data['coords'][f'Qz_{refl_num}']}
+            data=data['data'][f'R_{refl_num}'].copy(),
+            coords={f'Qz_{refl_num}': data['coords'][f'Qz_{refl_num}'].copy()}
         )
         plot_data.data *= sc.scalar(10.**i, unit=plot_data.unit)
         plot_data.coords[f'Qz_{refl_num}'].variances = None
@@ -43,10 +43,10 @@ def plot(data: sc.DataGroup) -> None:
         try:
             plot_model_data = sc.DataArray(
                 name=f'R_{refl_num}_model',
-                data=data['data'][f'R_{refl_num}_model'],
-                coords={f'Qz_{refl_num}': data['coords'][f'Qz_{refl_num}']}
+                data=data[f'R_{refl_num}_model'].copy(),
+                coords={f'Qz_{refl_num}': data['coords'][f'Qz_{refl_num}'].copy()}
             )
-            plot_model_data.data *= sc.scalar(10.**float(i))
+            plot_model_data.data *= sc.scalar(10.**i, unit=plot_model_data.unit)
             plot_model_data.coords[f'Qz_{refl_num}'].variances = None
             sc.plot(
                 plot_model_data,
@@ -66,8 +66,8 @@ def plot(data: sc.DataGroup) -> None:
         for i, refl_num in enumerate(refl_nums):
             plot_sld_data = sc.DataArray(
                 name=f'SLD_{refl_num}',
-                data=data[f'SLD_{refl_num}'],
-                coords={f'z_{refl_num}': data['coords'][f'z_{refl_num}']}
+                data=data[f'SLD_{refl_num}'].copy(),
+                coords={f'z_{refl_num}': data['coords'][f'z_{refl_num}'].copy()}
             )
             sc.plot(
                 plot_sld_data,
