@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "EasyReflectometryLib"
-version = "0.0.2"
+version = "0.0.3"
 description = "A reflectometry python package built on the EasyScience framework."
 readme = "README.rst"
 authors = [
@@ -72,7 +72,7 @@ packages = ["EasyReflectometry"]
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{38,39,310,311}
+envlist = py{39,310,311}
 [gh-actions]
 python =
     3.9: py39
