@@ -26,7 +26,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -e '.[dev]'
-        pip install build --sdist --wheel --outdir dist/ .
+        python -m build
     - name: Test with pytest
       run: |
         cd ./dist
