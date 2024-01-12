@@ -1,3 +1,14 @@
+# This workflows will will for a variety of Python versions 
+# - install the code base
+# - lint the code base
+# - test the code base
+# - upload the test coverage to codecov
+#
+# - it will also build the package
+# - check the package
+#
+# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+
 name: CI using pip
 
 on: [push, pull_request]
@@ -61,9 +72,9 @@ jobs:
       run: python -m pip install build --user
 
     - name: build a binary wheel and source tarball
-      run: python -m build --sdist --wheel --outdir dist/ .
+      run: python -m build
 
     - name: Check Build
       run: |
-        pip install twine
-        python -m twine check dist/*
+        cd ./dist
+        pytest ../

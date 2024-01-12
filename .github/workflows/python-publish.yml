@@ -1,7 +1,9 @@
-# This workflows will upload a Python Package using Twine when a release is created
+# This workflows will
+# - deploy already produce artifacts to PyIP
+#
 # For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
 
-name: Upload Python Package
+name: Deploy Python Package
 
 on:
   workflow_dispatch:
@@ -30,6 +32,6 @@ jobs:
       run: |
         pip install build
     - name: Publish distribution 📦 to PyPI
-      uses: pypa/gh-action-pypi-publish@master
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.PYPI_PASSWORD }}

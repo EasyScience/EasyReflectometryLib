@@ -1,12 +1,11 @@
-# This workflow will for a variety of Python versions  
-# - get code from the repository
-# - install Python dependencies
-# - build the package
+# This workflow will for a variety of Python versions
+# - build a python package
 # - run tests on the produced package
 # - upload the package as an artifact
+#
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python package
+name: Create Python Package
 
 on:
   push:
