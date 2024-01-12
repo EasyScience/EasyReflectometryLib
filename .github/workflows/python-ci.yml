@@ -1,10 +1,11 @@
-# This workflows will will for a variety of Python versions 
+# This workflow will will for a variety of Python versions 
 # - install the code base
 # - lint the code base
 # - test the code base
 # - upload the test coverage to codecov
 #
-# - it will also build the package
+# It will also
+# - build the package
 # - check the package
 #
 # For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
@@ -56,7 +57,7 @@ jobs:
         OS: ${{ matrix.os }}
         PYTHON: ${{ matrix.python-version }}
 
-  Packaging_Testing:
+  Package_Testing:
 
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
@@ -68,14 +69,10 @@ jobs:
       with:
         python-version: 3.9
 
-    - name: install pypa/build
-      run: python -m pip install build --user
-
-    - name: install pytest
-      run: python -m pip install pytest --user
-
-    - name: build a binary wheel and source tarball
-      run: python -m build
+    - name: Install dependencies and build
+      run: |
+        pip install -e '.[dev]'
+        python -m build
 
     - name: Check Build
       run: |
