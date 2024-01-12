@@ -1,7 +1,12 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# This workflow will for a variety of Python versions  
+# - get code from the repository
+# - install Python dependencies
+# - build the package
+# - run tests on the produced package
+# - upload the package as an artifact
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python package testing
+name: Python package
 
 on:
   push:
@@ -23,7 +28,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Install dependencies and build
       run: |
         pip install -e '.[dev]'
         python -m build
