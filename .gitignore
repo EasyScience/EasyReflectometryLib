@@ -38,9 +38,13 @@ build
 # Docs
 docs/_build 
 
+# VSCode
+.vscode
+
 # Misc
 ..*
 *.log
 *.zip
 .ci/
 .idea/
+

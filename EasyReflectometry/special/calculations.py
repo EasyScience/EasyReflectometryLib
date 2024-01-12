@@ -9,7 +9,7 @@ from EasyReflectometry.special.parsing import parse_formula
 def weighted_average_sld(a: Parameter, b: Parameter, p: Parameter) -> Parameter:
     """
     Determine the weighted average SLD between a and b, where p is the weight.
-    
+
     :param a: First sld
     :param b: Second sld
     :param p: Weight
@@ -40,7 +40,7 @@ def neutron_scattering_length(formula: str) -> complex:
 def molecular_weight(formula: str) -> float:
     """
     Determine the molecular weight for a chemical formula.
-    
+
     :param formula: Chemical formula
     :return: Molecular weight of the material in kilograms.
     """
@@ -59,7 +59,7 @@ def apm_to_sld(scattering_length: float, thickness: Parameter,
     :param scattering_length: Scattering length of component, in angstrom.
     :param thickness: Thickness of component, in angstrom.
     :param area_per_molecule: Area per molecule, in angstrom ** 2.
-    :return: Scattering length density of layer in e-6 1/angstrom ** 2. 
+    :return: Scattering length density of layer in e-6 1/angstrom ** 2.
     """
     return scattering_length / (thickness * area_per_molecule) * 1e6
 
@@ -68,7 +68,7 @@ def density_to_sld(scattering_length: float, molecular_weight: float,
                    density: Parameter):
     """
     Find the scattering length density from the mass density of a material.
-    
+
     :param scattering_length: Scattering length of component, in angstrom.
     :param molecular_weight: Molecular weight of component, in u.
     :param density: Mass density of the component, in gram centimeter^-3.

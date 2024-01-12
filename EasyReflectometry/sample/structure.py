@@ -1,10 +1,8 @@
 __author__ = 'github.com/arm61'
 
-from copy import deepcopy
 from typing import List, Union
 
 import yaml
-from easyCore import np
 from easyCore.Objects.Groups import BaseCollection
 from EasyReflectometry.sample.item import MultiLayer
 from EasyReflectometry.sample.layer import Layer
@@ -32,7 +30,7 @@ class Structure(BaseCollection):
     @classmethod
     def default(cls, interface=None) -> "Structure":
         """
-        Default constructor for the reflectometry structure. 
+        Default constructor for the reflectometry structure.
 
         :return: Default structure container
         :rtype: Structure
@@ -67,8 +65,8 @@ class Structure(BaseCollection):
     @property
     def _dict_repr(self) -> dict:
         """
-        A simplified dict representation. 
-        
+        A simplified dict representation.
+
         :return: Simple dictionary
         """
         return {self.name: [i._dict_repr for i in self]}

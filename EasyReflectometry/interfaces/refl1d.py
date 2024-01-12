@@ -38,7 +38,8 @@ class Refl1d(InterfaceTemplate):
         """
         self.calculator.reset_storage()
 
-    def create(self, model: Union[Material, Layer, MultiLayer, Model]) -> List[ItemContainer]:
+    def create(self, model: Union[Material, Layer, MultiLayer,
+                                  Model]) -> List[ItemContainer]:
         """
         Creation function
 
@@ -83,8 +84,7 @@ class Refl1d(InterfaceTemplate):
             key = model.uid
             self.calculator.create_model(key)
             r_list.append(
-                ItemContainer(key, self._model_link,
-                              self.calculator.get_model_value,
+                ItemContainer(key, self._model_link, self.calculator.get_model_value,
                               self.calculator.update_model))
             for i in model.structure:
                 self.add_item_to_model(i.uid, key)
@@ -111,7 +111,7 @@ class Refl1d(InterfaceTemplate):
     def remove_layer_from_item(self, layer_id: str, item_id: str):
         """
         Remove a layer from an item stack
-        
+
         :param item_id: The item id
         :type item_id: int        :param layer_id: The layer id
         """
