@@ -1,4 +1,4 @@
-# This workflow will will for a variety of Python versions 
+# This workflow will for a variety of Python versions 
 # - install the code base
 # - lint the code base
 # - test the code base

@@ -1,5 +1,5 @@
 # This workflows will
-# - deploy already produce artifacts to PyIP
+# - deploy already produced artifacts to PyIP
 #
 # For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
 
