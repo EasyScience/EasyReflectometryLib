@@ -1,5 +1,5 @@
 # This workflow will
-# - build distribution package
+# - build distribution package, pure python wheel
 # - deploy produced distribution package to PyIP
 #
 # For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
