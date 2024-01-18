@@ -1,8 +1,10 @@
-# This pipeline 
-# - build html documentation 
-# - deploy html documentation to gh-pages branch of the same repository
+# This pipeline
+# - build developer documentation 
+# - push documentation to gh-pages branch of the same repository
+#
+# Deployment is handled by pages-build-deployment bot
 
-name: Build and Deploy Documentation
+name: Build Documentation and Push to gh-pages Branch 
 
 # Controls when the workflow will run
 on:
@@ -33,7 +35,7 @@ jobs:
     - name: Install Pandoc, EasyReflectometry and dependencies
       run: |
         sudo apt install pandoc
-        pip install . '.[dev]'
+        pip install . '.[docs]'
     - name: Build and Commit
       uses: sphinx-notes/pages@master
       with:
