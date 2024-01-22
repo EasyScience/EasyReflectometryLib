@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from easyCore.Fitting.Constraints import ObjConstraint
-from easyCore.Objects.ObjectClasses import Parameter
 from numpy import arange
 
 from EasyReflectometry.sample.layer import Layer
@@ -19,49 +18,31 @@ class GradientLayer(MultiLayer):
         self,
         initial_material: Material,
         final_material: Material,
-        thickness: Parameter,
-        roughness: Parameter,
-        discretisation_thickness: float = 0.5,
+        thickness: float,
+        roughness: float,
+        discretisation_elements: int = 10,
         name: str = 'EasyGradienLayer',
-        conformal_roughness: bool = False,
-        interface = None
-    ) -> None:
+        interface=None
+    ) -> GradientLayer:
         """
-        :param layers: List with initial and final layer object
-        :param final: Final layer object
+        :param initial_material: Material of initial "part" of the layer
+        :param final_material: Material of final "part" of the layer
+        :param thickness: Thicknkess of the layer
+        :param roughness: Roughness of the layer
+        :param discretisation_elements: Number of dicrete layers
         :param name: Name for gradient layer
+        :param interface: Interface to use for the layer
         """
-        self._initial_material = initial_material
-        self._final_material = final_material
-        self._thickness = thickness
-        self._roughness = roughness
-        self._discretisation_thickness = discretisation_thickness
+        self.initial_material = initial_material
+        self.final_material = final_material
+        self.roughness = roughness
+        self.discretisation_elements = discretisation_elements
 
-        # setup gradient layers
-        discretisation_elements = int(thickness.raw_value / discretisation_thickness)
-
-        gradient_sld = _linear_gradient(
-            init_value=initial_material.sld.raw_value,
-            final_value=final_material.sld.raw_value,
-            discretisation_elements=discretisation_elements
-        )
-
-        gradient_isld = _linear_gradient(
-            init_value=initial_material.isld.raw_value,
-            final_value=final_material.isld.raw_value,
-            discretisation_elements=discretisation_elements
-        )
-
-        gradient_layers = []
-        for i in range(discretisation_elements):
-            layer = Layer.from_pars(
-                material=Material.from_pars(gradient_sld[i], gradient_isld[i]),
-                thickness=discretisation_thickness,
-                roughness=0,
-                name=str(i),
-                interface=interface
-            )
-            gradient_layers.append(layer)
+        gradient_layers = self._prepare_gradient_layers(
+            initial_material=initial_material,
+            final_material=final_material,
+            discretisation_elements=discretisation_elements,
+            interface=interface)
 
         super().__init__(
             layers=gradient_layers,
@@ -70,11 +51,60 @@ class GradientLayer(MultiLayer):
             type='Gradient-layer'
         )
 
-        self.layers[-1].roughness.enabled = True
-        roughness = ObjConstraint(self.layers[-1].roughness, '',
-                                  self.layers[0].roughness)
-        self.layers[0].roughness.user_constraints['roughness'] = roughness
-        self.layers[0].roughness.user_constraints['roughness'].enabled = conformal_roughness
+        self._apply_thickness_constraints(thickness, discretisation_elements)
+
+    def _prepare_gradient_layers(
+            self,
+            initial_material: Material,
+            final_material: Material,
+            discretisation_elements: int,
+            interface=None
+        ) -> list[Layer]:
+        gradient_sld = _linear_gradient(
+            init_value=initial_material.sld.raw_value,
+            final_value=final_material.sld.raw_value,
+            discretisation_elements=discretisation_elements
+        )
+        gradient_isld = _linear_gradient(
+            init_value=initial_material.isld.raw_value,
+            final_value=final_material.isld.raw_value,
+            discretisation_elements=discretisation_elements
+        )
+        gradient_layers = []
+        for i in range(discretisation_elements):
+            layer = Layer.from_pars(
+                material=Material.from_pars(gradient_sld[i], gradient_isld[i]),
+                thickness=0.0,
+                roughness=0.0,
+                name=str(i),
+                interface=interface
+            )
+            gradient_layers.append(layer)
+        return gradient_layers
+
+    def _apply_thickness_constraints(self, thickness: float, discretisation_elements: int) -> None:
+        # Add thickness constraint, layer 0 is the deciding layer
+        for i in range(discretisation_elements):
+            if i != 0:
+                self.layers[i].thickness.enabled = True
+                layer_constraint = ObjConstraint(
+                    dependent_obj=self.layers[i].thickness,
+                    operator='',
+                    independent_obj=self.layers[0].thickness
+                )
+                self.layers[0].thickness.user_constraints[f'thickness_{i}'] = layer_constraint
+                self.layers[0].thickness.user_constraints[f'thickness_{i}'].enabled = True
+
+        # Trigger the constraint to be applied
+        self.layers[0].thickness.value = thickness / discretisation_elements
+        self.layers[0].thickness.enabled = True
+
+    @property
+    def thickness(self) -> float:
+        """
+        :return: Thickness of the layer
+        """
+        return self.layers[0].thickness.raw_value * self.discretisation_elements
 
     # Class constructors
     @classmethod
@@ -90,9 +120,9 @@ class GradientLayer(MultiLayer):
         return cls(
             initial_material=initial_material,
             final_material=final_material,
-            thickness=Parameter('thickness', 2),
-            roughness=Parameter('roughness', 0.2),
-            discretisation_thickness=0.1, 
+            thickness=2.,
+            roughness=0.2,
+            discretisation_elements=10, 
             name='Air-Deuterium', 
             interface=interface
         )
@@ -104,7 +134,7 @@ class GradientLayer(MultiLayer):
         final_material: Material,
         thickness: float,
         roughness: float,
-        discretisation_thickness: float,
+        discretisation_elements: int,
         name: str = 'EasyGradientLayer',
         interface=None
     ) -> GradientLayer:
@@ -116,35 +146,19 @@ class GradientLayer(MultiLayer):
         :param final_material: Material of final "part" of the layer
         :param thickness: Thicknkess of the layer
         :param roughness: Roughness of the layer
-        :param discretisation_thickness: Thickness of each layer in the gradient
+        :param discretisation_elements: Number of dicrete layers
         :param name: Name for gradient layer
         """
 
         return cls(
             initial_material=initial_material,
             final_material=final_material,
-            thickness=Parameter('thickness', thickness),
-            roughness=Parameter('roughness', roughness),
-            discretisation_thickness=discretisation_thickness, 
+            thickness=thickness,
+            roughness=roughness,
+            discretisation_elements=discretisation_elements, 
             name=name, 
             interface=interface
         )
-
-
-    @property
-    def conformal_roughness(self) -> bool:
-        """
-        :return: is the roughness is the same for both layers.
-        """
-        return self.layers[0].roughness.user_constraints['roughness'].enabled
-
-    @conformal_roughness.setter
-    def conformal_roughness(self, x: bool):
-        """
-        Set the roughness to be the same for both layers.
-        """
-        self.layers[0].roughness.user_constraints['roughness'].enabled = x
-        self.layers[-1].roughness.value = self.layers[0].roughness.raw_value
 
     def add_layer(self, layer: Layer) -> None:
         raise NotImplementedError("Cannot add layers to a gradient layer.")
@@ -164,8 +178,8 @@ class GradientLayer(MultiLayer):
         """
         return {
             'type': self.type,
-            'thickness': self._thickness,
-            'discretisation_thickness': self._discretisation_thickness,
+            'thickness': self.thickness,
+            'discretisation_elements': self.discretisation_elements,
             'initial_layer': self.layers[0]._dict_repr,
             'final_layer': self.layers[-1]._dict_repr
         }

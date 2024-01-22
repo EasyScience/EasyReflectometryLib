@@ -7,6 +7,7 @@ from EasyReflectometry.sample.item import GradientLayer
 from EasyReflectometry.sample.items.gradient_layer import _linear_gradient
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.material import Material
+from easyCore.Objects.ObjectClasses import Parameter
 
 
 class TestGradientLayer(unittest.TestCase):
@@ -19,9 +20,9 @@ class TestGradientLayer(unittest.TestCase):
         result = GradientLayer(
             initial_material=init,
             final_material=final,
-            thickness=1.0,
-            roughness=2.0,
-            discretisation_thickness=0.1,
+            thickness=Parameter('thickness', 1.0),
+            roughness=Parameter('roughness', 2.0),
+            discretisation_elements=10,
             name='Test',
             conformal_roughness=False,
             interface=None
