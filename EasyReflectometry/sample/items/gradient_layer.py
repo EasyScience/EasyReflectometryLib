@@ -38,7 +38,7 @@ class GradientLayer(MultiLayer):
         self.roughness = roughness
         self.discretisation_elements = discretisation_elements
 
-        gradient_layers = self._prepare_gradient_layers(
+        gradient_layers = _prepare_gradient_layers(
             initial_material=initial_material,
             final_material=final_material,
             discretisation_elements=discretisation_elements,
@@ -51,60 +51,21 @@ class GradientLayer(MultiLayer):
             type='Gradient-layer'
         )
 
-        self._apply_thickness_constraints(thickness, discretisation_elements)
-
-    def _prepare_gradient_layers(
-            self,
-            initial_material: Material,
-            final_material: Material,
-            discretisation_elements: int,
-            interface=None
-        ) -> list[Layer]:
-        gradient_sld = _linear_gradient(
-            init_value=initial_material.sld.raw_value,
-            final_value=final_material.sld.raw_value,
-            discretisation_elements=discretisation_elements
-        )
-        gradient_isld = _linear_gradient(
-            init_value=initial_material.isld.raw_value,
-            final_value=final_material.isld.raw_value,
-            discretisation_elements=discretisation_elements
-        )
-        gradient_layers = []
-        for i in range(discretisation_elements):
-            layer = Layer.from_pars(
-                material=Material.from_pars(gradient_sld[i], gradient_isld[i]),
-                thickness=0.0,
-                roughness=0.0,
-                name=str(i),
-                interface=interface
-            )
-            gradient_layers.append(layer)
-        return gradient_layers
-
-    def _apply_thickness_constraints(self, thickness: float, discretisation_elements: int) -> None:
-        # Add thickness constraint, layer 0 is the deciding layer
-        for i in range(discretisation_elements):
-            if i != 0:
-                self.layers[i].thickness.enabled = True
-                layer_constraint = ObjConstraint(
-                    dependent_obj=self.layers[i].thickness,
-                    operator='',
-                    independent_obj=self.layers[0].thickness
-                )
-                self.layers[0].thickness.user_constraints[f'thickness_{i}'] = layer_constraint
-                self.layers[0].thickness.user_constraints[f'thickness_{i}'].enabled = True
-
-        # Trigger the constraint to be applied
-        self.layers[0].thickness.value = thickness / discretisation_elements
-        self.layers[0].thickness.enabled = True
+        _apply_thickness_constraints(self.layers)
+        self.thickness = thickness
 
     @property
     def thickness(self) -> float:
         """
         :return: Thickness of the layer
         """
+        # Layer 0 is the deciding layer as set in _apply_thickness_constraints
         return self.layers[0].thickness.raw_value * self.discretisation_elements
+
+    @thickness.setter
+    def thickness(self, thickness: float) -> None:
+        # Layer 0 is the deciding layer as set in _apply_thickness_constraints
+        self.layers[0].thickness.value = thickness / self.discretisation_elements
 
     # Class constructors
     @classmethod
@@ -209,3 +170,49 @@ def _linear_gradient(
     else:
         gradient = [init_value] * discretisation_elements
     return gradient
+
+
+def _prepare_gradient_layers(
+        initial_material: Material,
+        final_material: Material,
+        discretisation_elements: int,
+        interface=None
+    ) -> list[Layer]:
+    gradient_sld = _linear_gradient(
+        init_value=initial_material.sld.raw_value,
+        final_value=final_material.sld.raw_value,
+        discretisation_elements=discretisation_elements
+    )
+    gradient_isld = _linear_gradient(
+        init_value=initial_material.isld.raw_value,
+        final_value=final_material.isld.raw_value,
+        discretisation_elements=discretisation_elements
+    )
+    gradient_layers = []
+    for i in range(discretisation_elements):
+        layer = Layer.from_pars(
+            material=Material.from_pars(gradient_sld[i], gradient_isld[i]),
+            thickness=0.0,
+            roughness=0.0,
+            name=str(i),
+            interface=interface
+        )
+        gradient_layers.append(layer)
+    return gradient_layers
+
+
+def _apply_thickness_constraints(layers) -> None:
+    # Add thickness constraint, layer 0 is the deciding layer
+    for i in range(len(layers)):
+        if i != 0:
+            layers[i].thickness.enabled = True
+            layer_constraint = ObjConstraint(
+                dependent_obj=layers[i].thickness,
+                operator='',
+                independent_obj=layers[0].thickness
+            )
+            layers[0].thickness.user_constraints[f'thickness_{i}'] = layer_constraint
+            layers[0].thickness.user_constraints[f'thickness_{i}'].enabled = True
+
+    layers[0].thickness.enabled = True
+
