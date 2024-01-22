@@ -3,12 +3,15 @@ from unittest.mock import MagicMock
 import pytest
 from numpy.testing import assert_almost_equal
 
-from EasyReflectometry.sample.item import GradientLayer
-from EasyReflectometry.sample.items.gradient_layer import _linear_gradient, _apply_thickness_constraints, _prepare_gradient_layers
 import EasyReflectometry.sample.items.gradient_layer
+from EasyReflectometry.sample.item import GradientLayer
+from EasyReflectometry.sample.items.gradient_layer import (
+    _apply_thickness_constraints,
+    _linear_gradient,
+    _prepare_gradient_layers,
+)
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.material import Material
-from easyCore.Objects.ObjectClasses import Parameter
 
 
 class TestGradientLayer():
