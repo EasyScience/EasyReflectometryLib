@@ -20,11 +20,10 @@ class TestGradientLayer(unittest.TestCase):
         result = GradientLayer(
             initial_material=init,
             final_material=final,
-            thickness=Parameter('thickness', 1.0),
-            roughness=Parameter('roughness', 2.0),
+            thickness=1.0,
+            roughness=2.0,
             discretisation_elements=10,
             name='Test',
-            conformal_roughness=False,
             interface=None
         )
     
@@ -33,10 +32,11 @@ class TestGradientLayer(unittest.TestCase):
         assert result.name, 'Test'
         assert result.type, 'Gradient-layer'
         assert result.interface is None
-        assert len(result.layers) == 10
+        assert result.thickness == 1.0
         assert result.layers.name == '0/1/2/3/4/5/6/7/8/9'
         assert result.layers[0].material.sld.raw_value == 10.0
         assert result.layers[5].material.sld.raw_value == 5.0
+        assert result.layers[0].thickness.raw_value == 0.1
         assert result.layers[5].material.isld.raw_value == -5.0
         assert result.layers[9].material.isld.raw_value == -1.0
 
@@ -48,8 +48,8 @@ class TestGradientLayer(unittest.TestCase):
         assert result.name == 'Air-Deuterium'
         assert result.type, 'Gradient-layer'
         assert result.interface is None
-        assert len(result.layers) == 20
-        assert  result.layers.name == '0/1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19'
+        assert len(result.layers) == 10
+        assert  result.layers.name == '0/1/2/3/4/5/6/7/8/9'
 
     def test_from_pars(self):
         # When
@@ -62,7 +62,7 @@ class TestGradientLayer(unittest.TestCase):
             final_material=final,
             thickness=10.0,
             roughness=1.0,
-            discretisation_thickness=2.0,
+            discretisation_elements=5,
             name='gradientItem'
         )
 
@@ -102,7 +102,7 @@ class TestGradientLayer(unittest.TestCase):
         result = GradientLayer.default()
 
         # Expect
-        expected_str = "type: Gradient-layer\nthickness: 2\ndiscretisation_thickness: 0.1\ninitial_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 0.000e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 0.000 angstrom\nfinal_layer:\n  '19':\n    material:\n      EasyMaterial:\n        sld: 6.042e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 0.000 angstrom\n"
+        expected_str = "type: Gradient-layer\nthickness: 2.0\ndiscretisation_elements: 10\ninitial_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 0.000e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 0.200 angstrom\n    roughness: 0.000 angstrom\nfinal_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 5.724e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 0.200 angstrom\n    roughness: 0.000 angstrom\n"
         assert result.__repr__() == expected_str
 
     def test_dict_round_trip(self):
@@ -116,7 +116,7 @@ class TestGradientLayer(unittest.TestCase):
         assert result.as_data_dict() == default.as_data_dict()
         assert len(default.layers) == len(result.layers)
         # Just one layer of the generated layers is checked
-        assert default.layers[10].__repr__() == result.layers[10].__repr__()
+        assert default.layers[5].__repr__() == result.layers[5].__repr__()
 
 
 def test_linear_gradient_increasing():
