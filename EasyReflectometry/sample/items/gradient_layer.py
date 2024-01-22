@@ -35,7 +35,6 @@ class GradientLayer(MultiLayer):
         """
         self.initial_material = initial_material
         self.final_material = final_material
-        self.roughness = roughness
         self.discretisation_elements = discretisation_elements
 
         gradient_layers = _prepare_gradient_layers(
@@ -53,19 +52,41 @@ class GradientLayer(MultiLayer):
 
         _apply_thickness_constraints(self.layers)
         self.thickness = thickness
+        self.roughness = roughness
 
     @property
     def thickness(self) -> float:
         """
-        :return: Thickness of the layer
+        :return: Thickness of the gradient layer
         """
         # Layer 0 is the deciding layer as set in _apply_thickness_constraints
         return self.layers[0].thickness.raw_value * self.discretisation_elements
 
     @thickness.setter
     def thickness(self, thickness: float) -> None:
+        """
+        :param thickness: Thickness of the gradient layer
+        """
         # Layer 0 is the deciding layer as set in _apply_thickness_constraints
         self.layers[0].thickness.value = thickness / self.discretisation_elements
+
+    @property
+    def roughness(self) -> float:
+        """
+        :return: Roughness of the gradient layer
+        """
+        # Layer 0 ir -1 is the deciding layer
+        return self.layers[0].roughness.raw_value
+
+    @roughness.setter
+    def roughness(self, roughness: float) -> None:
+        """
+        :param roughness: Roughness of the gradient layer
+        """
+        # Layer 0 is the facing the beam
+        # Layer -1 is away from the beam
+        self.layers[0].roughness.value = roughness
+        self.layers[-1].roughness.value = roughness
 
     # Class constructors
     @classmethod
