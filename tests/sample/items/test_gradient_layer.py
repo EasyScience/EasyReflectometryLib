@@ -54,7 +54,7 @@ class TestGradientLayer():
         assert result.type, 'Gradient-layer'
         assert result.interface is None
         assert len(result.layers) == 10
-        assert  result.layers.name == '0/1/2/3/4/5/6/7/8/9'
+        assert result.layers.name == '0/1/2/3/4/5/6/7/8/9'
 
     def test_from_pars(self):
         # When
