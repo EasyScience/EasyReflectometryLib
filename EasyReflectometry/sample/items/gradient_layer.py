@@ -90,7 +90,7 @@ class GradientLayer(MultiLayer):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> GradientLayer:
+    def default(cls, name: str = 'Air-Deuterium', interface=None) -> GradientLayer:
         """
         Default constructor for a gradient layer object. The default is air to deuterium.
 
@@ -105,7 +105,7 @@ class GradientLayer(MultiLayer):
             thickness=2.,
             roughness=0.2,
             discretisation_elements=10, 
-            name='Air-Deuterium', 
+            name=name, 
             interface=interface
         )
 
