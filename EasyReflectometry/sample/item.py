@@ -11,6 +11,7 @@ __author__ = 'github.com/arm61'
 from .items.multilayer import MultiLayer
 from .items.repeating_multilayer import RepeatingMultiLayer
 from .items.surfactant_layer import SurfactantLayer
+
 from .items.gradient_layer import GradientLayer
 
 _ = (MultiLayer, RepeatingMultiLayer, SurfactantLayer, GradientLayer)
