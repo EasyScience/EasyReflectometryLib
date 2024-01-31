@@ -15,8 +15,17 @@ name: CI using pip
 on: [push, pull_request]
 
 jobs:
-  CI_Testing:
+  CI_Code_Consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: pip install -e '.[dev]'
+
+      - uses: isort/isort-action@v1    
+
+  CI_Testing:
     strategy:
       max-parallel: 4
       matrix:

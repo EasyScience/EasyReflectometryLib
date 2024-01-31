@@ -34,12 +34,14 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "black",
     "build",
     "codecov>=2.1.11",
     "coverage",
     "coveralls",
     "flake8>=6.0.0",
     "ipykernel",
+    "isort",
     "jupyter>=1.0.0",
     "jupyterlab",
     "nbsphinx",
@@ -59,6 +61,9 @@ documentation = "https://docs.easyreflectometry.org"
 [tool.hatch.metadata]
 allow-direct-references = true
 
+[tool.hatch.build.targets.wheel]
+packages = ["EasyReflectometry"]
+
 [tool.coverage.run]
 source = ['EasyReflectometry']
 
@@ -66,8 +71,14 @@ source = ['EasyReflectometry']
 organization = 'easyScience'
 repo = 'EasyReflectometryLib'
 
-[tool.hatch.build.targets.wheel]
-packages = ["EasyReflectometry"]
+[tool.black]
+line_length = 88
+
+[tool.isort]
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 2
 
 [tool.tox]
 legacy_tox_ini = """
