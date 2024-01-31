@@ -1,15 +1,22 @@
 __author__ = 'github.com/arm61'
 
-from typing import Union
 from copy import deepcopy
+from typing import Union
 
 import yaml
 from easyCore import np
-from easyCore.Objects.ObjectClasses import Parameter, BaseObj
-from EasyReflectometry.sample.structure import Structure
-from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
+from easyCore.Objects.ObjectClasses import (
+    BaseObj,
+    Parameter,
+)
+
+from EasyReflectometry.sample.item import (
+    MultiLayer,
+    RepeatingMultiLayer,
+)
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
+from EasyReflectometry.sample.structure import Structure
 
 LAYER_DETAILS = {
     'scale': {

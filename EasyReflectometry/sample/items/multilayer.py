@@ -1,7 +1,11 @@
-from typing import Union, List
-import yaml
+from typing import (
+    List,
+    Union,
+)
 
+import yaml
 from easyCore.Objects.ObjectClasses import BaseObj
+
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
 

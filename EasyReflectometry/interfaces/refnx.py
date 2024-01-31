@@ -1,16 +1,23 @@
 __author__ = "github.com/arm61"
 
-from typing import List, Tuple, Union
+from typing import (
+    List,
+    Tuple,
+    Union,
+)
 
 import numpy as np
-
 from easyCore.Objects.Inferface import ItemContainer
-from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
+
 from EasyReflectometry.calculators.refnx import Refnx as Refnx_calc
-from EasyReflectometry.sample.material import Material, MaterialMixture
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.item import MultiLayer
 from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
+from EasyReflectometry.sample.item import MultiLayer
+from EasyReflectometry.sample.layer import Layer
+from EasyReflectometry.sample.material import (
+    Material,
+    MaterialMixture,
+)
 
 
 class Refnx(InterfaceTemplate):

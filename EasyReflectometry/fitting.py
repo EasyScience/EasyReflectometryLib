@@ -2,7 +2,6 @@ __author__ = 'github.com/arm61'
 
 import numpy as np
 import scipp as sc
-
 from easyCore.Fitting.Fitting import MultiFitter as easyFitter
 
 from EasyReflectometry.experiment.model import Model

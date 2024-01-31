@@ -1,7 +1,7 @@
 __author__ = 'github.com/arm61'
 
-import scipp as sc
 import matplotlib.pyplot as plt
+import scipp as sc
 from matplotlib.gridspec import GridSpec
 
 color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']

@@ -1,8 +1,11 @@
 __author__ = "github.com/wardsimon"
 
-import numpy as np
-from abc import ABCMeta, abstractmethod
+from abc import (
+    ABCMeta,
+    abstractmethod,
+)
 
+import numpy as np
 from easyCore import borg
 from easyCore.Objects.core import ComponentSerializer
 
