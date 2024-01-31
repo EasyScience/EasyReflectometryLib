@@ -1,0 +1,16 @@
+{
+    "black-formatter.args": ["--config", "pyproject.toml"],
+
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+    },
+    "isort.args": ["-m", "3", "--fgw", "2"],
+}

@@ -24,6 +24,7 @@ jobs:
         if: ${{ failure() }}
         run: |
             echo "::notice::In project root run 'python.exe -m isort .' and commit changes to fix errors."
+            exit 1
   CI_Testing:
     strategy:
       max-parallel: 4
