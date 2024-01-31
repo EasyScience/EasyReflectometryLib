@@ -6,12 +6,21 @@ Tests for data module
 
 import os
 import unittest
+
 import numpy as np
-from numpy.testing import assert_almost_equal
 import scipp as sc
-from orsopy.fileio import load_orso, Header
+from numpy.testing import assert_almost_equal
+from orsopy.fileio import (
+    Header,
+    load_orso,
+)
+
 import EasyReflectometry
-from EasyReflectometry.data import load, _load_orso, _load_txt
+from EasyReflectometry.data import (
+    _load_orso,
+    _load_txt,
+    load,
+)
 
 
 class TestData(unittest.TestCase):

@@ -6,15 +6,23 @@ Tests for Layer class module
 
 import os
 import unittest
+
 import numpy as np
-from numpy.testing import assert_almost_equal, assert_equal
+from numpy.testing import (
+    assert_almost_equal,
+    assert_equal,
+)
+
 from EasyReflectometry.experiment.model import Model
-from EasyReflectometry.sample.material import Material
+from EasyReflectometry.interface import InterfaceFactory
+from EasyReflectometry.sample.item import (
+    MultiLayer,
+    RepeatingMultiLayer,
+)
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
-from EasyReflectometry.sample.item import RepeatingMultiLayer, MultiLayer
+from EasyReflectometry.sample.material import Material
 from EasyReflectometry.sample.structure import Structure
-from EasyReflectometry.interface import InterfaceFactory
 
 
 class TestModel(unittest.TestCase):

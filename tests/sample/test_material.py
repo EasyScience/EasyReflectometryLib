@@ -5,9 +5,15 @@ Tests for Material class module
 """
 
 import unittest
+
 import numpy as np
 from numpy.testing import assert_almost_equal
-from EasyReflectometry.sample.material import Material, MaterialDensity, MaterialMixture
+
+from EasyReflectometry.sample.material import (
+    Material,
+    MaterialDensity,
+    MaterialMixture,
+)
 
 
 class TestMaterial(unittest.TestCase):
