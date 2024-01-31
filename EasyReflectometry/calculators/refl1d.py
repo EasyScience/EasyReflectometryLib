@@ -4,7 +4,8 @@ from typing import Tuple
 
 from easyCore import np
 from refl1d import (
-    model, names,
+    model,
+    names,
 )
 
 
