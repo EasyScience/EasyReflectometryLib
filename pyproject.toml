@@ -71,9 +71,6 @@ source = ['EasyReflectometry']
 organization = 'easyScience'
 repo = 'EasyReflectometryLib'
 
-[tool.black]
-line_length = 88
-
 [tool.isort]
 line_length = 88
 multi_line_output = 3
