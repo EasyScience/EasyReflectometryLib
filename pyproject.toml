@@ -34,19 +34,18 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "black",
     "build",
     "codecov>=2.1.11",
     "coverage",
     "coveralls",
     "flake8>=6.0.0",
     "ipykernel",
-    "isort",
     "jupyter>=1.0.0",
     "jupyterlab",
     "plopp",
     "pytest>=5.2",
     "pytest-cov>=3.0.0",
+    "ruff",
     "toml>=0.10",
     "yapf>=0.31.0",
 ]
@@ -73,11 +72,27 @@ source = ['EasyReflectometry']
 organization = 'easyScience'
 repo = 'EasyReflectometryLib'
 
-[tool.isort]
-line_length = 88
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 2
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    # flake8 settings from existing CI setup
+    "E9", "F63", "F7", "F82",
+    # Code should be polished to fulfill all cases bellow
+    # pycodestyle
+#     "E",
+    # Pyflakes
+#    "F",
+    # pyupgrade
+#    "UP",
+    # flake8-bugbear
+#    "B",
+    # flake8-simplify
+#    "SIM",
+    # isort
+    "I",
+]
 
 [tool.tox]
 legacy_tox_ini = """
