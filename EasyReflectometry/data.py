@@ -8,8 +8,7 @@ from typing import (
 import numpy as np
 import scipp as sc
 from orsopy.fileio import (
-    Header,
-    orso,
+    Header, orso,
 )
 
 
