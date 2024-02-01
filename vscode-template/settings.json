@@ -1,6 +1,4 @@
 {
-    "black-formatter.args": ["--config", "pyproject.toml"],
-
     "python.testing.pytestArgs": [
         "tests"
     ],
@@ -12,5 +10,4 @@
             "source.organizeImports": "explicit"
         },
     },
-    "isort.args": ["-m", "3", "--fgw", "2"],
 }

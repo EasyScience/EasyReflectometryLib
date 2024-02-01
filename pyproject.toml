@@ -94,6 +94,9 @@ select = [
     "I",
 ]
 
+[tool.ruff.lint.isort]
+force-single-line = true
+
 [tool.tox]
 legacy_tox_ini = """
 [tox]
