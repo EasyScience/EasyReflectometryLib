@@ -29,13 +29,15 @@ class GradientLayer(MultiLayer):
         :param final_material: Material of final "part" of the layer
         :param thickness: Thicknkess of the layer
         :param roughness: Roughness of the layer
-        :param discretisation_elements: Number of dicrete layers
+        :param discretisation_elements: Number of discrete layers
         :param name: Name for gradient layer
         :param interface: Interface to use for the layer
         """
-        self.initial_material = initial_material
-        self.final_material = final_material
-        self.discretisation_elements = discretisation_elements
+        self._initial_material = initial_material
+        self._final_material = final_material
+        if discretisation_elements < 2:
+            raise ValueError("Discretisation elements must be greater than 2.")
+        self._discretisation_elements = discretisation_elements
 
         gradient_layers = _prepare_gradient_layers(
             initial_material=initial_material,
@@ -51,6 +53,7 @@ class GradientLayer(MultiLayer):
         )
 
         _apply_thickness_constraints(self.layers)
+        # Set the thickness and roughness properties
         self.thickness = thickness
         self.roughness = roughness
 
@@ -60,7 +63,7 @@ class GradientLayer(MultiLayer):
         :return: Thickness of the gradient layer
         """
         # Layer 0 is the deciding layer as set in _apply_thickness_constraints
-        return self.layers[0].thickness.raw_value * self.discretisation_elements
+        return self.layers[0].thickness.raw_value * self._discretisation_elements
 
     @thickness.setter
     def thickness(self, thickness: float) -> None:
@@ -68,7 +71,7 @@ class GradientLayer(MultiLayer):
         :param thickness: Thickness of the gradient layer
         """
         # Layer 0 is the deciding layer as set in _apply_thickness_constraints
-        self.layers[0].thickness.value = thickness / self.discretisation_elements
+        self.layers[0].thickness.value = thickness / self._discretisation_elements
 
     @property
     def roughness(self) -> float:
@@ -83,7 +86,7 @@ class GradientLayer(MultiLayer):
         """
         :param roughness: Roughness of the gradient layer
         """
-        # Layer 0 is the facing the beam
+        # Layer 0 is facing the beam
         # Layer -1 is away from the beam
         self.layers[0].roughness.value = roughness
         self.layers[-1].roughness.value = roughness
@@ -161,7 +164,7 @@ class GradientLayer(MultiLayer):
         return {
             'type': self.type,
             'thickness': self.thickness,
-            'discretisation_elements': self.discretisation_elements,
+            'discretisation_elements': self._discretisation_elements,
             'initial_layer': self.layers[0]._dict_repr,
             'final_layer': self.layers[-1]._dict_repr
         }
@@ -224,16 +227,15 @@ def _prepare_gradient_layers(
 
 def _apply_thickness_constraints(layers) -> None:
     # Add thickness constraint, layer 0 is the deciding layer
-    for i in range(len(layers)):
-        if i != 0:
-            layers[i].thickness.enabled = True
-            layer_constraint = ObjConstraint(
-                dependent_obj=layers[i].thickness,
-                operator='',
-                independent_obj=layers[0].thickness
-            )
-            layers[0].thickness.user_constraints[f'thickness_{i}'] = layer_constraint
-            layers[0].thickness.user_constraints[f'thickness_{i}'].enabled = True
+    for i in range(1, len(layers)):
+        layers[i].thickness.enabled = True
+        layer_constraint = ObjConstraint(
+            dependent_obj=layers[i].thickness,
+            operator='',
+            independent_obj=layers[0].thickness
+        )
+        layers[0].thickness.user_constraints[f'thickness_{i}'] = layer_constraint
+        layers[0].thickness.user_constraints[f'thickness_{i}'].enabled = True
 
     layers[0].thickness.enabled = True
 
