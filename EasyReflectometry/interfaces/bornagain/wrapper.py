@@ -5,7 +5,7 @@ from scipy.stats import norm
 import bornagain as ba
 
 
-class BornAgain:
+class BornAgainWrapper:
 
     def __init__(self):
         self.storage = {

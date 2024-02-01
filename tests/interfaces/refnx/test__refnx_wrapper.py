@@ -8,26 +8,26 @@ import os
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from EasyReflectometry.calculators.refnx import Refnx
+from EasyReflectometry.interfaces.refnx.wrapper import RefnxWrapper
 from refnx import reflect
 
 
 class TestRefnx(unittest.TestCase):
 
     def test_init(self):
-        p = Refnx()
+        p = RefnxWrapper()
         assert_equal(list(p.storage.keys()), ['material', 'layer', 'item', 'model'])
         assert_equal(issubclass(p.storage['material'].__class__, dict), True)
 
     def test_reset_storage(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.storage['material']['a'] = 1
         assert_equal(p.storage['material']['a'], 1)
         p.reset_storage()
         assert_equal(p.storage['material'], {})
 
     def test_create_material(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('Si')
         assert_equal(list(p.storage['material'].keys()), ['Si'])
         assert_almost_equal(p.storage['material']['Si'].real.value, 0.0)
@@ -35,7 +35,7 @@ class TestRefnx(unittest.TestCase):
         assert_equal(p.storage['material']['Si'].name, 'Si')
 
     def test_update_material(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('B')
         p.update_material('B', real=6.908, imag=-0.278)
         assert_equal(list(p.storage['material'].keys()), ['B'])
@@ -43,7 +43,7 @@ class TestRefnx(unittest.TestCase):
         assert_almost_equal(p.storage['material']['B'].imag.value, -0.278)
 
     def test_get_material_value(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('B')
         p.update_material('B', real=6.908, imag=-0.278)
         assert_equal(list(p.storage['material'].keys()), ['B'])
@@ -51,7 +51,7 @@ class TestRefnx(unittest.TestCase):
         assert_almost_equal(p.get_material_value('B', 'imag'), -0.278)
 
     def test_create_layer(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_layer('Si')
         assert_equal(list(p.storage['layer'].keys()), ['Si'])
         assert_almost_equal(p.storage['layer']['Si'].thick.value, 0)
@@ -60,44 +60,44 @@ class TestRefnx(unittest.TestCase):
         assert_almost_equal(p.storage['layer']['Si'].sld.imag.value, 0)
 
     def test_update_layer(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_layer('Si')
         p.update_layer('Si', thick=10, rough=5)
         assert_almost_equal(p.storage['layer']['Si'].thick.value, 10)
         assert_almost_equal(p.storage['layer']['Si'].rough.value, 5)
 
     def test_get_layer_value(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_layer('Si')
         p.update_layer('Si', thick=10, rough=5)
         assert_almost_equal(p.get_layer_value('Si', 'thick'), 10)
         assert_almost_equal(p.get_layer_value('Si', 'rough'), 5)
 
     def test_create_item(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_item('SiNi')
         assert_equal(list(p.storage['item'].keys()), ['SiNi'])
         assert_almost_equal(p.storage['item']['SiNi'].repeats.value, 1)
 
     def test_update_item(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_item('SiNi')
         p.update_item('SiNi', repeats=10)
         assert_almost_equal(p.storage['item']['SiNi'].repeats.value, 10)
 
     def test_get_item_value(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_item('SiNi')
         p.update_item('SiNi', repeats=10)
         assert_almost_equal(p.get_item_value('SiNi', 'repeats'), 10)
 
     def test_create_model(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_model('MyModel')
         assert_equal(isinstance(p.storage['model']['MyModel'], reflect.ReflectModel), True)
 
     def test_update_model(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_model('MyModel')
         p.update_model('MyModel', scale=2, bkg=1e-3, dq=2.0)
         assert_almost_equal(p.storage['model']['MyModel'].scale.value, 2)
@@ -105,7 +105,7 @@ class TestRefnx(unittest.TestCase):
         assert_almost_equal(p.storage['model']['MyModel'].dq.value, 2.0)
 
     def test_get_model_value(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_model('MyModel')
         p.update_model('MyModel', scale=2, bkg=1e-3, dq=2.0)
         assert_almost_equal(p.get_model_value('MyModel', 'scale'), 2)
@@ -113,7 +113,7 @@ class TestRefnx(unittest.TestCase):
         assert_almost_equal(p.get_model_value('MyModel', 'dq'), 2.0)
 
     def test_assign_material_to_layer(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('B')
         p.update_material('B', real=6.908, imag=-0.278)
         p.create_layer('B_layer')
@@ -122,7 +122,7 @@ class TestRefnx(unittest.TestCase):
         assert_almost_equal(p.storage['layer']['B_layer'].sld.imag.value, -0.278)
 
     def test_add_layer_to_item(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('B')
         p.update_material('B', real=6.908, imag=-0.278)
         p.create_layer('B_layer')
@@ -134,7 +134,7 @@ class TestRefnx(unittest.TestCase):
         assert_equal(p.storage['item']['B_item'][0].name, 'B_layer')
 
     def test_add_item(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('B')
         p.update_material('B', real=6.908, imag=-0.278)
         p.create_layer('B_layer')
@@ -148,7 +148,7 @@ class TestRefnx(unittest.TestCase):
         assert_equal(p.storage['model']['MyModel'].structure.components[0].name, 'B_item')
 
     def test_remove_layer_from_item(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('B')
         p.update_material('B', real=6.908, imag=-0.278)
         p.create_layer('B_layer')
@@ -160,7 +160,7 @@ class TestRefnx(unittest.TestCase):
         assert_equal(len(p.storage['item']['B_item']), 0)
 
     def test_remove_item(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('B')
         p.update_material('B', real=6.908, imag=-0.278)
         p.create_layer('B_layer')
@@ -174,7 +174,7 @@ class TestRefnx(unittest.TestCase):
         assert_equal(len(p.storage['model']['MyModel'].structure.components), 0)
 
     def test_calculate(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('Material1')
         p.update_material('Material1', real=0.000, imag=0.000)
         p.create_material('Material2')
@@ -204,7 +204,7 @@ class TestRefnx(unittest.TestCase):
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)
 
     def test_calculate2(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('Material1')
         p.update_material('Material1', real=0.000, imag=0.000)
         p.create_material('Material2')
@@ -240,7 +240,7 @@ class TestRefnx(unittest.TestCase):
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)
 
     def test_sld_profile(self):
-        p = Refnx()
+        p = RefnxWrapper()
         p.create_material('Material1')
         p.update_material('Material1', real=0.000, imag=0.000)
         p.create_material('Material2')

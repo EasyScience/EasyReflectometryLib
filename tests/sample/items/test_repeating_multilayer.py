@@ -94,11 +94,11 @@ class TestRepeatingMultiLayer(unittest.TestCase):
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron', interface=interface)
         q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium', interface=interface)
         o = RepeatingMultiLayer.from_pars(p, 2.0, 'twoLayerItem', interface=interface)
-        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 1)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
         o.add_layer(q)
-        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 2)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
         assert_equal(
-            o.interface().calculator.storage['item'][o.uid].components[1].thick.value,
+            o.interface()._wrapper.storage['item'][o.uid].components[1].thick.value,
             50.)
 
     def test_duplicate_layer(self):
@@ -123,21 +123,21 @@ class TestRepeatingMultiLayer(unittest.TestCase):
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron', interface=interface)
         q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium', interface=interface)
         o = RepeatingMultiLayer.from_pars(p, 2.0, 'twoLayerItem', interface=interface)
-        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 1)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
         o.add_layer(q)
-        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 2)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
         assert_equal(
-            o.interface().calculator.storage['item'][o.uid].components[1].thick.value,
+            o.interface()._wrapper.storage['item'][o.uid].components[1].thick.value,
             50.)
         o.duplicate_layer(1)
-        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 3)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 3)
         assert_equal(
-            o.interface().calculator.storage['item'][o.uid].components[2].thick.value,
+            o.interface()._wrapper.storage['item'][o.uid].components[2].thick.value,
             50.)
         assert_raises(
             AssertionError, assert_equal,
-            o.interface().calculator.storage['item'][o.uid].components[1].name,
-            o.interface().calculator.storage['item'][o.uid].components[2].name)
+            o.interface()._wrapper.storage['item'][o.uid].components[1].name,
+            o.interface()._wrapper.storage['item'][o.uid].components[2].name)
 
     def test_remove_layer(self):
         m = Material.from_pars(6.908, -0.278, 'Boron')
@@ -164,12 +164,12 @@ class TestRepeatingMultiLayer(unittest.TestCase):
                                           repetitions=2.0,
                                           name='twoLayerItem',
                                           interface=interface)
-        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 1)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
         o.add_layer(q)
-        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 2)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
         assert_equal(o.layers[1].name, 'thickPotassium')
         o.remove_layer(1)
-        assert_equal(len(o.interface().calculator.storage['item'][o.uid].components), 1)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
         assert_equal(o.layers[0].name, 'thinBoron')
 
     def test_repr(self):
