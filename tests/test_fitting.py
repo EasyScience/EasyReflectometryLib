@@ -9,20 +9,16 @@ import unittest
 import numpy as np
 import scipp as sc
 from numpy.testing import assert_almost_equal
-from orsopy.fileio import (
-    Header,
-    load_orso,
-)
+from orsopy.fileio import Header
+from orsopy.fileio import load_orso
 
 import EasyReflectometry
 from EasyReflectometry.data import load
 from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.fitting import Fitter
 from EasyReflectometry.interface import InterfaceFactory as Interface
-from EasyReflectometry.sample import (
-    Layer,
-    Structure,
-)
+from EasyReflectometry.sample import Layer
+from EasyReflectometry.sample import Structure
 from EasyReflectometry.sample.material import Material
 
 

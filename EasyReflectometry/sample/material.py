@@ -6,17 +6,13 @@ from typing import ClassVar
 import yaml
 from easyCore import np
 from easyCore.Fitting.Constraints import FunctionalConstraint
-from easyCore.Objects.ObjectClasses import (
-    BaseObj,
-    Parameter,
-)
+from easyCore.Objects.ObjectClasses import BaseObj
+from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.special.calculations import (
-    density_to_sld,
-    molecular_weight,
-    neutron_scattering_length,
-    weighted_average_sld,
-)
+from EasyReflectometry.special.calculations import density_to_sld
+from EasyReflectometry.special.calculations import molecular_weight
+from EasyReflectometry.special.calculations import neutron_scattering_length
+from EasyReflectometry.special.calculations import weighted_average_sld
 
 MATERIAL_DEFAULTS = {
     'sld': {

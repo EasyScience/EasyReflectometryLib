@@ -1,9 +1,7 @@
 __author__ = "github.com/wardsimon"
 
-from abc import (
-    ABCMeta,
-    abstractmethod,
-)
+from abc import ABCMeta
+from abc import abstractmethod
 
 import numpy as np
 from easyCore import borg

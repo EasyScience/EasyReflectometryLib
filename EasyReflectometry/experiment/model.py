@@ -5,15 +5,11 @@ from typing import Union
 
 import yaml
 from easyCore import np
-from easyCore.Objects.ObjectClasses import (
-    BaseObj,
-    Parameter,
-)
+from easyCore.Objects.ObjectClasses import BaseObj
+from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.sample.item import (
-    MultiLayer,
-    RepeatingMultiLayer,
-)
+from EasyReflectometry.sample.item import MultiLayer
+from EasyReflectometry.sample.item import RepeatingMultiLayer
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
 from EasyReflectometry.sample.structure import Structure

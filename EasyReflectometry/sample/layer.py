@@ -6,19 +6,13 @@ from typing import ClassVar
 import yaml
 from easyCore import np
 from easyCore.Fitting.Constraints import FunctionalConstraint
-from easyCore.Objects.ObjectClasses import (
-    BaseObj,
-    Parameter,
-)
+from easyCore.Objects.ObjectClasses import BaseObj
+from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.sample.material import (
-    Material,
-    MaterialMixture,
-)
-from EasyReflectometry.special.calculations import (
-    apm_to_sld,
-    neutron_scattering_length,
-)
+from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.material import MaterialMixture
+from EasyReflectometry.special.calculations import apm_to_sld
+from EasyReflectometry.special.calculations import neutron_scattering_length
 
 LAYER_DETAILS = {
     'thickness': {

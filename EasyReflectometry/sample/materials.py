@@ -1,17 +1,13 @@
 __author__ = 'github.com/arm61'
 
-from typing import (
-    List,
-    Union,
-)
+from typing import List
+from typing import Union
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 
-from EasyReflectometry.sample.material import (
-    Material,
-    MaterialMixture,
-)
+from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.material import MaterialMixture
 
 
 class Materials(BaseCollection):

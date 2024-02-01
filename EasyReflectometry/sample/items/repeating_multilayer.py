@@ -1,8 +1,6 @@
 from copy import deepcopy
-from typing import (
-    List,
-    Union,
-)
+from typing import List
+from typing import Union
 
 from easyCore.Objects.ObjectClasses import Parameter
 

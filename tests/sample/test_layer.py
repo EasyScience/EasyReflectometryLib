@@ -8,21 +8,15 @@ import os
 import unittest
 
 import numpy as np
-from numpy.testing import (
-    assert_almost_equal,
-    assert_equal,
-)
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_equal
 
 from EasyReflectometry.interface import InterfaceFactory
-from EasyReflectometry.sample.layer import (
-    Layer,
-    LayerApm,
-)
+from EasyReflectometry.sample.layer import Layer
+from EasyReflectometry.sample.layer import LayerApm
 from EasyReflectometry.sample.material import Material
-from EasyReflectometry.special.calculations import (
-    apm_to_sld,
-    neutron_scattering_length,
-)
+from EasyReflectometry.special.calculations import apm_to_sld
+from EasyReflectometry.special.calculations import neutron_scattering_length
 
 
 class TestLayer(unittest.TestCase):

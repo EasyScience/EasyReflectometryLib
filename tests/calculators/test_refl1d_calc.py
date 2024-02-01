@@ -8,10 +8,8 @@ import os
 import unittest
 
 import numpy as np
-from numpy.testing import (
-    assert_almost_equal,
-    assert_equal,
-)
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_equal
 from refl1d import names
 
 from EasyReflectometry.calculators.refl1d import Refl1d

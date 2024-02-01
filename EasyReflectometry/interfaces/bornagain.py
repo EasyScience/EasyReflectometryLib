@@ -8,10 +8,8 @@ from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.interfaces.interfaceTemplate import InterfaceTemplate
 from EasyReflectometry.sample.item import MultiLayer
 from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.material import (
-    Material,
-    MaterialMixture,
-)
+from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.material import MaterialMixture
 
 
 class BornAgain(InterfaceTemplate):

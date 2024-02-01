@@ -1,7 +1,5 @@
-from typing import (
-    List,
-    Union,
-)
+from typing import List
+from typing import Union
 
 import yaml
 from easyCore.Objects.ObjectClasses import BaseObj

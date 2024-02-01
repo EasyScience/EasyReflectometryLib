@@ -8,10 +8,8 @@ import os
 import unittest
 
 import numpy as np
-from numpy.testing import (
-    assert_almost_equal,
-    assert_equal,
-)
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_equal
 
 from EasyReflectometry.interfaces.refnx import Refnx
 from EasyReflectometry.sample.material import Material

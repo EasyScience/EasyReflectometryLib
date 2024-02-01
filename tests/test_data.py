@@ -10,17 +10,13 @@ import unittest
 import numpy as np
 import scipp as sc
 from numpy.testing import assert_almost_equal
-from orsopy.fileio import (
-    Header,
-    load_orso,
-)
+from orsopy.fileio import Header
+from orsopy.fileio import load_orso
 
 import EasyReflectometry
-from EasyReflectometry.data import (
-    _load_orso,
-    _load_txt,
-    load,
-)
+from EasyReflectometry.data import _load_orso
+from EasyReflectometry.data import _load_txt
+from EasyReflectometry.data import load
 
 
 class TestData(unittest.TestCase):
