@@ -1,7 +1,10 @@
-from typing import Union, List
-import yaml
+from __future__ import annotations
 
+from typing import List, Union
+
+import yaml
 from easyCore.Objects.ObjectClasses import BaseObj
+
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
 
@@ -20,21 +23,24 @@ class MultiLayer(BaseObj):
     .. _`item library documentation`: ./item_library.html#multilayer
     """
 
-    def __init__(self,
-                 layers: Union[Layers, Layer, List[Layer]],
-                 name: str = 'EasyMultiLayer',
-                 interface=None):
+    def __init__(
+            self,
+            layers: Union[Layers, Layer, List[Layer]],
+            name: str = 'EasyMultiLayer',
+            interface=None,
+            type: str='Multi-layer'
+        ):
         if isinstance(layers, Layer):
             layers = Layers(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = Layers(*layers, name='/'.join([layer.name for layer in layers]))
-        self.type = 'Multi-layer'
+        self.type = type
         super().__init__(name, layers=layers)
         self.interface = interface
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> "MultiLayer":
+    def default(cls, interface=None) -> MultiLayer:
         """
         Default constructor for a multi-layer item.
 
@@ -48,7 +54,7 @@ class MultiLayer(BaseObj):
     def from_pars(cls,
                   layers: Layers,
                   name: str = "EasyMultiLayer",
-                  interface=None) -> "MultiLayer":
+                  interface=None) -> MultiLayer:
         """
         Constructor of a multi-layer item where the parameters are known.
 
