@@ -1,4 +1,4 @@
-__author__ = "github.com/arm61"
+__author__ = 'github.com/arm61'
 
 from typing import TextIO
 from typing import Union
