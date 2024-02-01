@@ -74,12 +74,19 @@ repo = 'EasyReflectometryLib'
 
 [tool.ruff]
 line-length = 88
+exclude = [
+    "tests",
+]
+
+[tool.ruff.format]
+quote-style = "single"
 
 [tool.ruff.lint]
 select = [
     # flake8 settings from existing CI setup
     "E9", "F63", "F7", "F82",
     # Code should be polished to fulfill all cases bellow
+    # https://docs.astral.sh/ruff/rules/
     # pycodestyle
 #     "E",
     # Pyflakes
@@ -92,6 +99,8 @@ select = [
 #    "SIM",
     # isort
     "I",
+    # flake8-bandit
+    "S",
 ]
 
 [tool.ruff.lint.isort]
