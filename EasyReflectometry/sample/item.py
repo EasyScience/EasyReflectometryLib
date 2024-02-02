@@ -8,10 +8,9 @@ For more information please look at the `item library documentation`_
 
 __author__ = 'github.com/arm61'
 
+from .items.gradient_layer import GradientLayer
 from .items.multilayer import MultiLayer
 from .items.repeating_multilayer import RepeatingMultiLayer
 from .items.surfactant_layer import SurfactantLayer
-
-from .items.gradient_layer import GradientLayer
 
 _ = (MultiLayer, RepeatingMultiLayer, SurfactantLayer, GradientLayer)
