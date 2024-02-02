@@ -12,4 +12,6 @@ from .items.multilayer import MultiLayer
 from .items.repeating_multilayer import RepeatingMultiLayer
 from .items.surfactant_layer import SurfactantLayer
 
-_ = (MultiLayer, RepeatingMultiLayer, SurfactantLayer)
+from .items.gradient_layer import GradientLayer
+
+_ = (MultiLayer, RepeatingMultiLayer, SurfactantLayer, GradientLayer)
