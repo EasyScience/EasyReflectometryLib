@@ -14,7 +14,7 @@ except Exception:
     print('Warning: refnx is not installed')
 
 # try:
-#     from .bornagain import BornAgain
+#     from .bornagain.calculator import BornAgain
 #    imported_calculators.append(BornAgain)
 # except Exception:
 #     traceback.print_exc()
