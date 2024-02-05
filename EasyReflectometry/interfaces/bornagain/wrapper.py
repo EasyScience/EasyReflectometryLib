@@ -5,7 +5,7 @@ from easyCore import np
 from scipy.stats import norm
 
 
-class BornAgain:
+class BornAgainWrapper:
 
     def __init__(self):
         self.storage = {

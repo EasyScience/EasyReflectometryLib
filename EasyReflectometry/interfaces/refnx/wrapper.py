@@ -3,20 +3,29 @@ __author__ = "github.com/arm61"
 from typing import Tuple
 
 from easyCore import np
-from refl1d import model
-from refl1d import names
+from refnx import reflect
 
 
-class Refl1d:
+class RefnxWrapper:
 
     def __init__(self):
-        self.storage = {'material': {}, 'layer': {}, 'item': {}, 'model': {}}
+        self.storage = {
+            'material': {},
+            'layer': {},
+            'item': {},
+            'model': {}
+        }
 
     def reset_storage(self):
         """
         Reset the storage area to blank.
         """
-        self.storage = {'material': {}, 'layer': {}, 'item': {}, 'model': {}}
+        self.storage = {
+            'material': {},
+            'layer': {},
+            'item': {},
+            'model': {}
+        }
 
     def create_material(self, name: str):
         """
@@ -24,7 +33,7 @@ class Refl1d:
 
         :param name: The name of the material
         """
-        self.storage['material'][name] = names.SLD(str(name))
+        self.storage['material'][name] = reflect.SLD(0, name=name)
 
     def update_material(self, name: str, **kwargs):
         """
@@ -55,7 +64,7 @@ class Refl1d:
 
         :param name: The name of the layer
         """
-        self.storage['layer'][name] = model.Slab(name=str(name))
+        self.storage['layer'][name] = reflect.Slab(0, 0, 0, name=name)
 
     def update_layer(self, name: str, **kwargs):
         """
@@ -82,14 +91,11 @@ class Refl1d:
 
     def create_item(self, name: str):
         """
-        Create an item using Repeat.
+        Create an item using Stack.
 
         :param name: The name of the item
         """
-        self.storage['item'][name] = model.Repeat(model.Stack(
-            model.Slab(names.SLD(), thickness=0, interface=0)),
-                                                  name=str(name))
-        del self.storage['item'][name].stack[0]
+        self.storage['item'][name] = reflect.Stack(name=name)
 
     def update_item(self, name: str, **kwargs):
         """
@@ -120,28 +126,30 @@ class Refl1d:
 
         :param name: Name for the model
         """
-        self.storage['model'][name] = {'scale': 1, 'bkg': 0, 'dq': 0, 'items': []}
+        self.storage['model'][name] = reflect.ReflectModel(reflect.Structure())
 
     def update_model(self, name: str, **kwargs):
         """
         Update the non-structural parameters of the model
 
-        :param name: Name of the model
+        :param name: Name for the model
         """
         model = self.storage['model'][name]
         for key in kwargs.keys():
-            model[key] = kwargs[key]
+            item = getattr(model, key)
+            setattr(item, 'value', kwargs[key])
 
     def get_model_value(self, name: str, key: str) -> float:
         """
         A function to get a given model value
 
-        :param name: Name of the model
+        :param name: Name for the model
         :param key: The given value keys
         :return: The desired value
         """
         model = self.storage['model'][name]
-        return model[key]
+        item = getattr(model, key)
+        return getattr(item, 'value')
 
     def assign_material_to_layer(self, material_name: str, layer_name: str):
         """
@@ -150,8 +158,7 @@ class Refl1d:
         :param material_name: The material name
         :param layer_name: The layer name
         """
-        self.storage['layer'][layer_name].material = self.storage['material'][
-            material_name]
+        self.storage['layer'][layer_name].sld = self.storage['material'][material_name]
 
     def add_layer_to_item(self, layer_name: str, item_name: str):
         """
@@ -161,16 +168,16 @@ class Refl1d:
         :param item_name: The item name
         """
         item = self.storage['item'][item_name]
-        item.stack.add(self.storage['layer'][layer_name])
+        item.append(self.storage['layer'][layer_name])
 
     def add_item(self, item_name: str, model_name: str):
         """
         Add an item to the model.
 
         :param item_name: items to add to model
-        :param model_name: name for the model
+        :param model_name: Name for the model
         """
-        self.storage['model'][model_name]['items'].append(
+        self.storage['model'][model_name].structure.components.append(
             self.storage['item'][item_name])
 
     def remove_layer_from_item(self, layer_name: str, item_name: str):
@@ -180,20 +187,20 @@ class Refl1d:
         :param layer_name: The layer name
         :param item_name: The item name
         """
-        layer_idx = list(self.storage['item'][item_name].stack).index(
+        layer_idx = self.storage['item'][item_name].components.index(
             self.storage['layer'][layer_name])
-        del self.storage['item'][item_name].stack[layer_idx]
+        del self.storage['item'][item_name].components[layer_idx]
 
     def remove_item(self, item_name: str, model_name: str):
         """
         Remove a given item.
 
         :param item_name: The item name
-        :param model_name: The model name
+        :param model_name: Name of the model
         """
-        item_idx = self.storage['model'][model_name]['items'].index(
+        item_idx = self.storage['model'][model_name].structure.components.index(
             self.storage['item'][item_name])
-        del self.storage['model'][model_name]['items'][item_idx]
+        del self.storage['model'][model_name].structure.components[item_idx]
         del self.storage['item'][item_name]
 
     def calculate(self, x_array: np.ndarray, model_name: str) -> np.ndarray:
@@ -201,58 +208,43 @@ class Refl1d:
         For a given x calculate the corresponding y.
 
         :param x_array: array of data points to be calculated
-        :param model_name: the model name
+        :param model_name: Name for the model
         :return: points calculated at `x`
         """
-        structure = model.Stack()
-        for i in self.storage['model'][model_name]['items'][::-1]:
-            if i.repeat.value == 1:
-                for j in range(len(i.stack))[::-1]:
-                    structure |= i.stack[j]
-            else:
-                stack = model.Stack()
-                for j in range(len(i.stack))[::-1]:
-                    stack |= i.stack[j]
-                structure |= model.Repeat(stack, repeat=i.repeat.value)
-
-        argmin = np.argmin(x_array)
-        argmax = np.argmax(x_array)
-        dq_vector = x_array * self.storage['model'][model_name]['dq'] / 100 / (
-            2 * np.sqrt(2 * np.log(2)))
-
-        q = names.QProbe(x_array,
-                         dq_vector,
-                         intensity=self.storage['model'][model_name]['scale'],
-                         background=self.storage['model'][model_name]['bkg'])
-        q.calc_Qo = np.linspace(
-            x_array[argmin] - 3.5 * dq_vector[argmin],
-            x_array[argmax] + 3.5 * dq_vector[argmax],
-            21 * len(x_array),
-        )
-        R = names.Experiment(probe=q, sample=structure).reflectivity()[1]
-        return R
+        structure = _remove_unecessary_stacks(
+            self.storage['model'][model_name].structure)
+        model = reflect.ReflectModel(
+            structure,
+            scale=self.storage['model'][model_name].scale.value,
+            bkg=self.storage['model'][model_name].bkg.value,
+            dq=self.storage['model'][model_name].dq.value)
+        return model(x_array)
 
     def sld_profile(self, model_name: str) -> Tuple[np.ndarray, np.ndarray]:
         """
         Return the scattering length density profile.
 
-        :param model_name: the model name
+        :param model_name: Name for the model
         :return: z and sld(z)
         """
-        structure = model.Stack()
-        for i in self.storage['model'][model_name]['items'][::-1]:
-            if i.repeat.value == 1:
-                for j in range(len(i.stack))[::-1]:
-                    structure |= i.stack[j]
-            else:
-                stack = model.Stack()
-                for j in range(len(i.stack))[::-1]:
-                    stack |= i.stack[j]
-                structure |= model.Repeat(stack, repeat=i.repeat.value)
+        return _remove_unecessary_stacks(
+            self.storage['model'][model_name].structure).sld_profile()
 
-        q = names.QProbe(np.linspace(0.001, 0.3, 10),
-                         np.linspace(0.001, 0.3, 10),
-                         intensity=self.storage['model'][model_name]['scale'],
-                         background=self.storage['model'][model_name]['bkg'])
-        z, sld, _ = names.Experiment(probe=q, sample=structure).smooth_profile()
-        return z, sld[::-1]
+
+def _remove_unecessary_stacks(
+        current_structure: reflect.Structure) -> reflect.Structure:
+    """
+    Removed unnecessary reflect.Stack objects from the structure.
+
+    :param current_structure: The current structure
+    :return: The structre without the unnecessary Stacks
+    :rtype: reflect.structure
+    """
+    structure = []
+    for i in current_structure.components:
+        if i.repeats.value == 1:
+            for j in i.components:
+                structure.append(j)
+        else:
+            structure.append(i)
+    return reflect.Structure(structure)
