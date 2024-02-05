@@ -4,12 +4,10 @@ __version__ = '0.0.1'
 Tests for Refnx class module
 """
 
-import os
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from EasyReflectometry.calculators.refnx.calculators import Refnx
-from EasyReflectometry.sample.material import Material
+from EasyReflectometry.calculators.refnx.calculator import Refnx
 
 
 class TestRefnx(unittest.TestCase):
