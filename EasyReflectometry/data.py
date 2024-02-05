@@ -1,9 +1,12 @@
 __author__ = 'github.com/arm61'
 
-from typing import Union, TextIO
+from typing import TextIO
+from typing import Union
+
 import numpy as np
 import scipp as sc
-from orsopy.fileio import orso, Header
+from orsopy.fileio import Header
+from orsopy.fileio import orso
 
 
 def load(fname: Union[TextIO, str]) -> sc.DataGroup:
@@ -40,20 +43,20 @@ def _load_orso(fname: Union[TextIO, str]) -> sc.DataGroup:
             dims=[f'{o.info.columns[0].name}_{name}'],
             values=o.data[:, 0],
             variances=np.square(o.data[:, 3]),
-            unit=sc.Unit(o.info.columns[0].unit)
+            unit=sc.Unit(o.info.columns[0].unit),
         )
         try:
             data[f'R_{name}'] = sc.array(
                 dims=[f'{o.info.columns[0].name}_{name}'],
                 values=o.data[:, 1],
                 variances=np.square(o.data[:, 2]),
-                unit=sc.Unit(o.info.columns[1].unit)
+                unit=sc.Unit(o.info.columns[1].unit),
             )
         except TypeError:
             data[f'R_{name}'] = sc.array(
                 dims=[f'{o.info.columns[0].name}_{name}'],
                 values=o.data[:, 1],
-                variances=np.square(o.data[:, 2])
+                variances=np.square(o.data[:, 2]),
             )
         attrs[f'R_{name}'] = {'orso_header': sc.scalar(Header.asdict(o.info))}
     return sc.DataGroup(data=data, coords=coords, attrs=attrs)
@@ -69,16 +72,16 @@ def _load_txt(fname: Union[TextIO, str]) -> sc.DataGroup:
     """
     f_data = np.loadtxt(fname)
     data = {
-        'R_0':
-        sc.array(dims=['Qz_0'], values=f_data[:, 1], variances=np.square(f_data[:, 2]))
+        'R_0': sc.array(
+            dims=['Qz_0'], values=f_data[:, 1], variances=np.square(f_data[:, 2])
+        )
     }
     coords = {
-        data['R_0'].dims[0]:
-        sc.array(
+        data['R_0'].dims[0]: sc.array(
             dims=['Qz_0'],
             values=f_data[:, 0],
             variances=np.square(f_data[:, 3]),
-            unit=sc.Unit('1/angstrom')
+            unit=sc.Unit('1/angstrom'),
         )
     }
     return sc.DataGroup(data=data, coords=coords)

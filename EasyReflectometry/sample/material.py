@@ -1,16 +1,18 @@
 __author__ = 'github.com/arm61'
 
-from typing import ClassVar
 from copy import deepcopy
+from typing import ClassVar
 
 import yaml
 from easyCore import np
-from easyCore.Objects.ObjectClasses import Parameter, BaseObj
 from easyCore.Fitting.Constraints import FunctionalConstraint
+from easyCore.Objects.ObjectClasses import BaseObj
+from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.special.calculations import (weighted_average_sld,
-                                                    neutron_scattering_length,
-                                                    molecular_weight, density_to_sld)
+from EasyReflectometry.special.calculations import density_to_sld
+from EasyReflectometry.special.calculations import molecular_weight
+from EasyReflectometry.special.calculations import neutron_scattering_length
+from EasyReflectometry.special.calculations import weighted_average_sld
 
 MATERIAL_DEFAULTS = {
     'sld': {

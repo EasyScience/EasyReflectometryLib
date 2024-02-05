@@ -6,10 +6,13 @@ Tests for Refnx class module
 
 import os
 import unittest
+
 import numpy as np
-from numpy.testing import assert_almost_equal, assert_equal
-from EasyReflectometry.calculators.refnx import Refnx
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_equal
 from refnx import reflect
+
+from EasyReflectometry.calculators.refnx import Refnx
 
 
 class TestRefnx(unittest.TestCase):

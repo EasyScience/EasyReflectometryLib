@@ -45,6 +45,7 @@ dev = [
     "plopp",
     "pytest>=5.2",
     "pytest-cov>=3.0.0",
+    "ruff",
     "toml>=0.10",
     "yapf>=0.31.0",
 ]
@@ -61,6 +62,9 @@ documentation = "https://docs.easyreflectometry.org"
 [tool.hatch.metadata]
 allow-direct-references = true
 
+[tool.hatch.build.targets.wheel]
+packages = ["EasyReflectometry"]
+
 [tool.coverage.run]
 source = ['EasyReflectometry']
 
@@ -68,8 +72,39 @@ source = ['EasyReflectometry']
 organization = 'easyScience'
 repo = 'EasyReflectometryLib'
 
-[tool.hatch.build.targets.wheel]
-packages = ["EasyReflectometry"]
+[tool.ruff]
+line-length = 127
+exclude = [
+    "tests",
+]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint]
+select = [
+    # flake8 settings from existing CI setup
+    "E9", "F63", "F7", "F82",
+    # Code should be polished to fulfill all cases bellow
+    # https://docs.astral.sh/ruff/rules/
+    # pycodestyle
+#     "E",
+    # Pyflakes
+#    "F",
+    # pyupgrade
+#    "UP",
+    # flake8-bugbear
+#    "B",
+    # flake8-simplify
+#    "SIM",
+    # isort
+    "I",
+    # flake8-bandit
+    "S",
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
 
 [tool.tox]
 legacy_tox_ini = """
