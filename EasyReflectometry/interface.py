@@ -1,12 +1,11 @@
-__author__ = "github.com/wardsimon"
+__author__ = 'github.com/wardsimon'
 
 from easyCore.Objects.Inferface import InterfaceFactoryTemplate
 
-from EasyReflectometry.interfaces import InterfaceTemplate
+from EasyReflectometry.calculators import InterfaceTemplate
 
 
 class InterfaceFactory(InterfaceFactoryTemplate):
-
     def __init__(self):
         super(InterfaceFactory, self).__init__(InterfaceTemplate._interfaces)
 
