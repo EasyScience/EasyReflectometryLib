@@ -1,6 +1,4 @@
-from __future__ import annotations
-
-__author__ = "github.com/arm61"
+__author__ = 'github.com/arm61'
 
 from typing import List
 from typing import Union
@@ -8,18 +6,17 @@ from typing import Union
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 
-from EasyReflectometry.sample.items import MultiLayer
+from EasyReflectometry.sample.item import MultiLayer
 from EasyReflectometry.sample.layer import Layer
 
 
 class Structure(BaseCollection):
-    def __init__(
-        self,
-        *args: List[Union[Layer, MultiLayer]],
-        name: str = "EasyStructure",
-        interface=None,
-        **kwargs,
-    ):
+
+    def __init__(self,
+                 *args: List[Union[Layer, MultiLayer]],
+                 name: str = 'EasyStructure',
+                 interface=None,
+                 **kwargs):
         new_items = []
         for i in args:
             if issubclass(type(i), Layer):
@@ -27,13 +24,13 @@ class Structure(BaseCollection):
             elif issubclass(type(i), MultiLayer):
                 new_items.append(i)
             else:
-                raise ValueError("The items must be either a Layer or an Item")
+                raise ValueError('The items must be either a Layer or an Item')
         super().__init__(name, *new_items, **kwargs)
         self.interface = interface
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> Structure:
+    def default(cls, interface=None) -> "Structure":
         """
         Default constructor for the reflectometry structure.
 
@@ -45,12 +42,10 @@ class Structure(BaseCollection):
         return cls(item1, item2, interface=interface)
 
     @classmethod
-    def from_pars(
-        cls,
-        *args: List[Union[MultiLayer]],
-        name: str = "EasyStructure",
-        interface=None,
-    ) -> "Structure":
+    def from_pars(cls,
+                  *args: List[Union[MultiLayer]],
+                  name: str = 'EasyStructure',
+                  interface=None) -> "Structure":
         """
         Constructor of a reflectometry structure where the parameters are known.
 

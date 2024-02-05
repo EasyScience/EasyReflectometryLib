@@ -18,27 +18,19 @@ class BornAgain(InterfaceTemplate):
     A simple interface using BornAgain
     """
 
-    _material_link = {
-        "sld": "real",
-        "isld": "imag",
-    }
+    _material_link = {'sld': 'real', 'isld': 'imag'}
 
-    _layer_link = {
-        "thickness": "thickness",
-        "roughness": "sigma",
-    }
+    _layer_link = {'thickness': 'thickness', 'roughness': 'sigma'}
 
-    _item_link = {
-        "repetitions": "repeats",
-    }
+    _item_link = {'repetitions': 'repeats'}
 
     _model_link = {
-        "scale": "scale",
-        "background": "background",
-        "resolution": "resolution",
+        'scale': 'scale',
+        'background': 'background',
+        'resolution': 'resolution'
     }
 
-    name = "BornAgain"
+    name = 'BornAgain'
 
     def __init__(self):
         self._wrapper = BornAgainWrapper()
@@ -63,35 +55,42 @@ class BornAgain(InterfaceTemplate):
         t_ = type(model)
         if issubclass(t_, Material):
             key = model.uid
-            if key not in self._wrapper.storage["material"].keys():
+            if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
-                ItemContainer(key, self._material_link, self.calculator.get_material_value, self.calculator.update_material)
-            )
+                ItemContainer(key, self._material_link,
+                              self._wrapper.get_material_value,
+                              self._wrapper.update_material))
         elif issubclass(t_, MaterialMixture):
             key = model.uid
-            if key not in self._wrapper.storage["material"].keys():
+            if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
-                ItemContainer(key, self._material_link, self.calculator.get_material_value, self.calculator.update_material)
-            )
+                ItemContainer(key, self._material_link,
+                              self._wrapper.get_material_value,
+                              self._wrapper.update_material))
         elif issubclass(t_, Layer):
             key = model.uid
-            if key not in self.calculator.storage["layer"].keys():
-                self.calculator.create_layer(key)
-            r_list.append(ItemContainer(key, self._layer_link, self.calculator.get_layer_value, self.calculator.update_layer))
+            if key not in self._wrapper.storage['layer'].keys():
+                self._wrapper.create_layer(key)
+            r_list.append(
+                ItemContainer(key, self._layer_link, self._wrapper.get_layer_value,
+                              self._wrapper.update_layer))
             self.assign_material_to_layer(model.material.uid, key)
         elif issubclass(t_, MultiLayer):
             key = model.uid
-            self.calculator.create_item(key)
-            r_list.append(ItemContainer(key, self._item_link, self.calculator.get_item_value, self.calculator.update_item))
+            self._wrapper.create_item(key)
+            r_list.append(
+                ItemContainer(key, self._item_link, self._wrapper.get_item_value,
+                              self._wrapper.update_item))
             for i in model.layers:
                 self.add_layer_to_item(i.uid, model.uid)
         elif issubclass(t_, Model):
             self._wrapper.create_model()
             r_list.append(
-                ItemContainer("model", self._model_link, self.calculator.get_model_value, self.calculator.update_model)
-            )
+                ItemContainer('model', self._model_link,
+                              self._wrapper.get_model_value,
+                              self._wrapper.update_model))
             for i in model.structure:
                 self.add_item_to_model(i.uid)
         return r_list
