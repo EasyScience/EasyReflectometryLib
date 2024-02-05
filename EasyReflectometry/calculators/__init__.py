@@ -6,7 +6,7 @@ import traceback
 imported_calculators = []
 
 try:
-    from .refnx.calculators import Refnx
+    from .refnx.calculator import Refnx
 
     imported_calculators.append(Refnx)
 except Exception:
@@ -21,7 +21,7 @@ except Exception:
 #     print('Warning: BornAgain python is not installed')
 
 try:
-    from .refl1d.calculators import Refl1d  # noqa: F401
+    from .refl1d.calculator import Refl1d  # noqa: F401
 
     imported_calculators.append(Refl1d)
 except Exception:
