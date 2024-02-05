@@ -12,7 +12,7 @@ from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 from numpy.testing import assert_raises
 
-from EasyReflectometry.interface import InterfaceFactory
+from EasyReflectometry.calculators import CalculatorFactory
 from EasyReflectometry.sample.item import MultiLayer
 from EasyReflectometry.sample.item import RepeatingMultiLayer
 from EasyReflectometry.sample.item import SurfactantLayer

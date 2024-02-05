@@ -2,12 +2,12 @@ __author__ = 'github.com/wardsimon'
 
 from easyCore.Objects.Inferface import InterfaceFactoryTemplate
 
-from EasyReflectometry.calculators import InterfaceTemplate
+from EasyReflectometry.calculators import CalculatorBase
 
 
-class InterfaceFactory(InterfaceFactoryTemplate):
+class CalculatorFactory(InterfaceFactoryTemplate):
     def __init__(self):
-        super(InterfaceFactory, self).__init__(InterfaceTemplate._interfaces)
+        super(CalculatorFactory, self).__init__(CalculatorBase._interfaces)
 
     def reset_storage(self) -> None:
         return self().reset_storage()

@@ -1,4 +1,4 @@
-__author__ = "github.com/wardsimon"
+__author__ = 'github.com/wardsimon'
 
 from abc import ABCMeta
 from abc import abstractmethod
@@ -8,10 +8,11 @@ from easyCore import borg
 from easyCore.Objects.core import ComponentSerializer
 
 
-class InterfaceTemplate(ComponentSerializer, metaclass=ABCMeta):
+class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
     """
     This class is a template and defines all properties that an interface should have.
     """
+
     _interfaces = []
     _borg = borg
     _link = {}

@@ -11,7 +11,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
-from EasyReflectometry.interface import InterfaceFactory
+from EasyReflectometry.calculators import CalculatorFactory
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layer import LayerApm
 from EasyReflectometry.sample.material import Material
@@ -69,7 +69,7 @@ class TestLayer(unittest.TestCase):
         assert_almost_equal(p.material.isld.raw_value, 0.0)
 
     def test_assign_material_with_interface_refnx(self):
-        interface = InterfaceFactory()
+        interface = CalculatorFactory()
         m = Material.from_pars(6.908, -0.278, 'Boron', interface=interface)
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron', interface=interface)
         k = Material.from_pars(2.074, 0.0, 'Silicon', interface=interface)
