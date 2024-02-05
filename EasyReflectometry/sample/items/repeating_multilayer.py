@@ -1,9 +1,12 @@
 from copy import deepcopy
-from typing import Union, List
+from typing import List
+from typing import Union
 
 from easyCore.Objects.ObjectClasses import Parameter
+
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
+
 from .multilayer import MultiLayer
 
 REPEATINGMULTILAYER_DETAILS = {

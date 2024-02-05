@@ -5,6 +5,7 @@ Tests for Layers class module
 """
 
 import unittest
+
 from EasyReflectometry.sample.material import Material
 from EasyReflectometry.sample.materials import Materials
 

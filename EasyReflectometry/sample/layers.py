@@ -4,6 +4,7 @@ from typing import List
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
+
 from EasyReflectometry.sample.layer import Layer
 
 

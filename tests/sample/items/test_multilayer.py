@@ -6,13 +6,17 @@ Tests for Item class module
 
 import os
 import unittest
+
 import numpy as np
-from numpy.testing import assert_almost_equal, assert_equal, assert_raises
-from EasyReflectometry.sample.material import Material
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_equal
+from numpy.testing import assert_raises
+
+from EasyReflectometry.interface import InterfaceFactory
+from EasyReflectometry.sample.item import MultiLayer
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
-from EasyReflectometry.sample.item import MultiLayer
-from EasyReflectometry.interface import InterfaceFactory
+from EasyReflectometry.sample.material import Material
 
 
 class TestMultiLayer(unittest.TestCase):
