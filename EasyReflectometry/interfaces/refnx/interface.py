@@ -21,15 +21,15 @@ class Refnx(InterfaceTemplate):
     A simple interface using refnx
     """
 
-    _material_link = {'sld': 'real', 'isld': 'imag'}
+    _material_link = {"sld": "real", "isld": "imag"}
 
-    _layer_link = {'thickness': 'thick', 'roughness': 'rough'}
+    _layer_link = {"thickness": "thick", "roughness": "rough"}
 
-    _item_link = {'repetitions': 'repeats'}
+    _item_link = {"repetitions": "repeats"}
 
-    _model_link = {'scale': 'scale', 'background': 'bkg', 'resolution': 'dq'}
+    _model_link = {"scale": "scale", "background": "bkg", "resolution": "dq"}
 
-    name = 'refnx'
+    name = "refnx"
 
     def __init__(self):
         self.calculator = Refnx_calc()
@@ -41,8 +41,7 @@ class Refnx(InterfaceTemplate):
         """
         self.calculator.reset_storage()
 
-    def create(self, model: Union[Material, Layer, MultiLayer,
-                                  Model]) -> List[ItemContainer]:
+    def create(self, model: Union[Material, Layer, MultiLayer, Model]) -> List[ItemContainer]:
         """
         Creation function
 
@@ -53,42 +52,34 @@ class Refnx(InterfaceTemplate):
         t_ = type(model)
         if issubclass(t_, Material):
             key = model.uid
-            if key not in self.calculator.storage['material'].keys():
+            if key not in self.calculator.storage["material"].keys():
                 self.calculator.create_material(key)
             r_list.append(
-                ItemContainer(key, self._material_link,
-                              self.calculator.get_material_value,
-                              self.calculator.update_material))
+                ItemContainer(key, self._material_link, self.calculator.get_material_value, self.calculator.update_material)
+            )
         elif issubclass(t_, MaterialMixture):
             key = model.uid
-            if key not in self.calculator.storage['material'].keys():
+            if key not in self.calculator.storage["material"].keys():
                 self.calculator.create_material(key)
             r_list.append(
-                ItemContainer(key, self._material_link,
-                              self.calculator.get_material_value,
-                              self.calculator.update_material))
+                ItemContainer(key, self._material_link, self.calculator.get_material_value, self.calculator.update_material)
+            )
         elif issubclass(t_, Layer):
             key = model.uid
-            if key not in self.calculator.storage['layer'].keys():
+            if key not in self.calculator.storage["layer"].keys():
                 self.calculator.create_layer(key)
-            r_list.append(
-                ItemContainer(key, self._layer_link, self.calculator.get_layer_value,
-                              self.calculator.update_layer))
+            r_list.append(ItemContainer(key, self._layer_link, self.calculator.get_layer_value, self.calculator.update_layer))
             self.assign_material_to_layer(model.material.uid, key)
         elif issubclass(t_, MultiLayer):
             key = model.uid
             self.calculator.create_item(key)
-            r_list.append(
-                ItemContainer(key, self._item_link, self.calculator.get_item_value,
-                              self.calculator.update_item))
+            r_list.append(ItemContainer(key, self._item_link, self.calculator.get_item_value, self.calculator.update_item))
             for i in model.layers:
                 self.add_layer_to_item(i.uid, model.uid)
         elif issubclass(t_, Model):
             key = model.uid
             self.calculator.create_model(key)
-            r_list.append(
-                ItemContainer(key, self._model_link, self.calculator.get_model_value,
-                              self.calculator.update_model))
+            r_list.append(ItemContainer(key, self._model_link, self.calculator.get_model_value, self.calculator.update_model))
             for i in model.structure:
                 self.add_item_to_model(i.uid, key)
         return r_list
