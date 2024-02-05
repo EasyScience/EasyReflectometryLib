@@ -11,7 +11,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
-from EasyReflectometry.sample.item import RepeatingMultiLayer
+from EasyReflectometry.sample.items import RepeatingMultiLayer
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
 from EasyReflectometry.sample.material import Material
