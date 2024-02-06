@@ -62,7 +62,11 @@ class RepeatingMultiLayer(MultiLayer):
         """
         layers = Layers.default()
         repetitions = Parameter('repetitions', **REPEATINGMULTILAYER_DETAILS['repetitions'])
-        return cls(layers, repetitions, interface=interface)
+        return cls(
+            layers,
+            repetitions,
+            interface=interface,
+        )
 
     @classmethod
     def from_pars(
@@ -85,7 +89,12 @@ class RepeatingMultiLayer(MultiLayer):
 
         repetitions = Parameter('repetitions', repetitions, **default_options['repetitions'])
 
-        return cls(layers=layers, repetitions=repetitions, name=name, interface=interface)
+        return cls(
+            layers=layers,
+            repetitions=repetitions,
+            name=name,
+            interface=interface,
+        )
 
     @property
     def uid(self) -> int:

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from typing import List
 from typing import Union
 
 import yaml
@@ -26,7 +25,7 @@ class MultiLayer(BaseObj):
 
     def __init__(
         self,
-        layers: Union[Layers, Layer, List[Layer]],
+        layers: Union[Layers, Layer, list[Layer]],
         name: str = 'EasyMultiLayer',
         interface=None,
         type: str = 'Multi-layer',

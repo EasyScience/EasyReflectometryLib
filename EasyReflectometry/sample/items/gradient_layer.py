@@ -184,7 +184,11 @@ class GradientLayer(MultiLayer):
         return this_dict
 
 
-def _linear_gradient(init_value: float, final_value: float, discretisation_elements: int) -> list[float]:
+def _linear_gradient(
+    init_value: float,
+    final_value: float,
+    discretisation_elements: int,
+) -> list[float]:
     discrete_step = (final_value - init_value) / discretisation_elements
     if discrete_step != 0:
         # Both initial and final values are included
@@ -224,7 +228,11 @@ def _apply_thickness_constraints(layers) -> None:
     # Add thickness constraint, layer 0 is the deciding layer
     for i in range(1, len(layers)):
         layers[i].thickness.enabled = True
-        layer_constraint = ObjConstraint(dependent_obj=layers[i].thickness, operator='', independent_obj=layers[0].thickness)
+        layer_constraint = ObjConstraint(
+            dependent_obj=layers[i].thickness,
+            operator='',
+            independent_obj=layers[0].thickness,
+        )
         layers[0].thickness.user_constraints[f'thickness_{i}'] = layer_constraint
         layers[0].thickness.user_constraints[f'thickness_{i}'].enabled = True
 
