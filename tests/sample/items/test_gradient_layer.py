@@ -4,7 +4,7 @@ import pytest
 from numpy.testing import assert_almost_equal
 
 import EasyReflectometry.sample.items.gradient_layer
-from EasyReflectometry.sample.item import GradientLayer
+from EasyReflectometry.sample.items import GradientLayer
 from EasyReflectometry.sample.items.gradient_layer import (
     _apply_thickness_constraints,
     _linear_gradient,

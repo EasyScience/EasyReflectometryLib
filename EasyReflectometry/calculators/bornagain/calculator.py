@@ -6,7 +6,7 @@ import numpy as np
 from easyCore.Objects.Inferface import ItemContainer
 
 from EasyReflectometry.experiment.model import Model
-from EasyReflectometry.sample.item import MultiLayer
+from EasyReflectometry.sample.items import MultiLayer
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.material import Material
 from EasyReflectometry.sample.material import MaterialMixture

@@ -10,8 +10,8 @@ from easyCore import np
 from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.sample.item import MultiLayer
-from EasyReflectometry.sample.item import RepeatingMultiLayer
+from EasyReflectometry.sample.items import MultiLayer
+from EasyReflectometry.sample.items import RepeatingMultiLayer
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
 from EasyReflectometry.sample.structure import Structure
@@ -52,14 +52,14 @@ class Model(BaseObj):
         background: Parameter,
         resolution: Parameter,
         name: str = 'EasyModel',
-        calculator=None,
+        interface=None,
     ):
         super().__init__(name, structure=structure, scale=scale, background=background, resolution=resolution)
-        self.interface = calculator
+        self.interface = interface
 
     # Class constructors
     @classmethod
-    def default(cls, calculator=None) -> Model:
+    def default(cls, interface=None) -> 'Model':
         """
         Default constructor for the reflectometry experiment model.
 
@@ -80,8 +80,8 @@ class Model(BaseObj):
         background: Parameter,
         resolution: Parameter,
         name: str = 'EasyModel',
-        calculator=None,
-    ) -> Model:
+        interface=None,
+    ) -> 'Model':
         """
         Constructor of a reflectometry experiment model where the parameters are known.
 
@@ -101,12 +101,7 @@ class Model(BaseObj):
         resolution = Parameter('resolution', resolution, **default_options['resolution'])
 
         return cls(
-            structure=structure,
-            scale=scale,
-            background=background,
-            resolution=resolution,
-            name=name,
-            calculator=calculator,
+            structure=structure, scale=scale, background=background, resolution=resolution, name=name, interface=interface
         )
 
     def add_item(self, *items: Union[Layer, RepeatingMultiLayer]) -> None:
