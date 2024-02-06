@@ -47,7 +47,12 @@ class GradientLayer(MultiLayer):
             interface=interface,
         )
 
-        super().__init__(layers=gradient_layers, name=name, interface=interface, type='Gradient-layer')
+        super().__init__(
+            layers=gradient_layers,
+            name=name,
+            interface=interface,
+            type='Gradient-layer',
+        )
 
         _apply_thickness_constraints(self.layers)
         # Set the thickness and roughness properties

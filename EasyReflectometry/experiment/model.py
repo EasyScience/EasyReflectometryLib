@@ -52,7 +52,13 @@ class Model(BaseObj):
         name: str = 'EasyModel',
         interface=None,
     ):
-        super().__init__(name, structure=structure, scale=scale, background=background, resolution=resolution)
+        super().__init__(
+            name,
+            structure=structure,
+            scale=scale,
+            background=background,
+            resolution=resolution,
+        )
         self.interface = interface
 
     # Class constructors
@@ -99,7 +105,12 @@ class Model(BaseObj):
         resolution = Parameter('resolution', resolution, **default_options['resolution'])
 
         return cls(
-            structure=structure, scale=scale, background=background, resolution=resolution, name=name, interface=interface
+            structure=structure,
+            scale=scale,
+            background=background,
+            resolution=resolution,
+            name=name,
+            interface=interface,
         )
 
     def add_item(self, *items: Union[Layer, RepeatingMultiLayer]):
