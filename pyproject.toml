@@ -76,21 +76,23 @@ repo = 'EasyReflectometryLib'
 line-length = 127
 exclude = [
     "tests",
+    "docs",
 ]
 
 [tool.ruff.format]
 quote-style = "single"
 
 [tool.ruff.lint]
+ignore-init-module-imports = true
 select = [
     # flake8 settings from existing CI setup
     "E9", "F63", "F7", "F82",
     # Code should be polished to fulfill all cases bellow
     # https://docs.astral.sh/ruff/rules/
     # pycodestyle
-#     "E",
+    "E",
     # Pyflakes
-#    "F",
+    "F",
     # pyupgrade
 #    "UP",
     # flake8-bugbear

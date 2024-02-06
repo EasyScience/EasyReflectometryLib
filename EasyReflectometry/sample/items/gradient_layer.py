@@ -14,6 +14,7 @@ class GradientLayer(MultiLayer):
     A :py:class:`GradientLayer` constructs a gradient multilayer for the
     provided initial and final material.
     """
+
     def __init__(
         self,
         initial_material: Material,
@@ -22,7 +23,7 @@ class GradientLayer(MultiLayer):
         roughness: float,
         discretisation_elements: int = 10,
         name: str = 'EasyGradienLayer',
-        interface=None
+        interface=None,
     ) -> GradientLayer:
         """
         :param initial_material: Material of initial "part" of the layer
@@ -36,20 +37,21 @@ class GradientLayer(MultiLayer):
         self._initial_material = initial_material
         self._final_material = final_material
         if discretisation_elements < 2:
-            raise ValueError("Discretisation elements must be greater than 2.")
+            raise ValueError('Discretisation elements must be greater than 2.')
         self._discretisation_elements = discretisation_elements
 
         gradient_layers = _prepare_gradient_layers(
             initial_material=initial_material,
             final_material=final_material,
             discretisation_elements=discretisation_elements,
-            interface=interface)
+            interface=interface,
+        )
 
         super().__init__(
             layers=gradient_layers,
             name=name,
             interface=interface,
-            type='Gradient-layer'
+            type='Gradient-layer',
         )
 
         _apply_thickness_constraints(self.layers)
@@ -105,11 +107,11 @@ class GradientLayer(MultiLayer):
         return cls(
             initial_material=initial_material,
             final_material=final_material,
-            thickness=2.,
+            thickness=2.0,
             roughness=0.2,
-            discretisation_elements=10, 
-            name=name, 
-            interface=interface
+            discretisation_elements=10,
+            name=name,
+            interface=interface,
         )
 
     @classmethod
@@ -121,7 +123,7 @@ class GradientLayer(MultiLayer):
         roughness: float,
         discretisation_elements: int,
         name: str = 'EasyGradientLayer',
-        interface=None
+        interface=None,
     ) -> GradientLayer:
         """
         Constructor for the gradient layer where the parameters are known,
@@ -140,19 +142,19 @@ class GradientLayer(MultiLayer):
             final_material=final_material,
             thickness=thickness,
             roughness=roughness,
-            discretisation_elements=discretisation_elements, 
-            name=name, 
-            interface=interface
+            discretisation_elements=discretisation_elements,
+            name=name,
+            interface=interface,
         )
 
     def add_layer(self, layer: Layer) -> None:
-        raise NotImplementedError("Cannot add layers to a gradient layer.")
+        raise NotImplementedError('Cannot add layers to a gradient layer.')
 
     def duplicate_layer(self, idx: int) -> None:
-        raise NotImplementedError("Cannot duplicate a layer for a gradient layer.")
+        raise NotImplementedError('Cannot duplicate a layer for a gradient layer.')
 
     def remove_layer(self, idx: int) -> None:
-        raise NotImplementedError("Cannot remove layer from a gradient layer.")
+        raise NotImplementedError('Cannot remove layer from a gradient layer.')
 
     @property
     def _dict_repr(self) -> dict[str, str]:
@@ -166,7 +168,7 @@ class GradientLayer(MultiLayer):
             'thickness': self.thickness,
             'discretisation_elements': self._discretisation_elements,
             'initial_layer': self.layers[0]._dict_repr,
-            'final_layer': self.layers[-1]._dict_repr
+            'final_layer': self.layers[-1]._dict_repr,
         }
 
     def as_dict(self, skip: list = None) -> dict:
@@ -183,10 +185,10 @@ class GradientLayer(MultiLayer):
 
 
 def _linear_gradient(
-        init_value: float,
-        final_value: float,
-        discretisation_elements: int
-    ) -> list[float]:
+    init_value: float,
+    final_value: float,
+    discretisation_elements: int,
+) -> list[float]:
     discrete_step = (final_value - init_value) / discretisation_elements
     if discrete_step != 0:
         # Both initial and final values are included
@@ -197,20 +199,17 @@ def _linear_gradient(
 
 
 def _prepare_gradient_layers(
-        initial_material: Material,
-        final_material: Material,
-        discretisation_elements: int,
-        interface=None
-    ) -> list[Layer]:
+    initial_material: Material, final_material: Material, discretisation_elements: int, interface=None
+) -> list[Layer]:
     gradient_sld = _linear_gradient(
         init_value=initial_material.sld.raw_value,
         final_value=final_material.sld.raw_value,
-        discretisation_elements=discretisation_elements
+        discretisation_elements=discretisation_elements,
     )
     gradient_isld = _linear_gradient(
         init_value=initial_material.isld.raw_value,
         final_value=final_material.isld.raw_value,
-        discretisation_elements=discretisation_elements
+        discretisation_elements=discretisation_elements,
     )
     gradient_layers = []
     for i in range(discretisation_elements):
@@ -219,7 +218,7 @@ def _prepare_gradient_layers(
             thickness=0.0,
             roughness=0.0,
             name=str(i),
-            interface=interface
+            interface=interface,
         )
         gradient_layers.append(layer)
     return gradient_layers
@@ -232,10 +231,9 @@ def _apply_thickness_constraints(layers) -> None:
         layer_constraint = ObjConstraint(
             dependent_obj=layers[i].thickness,
             operator='',
-            independent_obj=layers[0].thickness
+            independent_obj=layers[0].thickness,
         )
         layers[0].thickness.user_constraints[f'thickness_{i}'] = layer_constraint
         layers[0].thickness.user_constraints[f'thickness_{i}'].enabled = True
 
     layers[0].thickness.enabled = True
-

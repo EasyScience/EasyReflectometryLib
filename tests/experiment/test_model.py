@@ -13,8 +13,8 @@ from numpy.testing import assert_equal
 
 from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.interface import InterfaceFactory
-from EasyReflectometry.sample.item import MultiLayer
-from EasyReflectometry.sample.item import RepeatingMultiLayer
+from EasyReflectometry.sample.items import MultiLayer
+from EasyReflectometry.sample.items import RepeatingMultiLayer
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
 from EasyReflectometry.sample.material import Material

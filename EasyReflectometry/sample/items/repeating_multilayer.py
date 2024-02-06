@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from copy import deepcopy
 from typing import List
 from typing import Union
@@ -15,7 +17,7 @@ REPEATINGMULTILAYER_DETAILS = {
         'value': 1,
         'min': 1,
         'max': 9999,
-        'fixed': True
+        'fixed': True,
     }
 }
 
@@ -34,39 +36,46 @@ class RepeatingMultiLayer(MultiLayer):
     .. _`item library documentation`: ./item_library.html#repeatingmultilayer
     """
 
-    def __init__(self,
-                 layers: Union[Layers, Layer, List[Layer]],
-                 repetitions: Parameter,
-                 name: str = 'EasyRepeatingMultiLayer',
-                 interface=None):
+    def __init__(
+        self,
+        layers: Union[Layers, Layer, List[Layer]],
+        repetitions: Parameter,
+        name: str = 'EasyRepeatingMultiLayer',
+        interface=None,
+    ):
         if isinstance(layers, Layer):
             layers = Layers(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = Layers(*layers, name='/'.join([layer.name for layer in layers]))
         super().__init__(layers, name, interface)
-        self._add_component("repetitions", repetitions)
+        self._add_component('repetitions', repetitions)
         self.interface = interface
         self.type = 'Repeating Multi-layer'
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> "RepeatingMultiLayer":
+    def default(cls, interface=None) -> RepeatingMultiLayer:
         """
         Default constructor for the reflectometry repeating multi layer.
 
         :return: Default repeating multi-layer container
         """
         layers = Layers.default()
-        repetitions = Parameter('repetitions',
-                                **REPEATINGMULTILAYER_DETAILS['repetitions'])
-        return cls(layers, repetitions, interface=interface)
+        repetitions = Parameter('repetitions', **REPEATINGMULTILAYER_DETAILS['repetitions'])
+        return cls(
+            layers,
+            repetitions,
+            interface=interface,
+        )
 
     @classmethod
-    def from_pars(cls,
-                  layers: Layers,
-                  repetitions: float = 1.0,
-                  name: str = 'EasyRepeatingMultiLayer',
-                  interface=None) -> "RepeatingMultiLayer":
+    def from_pars(
+        cls,
+        layers: Layers,
+        repetitions: float = 1.0,
+        name: str = 'EasyRepeatingMultiLayer',
+        interface=None,
+    ) -> RepeatingMultiLayer:
         """
         Constructor of a reflectometry repeating multi layer where the
         parameters are known.
@@ -78,13 +87,14 @@ class RepeatingMultiLayer(MultiLayer):
         default_options = deepcopy(REPEATINGMULTILAYER_DETAILS)
         del default_options['repetitions']['value']
 
-        repetitions = Parameter('repetitions', repetitions,
-                                **default_options['repetitions'])
+        repetitions = Parameter('repetitions', repetitions, **default_options['repetitions'])
 
-        return cls(layers=layers,
-                   repetitions=repetitions,
-                   name=name,
-                   interface=interface)
+        return cls(
+            layers=layers,
+            repetitions=repetitions,
+            name=name,
+            interface=interface,
+        )
 
     @property
     def uid(self) -> int:
