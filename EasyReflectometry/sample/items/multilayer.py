@@ -25,12 +25,12 @@ class MultiLayer(BaseObj):
     """
 
     def __init__(
-            self,
-            layers: Union[Layers, Layer, List[Layer]],
-            name: str = 'EasyMultiLayer',
-            interface=None,
-            type: str='Multi-layer'
-        ):
+        self,
+        layers: Union[Layers, Layer, List[Layer]],
+        name: str = 'EasyMultiLayer',
+        interface=None,
+        type: str = 'Multi-layer',
+    ):
         if isinstance(layers, Layer):
             layers = Layers(layers, name=layers.name)
         elif isinstance(layers, list):
@@ -52,10 +52,7 @@ class MultiLayer(BaseObj):
         return cls(layers, interface=interface)
 
     @classmethod
-    def from_pars(cls,
-                  layers: Layers,
-                  name: str = "EasyMultiLayer",
-                  interface=None) -> MultiLayer:
+    def from_pars(cls, layers: Layers, name: str = 'EasyMultiLayer', interface=None) -> MultiLayer:
         """
         Constructor of a multi-layer item where the parameters are known.
 
@@ -87,10 +84,12 @@ class MultiLayer(BaseObj):
         :type idx: int
         """
         to_duplicate = self.layers[idx]
-        duplicate_layer = Layer.from_pars(material=to_duplicate.material,
-                                          thickness=to_duplicate.thickness.raw_value,
-                                          roughness=to_duplicate.roughness.raw_value,
-                                          name=to_duplicate.name + ' duplicate')
+        duplicate_layer = Layer.from_pars(
+            material=to_duplicate.material,
+            thickness=to_duplicate.thickness.raw_value,
+            roughness=to_duplicate.roughness.raw_value,
+            name=to_duplicate.name + ' duplicate',
+        )
         self.add_layer(duplicate_layer)
 
     def remove_layer(self, idx):

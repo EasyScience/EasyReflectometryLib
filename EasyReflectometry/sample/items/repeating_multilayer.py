@@ -12,12 +12,12 @@ from EasyReflectometry.sample.layers import Layers
 from .multilayer import MultiLayer
 
 REPEATINGMULTILAYER_DETAILS = {
-    "repetitions": {
-        "description": "Number of repetitions of the given series of layers",
-        "value": 1,
-        "min": 1,
-        "max": 9999,
-        "fixed": True,
+    'repetitions': {
+        'description': 'Number of repetitions of the given series of layers',
+        'value': 1,
+        'min': 1,
+        'max': 9999,
+        'fixed': True,
     }
 }
 
@@ -40,17 +40,17 @@ class RepeatingMultiLayer(MultiLayer):
         self,
         layers: Union[Layers, Layer, List[Layer]],
         repetitions: Parameter,
-        name: str = "EasyRepeatingMultiLayer",
+        name: str = 'EasyRepeatingMultiLayer',
         interface=None,
     ):
         if isinstance(layers, Layer):
             layers = Layers(layers, name=layers.name)
         elif isinstance(layers, list):
-            layers = Layers(*layers, name="/".join([layer.name for layer in layers]))
+            layers = Layers(*layers, name='/'.join([layer.name for layer in layers]))
         super().__init__(layers, name, interface)
-        self._add_component("repetitions", repetitions)
+        self._add_component('repetitions', repetitions)
         self.interface = interface
-        self.type = "Repeating Multi-layer"
+        self.type = 'Repeating Multi-layer'
 
     # Class constructors
     @classmethod
@@ -61,7 +61,7 @@ class RepeatingMultiLayer(MultiLayer):
         :return: Default repeating multi-layer container
         """
         layers = Layers.default()
-        repetitions = Parameter("repetitions", **REPEATINGMULTILAYER_DETAILS["repetitions"])
+        repetitions = Parameter('repetitions', **REPEATINGMULTILAYER_DETAILS['repetitions'])
         return cls(layers, repetitions, interface=interface)
 
     @classmethod
@@ -69,7 +69,7 @@ class RepeatingMultiLayer(MultiLayer):
         cls,
         layers: Layers,
         repetitions: float = 1.0,
-        name: str = "EasyRepeatingMultiLayer",
+        name: str = 'EasyRepeatingMultiLayer',
         interface=None,
     ) -> RepeatingMultiLayer:
         """
@@ -81,9 +81,9 @@ class RepeatingMultiLayer(MultiLayer):
         :return: Repeating multi-layer container
         """
         default_options = deepcopy(REPEATINGMULTILAYER_DETAILS)
-        del default_options["repetitions"]["value"]
+        del default_options['repetitions']['value']
 
-        repetitions = Parameter("repetitions", repetitions, **default_options["repetitions"])
+        repetitions = Parameter('repetitions', repetitions, **default_options['repetitions'])
 
         return cls(layers=layers, repetitions=repetitions, name=name, interface=interface)
 
@@ -103,5 +103,5 @@ class RepeatingMultiLayer(MultiLayer):
         :return: Simple dictionary
         """
         d_dict = {self.name: self.layers._dict_repr}
-        d_dict[self.name]["repetitions"] = self.repetitions.raw_value
+        d_dict[self.name]['repetitions'] = self.repetitions.raw_value
         return d_dict

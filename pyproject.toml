@@ -79,6 +79,9 @@ exclude = [
     "docs",
 ]
 
+[tool.ruff.format]
+quote-style = "single"
+
 [tool.ruff.lint]
 ignore-init-module-imports = true
 select = [
