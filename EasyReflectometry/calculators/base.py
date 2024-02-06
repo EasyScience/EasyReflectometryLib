@@ -2,7 +2,6 @@ __author__ = 'github.com/wardsimon'
 
 from abc import ABCMeta
 from abc import abstractmethod
-from typing import List
 from typing import Union
 
 import numpy as np
@@ -18,12 +17,12 @@ from EasyReflectometry.sample.material import Material
 
 class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
     """
-    This class is a template and defines all properties that an interface should have.
+    This class is a template and defines all properties that a calculator should have.
     """
 
-    _interfaces = []
-    _borg = borg
-    _link = {}
+    _calculators = []
+    #    _borg = borg
+    #    _link = {}
 
     def __init_subclass__(cls, is_abstract: bool = False, **kwargs):
         """
@@ -38,7 +37,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         """
         super().__init_subclass__(**kwargs)
         if not is_abstract:
-            cls._interfaces.append(cls)
+            cls._calculators.append(cls)
 
     @abstractmethod
     def reset_storage(self) -> None:
@@ -48,7 +47,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    def create(self, model: Union[Material, Layer, MultiLayer, Model]) -> List[ItemContainer]:
+    def create(self, model: Union[Material, Layer, MultiLayer, Model]) -> list[ItemContainer]:
         """
         Creation function
 
@@ -75,7 +74,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         :param layer_id: the layer id
         :param item_id: the item id
         """
-        ... 
+        ...
 
     @abstractmethod
     def remove_layer_from_item(self, layer_id: str, item_id: str) -> None:
@@ -119,7 +118,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    def sld_profile(self, model_id: str) -> tuple:
+    def sld_profile(self, model_id: str) -> tuple([np.ndarray, np.ndarray]):
         """
         :param model_id: the model id
         """
