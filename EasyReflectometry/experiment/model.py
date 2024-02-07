@@ -70,7 +70,7 @@ class Model(BaseObj):
         scale = Parameter('scale', **LAYER_DETAILS['scale'])
         background = Parameter('background', **LAYER_DETAILS['background'])
         resolution = Parameter('resolution', **LAYER_DETAILS['resolution'])
-        return cls(structure, scale, background, resolution, calculator=calculator)
+        return cls(structure, scale, background, resolution, interface=interface)
 
     @classmethod
     def from_pars(

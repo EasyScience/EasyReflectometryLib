@@ -7,7 +7,7 @@ from EasyReflectometry.calculators import CalculatorBase
 
 class CalculatorFactory(InterfaceFactoryTemplate):
     def __init__(self):
-        super(CalculatorFactory, self).__init__(CalculatorBase._calculators)
+        super().__init__(interface_list=CalculatorBase._calculators)
 
     def reset_storage(self) -> None:
         return self().reset_storage()
