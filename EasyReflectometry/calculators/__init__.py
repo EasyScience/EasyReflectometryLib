@@ -3,6 +3,9 @@ __version__ = '0.0.1'
 
 import traceback
 
+from .base import CalculatorBase
+from .factory import CalculatorFactory
+
 imported_calculators = []
 
 try:
@@ -27,8 +30,5 @@ try:
 except Exception:
     traceback.print_exc()
     print('Warning: refl1d is not installed')
-
-from .base import CalculatorBase
-from .factory import CalculatorFactory
 
 __all__ = [CalculatorBase, CalculatorFactory] + imported_calculators

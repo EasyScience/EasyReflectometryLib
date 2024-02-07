@@ -5,7 +5,6 @@ from abc import abstractmethod
 from typing import Union
 
 import numpy as np
-from easyCore import borg
 from easyCore.Objects.core import ComponentSerializer
 from easyCore.Objects.Inferface import ItemContainer
 
@@ -21,8 +20,6 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
     """
 
     _calculators = []
-    #    _borg = borg
-    #    _link = {}
 
     def __init_subclass__(cls, is_abstract: bool = False, **kwargs):
         """
