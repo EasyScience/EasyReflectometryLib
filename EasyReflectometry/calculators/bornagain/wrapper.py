@@ -6,9 +6,28 @@ from scipy.stats import norm
 
 from ..wrapper_base import WrapperBase
 
+"""
+THIS CODE IS NOT FUNCTIONAL
+PLEASE CONSULT ONE OF THE OTHER WRAPPES FOR A FUNCTIONAL EXAMPLE
+"""
+
 
 class BornAgainWrapper(WrapperBase):
     def __init__(self):
+        super().__init__()
+        self.storage = {
+            'layer_material': {},
+            'roughness': {},
+            'item_repeats': {},
+            'model_items': [],
+            'model_parameters': {},
+        }
+
+    def reset_storage(self):
+        """
+        Reset the storage area to blank.
+        """
+        super().reset_storage()
         self.storage = {
             'layer_material': {},
             'roughness': {},
@@ -25,18 +44,6 @@ class BornAgainWrapper(WrapperBase):
         :type name: str
         """
         self.storage['material'][name] = ba.MaterialBySLD(str(name), 0.0, 0.0)
-
-    def reset_storage(self):
-        """
-        Reset the storage area to blank.
-        """
-        self.storage = {
-            'layer_material': {},
-            'roughness': {},
-            'item_repeats': {},
-            'model_items': [],
-            'model_parameters': {},
-        }
 
     def update_material(self, name, **kwargs):
         """

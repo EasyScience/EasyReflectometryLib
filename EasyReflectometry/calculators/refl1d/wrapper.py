@@ -10,15 +10,6 @@ from ..wrapper_base import WrapperBase
 
 
 class Refl1dWrapper(WrapperBase):
-    # def __init__(self):
-    #     self.storage = {'material': {}, 'layer': {}, 'item': {}, 'model': {}}
-
-    # def reset_storage(self):
-    #     """
-    #     Reset the storage area to blank.
-    #     """
-    #     self.storage = {'material': {}, 'layer': {}, 'item': {}, 'model': {}}
-
     def create_material(self, name: str):
         """
         Create a material using SLD.
@@ -27,29 +18,6 @@ class Refl1dWrapper(WrapperBase):
         """
         self.storage['material'][name] = names.SLD(str(name))
 
-    def update_material(self, name: str, **kwargs):
-        """
-        Update a material.
-
-        :param name: The name of the material
-        """
-        material = self.storage['material'][name]
-        for key in kwargs.keys():
-            item = getattr(material, key)
-            setattr(item, 'value', kwargs[key])
-
-    def get_material_value(self, name: str, key: str) -> float:
-        """
-        A function to get a given material value
-
-        :param name: The material name
-        :param key: The given value keys
-        :return: The desired value
-        """
-        material = self.storage['material'][name]
-        item = getattr(material, key)
-        return getattr(item, 'value')
-
     def create_layer(self, name: str):
         """
         Create a layer using Slab.
@@ -57,29 +25,6 @@ class Refl1dWrapper(WrapperBase):
         :param name: The name of the layer
         """
         self.storage['layer'][name] = model.Slab(name=str(name))
-
-    def update_layer(self, name: str, **kwargs):
-        """
-        Update a layer in a given item.
-
-        :param name: The layer name
-        """
-        layer = self.storage['layer'][name]
-        for key in kwargs.keys():
-            ii = getattr(layer, key)
-            setattr(ii, 'value', kwargs[key])
-
-    def get_layer_value(self, name: str, key: str) -> float:
-        """
-        A function to get a given layer value
-
-        :param name: The layer name
-        :param key: The given value keys
-        :return: The desired value
-        """
-        layer = self.storage['layer'][name]
-        ii = getattr(layer, key)
-        return getattr(ii, 'value')
 
     def create_item(self, name: str):
         """

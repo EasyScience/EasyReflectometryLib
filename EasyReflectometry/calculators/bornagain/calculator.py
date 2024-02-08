@@ -12,6 +12,11 @@ from EasyReflectometry.sample.material import MaterialMixture
 from ..calculator_base import CalculatorBase
 from .wrapper import BornAgainWrapper
 
+"""
+THIS CODE IS NOT FUNCTIONAL
+PLEASE CONSULT ONE OF THE OTHER CALCULATORS FOR A FUNCTIONAL EXAMPLE
+"""
+
 
 class BornAgain(CalculatorBase):
     """
@@ -43,8 +48,6 @@ class BornAgain(CalculatorBase):
     def __init__(self):
         super().__init__()
         self._wrapper = BornAgainWrapper()
-
-    #        self._namespace = {}
 
     def reset_storage(self) -> None:
         """
@@ -149,14 +152,12 @@ class BornAgain(CalculatorBase):
         """
         self._wrapper.add_layer_to_item(layer_id, item_id)
 
-    def remove_layer_from_item(self, layer_id: int, item_id: int) -> None:
+    def remove_layer_from_item(self, layer_id: str, item_id: str) -> None:
         """
         Remove a layer from an item stack
 
         :param item_id: The item id
-        :type item_id: int
         :param layer_id: The layer id
-        :type layer_id: int
         """
         self._wrapper.remove_layer_from_item(layer_id, item_id)
 
