@@ -1,5 +1,6 @@
 __author__ = 'github.com/arm61'
 
+from typing import List
 from typing import Union
 
 import yaml
@@ -12,7 +13,7 @@ from EasyReflectometry.sample.material import MaterialMixture
 class Materials(BaseCollection):
 
     def __init__(self,
-                 *args: list[Union[Material, MaterialMixture]],
+                 *args: List[Union[Material, MaterialMixture]],
                  name: str = 'EasyMaterials',
                  interface=None,
                  **kwargs):
@@ -34,23 +35,23 @@ class Materials(BaseCollection):
 
     @classmethod
     def from_pars(cls,
-                  *args: list[Union[Material, MaterialMixture]],
+                  *args: List[Union[Material, MaterialMixture]],
                   name: str = 'EasyMaterials',
                   interface=None) -> "Materials":
         """
         Constructor of materials where the parameters are known.
 
         :param args: The series of material
-        :type args: list[Union[EasyReflectometry.material.Material]]
+        :type args: List[Union[EasyReflectometry.material.Material]]
         :return: Materials container
         :rtype: Materials
         """
         return cls(*args, name=name, interface=interface)
 
     @property
-    def names(self) -> list[str]:
+    def names(self) -> List:
         """
-        :returns: list of names for the materials.
+        :returns: List of names for the materials.
         """
         return [i.name for i in self]
 

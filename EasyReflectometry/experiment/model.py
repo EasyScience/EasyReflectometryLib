@@ -3,6 +3,7 @@ from __future__ import annotations
 __author__ = 'github.com/arm61'
 
 from copy import deepcopy
+from typing import Union
 
 import yaml
 from easyCore import np
@@ -16,7 +17,7 @@ from EasyReflectometry.sample.items import MultiLayer
 from EasyReflectometry.sample.items import RepeatingMultiLayer
 
 LAYER_DETAILS = {
-    "scale": {
+    'scale': {
         'description': 'Scaling of the reflectomety profile',
         'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
         'value': 1.0,
@@ -114,7 +115,7 @@ class Model(BaseObj):
             interface=interface,
         )
 
-    def add_item(self, *items: Layer | RepeatingMultiLayer) -> None:
+    def add_item(self, *items: Union[Layer, RepeatingMultiLayer]) -> None:
         """
         Add a layer or item to the model structure.
 

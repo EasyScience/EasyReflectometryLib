@@ -1,13 +1,14 @@
 __author__ = 'github.com/arm61'
 
 import re
+from typing import Tuple
 
 ATOM_REGEX = '([A-Z][a-z]*)(\\d*)'
 OPENERS = '({['
 CLOSERS = ')}]'
 
 
-def _dictify(tuples: tuple[tuple[str, str]]) -> dict:
+def _dictify(tuples: Tuple[Tuple[str, str]]) -> dict:
     """
     :param tuples: tuples of tuples with atom and occurance.
     :return: Dict of atoms and occurance.
@@ -34,7 +35,7 @@ def _fuse(mol1: dict, mol2: dict, w: int = 1) -> dict:
     }
 
 
-def _parse(formula: str) -> tuple[dict, int]:
+def _parse(formula: str) -> Tuple[dict, int]:
     """
     :param formula: Chemical formula as a string
     :return: Tuple containing; formula as a dictwith occurences

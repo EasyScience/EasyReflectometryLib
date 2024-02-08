@@ -1,4 +1,7 @@
 __author__ = 'github.com/arm61'
+
+from typing import List
+
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 
@@ -8,7 +11,7 @@ from EasyReflectometry.experiment.model import Model
 class Models(BaseCollection):
 
     def __init__(self,
-                 *args: list[Model],
+                 *args: List[Model],
                  name: str = 'EasyModels',
                  interface=None,
                  **kwargs):
@@ -29,7 +32,7 @@ class Models(BaseCollection):
 
     @classmethod
     def from_pars(cls,
-                  *args: list[Model],
+                  *args: List[Model],
                   name: str = 'EasyModels',
                   interface=None) -> 'Models':
         """
