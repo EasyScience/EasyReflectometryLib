@@ -5,8 +5,8 @@ from typing import Union
 import yaml
 from easyCore.Objects.ObjectClasses import BaseObj
 
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.layers import Layers
+from ..elementals.layer import Layer
+from ..elementals.layers import Layers
 
 
 class MultiLayer(BaseObj):

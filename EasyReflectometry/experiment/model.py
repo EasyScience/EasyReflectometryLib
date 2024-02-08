@@ -8,10 +8,10 @@ from easyCore import np
 from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.sample.items import MultiLayer
-from EasyReflectometry.sample.items import RepeatingMultiLayer
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.layers import Layers
+from EasyReflectometry.sample import Layer
+from EasyReflectometry.sample import Layers
+from EasyReflectometry.sample import MultiLayer
+from EasyReflectometry.sample import RepeatingMultiLayer
 from EasyReflectometry.sample.structure import Structure
 
 LAYER_DETAILS = {

@@ -9,7 +9,7 @@ import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
 from EasyReflectometry.interfaces.refnx.interface import Refnx
-from EasyReflectometry.sample.material import Material
+# from EasyReflectometry.sample.material import Material
 
 
 class TestRefnx(unittest.TestCase):

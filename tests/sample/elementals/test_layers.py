@@ -4,17 +4,17 @@ __version__ = '0.0.1'
 Tests for Layers class module
 """
 
-import os
+#import os
 import unittest
 
-import numpy as np
-from numpy.testing import assert_almost_equal
+# import numpy as np
+# from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
-from EasyReflectometry.sample.items import RepeatingMultiLayer
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.layers import Layers
-from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultiLayer
+from EasyReflectometry.sample.elementals.layer import Layer
+from EasyReflectometry.sample.elementals.layers import Layers
+from EasyReflectometry.sample.elementals.material import Material
 
 
 class TestLayers(unittest.TestCase):

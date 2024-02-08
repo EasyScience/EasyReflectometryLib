@@ -6,9 +6,8 @@ from typing import Union
 
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.layers import Layers
-
+from ..elementals.layer import Layer
+from ..elementals.layers import Layers
 from .multilayer import MultiLayer
 
 REPEATINGMULTILAYER_DETAILS = {

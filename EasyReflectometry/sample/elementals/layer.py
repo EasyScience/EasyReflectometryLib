@@ -9,32 +9,31 @@ from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.sample.material import Material
-from EasyReflectometry.sample.material import MaterialMixture
 from EasyReflectometry.special.calculations import apm_to_sld
 from EasyReflectometry.special.calculations import neutron_scattering_length
+
+from .material import Material
+from .material import MaterialMixture
 
 LAYER_DETAILS = {
     'thickness': {
         'description': 'The thickness of the layer in angstroms',
-        'url':
-        'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
+        'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
         'value': 10.0,
         'units': 'angstrom',
         'min': 0.0,
         'max': np.Inf,
-        'fixed': True
+        'fixed': True,
     },
     'roughness': {
-        'description':
-        'The interfacial roughness, Nevot-Croce, for the layer in angstroms.',
+        'description': 'The interfacial roughness, Nevot-Croce, for the layer in angstroms.',
         'url': 'https://doi.org/10.1051/rphysap:01980001503076100',
         'value': 3.3,
         'units': 'angstrom',
         'min': 0.0,
         'max': np.Inf,
-        'fixed': True
-    }
+        'fixed': True,
+    },
 }
 
 LAYERAPM_DETAILS = {
@@ -44,7 +43,7 @@ LAYERAPM_DETAILS = {
         'units': 'angstrom',
         'min': 0,
         'max': np.inf,
-        'fixed': True
+        'fixed': True,
     },
     'chemical_structure': 'C10H18NO8P',
     'roughness': {
@@ -53,7 +52,7 @@ LAYERAPM_DETAILS = {
         'units': 'angstrom',
         'min': 0,
         'max': np.inf,
-        'fixed': True
+        'fixed': True,
     },
     'area_per_molecule': {
         'description': 'Surface coverage',
@@ -61,7 +60,7 @@ LAYERAPM_DETAILS = {
         'units': 'angstrom ** 2',
         'min': 0,
         'max': np.inf,
-        'fixed': True
+        'fixed': True,
     },
     'solvation': {
         'description': 'Fraction of solvent present',
@@ -69,7 +68,7 @@ LAYERAPM_DETAILS = {
         'units': 'dimensionless',
         'min': 0,
         'max': 1,
-        'fixed': True
+        'fixed': True,
     },
     'sl': {
         'description': 'The real scattering length for a chemical formula in angstrom.',
@@ -78,7 +77,7 @@ LAYERAPM_DETAILS = {
         'units': 'angstrom',
         'min': -np.Inf,
         'max': np.Inf,
-        'fixed': True
+        'fixed': True,
     },
     'isl': {
         'description': 'The real scattering length for a chemical formula in angstrom.',
@@ -87,28 +86,26 @@ LAYERAPM_DETAILS = {
         'units': 'angstrom',
         'min': -np.Inf,
         'max': np.Inf,
-        'fixed': True
-    }
+        'fixed': True,
+    },
 }
 
 
 class Layer(BaseObj):
-
-    def __init__(self,
-                 material: Material,
-                 thickness: Parameter,
-                 roughness: Parameter,
-                 name: str = 'EasyLayer',
-                 interface=None):
-        super().__init__(name,
-                         material=material,
-                         thickness=thickness,
-                         roughness=roughness)
+    def __init__(
+        self,
+        material: Material,
+        thickness: Parameter,
+        roughness: Parameter,
+        name: str = 'EasyLayer',
+        interface=None,
+    ):
+        super().__init__(name, material=material, thickness=thickness, roughness=roughness)
         self.interface = interface
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> "Layer":
+    def default(cls, interface=None) -> 'Layer':
         """
         Default constructor for the reflectometry layer.
 
@@ -121,12 +118,9 @@ class Layer(BaseObj):
         return cls(material, thickness, roughness, interface=interface)
 
     @classmethod
-    def from_pars(cls,
-                  material: Material,
-                  thickness: float,
-                  roughness: float,
-                  name: str = 'EasyLayer',
-                  interface=None) -> "Layer":
+    def from_pars(
+        cls, material: Material, thickness: float, roughness: float, name: str = 'EasyLayer', interface=None
+    ) -> 'Layer':
         """
         Constructor of a reflectometry layer where the parameters are known.
 
@@ -146,11 +140,7 @@ class Layer(BaseObj):
         thickness = Parameter('thickness', thickness, **default_options['thickness'])
         roughness = Parameter('roughness', roughness, **default_options['roughness'])
 
-        return cls(material=material,
-                   thickness=thickness,
-                   roughness=roughness,
-                   name=name,
-                   interface=interface)
+        return cls(material=material, thickness=thickness, roughness=roughness, name=name, interface=interface)
 
     def assign_material(self, material):
         """
@@ -179,7 +169,7 @@ class Layer(BaseObj):
             self.name: {
                 'material': self.material._dict_repr,
                 'thickness': f'{self.thickness.raw_value:.3f} {self.thickness.unit}',
-                'roughness': f'{self.roughness.raw_value:.3f} {self.roughness.unit}'
+                'roughness': f'{self.roughness.raw_value:.3f} {self.roughness.unit}',
             }
         }
 
@@ -199,18 +189,21 @@ class LayerApm(Layer):
     chemical structure (given as a chemical formula) and area per molecule.
 
     """
+
     area_per_molecule: ClassVar[Parameter]
     solvation: ClassVar[Parameter]
 
-    def __init__(self,
-                 chemical_structure: str,
-                 thickness: Parameter,
-                 solvent: Material,
-                 solvation: Parameter,
-                 area_per_molecule: Parameter,
-                 roughness: Parameter,
-                 name: str = 'EasyLayerApm',
-                 interface=None):
+    def __init__(
+        self,
+        chemical_structure: str,
+        thickness: Parameter,
+        solvent: Material,
+        solvation: Parameter,
+        area_per_molecule: Parameter,
+        roughness: Parameter,
+        name: str = 'EasyLayerApm',
+        interface=None,
+    ):
         """
         :param chemical_structure: Chemical formula for the material in the layer
         :param thickness: Layer thickness
@@ -225,47 +218,27 @@ class LayerApm(Layer):
         default_options = deepcopy(LAYERAPM_DETAILS)
         del default_options['sl']['value']
         del default_options['isl']['value']
-        scattering_length_real = Parameter('scattering_length_real',
-                                           scattering_length.real,
-                                           **default_options['sl'])
-        scattering_length_imag = Parameter('scattering_length_imag',
-                                           scattering_length.imag,
-                                           **default_options['isl'])
-        sld = apm_to_sld(scattering_length_real.raw_value, thickness.raw_value,
-                         area_per_molecule.raw_value)
-        isld = apm_to_sld(scattering_length_imag.raw_value, thickness.raw_value,
-                          area_per_molecule.raw_value)
+        scattering_length_real = Parameter('scattering_length_real', scattering_length.real, **default_options['sl'])
+        scattering_length_imag = Parameter('scattering_length_imag', scattering_length.imag, **default_options['isl'])
+        sld = apm_to_sld(scattering_length_real.raw_value, thickness.raw_value, area_per_molecule.raw_value)
+        isld = apm_to_sld(scattering_length_imag.raw_value, thickness.raw_value, area_per_molecule.raw_value)
 
-        material = Material.from_pars(sld,
-                                      isld,
-                                      name=chemical_structure,
-                                      interface=interface)
+        material = Material.from_pars(sld, isld, name=chemical_structure, interface=interface)
 
-        constraint = FunctionalConstraint(
-            material.sld, apm_to_sld,
-            [scattering_length_real, thickness, area_per_molecule])
+        constraint = FunctionalConstraint(material.sld, apm_to_sld, [scattering_length_real, thickness, area_per_molecule])
         thickness.user_constraints['apm'] = constraint
         area_per_molecule.user_constraints['apm'] = constraint
         scattering_length_real.user_constraints['apm'] = constraint
 
-        iconstraint = FunctionalConstraint(
-            material.isld, apm_to_sld,
-            [scattering_length_imag, thickness, area_per_molecule])
+        iconstraint = FunctionalConstraint(material.isld, apm_to_sld, [scattering_length_imag, thickness, area_per_molecule])
         thickness.user_constraints['iapm'] = iconstraint
         area_per_molecule.user_constraints['iapm'] = iconstraint
         scattering_length_imag.user_constraints['iapm'] = iconstraint
 
-        solvated_material = MaterialMixture(material,
-                                            solvent,
-                                            solvation,
-                                            name=chemical_structure + '/' +
-                                            solvent.name,
-                                            interface=interface)
-        super().__init__(material=solvated_material,
-                         thickness=thickness,
-                         roughness=roughness,
-                         name=name,
-                         interface=interface)
+        solvated_material = MaterialMixture(
+            material, solvent, solvation, name=chemical_structure + '/' + solvent.name, interface=interface
+        )
+        super().__init__(material=solvated_material, thickness=thickness, roughness=roughness, name=name, interface=interface)
         self._add_component('scattering_length_real', scattering_length_real)
         self._add_component('scattering_length_imag', scattering_length_imag)
         self._add_component('area_per_molecule', area_per_molecule)
@@ -303,7 +276,7 @@ class LayerApm(Layer):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> "LayerApm":
+    def default(cls, interface=None) -> 'LayerApm':
         """
         Default constructor for layer defined from chemical structure
         and area per molecule.
@@ -311,30 +284,33 @@ class LayerApm(Layer):
         :param interface: Interface object, defaults to :py:attr:`None`
         :return: Layer with correct structure
         """
-        area_per_molecule = Parameter('area_per_molecule',
-                                      **LAYERAPM_DETAILS['area_per_molecule'])
+        area_per_molecule = Parameter('area_per_molecule', **LAYERAPM_DETAILS['area_per_molecule'])
         thickness = Parameter('thickness', **LAYERAPM_DETAILS['thickness'])
         roughness = Parameter('roughness', **LAYERAPM_DETAILS['roughness'])
         solvent = Material.from_pars(6.36, 0, 'D2O', interface=interface)
         solvation = Parameter('solvation', **LAYERAPM_DETAILS['solvation'])
-        return cls(LAYERAPM_DETAILS['chemical_structure'],
-                   thickness,
-                   solvent,
-                   solvation,
-                   area_per_molecule,
-                   roughness,
-                   interface=interface)
+        return cls(
+            LAYERAPM_DETAILS['chemical_structure'],
+            thickness,
+            solvent,
+            solvation,
+            area_per_molecule,
+            roughness,
+            interface=interface,
+        )
 
     @classmethod
-    def from_pars(cls,
-                  chemical_structure: str,
-                  thickness: float,
-                  solvent: Material,
-                  solvation: float,
-                  area_per_molecule: float,
-                  roughness: float,
-                  name: str = 'EasyLayerApm',
-                  interface=None) -> "LayerApm":
+    def from_pars(
+        cls,
+        chemical_structure: str,
+        thickness: float,
+        solvent: Material,
+        solvation: float,
+        area_per_molecule: float,
+        roughness: float,
+        name: str = 'EasyLayerApm',
+        interface=None,
+    ) -> 'LayerApm':
         """
         Constructor for a layer described with the area per molecule,
         where the parameters are known.
@@ -356,20 +332,14 @@ class LayerApm(Layer):
         del default_options['solvation']['value']
         del default_options['chemical_structure']
 
-        area_per_molecule = Parameter('area_per_molecule', area_per_molecule,
-                                      **default_options['area_per_molecule'])
+        area_per_molecule = Parameter('area_per_molecule', area_per_molecule, **default_options['area_per_molecule'])
         thickness = Parameter('thickness', thickness, **default_options['thickness'])
         roughness = Parameter('roughness', roughness, **default_options['roughness'])
         solvation = Parameter('solvation', solvation, **default_options['solvation'])
 
-        return cls(chemical_structure,
-                   thickness,
-                   solvent,
-                   solvation,
-                   area_per_molecule,
-                   roughness,
-                   name=name,
-                   interface=interface)
+        return cls(
+            chemical_structure, thickness, solvent, solvation, area_per_molecule, roughness, name=name, interface=interface
+        )
 
     @property
     def chemical_structure(self) -> str:
@@ -381,8 +351,8 @@ class LayerApm(Layer):
     @chemical_structure.setter
     def chemical_structure(self, structure_string: str):
         """
-       :param structure_string: String that defines the chemical structure.
-       """
+        :param structure_string: String that defines the chemical structure.
+        """
         self._chemical_structure = structure_string
         scattering_length = neutron_scattering_length(structure_string)
         self.scattering_length_real.value = scattering_length.real
@@ -398,9 +368,7 @@ class LayerApm(Layer):
         """
         layerapm_dict = super()._dict_repr
         layerapm_dict['chemical_structure'] = self._chemical_structure
-        layerapm_dict[
-            'area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} ' \
-                                   f'{self.area_per_molecule.unit}'
+        layerapm_dict['area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} ' f'{self.area_per_molecule.unit}'
         return layerapm_dict
 
     def as_dict(self, skip: list = None) -> dict:

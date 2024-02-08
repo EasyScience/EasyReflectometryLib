@@ -19,7 +19,7 @@ from EasyReflectometry.fitting import Fitter
 from EasyReflectometry.interface import InterfaceFactory as Interface
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import Structure
-from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample import Material
 
 
 class TestFitting(unittest.TestCase):

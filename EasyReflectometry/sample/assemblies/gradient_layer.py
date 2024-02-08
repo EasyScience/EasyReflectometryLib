@@ -3,9 +3,8 @@ from __future__ import annotations
 from easyCore.Fitting.Constraints import ObjConstraint
 from numpy import arange
 
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.material import Material
-
+from ..elementals.layer import Layer
+from ..elementals.material import Material
 from .multilayer import MultiLayer
 
 

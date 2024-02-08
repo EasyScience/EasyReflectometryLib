@@ -1,20 +1,13 @@
 __author__ = 'github.com/arm61'
 
-from typing import List
-
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 
-from EasyReflectometry.sample.layer import Layer
+from .layer import Layer
 
 
 class Layers(BaseCollection):
-
-    def __init__(self,
-                 *args: List[Layer],
-                 name: str = 'EasyLayers',
-                 interface=None,
-                 **kwargs):
+    def __init__(self, *args: list[Layer], name: str = 'EasyLayers', interface=None, **kwargs):
         super().__init__(name, *args, **kwargs)
         self.interface = interface
 
@@ -31,10 +24,7 @@ class Layers(BaseCollection):
         return cls(layer1, layer2, interface=interface)
 
     @classmethod
-    def from_pars(cls,
-                  *args: List[Layer],
-                  name: str = 'EasyLayer',
-                  interface=None) -> 'Layer':
+    def from_pars(cls, *args: list[Layer], name: str = 'EasyLayer', interface=None) -> 'Layer':
         """
         Constructor of a reflectometry layers where the parameters are known.
 

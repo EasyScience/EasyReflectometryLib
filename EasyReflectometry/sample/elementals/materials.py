@@ -1,28 +1,20 @@
 __author__ = 'github.com/arm61'
 
-from typing import List
-from typing import Union
-
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 
-from EasyReflectometry.sample.material import Material
-from EasyReflectometry.sample.material import MaterialMixture
+from .material import Material
+from .material import MaterialMixture
 
 
 class Materials(BaseCollection):
-
-    def __init__(self,
-                 *args: List[Union[Material, MaterialMixture]],
-                 name: str = 'EasyMaterials',
-                 interface=None,
-                 **kwargs):
+    def __init__(self, *args: list[Material | MaterialMixture], name: str = 'EasyMaterials', interface=None, **kwargs):
         super().__init__(name, *args, **kwargs)
         self.interface = interface
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> "Materials":
+    def default(cls, interface=None) -> 'Materials':
         """
         Default constructor for materials.
 
@@ -34,24 +26,23 @@ class Materials(BaseCollection):
         return cls(material1, material2, interface=interface)
 
     @classmethod
-    def from_pars(cls,
-                  *args: List[Union[Material, MaterialMixture]],
-                  name: str = 'EasyMaterials',
-                  interface=None) -> "Materials":
+    def from_pars(
+        cls, *args: list[Material | MaterialMixture], name: str = 'EasyMaterials', interface=None
+    ) -> 'Materials':
         """
         Constructor of materials where the parameters are known.
 
         :param args: The series of material
-        :type args: List[Union[EasyReflectometry.material.Material]]
+        :type args: list[Material | MaterialMixture]
         :return: Materials container
         :rtype: Materials
         """
         return cls(*args, name=name, interface=interface)
 
     @property
-    def names(self) -> List:
+    def names(self) -> list:
         """
-        :returns: List of names for the materials.
+        :returns: list of names for the materials.
         """
         return [i.name for i in self]
 
