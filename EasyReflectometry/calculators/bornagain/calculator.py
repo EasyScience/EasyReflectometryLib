@@ -152,7 +152,7 @@ class BornAgain(CalculatorBase):
         """
         self._wrapper.add_layer_to_item(layer_id, item_id)
 
-    def remove_layer_from_item(self, layer_id: str, item_id: str) -> None:
+    def remove_layer_from_item(self, layer_id: int, item_id: int) -> None:
         """
         Remove a layer from an item stack
 

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-__author__ = 'github.com/wardsimon'
-
 from abc import ABCMeta
 
 import numpy as np
@@ -131,8 +129,8 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         """
         Assign a material to a layer.
 
-        :param material_name: The material name
-        :param layer_name: The layer name
+        :param material_id: The material name
+        :param layer_id: The layer name
         """
         self._wrapper.assign_material_to_layer(material_id, layer_id)
 

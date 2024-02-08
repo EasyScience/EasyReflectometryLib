@@ -59,7 +59,7 @@ class BornAgainWrapper(WrapperBase):
             real = kwargs['real'] * 1e-6
         if 'imag' in kwargs.keys():
             if kwargs['imag'] < 0:
-                raise ValueError('The BornAgain interface does not support negative ' 'imaginary scattering length densities')
+                raise ValueError('The BornAgain interface does not support negative imaginary scattering length densities')
             imag = kwargs['imag'] * 1e-6
         self.storage['material'][name] = ba.MaterialBySLD(str(name), real, imag)
 
@@ -272,7 +272,8 @@ class BornAgainWrapper(WrapperBase):
             for k in range(int(self.storage['item_repeats'][i])):
                 for j in self.storage['item'][i]:
                     layer = ba.Layer(
-                        self.storage['material'][self.storage['layer_material'][j]], self.storage['layer'][j].thickness()
+                        self.storage['material'][self.storage['layer_material'][j]],
+                        self.storage['layer'][j].thickness(),
                     )
                     total_model.addLayerWithTopRoughness(layer, self.storage['roughness'][j])
 
