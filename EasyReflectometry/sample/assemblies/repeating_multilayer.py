@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import List
-from typing import Union
 
 from easyCore.Objects.ObjectClasses import Parameter
 
@@ -37,7 +35,7 @@ class RepeatingMultiLayer(MultiLayer):
 
     def __init__(
         self,
-        layers: Union[Layers, Layer, List[Layer]],
+        layers: Layers | Layer | list[Layer],
         repetitions: Parameter,
         name: str = 'EasyRepeatingMultiLayer',
         interface=None,

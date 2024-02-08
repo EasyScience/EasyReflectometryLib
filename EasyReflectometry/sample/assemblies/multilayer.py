@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 import yaml
 from easyCore.Objects.ObjectClasses import BaseObj
 
@@ -25,7 +23,7 @@ class MultiLayer(BaseObj):
 
     def __init__(
         self,
-        layers: Union[Layers, Layer, list[Layer]],
+        layers: Layers | Layer | list[Layer],
         name: str = 'EasyMultiLayer',
         interface=None,
         type: str = 'Multi-layer',

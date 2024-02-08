@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List
-
 from easyCore.Fitting.Constraints import ObjConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
@@ -27,7 +25,7 @@ class SurfactantLayer(MultiLayer):
 
     def __init__(
         self,
-        layers: List[LayerApm],
+        layers: list[LayerApm],
         name: str = 'EasySurfactantLayer',
         constrain_apm: bool = False,
         conformal_roughness: bool = False,

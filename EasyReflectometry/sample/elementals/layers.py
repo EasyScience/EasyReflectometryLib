@@ -11,12 +11,12 @@ from .layer import Layer
 class Layers(BaseCollection):
     def __init__(
         self,
-        *args: list[Layer],
+        *layers: tuple[Layer],
         name: str = 'EasyLayers',
         interface=None,
         **kwargs,
     ):
-        super().__init__(name, interface, *args, **kwargs)
+        super().__init__(name, interface, *layers, **kwargs)
 
     # Class constructors
     @classmethod
@@ -33,7 +33,7 @@ class Layers(BaseCollection):
     @classmethod
     def from_pars(
         cls,
-        *args: list[Layer],
+        *layers: tuple[Layer],
         name: str = 'EasyLayer',
         interface=None,
     ) -> Layer:
@@ -43,7 +43,7 @@ class Layers(BaseCollection):
         :param args: The series of layers
         :return: Layers container
         """
-        return cls(*args, name=name, interface=interface)
+        return cls(*layers, name=name, interface=interface)
 
     @property
     def uid(self) -> int:

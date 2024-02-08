@@ -4,7 +4,6 @@ __author__ = 'github.com/arm61'
 
 import yaml
 
-# from easyCore.Objects.Groups import BaseCollection
 from .base import BaseCollection
 from .material import Material
 from .material import MaterialMixture
@@ -13,15 +12,17 @@ from .material import MaterialMixture
 class Materials(BaseCollection):
     def __init__(
         self,
-        *args: list[Material | MaterialMixture],
+        *materials: tuple[Material | MaterialMixture],
         name: str = 'EasyMaterials',
         interface=None,
         **kwargs,
     ):
-        super().__init__(name, interface, *args, **kwargs)
-
-    #        super().__init__(name, *args, **kwargs)
-    #        self.interface = interface
+        super().__init__(
+            name,
+            interface,
+            *materials,
+            **kwargs,
+        )
 
     # Class constructors
     @classmethod
@@ -39,7 +40,7 @@ class Materials(BaseCollection):
     @classmethod
     def from_pars(
         cls,
-        *args: list[Material | MaterialMixture],
+        *materials: tuple[Material | MaterialMixture],
         name: str = 'EasyMaterials',
         interface=None,
     ) -> Materials:
@@ -51,7 +52,7 @@ class Materials(BaseCollection):
         :return: Materials container
         :rtype: Materials
         """
-        return cls(*args, name=name, interface=interface)
+        return cls(*materials, name=name, interface=interface)
 
     @property
     def names(self) -> list:
