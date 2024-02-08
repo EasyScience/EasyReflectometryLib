@@ -74,12 +74,14 @@ repo = 'EasyReflectometryLib'
 
 [tool.ruff]
 line-length = 127
+indent-width = 4
 exclude = [
     "tests",
     "docs",
 ]
 
 [tool.ruff.format]
+indent-style = "space"
 quote-style = "single"
 
 [tool.ruff.lint]
@@ -90,11 +92,11 @@ select = [
     # Code should be polished to fulfill all cases bellow
     # https://docs.astral.sh/ruff/rules/
     # pycodestyle
-    "E",
+    "E", "W",
     # Pyflakes
     "F",
     # pyupgrade
-#    "UP",
+    "UP",
     # flake8-bugbear
 #    "B",
     # flake8-simplify

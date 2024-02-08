@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List
-
 from easyCore.Fitting.Constraints import ObjConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
@@ -28,7 +26,7 @@ class SurfactantLayer(MultiLayer):
 
     def __init__(
         self,
-        layers: List[LayerApm],
+        layers: list[LayerApm],
         name: str = 'EasySurfactantLayer',
         constrain_apm: bool = False,
         conformal_roughness: bool = False,
@@ -173,7 +171,7 @@ class SurfactantLayer(MultiLayer):
 
     def constain_multiple_contrast(
         self,
-        another_contrast: 'SurfactantLayer',
+        another_contrast: SurfactantLayer,
         layer1_thickness: bool = True,
         layer2_thickness: bool = True,
         layer1_area_per_molecule: bool = True,

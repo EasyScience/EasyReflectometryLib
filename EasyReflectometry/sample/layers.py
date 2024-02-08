@@ -1,7 +1,5 @@
 __author__ = 'github.com/arm61'
 
-from typing import List
-
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 
@@ -11,7 +9,7 @@ from EasyReflectometry.sample.layer import Layer
 class Layers(BaseCollection):
 
     def __init__(self,
-                 *args: List[Layer],
+                 *args: list[Layer],
                  name: str = 'EasyLayers',
                  interface=None,
                  **kwargs):
@@ -32,7 +30,7 @@ class Layers(BaseCollection):
 
     @classmethod
     def from_pars(cls,
-                  *args: List[Layer],
+                  *args: list[Layer],
                   name: str = 'EasyLayer',
                   interface=None) -> 'Layer':
         """

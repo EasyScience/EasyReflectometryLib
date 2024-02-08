@@ -2,9 +2,6 @@ from __future__ import annotations
 
 __author__ = "github.com/arm61"
 
-from typing import List
-from typing import Union
-
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 
@@ -15,7 +12,7 @@ from EasyReflectometry.sample.layer import Layer
 class Structure(BaseCollection):
     def __init__(
         self,
-        *args: List[Union[Layer, MultiLayer]],
+        *args: list[Layer | MultiLayer],
         name: str = "EasyStructure",
         interface=None,
         **kwargs,
@@ -47,15 +44,15 @@ class Structure(BaseCollection):
     @classmethod
     def from_pars(
         cls,
-        *args: List[Union[MultiLayer]],
+        *args: list[MultiLayer],
         name: str = "EasyStructure",
         interface=None,
-    ) -> "Structure":
+    ) -> Structure:
         """
         Constructor of a reflectometry structure where the parameters are known.
 
         :param args: The items in the structure
-        :type args: List[EasyReflectometry.item.Item]
+        :type args: list[EasyReflectometry.item.Item]
         :return: Structure container
         :rtype: Structure
         """

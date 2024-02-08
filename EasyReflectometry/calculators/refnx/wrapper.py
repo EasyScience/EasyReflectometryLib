@@ -1,7 +1,4 @@
 __author__ = "github.com/arm61"
-
-from typing import Tuple
-
 from easyCore import np
 from refnx import reflect
 
@@ -220,7 +217,7 @@ class RefnxWrapper:
             dq=self.storage['model'][model_name].dq.value)
         return model(x_array)
 
-    def sld_profile(self, model_name: str) -> Tuple[np.ndarray, np.ndarray]:
+    def sld_profile(self, model_name: str) -> tuple[np.ndarray, np.ndarray]:
         """
         Return the scattering length density profile.
 
