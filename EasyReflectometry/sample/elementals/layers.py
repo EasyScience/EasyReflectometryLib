@@ -1,19 +1,26 @@
+from __future__ import annotations
+
 __author__ = 'github.com/arm61'
 
 import yaml
-from easyCore.Objects.Groups import BaseCollection
 
+from .base import BaseCollection
 from .layer import Layer
 
 
 class Layers(BaseCollection):
-    def __init__(self, *args: list[Layer], name: str = 'EasyLayers', interface=None, **kwargs):
-        super().__init__(name, *args, **kwargs)
-        self.interface = interface
+    def __init__(
+        self,
+        *args: list[Layer],
+        name: str = 'EasyLayers',
+        interface=None,
+        **kwargs,
+    ):
+        super().__init__(name, interface, *args, **kwargs)
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> 'Layers':
+    def default(cls, interface=None) -> Layers:
         """
         Default constructor for the reflectometry layers.
 
@@ -24,7 +31,12 @@ class Layers(BaseCollection):
         return cls(layer1, layer2, interface=interface)
 
     @classmethod
-    def from_pars(cls, *args: list[Layer], name: str = 'EasyLayer', interface=None) -> 'Layer':
+    def from_pars(
+        cls,
+        *args: list[Layer],
+        name: str = 'EasyLayer',
+        interface=None,
+    ) -> Layer:
         """
         Constructor of a reflectometry layers where the parameters are known.
 

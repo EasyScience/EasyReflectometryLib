@@ -36,6 +36,7 @@ class MultiLayer(BaseObj):
             layers = Layers(*layers, name='/'.join([layer.name for layer in layers]))
         self.type = type
         super().__init__(name, layers=layers)
+
         self.interface = interface
 
     # Class constructors

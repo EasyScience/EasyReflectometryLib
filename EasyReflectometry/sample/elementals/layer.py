@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __author__ = 'github.com/arm61'
 
 from copy import deepcopy
@@ -6,12 +8,12 @@ from typing import ClassVar
 import yaml
 from easyCore import np
 from easyCore.Fitting.Constraints import FunctionalConstraint
-from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.special.calculations import apm_to_sld
 from EasyReflectometry.special.calculations import neutron_scattering_length
 
+from .base import BaseElemental
 from .material import Material
 from .material import MaterialMixture
 
@@ -91,7 +93,7 @@ LAYERAPM_DETAILS = {
 }
 
 
-class Layer(BaseObj):
+class Layer(BaseElemental):
     def __init__(
         self,
         material: Material,
@@ -100,12 +102,17 @@ class Layer(BaseObj):
         name: str = 'EasyLayer',
         interface=None,
     ):
-        super().__init__(name, material=material, thickness=thickness, roughness=roughness)
-        self.interface = interface
+        super().__init__(
+            name=name,
+            interface=interface,
+            material=material,
+            thickness=thickness,
+            roughness=roughness,
+        )
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> 'Layer':
+    def default(cls, interface=None) -> Layer:
         """
         Default constructor for the reflectometry layer.
 
@@ -119,8 +126,13 @@ class Layer(BaseObj):
 
     @classmethod
     def from_pars(
-        cls, material: Material, thickness: float, roughness: float, name: str = 'EasyLayer', interface=None
-    ) -> 'Layer':
+        cls,
+        material: Material,
+        thickness: float,
+        roughness: float,
+        name: str = 'EasyLayer',
+        interface=None,
+    ) -> Layer:
         """
         Constructor of a reflectometry layer where the parameters are known.
 
@@ -159,7 +171,7 @@ class Layer(BaseObj):
 
     # Representation
     @property
-    def _dict_repr(self) -> dict:
+    def _dict_repr(self) -> dict[str, str]:
         """
         A simplified dict representation.
 
@@ -276,7 +288,7 @@ class LayerApm(Layer):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> 'LayerApm':
+    def default(cls, interface=None) -> LayerApm:
         """
         Default constructor for layer defined from chemical structure
         and area per molecule.
@@ -310,7 +322,7 @@ class LayerApm(Layer):
         roughness: float,
         name: str = 'EasyLayerApm',
         interface=None,
-    ) -> 'LayerApm':
+    ) -> LayerApm:
         """
         Constructor for a layer described with the area per molecule,
         where the parameters are known.

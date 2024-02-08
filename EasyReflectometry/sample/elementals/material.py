@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __author__ = 'github.com/arm61'
 
 from copy import deepcopy
@@ -14,29 +16,27 @@ from EasyReflectometry.special.calculations import molecular_weight
 from EasyReflectometry.special.calculations import neutron_scattering_length
 from EasyReflectometry.special.calculations import weighted_average_sld
 
+from .base import BaseElemental
+
 MATERIAL_DEFAULTS = {
     'sld': {
-        'description':
-        'The real scattering length density for a '
-        'material in e-6 per squared angstrom.',
+        'description': 'The real scattering length density for a ' 'material in e-6 per squared angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 4.186,
         'units': '1 / angstrom ** 2',
         'min': -np.Inf,
         'max': np.Inf,
-        'fixed': True
+        'fixed': True,
     },
     'isld': {
-        'description':
-        'The imaginary scattering length density for a '
-        'material in e-6 per squared angstrom.',
+        'description': 'The imaginary scattering length density for a ' 'material in e-6 per squared angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 0.0,
         'units': '1 / angstrom ** 2',
         'min': -np.Inf,
         'max': np.Inf,
-        'fixed': True
-    }
+        'fixed': True,
+    },
 }
 
 MATERIALDENSITY_DEFAULTS = {
@@ -48,7 +48,7 @@ MATERIALDENSITY_DEFAULTS = {
         'units': 'angstrom',
         'min': -np.Inf,
         'max': np.Inf,
-        'fixed': True
+        'fixed': True,
     },
     'isl': {
         'description': 'The real scattering length for a chemical formula in angstrom.',
@@ -57,7 +57,7 @@ MATERIALDENSITY_DEFAULTS = {
         'units': 'angstrom',
         'min': -np.Inf,
         'max': np.Inf,
-        'fixed': True
+        'fixed': True,
     },
     'density': {
         'description': 'The mass density of the material.',
@@ -66,7 +66,7 @@ MATERIALDENSITY_DEFAULTS = {
         'units': 'gram / centimeter ** 3',
         'min': 0,
         'max': np.Inf,
-        'fixed': True
+        'fixed': True,
     },
     'molecular_weight': {
         'description': 'The molecular weight of a material.',
@@ -75,8 +75,8 @@ MATERIALDENSITY_DEFAULTS = {
         'units': 'g / mole',
         'min': -np.Inf,
         'max': np.Inf,
-        'fixed': True
-    }
+        'fixed': True,
+    },
 }
 
 MATERIALMIXTURE_DEFAULTS = {
@@ -86,27 +86,27 @@ MATERIALMIXTURE_DEFAULTS = {
         'units': 'dimensionless',
         'min': 0,
         'max': 1,
-        'fixed': True
+        'fixed': True,
     }
 }
 
 
-class Material(BaseObj):
-
+class Material(BaseElemental):
     sld: ClassVar[Parameter]
     isld: ClassVar[Parameter]
 
-    def __init__(self,
-                 sld: Parameter,
-                 isld: Parameter,
-                 name: str = 'EasyMaterial',
-                 interface=None):
-        super().__init__(name, sld=sld, isld=isld)
-        self.interface = interface
+    def __init__(
+        self,
+        sld: Parameter,
+        isld: Parameter,
+        name: str = 'EasyMaterial',
+        interface=None,
+    ):
+        super().__init__(name=name, interface=interface, sld=sld, isld=isld)
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> "Material":
+    def default(cls, interface=None) -> Material:
         """
         Default constructor for the reflectometry material.
 
@@ -117,11 +117,13 @@ class Material(BaseObj):
         return cls(sld, isld, interface=interface)
 
     @classmethod
-    def from_pars(cls,
-                  sld: float,
-                  isld: float,
-                  name: str = 'EasyMaterial',
-                  interface=None) -> "Material":
+    def from_pars(
+        cls,
+        sld: float,
+        isld: float,
+        name: str = 'EasyMaterial',
+        interface=None,
+    ) -> Material:
         """
         Constructor of a reflectometry material where the parameters are known.
 
@@ -158,7 +160,7 @@ class Material(BaseObj):
         return {
             self.name: {
                 'sld': f'{self.sld.raw_value:.3f}e-6 {self.sld.unit}',
-                'isld': f'{self.isld.raw_value:.3f}e-6 {self.isld.unit}'
+                'isld': f'{self.isld.raw_value:.3f}e-6 {self.isld.unit}',
             }
         }
 
@@ -172,14 +174,15 @@ class Material(BaseObj):
 
 
 class MaterialDensity(Material):
-
     density: ClassVar[Parameter]
 
-    def __init__(self,
-                 chemical_structure: str,
-                 density: Parameter,
-                 name: str = 'EasyMaterialDensity',
-                 interface=None) -> 'MaterialDensity':
+    def __init__(
+        self,
+        chemical_structure: str,
+        density: Parameter,
+        name: str = 'EasyMaterialDensity',
+        interface=None,
+    ) -> MaterialDensity:
         """
         :param chemical_structure: Chemical formula for the material
         :param density: Mass density for the material
@@ -191,33 +194,26 @@ class MaterialDensity(Material):
         del default_options['molecular_weight']['value']
         del default_options['sl']['value']
         del default_options['isl']['value']
-        mw = Parameter('molecular_weight', molecular_weight(chemical_structure),
-                       **default_options['molecular_weight'])
-        scattering_length_real = Parameter('scattering_length_real',
-                                           scattering_length.real,
-                                           **default_options['sl'])
-        scattering_length_imag = Parameter('scattering_length_imag',
-                                           scattering_length.imag,
-                                           **default_options['isl'])
+        mw = Parameter('molecular_weight', molecular_weight(chemical_structure), **default_options['molecular_weight'])
+        scattering_length_real = Parameter('scattering_length_real', scattering_length.real, **default_options['sl'])
+        scattering_length_imag = Parameter('scattering_length_imag', scattering_length.imag, **default_options['isl'])
         default_options = deepcopy(MATERIAL_DEFAULTS)
         del default_options['sld']['value']
         del default_options['isld']['value']
         sld = Parameter(
-            'sld',
-            density_to_sld(scattering_length_real.raw_value, mw.raw_value,
-                           density.raw_value), **default_options['sld'])
+            'sld', density_to_sld(scattering_length_real.raw_value, mw.raw_value, density.raw_value), **default_options['sld']
+        )
         isld = Parameter(
             'isld',
-            density_to_sld(scattering_length_imag.raw_value, mw.raw_value,
-                           density.raw_value), **default_options['isld'])
+            density_to_sld(scattering_length_imag.raw_value, mw.raw_value, density.raw_value),
+            **default_options['isld'],
+        )
 
-        constraint = FunctionalConstraint(sld, density_to_sld,
-                                          [scattering_length_real, mw, density])
+        constraint = FunctionalConstraint(sld, density_to_sld, [scattering_length_real, mw, density])
         scattering_length_real.user_constraints['sld'] = constraint
         mw.user_constraints['sld'] = constraint
         density.user_constraints['sld'] = constraint
-        iconstraint = FunctionalConstraint(isld, density_to_sld,
-                                           [scattering_length_imag, mw, density])
+        iconstraint = FunctionalConstraint(isld, density_to_sld, [scattering_length_imag, mw, density])
         scattering_length_imag.user_constraints['isld'] = iconstraint
         mw.user_constraints['isld'] = iconstraint
         density.user_constraints['isld'] = iconstraint
@@ -258,16 +254,12 @@ class MaterialDensity(Material):
         :return: Material container
         """
         density = Parameter('density', **MATERIALDENSITY_DEFAULTS['density'])
-        return cls(MATERIALDENSITY_DEFAULTS['chemical_structure'],
-                   density,
-                   interface=interface)
+        return cls(MATERIALDENSITY_DEFAULTS['chemical_structure'], density, interface=interface)
 
     @classmethod
-    def from_pars(cls,
-                  chemical_structure: str,
-                  density: float,
-                  name: str = 'EasyMaterialDensity',
-                  interface=None) -> 'MaterialDensity':
+    def from_pars(
+        cls, chemical_structure: str, density: float, name: str = 'EasyMaterialDensity', interface=None
+    ) -> 'MaterialDensity':
         """
         Constructor for a material based on the mass density and chemical structure,
         where these are known.
@@ -309,27 +301,14 @@ class MaterialDensity(Material):
 
 
 class MaterialMixture(BaseObj):
-
     fraction: ClassVar[Parameter]
 
-    def __init__(self,
-                 material_a: Material,
-                 material_b: Material,
-                 fraction: Parameter,
-                 name=None,
-                 interface=None):
+    def __init__(self, material_a: Material, material_b: Material, fraction: Parameter, name=None, interface=None):
         if name is None:
             name = material_a.name + '/' + material_b.name
-        super().__init__(name,
-                         _material_a=material_a,
-                         _material_b=material_b,
-                         fraction=fraction)
-        sld = weighted_average_sld(self._material_a.sld.raw_value,
-                                   self._material_b.sld.raw_value,
-                                   self.fraction.raw_value)
-        isld = weighted_average_sld(self._material_a.isld.raw_value,
-                                    self._material_b.isld.raw_value,
-                                    self.fraction.raw_value)
+        super().__init__(name, _material_a=material_a, _material_b=material_b, fraction=fraction)
+        sld = weighted_average_sld(self._material_a.sld.raw_value, self._material_b.sld.raw_value, self.fraction.raw_value)
+        isld = weighted_average_sld(self._material_a.isld.raw_value, self._material_b.isld.raw_value, self.fraction.raw_value)
         default_options = deepcopy(MATERIAL_DEFAULTS)
         del default_options['sld']['value']
         del default_options['isld']['value']
@@ -355,15 +334,15 @@ class MaterialMixture(BaseObj):
         self._slds[0].enabled = True
         self._slds[1].enabled = True
         constraint = FunctionalConstraint(
-            self._slds[0], weighted_average_sld,
-            [self._material_a.sld, self._material_b.sld, self.fraction])
+            self._slds[0], weighted_average_sld, [self._material_a.sld, self._material_b.sld, self.fraction]
+        )
         self._material_a.sld.user_constraints['sld'] = constraint
         self._material_b.sld.user_constraints['sld'] = constraint
         self.fraction.user_constraints['sld'] = constraint
         constraint()
         iconstraint = FunctionalConstraint(
-            self._slds[1], weighted_average_sld,
-            [self._material_a.isld, self._material_b.isld, self.fraction])
+            self._slds[1], weighted_average_sld, [self._material_a.isld, self._material_b.isld, self.fraction]
+        )
         self._material_a.isld.user_constraints['isld'] = iconstraint
         self._material_b.isld.user_constraints['isld'] = iconstraint
         self.fraction.user_constraints['isld'] = iconstraint
@@ -411,7 +390,7 @@ class MaterialMixture(BaseObj):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> "MaterialMixture":
+    def default(cls, interface=None) -> 'MaterialMixture':
         """
         Default constructor for a mixture of two materials.
 
@@ -423,12 +402,9 @@ class MaterialMixture(BaseObj):
         return cls(material_a, material_b, fraction, interface=interface)
 
     @classmethod
-    def from_pars(cls,
-                  material_a: Material,
-                  material_b: Material,
-                  fraction: float,
-                  name=None,
-                  interface=None) -> "MaterialMixture":
+    def from_pars(
+        cls, material_a: Material, material_b: Material, fraction: float, name=None, interface=None
+    ) -> 'MaterialMixture':
         """
         Constructor of a mixture of two materials where the parameters are known.
 
@@ -441,11 +417,7 @@ class MaterialMixture(BaseObj):
         del default_options['fraction']['value']
         fraction = Parameter('fraction', fraction, **default_options['fraction'])
 
-        return cls(material_a=material_a,
-                   material_b=material_b,
-                   fraction=fraction,
-                   name=name,
-                   interface=interface)
+        return cls(material_a=material_a, material_b=material_b, fraction=fraction, name=name, interface=interface)
 
     @property
     def uid(self) -> int:
@@ -470,7 +442,7 @@ class MaterialMixture(BaseObj):
                 'sld': f'{self.sld.raw_value:.3f}e-6 {self.sld.unit}',
                 'isld': f'{self.isld.raw_value:.3f}e-6 {self.isld.unit}',
                 'material1': self.material_a._dict_repr,
-                'material2': self.material_b._dict_repr
+                'material2': self.material_b._dict_repr,
             }
         }
 
