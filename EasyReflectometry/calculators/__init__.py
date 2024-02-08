@@ -3,7 +3,7 @@ __version__ = '0.0.1'
 
 import traceback
 
-from .base import CalculatorBase
+from .calculator_base import CalculatorBase
 from .factory import CalculatorFactory
 
 imported_calculators = []
