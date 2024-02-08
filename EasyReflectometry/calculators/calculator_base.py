@@ -170,15 +170,6 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         """
         self._wrapper.remove_item(item_id, model_id)
 
-    # def change_item_to_repeating_multi_layer(self, item_id: str, old_id: str) -> None:
-    #     """
-    #     Change a given item to a repeating multi layer
-
-    #     :param item_name: The item name
-    #     :param old_id: id of old item
-    #     """
-    #     self._wrapper.change_item_to_repeating_multi_layer(item_id, old_id)
-
     def fit_func(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
         """
         Function to perform a fit
