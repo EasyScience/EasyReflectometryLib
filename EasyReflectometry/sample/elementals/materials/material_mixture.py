@@ -4,11 +4,11 @@ from copy import deepcopy
 from typing import ClassVar
 
 from easyCore.Fitting.Constraints import FunctionalConstraint
-from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.special.calculations import weighted_average_sld
 
+from ..base import BaseElement
 from .material import MATERIAL_DEFAULTS
 from .material import Material
 
@@ -24,7 +24,7 @@ MATERIALMIXTURE_DEFAULTS = {
 }
 
 
-class MaterialMixture(BaseObj):
+class MaterialMixture(BaseElement):
     fraction: ClassVar[Parameter]
 
     def __init__(
@@ -37,7 +37,13 @@ class MaterialMixture(BaseObj):
     ):
         if name is None:
             name = material_a.name + '/' + material_b.name
-        super().__init__(name, _material_a=material_a, _material_b=material_b, fraction=fraction)
+        super().__init__(
+            name,
+            _material_a=material_a,
+            _material_b=material_b,
+            fraction=fraction,
+            interface=interface,
+        )
         sld = weighted_average_sld(self._material_a.sld.raw_value, self._material_b.sld.raw_value, self.fraction.raw_value)
         isld = weighted_average_sld(self._material_a.isld.raw_value, self._material_b.isld.raw_value, self.fraction.raw_value)
         default_options = deepcopy(MATERIAL_DEFAULTS)
