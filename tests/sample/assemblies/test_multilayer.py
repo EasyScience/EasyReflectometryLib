@@ -15,7 +15,7 @@ from numpy.testing import assert_raises
 from EasyReflectometry.interface import InterfaceFactory
 from EasyReflectometry.sample.assemblies.multilayer import MultiLayer
 from EasyReflectometry.sample.elementals.layer import Layer
-from EasyReflectometry.sample.elementals.layers import Layers
+from EasyReflectometry.sample.elementals.layer_collection import LayerCollection
 from EasyReflectometry.sample.elementals.material import Material
 
 
@@ -34,7 +34,7 @@ class TestMultiLayer(unittest.TestCase):
         k = Material.from_pars(0.487, 0.000, 'Potassium')
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
         q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium')
-        l = Layers.from_pars(p, q, name='twoLayer')
+        l = LayerCollection.from_pars(p, q, name='twoLayer')
         o = MultiLayer.from_pars(l, 'twoLayerItem')
         assert_equal(o.name, 'twoLayerItem')
         assert_equal(o.type, 'Multi-layer')

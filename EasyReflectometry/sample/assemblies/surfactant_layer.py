@@ -4,7 +4,7 @@ from easyCore.Fitting.Constraints import ObjConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
 from ..elementals.layer import LayerApm
-from ..elementals.layers import Layers
+from ..elementals.layer_collection import LayerCollection
 from ..elementals.material import Material
 from .multilayer import MultiLayer
 
@@ -36,7 +36,7 @@ class SurfactantLayer(MultiLayer):
         :param tail: Tail layer object
         :param name: Name for surfactant layer
         """
-        surfactant = Layers(layers[0], layers[1], name=name)
+        surfactant = LayerCollection(layers[0], layers[1], name=name)
         super().__init__(surfactant, name, interface)
 
         self.interface = interface

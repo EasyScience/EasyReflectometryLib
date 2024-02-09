@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-import yaml
-from easyCore.Objects.ObjectClasses import BaseObj
-
+# import yaml
+# from easyCore.Objects.ObjectClasses import BaseObj
 from ..elementals.layer import Layer
-from ..elementals.layers import Layers
+from ..elementals.layer_collection import LayerCollection
+from .base import BaseAssembly
 
 
-class MultiLayer(BaseObj):
+class MultiLayer(BaseAssembly):
     """
     A :py:class:`MultiLayer` consists of a series of
     :py:class:`EasyReflectometry.sample.layer.Layer` or
@@ -23,19 +23,19 @@ class MultiLayer(BaseObj):
 
     def __init__(
         self,
-        layers: Layers | Layer | list[Layer],
+        layers: LayerCollection | Layer | list[Layer],
         name: str = 'EasyMultiLayer',
         interface=None,
         type: str = 'Multi-layer',
     ):
         if isinstance(layers, Layer):
-            layers = Layers(layers, name=layers.name)
+            layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
-            layers = Layers(*layers, name='/'.join([layer.name for layer in layers]))
+            layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
         self.type = type
-        super().__init__(name, layers=layers)
+        super().__init__(name, layers=layers, interface=interface)
 
-        self.interface = interface
+    #        self.interface = interface
 
     # Class constructors
     @classmethod
@@ -46,11 +46,11 @@ class MultiLayer(BaseObj):
         :return: MultiLayer container
         :rtype: MultiLayer
         """
-        layers = Layers.default()
+        layers = LayerCollection.default()
         return cls(layers, interface=interface)
 
     @classmethod
-    def from_pars(cls, layers: Layers, name: str = 'EasyMultiLayer', interface=None) -> MultiLayer:
+    def from_pars(cls, layers: LayerCollection, name: str = 'EasyMultiLayer', interface=None) -> MultiLayer:
         """
         Constructor of a multi-layer item where the parameters are known.
 
@@ -101,12 +101,12 @@ class MultiLayer(BaseObj):
             self.interface().remove_layer_from_item(self.layers[idx].uid, self.uid)
         del self.layers[idx]
 
-    @property
-    def uid(self):
-        """
-        Return a UID from the borg map
-        """
-        return self._borg.map.convert_id_to_key(self)
+    # @property
+    # def uid(self):
+    #     """
+    #     Return a UID from the borg map
+    #     """
+    #     return self._borg.map.convert_id_to_key(self)
 
     # Representation
     @property
@@ -120,11 +120,11 @@ class MultiLayer(BaseObj):
             return self.layers[0]._dict_repr
         return {self.name: self.layers._dict_repr}
 
-    def __repr__(self) -> str:
-        """
-        String representation of the layer.
+    # def __repr__(self) -> str:
+    #     """
+    #     String representation of the layer.
 
-        :return: a string representation of the layer
-        :rtype: str
-        """
-        return yaml.dump(self._dict_repr, sort_keys=False)
+    #     :return: a string representation of the layer
+    #     :rtype: str
+    #     """
+    #     return yaml.dump(self._dict_repr, sort_keys=False)

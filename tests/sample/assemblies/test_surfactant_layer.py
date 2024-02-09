@@ -17,7 +17,7 @@ from EasyReflectometry.sample.assemblies.multilayer import MultiLayer
 from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultiLayer
 from EasyReflectometry.sample.assemblies.surfactant_layer import SurfactantLayer
 from EasyReflectometry.sample.elementals.layer import Layer
-from EasyReflectometry.sample.elementals.layers import Layers
+from EasyReflectometry.sample.elementals.layer_collection import LayerCollection
 from EasyReflectometry.sample.elementals.material import Material
 
 

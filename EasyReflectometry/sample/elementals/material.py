@@ -5,7 +5,7 @@ __author__ = 'github.com/arm61'
 from copy import deepcopy
 from typing import ClassVar
 
-import yaml
+# import yaml
 from easyCore import np
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import BaseObj
@@ -16,7 +16,7 @@ from EasyReflectometry.special.calculations import molecular_weight
 from EasyReflectometry.special.calculations import neutron_scattering_length
 from EasyReflectometry.special.calculations import weighted_average_sld
 
-from .base import BaseElemental
+from .base import BaseElement
 
 MATERIAL_DEFAULTS = {
     'sld': {
@@ -91,7 +91,7 @@ MATERIALMIXTURE_DEFAULTS = {
 }
 
 
-class Material(BaseElemental):
+class Material(BaseElement):
     sld: ClassVar[Parameter]
     isld: ClassVar[Parameter]
 
@@ -140,14 +140,14 @@ class Material(BaseElemental):
 
         return cls(sld=sld, isld=isld, name=name, interface=interface)
 
-    @property
-    def uid(self) -> int:
-        """
-        Return a UID from the borg map.
+    # @property
+    # def uid(self) -> int:
+    #     """
+    #     Return a UID from the borg map.
 
-        :return: Unique id
-        """
-        return self._borg.map.convert_id_to_key(self)
+    #     :return: Unique id
+    #     """
+    #     return self._borg.map.convert_id_to_key(self)
 
     # Representation
     @property
@@ -164,13 +164,13 @@ class Material(BaseElemental):
             }
         }
 
-    def __repr__(self) -> str:
-        """
-        Representation of the material.
+    # def __repr__(self) -> str:
+    #     """
+    #     Representation of the material.
 
-        :return: Dictionary representation of the material
-        """
-        return yaml.dump(self._dict_repr, sort_keys=False)
+    #     :return: Dictionary representation of the material
+    #     """
+    #     return yaml.dump(self._dict_repr, sort_keys=False)
 
 
 class MaterialDensity(Material):
@@ -419,14 +419,14 @@ class MaterialMixture(BaseObj):
 
         return cls(material_a=material_a, material_b=material_b, fraction=fraction, name=name, interface=interface)
 
-    @property
-    def uid(self) -> int:
-        """
-        Return a UID from the borg map.
+    # @property
+    # def uid(self) -> int:
+    #     """
+    #     Return a UID from the borg map.
 
-        :return: Unique id
-        """
-        return self._borg.map.convert_id_to_key(self)
+    #     :return: Unique id
+    #     """
+    #     return self._borg.map.convert_id_to_key(self)
 
     # Representation
     @property
@@ -446,11 +446,11 @@ class MaterialMixture(BaseObj):
             }
         }
 
-    def __repr__(self) -> str:
-        """
-        :return: Custom repr
-        """
-        return yaml.dump(self._dict_repr, sort_keys=False)
+    # def __repr__(self) -> str:
+    #     """
+    #     :return: Custom repr
+    #     """
+    #     return yaml.dump(self._dict_repr, sort_keys=False)
 
     def as_dict(self, skip: list = None) -> dict:
         """

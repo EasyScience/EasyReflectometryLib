@@ -9,7 +9,7 @@ from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.sample import Layer
-from EasyReflectometry.sample import Layers
+from EasyReflectometry.sample import LayerCollection
 from EasyReflectometry.sample import MultiLayer
 from EasyReflectometry.sample import RepeatingMultiLayer
 from EasyReflectometry.sample.structure import Structure
@@ -143,7 +143,7 @@ class Model(BaseObj):
                 )
             )
         duplicate = to_duplicate.__class__.from_pars(
-            Layers.from_pars(*duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
+            LayerCollection.from_pars(*duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
             name=to_duplicate.name + ' duplicate',
         )
         self.add_item(duplicate)

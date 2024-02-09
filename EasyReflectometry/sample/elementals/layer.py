@@ -13,7 +13,7 @@ from easyCore.Objects.ObjectClasses import Parameter
 from EasyReflectometry.special.calculations import apm_to_sld
 from EasyReflectometry.special.calculations import neutron_scattering_length
 
-from .base import BaseElemental
+from .base import BaseElement
 from .material import Material
 from .material import MaterialMixture
 
@@ -93,7 +93,7 @@ LAYERAPM_DETAILS = {
 }
 
 
-class Layer(BaseElemental):
+class Layer(BaseElement):
     def __init__(
         self,
         material: Material,
@@ -162,12 +162,12 @@ class Layer(BaseElemental):
         if self.interface is not None:
             self.interface().assign_material_to_layer(self.material.uid, self.uid)
 
-    @property
-    def uid(self) -> int:
-        """
-        :return: UID from the borg map
-        """
-        return self._borg.map.convert_id_to_key(self)
+    # @property
+    # def uid(self) -> int:
+    #     """
+    #     :return: UID from the borg map
+    #     """
+    #     return self._borg.map.convert_id_to_key(self)
 
     # Representation
     @property
@@ -185,14 +185,14 @@ class Layer(BaseElemental):
             }
         }
 
-    def __repr__(self) -> str:
-        """
-        String representation of the layer.
+    # def __repr__(self) -> str:
+    #     """
+    #     String representation of the layer.
 
-        :return: a string representation of the layer
-        :rtype: str
-        """
-        return yaml.dump(self._dict_repr, sort_keys=False)
+    #     :return: a string representation of the layer
+    #     :rtype: str
+    #     """
+    #     return yaml.dump(self._dict_repr, sort_keys=False)
 
 
 class LayerApm(Layer):

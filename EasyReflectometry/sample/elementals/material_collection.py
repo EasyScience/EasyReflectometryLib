@@ -4,12 +4,12 @@ __author__ = 'github.com/arm61'
 
 import yaml
 
-from .base import BaseCollection
+from .base import BaseElementCollection
 from .material import Material
 from .material import MaterialMixture
 
 
-class Materials(BaseCollection):
+class MaterialCollection(BaseElementCollection):
     def __init__(
         self,
         *materials: tuple[Material | MaterialMixture],
@@ -26,7 +26,7 @@ class Materials(BaseCollection):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> Materials:
+    def default(cls, interface=None) -> MaterialCollection:
         """
         Default constructor for materials.
 
@@ -43,7 +43,7 @@ class Materials(BaseCollection):
         *materials: tuple[Material | MaterialMixture],
         name: str = 'EasyMaterials',
         interface=None,
-    ) -> Materials:
+    ) -> MaterialCollection:
         """
         Constructor of materials where the parameters are known.
 
@@ -71,10 +71,10 @@ class Materials(BaseCollection):
         """
         return {self.name: [i._dict_repr for i in self]}
 
-    def __repr__(self) -> str:
-        """
-        String representation of the materials.
+    # def __repr__(self) -> str:
+    #     """
+    #     String representation of the materials.
 
-        :return: String representation of the materials
-        """
-        return yaml.dump(self._dict_repr, sort_keys=False)
+    #     :return: String representation of the materials
+    #     """
+    #     return yaml.dump(self._dict_repr, sort_keys=False)

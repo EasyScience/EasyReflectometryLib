@@ -5,7 +5,7 @@ from copy import deepcopy
 from easyCore.Objects.ObjectClasses import Parameter
 
 from ..elementals.layer import Layer
-from ..elementals.layers import Layers
+from ..elementals.layer_collection import LayerCollection
 from .multilayer import MultiLayer
 
 REPEATINGMULTILAYER_DETAILS = {
@@ -35,15 +35,15 @@ class RepeatingMultiLayer(MultiLayer):
 
     def __init__(
         self,
-        layers: Layers | Layer | list[Layer],
+        layers: LayerCollection | Layer | list[Layer],
         repetitions: Parameter,
         name: str = 'EasyRepeatingMultiLayer',
         interface=None,
     ):
         if isinstance(layers, Layer):
-            layers = Layers(layers, name=layers.name)
+            layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
-            layers = Layers(*layers, name='/'.join([layer.name for layer in layers]))
+            layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
         super().__init__(layers, name, interface)
         self._add_component('repetitions', repetitions)
         self.interface = interface
@@ -57,7 +57,7 @@ class RepeatingMultiLayer(MultiLayer):
 
         :return: Default repeating multi-layer container
         """
-        layers = Layers.default()
+        layers = LayerCollection.default()
         repetitions = Parameter('repetitions', **REPEATINGMULTILAYER_DETAILS['repetitions'])
         return cls(
             layers,
@@ -68,7 +68,7 @@ class RepeatingMultiLayer(MultiLayer):
     @classmethod
     def from_pars(
         cls,
-        layers: Layers,
+        layers: LayerCollection,
         repetitions: float = 1.0,
         name: str = 'EasyRepeatingMultiLayer',
         interface=None,

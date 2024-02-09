@@ -13,7 +13,7 @@ from numpy.testing import assert_equal
 
 from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultiLayer
 from EasyReflectometry.sample.elementals.layer import Layer
-from EasyReflectometry.sample.elementals.layers import Layers
+from EasyReflectometry.sample.elementals.layer_collection import LayerCollection
 from EasyReflectometry.sample.elementals.material import Material
 from EasyReflectometry.sample.structure import Structure
 
@@ -32,8 +32,8 @@ class TestStructure(unittest.TestCase):
         m2 = Material.from_pars(0.487, 0.000, 'Potassium')
         l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
         l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
-        ls1 = Layers.from_pars(l1, l2, name='twoLayer1')
-        ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
+        ls1 = LayerCollection.from_pars(l1, l2, name='twoLayer1')
+        ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Structure.from_pars(o1, o2, name='myModel')

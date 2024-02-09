@@ -7,13 +7,13 @@ Tests for Layers class module
 import unittest
 
 from EasyReflectometry.sample.elementals.material import Material
-from EasyReflectometry.sample.elementals.materials import Materials
+from EasyReflectometry.sample.elementals.material_collection import MaterialCollection
 
 
-class TestLayers(unittest.TestCase):
+class TestLayerCollection(unittest.TestCase):
 
     def test_default(self):
-        p = Materials.default()
+        p = MaterialCollection.default()
         assert p.name == 'EasyMaterials'
         assert p.interface is None
         assert len(p) == 2
@@ -23,7 +23,7 @@ class TestLayers(unittest.TestCase):
     def test_from_pars(self):
         m = Material.from_pars(6.908, -0.278, 'Boron')
         k = Material.from_pars(0.487, 0.000, 'Potassium')
-        p = Materials.from_pars(m, k, name='thinBoron')
+        p = MaterialCollection.from_pars(m, k, name='thinBoron')
         assert p.name == 'thinBoron'
         assert p.interface is None
         assert len(p) == 2
@@ -31,7 +31,7 @@ class TestLayers(unittest.TestCase):
         assert p[1].name == 'Potassium'
 
     def test_dict_repr(self):
-        p = Materials.default()
+        p = MaterialCollection.default()
         assert p._dict_repr == {
             'EasyMaterials': [{
                 'EasyMaterial': {
@@ -47,11 +47,11 @@ class TestLayers(unittest.TestCase):
         }
 
     def test_repr(self):
-        p = Materials.default()
+        p = MaterialCollection.default()
         assert p.__repr__(
         ) == 'EasyMaterials:\n- EasyMaterial:\n    sld: 4.186e-6 1 / angstrom ** 2\n    isld: 0.000e-6 1 / angstrom ** 2\n- EasyMaterial:\n    sld: 4.186e-6 1 / angstrom ** 2\n    isld: 0.000e-6 1 / angstrom ** 2\n'
 
     def test_dict_round_trip(self):
-        p = Materials.default()
-        q = Materials.from_dict(p.as_dict())
+        p = MaterialCollection.default()
+        q = MaterialCollection.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
