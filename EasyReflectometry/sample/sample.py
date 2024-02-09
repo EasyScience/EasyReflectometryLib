@@ -47,7 +47,7 @@ class Sample(BaseCollection):
         *args: list[MultiLayer],
         name: str = 'EasyStructure',
         interface=None,
-    ) -> 'Sample':
+    ) -> Sample:
         """
         Constructor of a reflectometry sample where the parameters are known.
 
