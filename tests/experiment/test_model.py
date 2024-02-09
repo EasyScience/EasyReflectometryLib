@@ -16,7 +16,7 @@ from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMu
 from EasyReflectometry.sample.elementals.layer import Layer
 from EasyReflectometry.sample.elementals.layer_collection import LayerCollection
 from EasyReflectometry.sample.elementals.material import Material
-from EasyReflectometry.sample.structure import Structure
+from EasyReflectometry.sample.sample import Sample
 
 
 class TestModel(unittest.TestCase):
@@ -25,7 +25,7 @@ class TestModel(unittest.TestCase):
         p = Model.default()
         assert_equal(p.name, 'EasyModel')
         assert_equal(p.interface, None)
-        assert_equal(p.structure.name, 'EasyStructure')
+        assert_equal(p.sample.name, 'EasySample')
         assert_equal(p.scale.display_name, 'scale')
         assert_equal(str(p.scale.unit), 'dimensionless')
         assert_equal(p.scale.value.n, 1.0)
@@ -54,11 +54,11 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, o2, name='myModel')
+        d = Sample.from_pars(o1, o2, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
         assert_equal(mod.name, 'newModel')
         assert_equal(mod.interface, None)
-        assert_equal(mod.structure.name, 'myModel')
+        assert_equal(mod.sample.name, 'myModel')
         assert_equal(mod.scale.display_name, 'scale')
         assert_equal(str(mod.scale.unit), 'dimensionless')
         assert_equal(mod.scale.value.n, 2.0)
@@ -87,13 +87,13 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
+        d = Sample.from_pars(o1, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
-        assert_equal(len(mod.structure), 1)
+        assert_equal(len(mod.sample), 1)
         mod.add_item(o2)
-        assert_equal(len(mod.structure), 2)
-        assert_equal(mod.structure[1].name, 'oneLayerItem2')
-        assert_equal(issubclass(mod.structure[1].__class__, RepeatingMultiLayer), True)
+        assert_equal(len(mod.sample), 2)
+        assert_equal(mod.sample[1].name, 'oneLayerItem2')
+        assert_equal(issubclass(mod.sample[1].__class__, RepeatingMultiLayer), True)
 
     def test_add_item_with_interface_refnx(self):
         interface = InterfaceFactory()
@@ -105,7 +105,7 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
+        d = Sample.from_pars(o1, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
@@ -124,7 +124,7 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
+        d = Sample.from_pars(o1, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
@@ -143,7 +143,7 @@ class TestModel(unittest.TestCase):
     #     ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
     #     o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
     #     o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-    #     d = Structure.from_pars(o1, name='myModel')
+    #     d = Sample.from_pars(o1, name='myModel')
     #     mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
@@ -160,15 +160,15 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
+        d = Sample.from_pars(o1, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
-        assert_equal(len(mod.structure), 1)
+        assert_equal(len(mod.sample), 1)
         mod.add_item(o2)
-        assert_equal(len(mod.structure), 2)
+        assert_equal(len(mod.sample), 2)
         mod.duplicate_item(1)
-        assert_equal(len(mod.structure), 3)
-        assert_equal(mod.structure[2].name, 'oneLayerItem2 duplicate')
-        assert_equal(issubclass(mod.structure[2].__class__, RepeatingMultiLayer), True)
+        assert_equal(len(mod.sample), 3)
+        assert_equal(mod.sample[2].name, 'oneLayerItem2 duplicate')
+        assert_equal(issubclass(mod.sample[2].__class__, RepeatingMultiLayer), True)
 
     def test_duplicate_item_with_interface_refnx(self):
         interface = InterfaceFactory()
@@ -180,7 +180,7 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
+        d = Sample.from_pars(o1, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         mod.add_item(o2)
@@ -199,7 +199,7 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
+        d = Sample.from_pars(o1, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         mod.add_item(o2)
@@ -218,7 +218,7 @@ class TestModel(unittest.TestCase):
     #     ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
     #     o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
     #     o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-    #     d = Structure.from_pars(o1, name='myModel')
+    #     d = Sample.from_pars(o1, name='myModel')
     #     mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     mod.add_item(o2)
@@ -235,13 +235,13 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
+        d = Sample.from_pars(o1, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
-        assert_equal(len(mod.structure), 1)
+        assert_equal(len(mod.sample), 1)
         mod.add_item(o2)
-        assert_equal(len(mod.structure), 2)
+        assert_equal(len(mod.sample), 2)
         mod.remove_item(0)
-        assert_equal(len(mod.structure), 1)
+        assert_equal(len(mod.sample), 1)
 
     def test_remove_item_with_interface_refnx(self):
         interface = InterfaceFactory()
@@ -253,7 +253,7 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
+        d = Sample.from_pars(o1, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
@@ -275,7 +275,7 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-        d = Structure.from_pars(o1, name='myModel')
+        d = Sample.from_pars(o1, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
@@ -297,7 +297,7 @@ class TestModel(unittest.TestCase):
     #     ls2 = Layers.from_pars(l2, l1, name='twoLayer2')
     #     o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
     #     o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
-    #     d = Structure.from_pars(o1, name='myModel')
+    #     d = Sample.from_pars(o1, name='myModel')
     #     mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
@@ -315,7 +315,7 @@ class TestModel(unittest.TestCase):
     def test_repr(self):
         p = Model.default()
         assert p.__repr__(
-        ) == "EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  structure:\n    EasyStructure:\n    - EasyMultiLayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultiLayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n"
+        ) == "EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  sample:\n    EasySample:\n    - EasyMultiLayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultiLayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n"
 
     def test_dict_round_trip(self):
         p = Model.default()

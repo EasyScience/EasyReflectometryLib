@@ -8,7 +8,7 @@ from .elementals.layer_collection import LayerCollection
 from .elementals.material import Material
 from .elementals.material import MaterialMixture
 from .elementals.material_collection import MaterialCollection
-from .structure import Structure
+from .sample import Sample
 
 __all__ = (
     GradientLayer,
@@ -21,5 +21,5 @@ __all__ = (
     Material,
     MaterialMixture,
     MaterialCollection,
-    Structure,
+    Sample,
 )

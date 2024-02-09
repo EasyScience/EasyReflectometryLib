@@ -9,11 +9,11 @@ from . import Layer
 from . import MultiLayer
 
 
-class Structure(BaseCollection):
+class Sample(BaseCollection):
     def __init__(
         self,
         *args: list[Layer | MultiLayer],
-        name: str = 'EasyStructure',
+        name: str = 'EasySample',
         interface=None,
         **kwargs,
     ):
@@ -30,11 +30,11 @@ class Structure(BaseCollection):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> Structure:
+    def default(cls, interface=None) -> Sample:
         """
-        Default constructor for the reflectometry structure.
+        Default constructor for the reflectometry sample.
 
-        :return: Default structure container
+        :return: Default sample container
         :rtype: Structure
         """
         item1 = MultiLayer.default()
@@ -47,11 +47,11 @@ class Structure(BaseCollection):
         *args: list[MultiLayer],
         name: str = 'EasyStructure',
         interface=None,
-    ) -> 'Structure':
+    ) -> 'Sample':
         """
-        Constructor of a reflectometry structure where the parameters are known.
+        Constructor of a reflectometry sample where the parameters are known.
 
-        :param args: The items in the structure
+        :param args: The items in the sample
         :type args: list[EasyReflectometry.item.Item]
         :return: Structure container
         :rtype: Structure

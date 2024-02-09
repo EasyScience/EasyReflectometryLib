@@ -6,11 +6,6 @@ Tests for fitting module
 import os
 import unittest
 
-import numpy as np
-import scipp as sc
-from numpy.testing import assert_almost_equal
-from orsopy.fileio import Header
-from orsopy.fileio import load_orso
 
 import EasyReflectometry
 from EasyReflectometry.data import load
@@ -18,7 +13,7 @@ from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.fitting import Fitter
 from EasyReflectometry.interface import InterfaceFactory as Interface
 from EasyReflectometry.sample import Layer
-from EasyReflectometry.sample import Structure
+from EasyReflectometry.sample import Sample
 from EasyReflectometry.sample import Material
 
 
@@ -37,12 +32,12 @@ class TestFitting(unittest.TestCase):
         sio2_layer = Layer.from_pars(sio2, 30, 3, 'SiO2 layer')
         film_layer = Layer.from_pars(film, 250, 3, 'Film Layer')
         superphase = Layer.from_pars(d2o, 0, 3, 'D2O Subphase')
-        structure = Structure.from_pars(si_layer,
+        sample = Sample.from_pars(si_layer,
                                         sio2_layer,
                                         film_layer,
                                         superphase,
                                         name='Film Structure')
-        model = Model.from_pars(structure, 1, 1e-6, 0.02, 'Film Model')
+        model = Model.from_pars(sample, 1, 1e-6, 0.02, 'Film Model')
         # Thicknesses
         sio2_layer.thickness.bounds = (15, 50)
         film_layer.thickness.bounds = (200, 300)

@@ -91,7 +91,7 @@ class BornAgain(InterfaceTemplate):
                 ItemContainer('model', self._model_link,
                               self._wrapper.get_model_value,
                               self._wrapper.update_model))
-            for i in model.structure:
+            for i in model.sample:
                 self.add_item_to_model(i.uid)
         return r_list
 
