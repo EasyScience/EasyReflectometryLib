@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from ..elementals.layer import Layer
 from ..elementals.layer_collection import LayerCollection
+from ..elementals.layers.layer import Layer
 from .base import BaseAssembly
 
 

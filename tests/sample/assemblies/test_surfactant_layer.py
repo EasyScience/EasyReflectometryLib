@@ -7,8 +7,8 @@ Tests for Item class module
 import unittest
 
 from EasyReflectometry.sample.assemblies.surfactant_layer import SurfactantLayer
-from EasyReflectometry.sample.elementals.layer import Layer
-from EasyReflectometry.sample.elementals.material import Material
+from EasyReflectometry.sample.elementals.layers.layer import Layer
+from EasyReflectometry.sample.elementals.materials.material import Material
 
 
 class TestSurfactantLayer(unittest.TestCase):

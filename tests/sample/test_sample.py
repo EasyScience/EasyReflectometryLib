@@ -6,9 +6,9 @@ import unittest
 from numpy.testing import assert_equal
 
 from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultiLayer
-from EasyReflectometry.sample.elementals.layer import Layer
+from EasyReflectometry.sample.elementals.layers.layer import Layer
 from EasyReflectometry.sample.elementals.layer_collection import LayerCollection
-from EasyReflectometry.sample.elementals.material import Material
+from EasyReflectometry.sample.elementals.materials.material import Material
 from EasyReflectometry.sample.sample import Sample
 
 
