@@ -5,7 +5,6 @@ __author__ = 'github.com/arm61'
 from copy import deepcopy
 from typing import ClassVar
 
-# import yaml
 from easyCore import np
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import BaseObj
@@ -140,15 +139,6 @@ class Material(BaseElement):
 
         return cls(sld=sld, isld=isld, name=name, interface=interface)
 
-    # @property
-    # def uid(self) -> int:
-    #     """
-    #     Return a UID from the borg map.
-
-    #     :return: Unique id
-    #     """
-    #     return self._borg.map.convert_id_to_key(self)
-
     # Representation
     @property
     def _dict_repr(self) -> dict:
@@ -163,14 +153,6 @@ class Material(BaseElement):
                 'isld': f'{self.isld.raw_value:.3f}e-6 {self.isld.unit}',
             }
         }
-
-    # def __repr__(self) -> str:
-    #     """
-    #     Representation of the material.
-
-    #     :return: Dictionary representation of the material
-    #     """
-    #     return yaml.dump(self._dict_repr, sort_keys=False)
 
 
 class MaterialDensity(Material):
@@ -419,15 +401,6 @@ class MaterialMixture(BaseObj):
 
         return cls(material_a=material_a, material_b=material_b, fraction=fraction, name=name, interface=interface)
 
-    # @property
-    # def uid(self) -> int:
-    #     """
-    #     Return a UID from the borg map.
-
-    #     :return: Unique id
-    #     """
-    #     return self._borg.map.convert_id_to_key(self)
-
     # Representation
     @property
     def _dict_repr(self) -> dict:
@@ -445,12 +418,6 @@ class MaterialMixture(BaseObj):
                 'material2': self.material_b._dict_repr,
             }
         }
-
-    # def __repr__(self) -> str:
-    #     """
-    #     :return: Custom repr
-    #     """
-    #     return yaml.dump(self._dict_repr, sort_keys=False)
 
     def as_dict(self, skip: list = None) -> dict:
         """

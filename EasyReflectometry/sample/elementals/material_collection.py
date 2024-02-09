@@ -2,8 +2,6 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
-import yaml
-
 from .base import BaseElementCollection
 from .material import Material
 from .material import MaterialMixture
@@ -70,11 +68,3 @@ class MaterialCollection(BaseElementCollection):
         :return: Simple dictionary
         """
         return {self.name: [i._dict_repr for i in self]}
-
-    # def __repr__(self) -> str:
-    #     """
-    #     String representation of the materials.
-
-    #     :return: String representation of the materials
-    #     """
-    #     return yaml.dump(self._dict_repr, sort_keys=False)

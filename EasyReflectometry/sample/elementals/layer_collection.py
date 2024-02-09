@@ -2,8 +2,6 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
-# import yaml
-
 from .base import BaseElementCollection
 from .layer import Layer
 
@@ -45,13 +43,6 @@ class LayerCollection(BaseElementCollection):
         """
         return cls(*layers, name=name, interface=interface)
 
-    # @property
-    # def uid(self) -> int:
-    #     """
-    #     :return: UID from the borg map
-    #     """
-    #     return self._borg.map.convert_id_to_key(self)
-
     # Representation
     @property
     def _dict_repr(self) -> dict:
@@ -61,11 +52,3 @@ class LayerCollection(BaseElementCollection):
         :return: Simple dictionary
         """
         return {self.name: [i._dict_repr for i in self]}
-
-    # def __repr__(self) -> str:
-    #     """
-    #     String representation of the layer.
-
-    #     :return: String representation of the layer
-    #     """
-    #     return yaml.dump(self._dict_repr, sort_keys=False)

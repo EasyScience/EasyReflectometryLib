@@ -5,7 +5,6 @@ __author__ = 'github.com/arm61'
 from copy import deepcopy
 from typing import ClassVar
 
-import yaml
 from easyCore import np
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import Parameter
@@ -162,13 +161,6 @@ class Layer(BaseElement):
         if self.interface is not None:
             self.interface().assign_material_to_layer(self.material.uid, self.uid)
 
-    # @property
-    # def uid(self) -> int:
-    #     """
-    #     :return: UID from the borg map
-    #     """
-    #     return self._borg.map.convert_id_to_key(self)
-
     # Representation
     @property
     def _dict_repr(self) -> dict[str, str]:
@@ -184,15 +176,6 @@ class Layer(BaseElement):
                 'roughness': f'{self.roughness.raw_value:.3f} {self.roughness.unit}',
             }
         }
-
-    # def __repr__(self) -> str:
-    #     """
-    #     String representation of the layer.
-
-    #     :return: a string representation of the layer
-    #     :rtype: str
-    #     """
-    #     return yaml.dump(self._dict_repr, sort_keys=False)
 
 
 class LayerApm(Layer):
