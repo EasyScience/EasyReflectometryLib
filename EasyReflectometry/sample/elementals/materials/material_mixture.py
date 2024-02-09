@@ -25,6 +25,7 @@ MATERIALMIXTURE_DEFAULTS = {
 
 
 class MaterialMixture(BaseElement):
+    # Added in super().__init__
     fraction: ClassVar[Parameter]
 
     def __init__(
@@ -136,7 +137,12 @@ class MaterialMixture(BaseElement):
         material_a = Material.default()
         material_b = Material.default()
         fraction = Parameter('fraction', **MATERIALMIXTURE_DEFAULTS['fraction'])
-        return cls(material_a, material_b, fraction, interface=interface)
+        return cls(
+            material_a,
+            material_b,
+            fraction,
+            interface=interface,
+        )
 
     @classmethod
     def from_pars(

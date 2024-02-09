@@ -33,6 +33,7 @@ MATERIAL_DEFAULTS = {
 
 
 class Material(BaseElement):
+    # Added in super().__init__
     sld: ClassVar[Parameter]
     isld: ClassVar[Parameter]
 

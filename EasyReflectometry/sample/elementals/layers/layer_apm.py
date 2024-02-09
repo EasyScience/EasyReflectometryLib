@@ -76,8 +76,15 @@ class LayerApm(Layer):
 
     """
 
-    area_per_molecule: ClassVar[Parameter]
     solvation: ClassVar[Parameter]
+    # Added in __init__
+    area_per_molecule: ClassVar[Parameter]
+    scattering_length_real: ClassVar[Parameter]
+    scattering_length_imag: ClassVar[Parameter]
+    roughness: ClassVar[Parameter]
+
+    # Passed in __init__
+    material: MaterialMixture
 
     def __init__(
         self,
@@ -122,9 +129,19 @@ class LayerApm(Layer):
         scattering_length_imag.user_constraints['iapm'] = iconstraint
 
         solvated_material = MaterialMixture(
-            material, solvent, solvation, name=chemical_structure + '/' + solvent.name, interface=interface
+            material,
+            solvent,
+            solvation,
+            name=chemical_structure + '/' + solvent.name,
+            interface=interface,
         )
-        super().__init__(material=solvated_material, thickness=thickness, roughness=roughness, name=name, interface=interface)
+        super().__init__(
+            material=solvated_material,
+            thickness=thickness,
+            roughness=roughness,
+            name=name,
+            interface=interface,
+        )
         self._add_component('scattering_length_real', scattering_length_real)
         self._add_component('scattering_length_imag', scattering_length_imag)
         self._add_component('area_per_molecule', area_per_molecule)
@@ -224,7 +241,14 @@ class LayerApm(Layer):
         solvation = Parameter('solvation', solvation, **default_options['solvation'])
 
         return cls(
-            chemical_structure, thickness, solvent, solvation, area_per_molecule, roughness, name=name, interface=interface
+            chemical_structure,
+            thickness,
+            solvent,
+            solvation,
+            area_per_molecule,
+            roughness,
+            name=name,
+            interface=interface,
         )
 
     @property

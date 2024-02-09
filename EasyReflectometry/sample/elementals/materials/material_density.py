@@ -56,6 +56,10 @@ MATERIALDENSITY_DEFAULTS = {
 
 
 class MaterialDensity(Material):
+    # Added in __init__
+    scattering_length_real: ClassVar[Parameter]
+    scattering_length_imag: ClassVar[Parameter]
+    molecular_weight: ClassVar[Parameter]
     density: ClassVar[Parameter]
 
     def __init__(
@@ -83,7 +87,9 @@ class MaterialDensity(Material):
         del default_options['sld']['value']
         del default_options['isld']['value']
         sld = Parameter(
-            'sld', density_to_sld(scattering_length_real.raw_value, mw.raw_value, density.raw_value), **default_options['sld']
+            'sld',
+            density_to_sld(scattering_length_real.raw_value, mw.raw_value, density.raw_value),
+            **default_options['sld'],
         )
         isld = Parameter(
             'isld',

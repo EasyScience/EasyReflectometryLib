@@ -3,6 +3,7 @@ from __future__ import annotations
 __author__ = 'github.com/arm61'
 
 from copy import deepcopy
+from typing import ClassVar
 
 from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter
@@ -33,6 +34,10 @@ LAYER_DETAILS = {
 
 
 class Layer(BaseElement):
+    # Added in super().__init__
+    thickness: ClassVar[Parameter]
+    roughness: ClassVar[Parameter]
+
     def __init__(
         self,
         material: Material,
@@ -61,7 +66,12 @@ class Layer(BaseElement):
         material = Material.default()
         thickness = Parameter('thickness', **LAYER_DETAILS['thickness'])
         roughness = Parameter('roughness', **LAYER_DETAILS['roughness'])
-        return cls(material, thickness, roughness, interface=interface)
+        return cls(
+            material,
+            thickness,
+            roughness,
+            interface=interface,
+        )
 
     @classmethod
     def from_pars(
@@ -91,9 +101,15 @@ class Layer(BaseElement):
         thickness = Parameter('thickness', thickness, **default_options['thickness'])
         roughness = Parameter('roughness', roughness, **default_options['roughness'])
 
-        return cls(material=material, thickness=thickness, roughness=roughness, name=name, interface=interface)
+        return cls(
+            material=material,
+            thickness=thickness,
+            roughness=roughness,
+            name=name,
+            interface=interface,
+        )
 
-    def assign_material(self, material):
+    def assign_material(self, material: Material) -> None:
         """
         Assign a material to the layer interface
         """
