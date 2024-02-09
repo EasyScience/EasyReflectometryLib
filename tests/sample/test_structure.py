@@ -4,11 +4,8 @@ __version__ = '0.0.1'
 Tests for Model class module
 """
 
-# import os
 import unittest
 
-# import numpy as np
-# from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
 from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultiLayer

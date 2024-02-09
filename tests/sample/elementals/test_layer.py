@@ -4,7 +4,6 @@ __version__ = '0.0.1'
 Tests for Layer class module
 """
 
-#import os
 import unittest
 
 import numpy as np
@@ -15,8 +14,6 @@ from EasyReflectometry.interface import InterfaceFactory
 from EasyReflectometry.sample.elementals.layer import Layer
 from EasyReflectometry.sample.elementals.layer import LayerApm
 from EasyReflectometry.sample.elementals.material import Material
-#from EasyReflectometry.special.calculations import apm_to_sld
-#from EasyReflectometry.special.calculations import neutron_scattering_length
 
 
 class TestLayer(unittest.TestCase):

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-# import yaml
-# from easyCore.Objects.ObjectClasses import BaseObj
 from ..elementals.layer import Layer
 from ..elementals.layer_collection import LayerCollection
 from .base import BaseAssembly
@@ -34,8 +32,6 @@ class MultiLayer(BaseAssembly):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
         self.type = type
         super().__init__(name, layers=layers, interface=interface)
-
-    #        self.interface = interface
 
     # Class constructors
     @classmethod
@@ -101,13 +97,6 @@ class MultiLayer(BaseAssembly):
             self.interface().remove_layer_from_item(self.layers[idx].uid, self.uid)
         del self.layers[idx]
 
-    # @property
-    # def uid(self):
-    #     """
-    #     Return a UID from the borg map
-    #     """
-    #     return self._borg.map.convert_id_to_key(self)
-
     # Representation
     @property
     def _dict_repr(self) -> dict:
@@ -119,12 +108,3 @@ class MultiLayer(BaseAssembly):
         if len(self.layers) == 1:
             return self.layers[0]._dict_repr
         return {self.name: self.layers._dict_repr}
-
-    # def __repr__(self) -> str:
-    #     """
-    #     String representation of the layer.
-
-    #     :return: a string representation of the layer
-    #     :rtype: str
-    #     """
-    #     return yaml.dump(self._dict_repr, sort_keys=False)

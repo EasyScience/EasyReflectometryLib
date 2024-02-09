@@ -19,7 +19,7 @@ from .base import BaseElement
 
 MATERIAL_DEFAULTS = {
     'sld': {
-        'description': 'The real scattering length density for a ' 'material in e-6 per squared angstrom.',
+        'description': 'The real scattering length density for a material in e-6 per squared angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 4.186,
         'units': '1 / angstrom ** 2',
@@ -28,7 +28,7 @@ MATERIAL_DEFAULTS = {
         'fixed': True,
     },
     'isld': {
-        'description': 'The imaginary scattering length density for a ' 'material in e-6 per squared angstrom.',
+        'description': 'The imaginary scattering length density for a material in e-6 per squared angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 0.0,
         'units': '1 / angstrom ** 2',
