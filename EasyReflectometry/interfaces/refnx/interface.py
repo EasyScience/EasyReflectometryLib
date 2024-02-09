@@ -1,4 +1,4 @@
-__author__ = 'github.com/arm61'
+__author__ = "github.com/arm61"
 
 from typing import List
 from typing import Tuple
@@ -42,7 +42,8 @@ class Refnx(InterfaceTemplate):
         """
         self._wrapper.reset_storage()
 
-    def create(self, model: Union[Material, Layer, MultiLayer, Model]) -> List[ItemContainer]:
+    def create(self, model: Union[Material, Layer, MultiLayer,
+                                  Model]) -> List[ItemContainer]:
         """
         Creation function
 
@@ -56,31 +57,39 @@ class Refnx(InterfaceTemplate):
             if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
-                ItemContainer(key, self._material_link, self._wrapper.get_material_value, self._wrapper.update_material)
-            )
+                ItemContainer(key, self._material_link,
+                              self._wrapper.get_material_value,
+                              self._wrapper.update_material))
         elif issubclass(t_, MaterialMixture):
             key = model.uid
             if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
-                ItemContainer(key, self._material_link, self._wrapper.get_material_value, self._wrapper.update_material)
-            )
+                ItemContainer(key, self._material_link,
+                              self._wrapper.get_material_value,
+                              self._wrapper.update_material))
         elif issubclass(t_, Layer):
             key = model.uid
             if key not in self._wrapper.storage['layer'].keys():
                 self._wrapper.create_layer(key)
-            r_list.append(ItemContainer(key, self._layer_link, self._wrapper.get_layer_value, self._wrapper.update_layer))
+            r_list.append(
+                ItemContainer(key, self._layer_link, self._wrapper.get_layer_value,
+                              self._wrapper.update_layer))
             self.assign_material_to_layer(model.material.uid, key)
         elif issubclass(t_, MultiLayer):
             key = model.uid
             self._wrapper.create_item(key)
-            r_list.append(ItemContainer(key, self._item_link, self._wrapper.get_item_value, self._wrapper.update_item))
+            r_list.append(
+                ItemContainer(key, self._item_link, self._wrapper.get_item_value,
+                              self._wrapper.update_item))
             for i in model.layers:
                 self.add_layer_to_item(i.uid, model.uid)
         elif issubclass(t_, Model):
             key = model.uid
             self._wrapper.create_model(key)
-            r_list.append(ItemContainer(key, self._model_link, self._wrapper.get_model_value, self._wrapper.update_model))
+            r_list.append(
+                ItemContainer(key, self._model_link, self._wrapper.get_model_value,
+                              self._wrapper.update_model))
             for i in model.structure:
                 self.add_item_to_model(i.uid, key)
         return r_list
