@@ -94,7 +94,7 @@ class MaterialMixture(BaseElement):
         return self._material_a
 
     @material_a.setter
-    def material_a(self, new_material_a: Material):
+    def material_a(self, new_material_a: Material) -> None:
         """
         Setter for material_a
 
@@ -114,7 +114,7 @@ class MaterialMixture(BaseElement):
         return self._material_b
 
     @material_b.setter
-    def material_b(self, new_material_b: Material):
+    def material_b(self, new_material_b: Material) -> None:
         """
         Setter for material_b
 
@@ -169,7 +169,7 @@ class MaterialMixture(BaseElement):
 
     # Representation
     @property
-    def _dict_repr(self) -> dict:
+    def _dict_repr(self) -> dict[str, str]:
         """
         A simplified dict representation.
 
@@ -185,7 +185,7 @@ class MaterialMixture(BaseElement):
             }
         }
 
-    def as_dict(self, skip: list = None) -> dict:
+    def as_dict(self, skip: list = None) -> dict[str, str]:
         """
         Custom as_dict method to skip necessary things.
 

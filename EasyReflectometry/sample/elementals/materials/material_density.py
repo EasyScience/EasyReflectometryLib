@@ -123,7 +123,7 @@ class MaterialDensity(Material):
         return self._chemical_structure
 
     @chemical_structure.setter
-    def chemical_structure(self, structure_string: str):
+    def chemical_structure(self, structure_string: str) -> None:
         """
         :param structure_string: String that defines the chemical structure.
         """
@@ -169,7 +169,7 @@ class MaterialDensity(Material):
         return cls(chemical_structure, density, name=name, interface=interface)
 
     @property
-    def _dict_repr(self) -> dict:
+    def _dict_repr(self) -> dict[str, str]:
         """
         Dictionary representation of the :py:class:`MaterialDensity` object.
 
@@ -180,7 +180,7 @@ class MaterialDensity(Material):
         mat_dict['density'] = f'{self.density.raw_value:.2e} {self.density.unit}'
         return mat_dict
 
-    def as_dict(self, skip: list = []) -> dict:
+    def as_dict(self, skip: list = []) -> dict[str, str]:
         """
         Custom as_dict method to skip necessary things.
 

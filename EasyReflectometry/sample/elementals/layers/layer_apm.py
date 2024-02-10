@@ -157,7 +157,7 @@ class LayerApm(Layer):
         return self.material.material_b
 
     @solvent.setter
-    def solvent(self, new_solvent):
+    def solvent(self, new_solvent: Material) -> None:
         """
         :param new_solvent: New solvent material.
         """
@@ -171,7 +171,7 @@ class LayerApm(Layer):
         return self.material.fraction
 
     @solvation.setter
-    def solvation(self, fraction: float):
+    def solvation(self, fraction: float) -> None:
         """
         :param fraction: Fraction of solvent.
         """
@@ -259,7 +259,7 @@ class LayerApm(Layer):
         return self._chemical_structure
 
     @chemical_structure.setter
-    def chemical_structure(self, structure_string: str):
+    def chemical_structure(self, structure_string: str) -> None:
         """
         :param structure_string: String that defines the chemical structure.
         """
@@ -270,7 +270,7 @@ class LayerApm(Layer):
         self.material.name = structure_string + '/' + self.material._material_b.name
 
     @property
-    def _dict_repr(self) -> dict:
+    def _dict_repr(self) -> dict[str, str]:
         """
         Dictionary representation of the :py:class:`LayerApm` object.
 
@@ -281,7 +281,7 @@ class LayerApm(Layer):
         layerapm_dict['area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} ' f'{self.area_per_molecule.unit}'
         return layerapm_dict
 
-    def as_dict(self, skip: list = None) -> dict:
+    def as_dict(self, skip: list = None) -> dict[str, str]:
         """
         Custom as_dict method to skip necessary things.
 
