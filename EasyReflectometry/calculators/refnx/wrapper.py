@@ -1,32 +1,14 @@
-__author__ = "github.com/arm61"
+__author__ = 'github.com/arm61'
 
 from typing import Tuple
 
 from easyCore import np
 from refnx import reflect
 
+from ..wrapper_base import WrapperBase
 
-class RefnxWrapper:
 
-    def __init__(self):
-        self.storage = {
-            'material': {},
-            'layer': {},
-            'item': {},
-            'model': {}
-        }
-
-    def reset_storage(self):
-        """
-        Reset the storage area to blank.
-        """
-        self.storage = {
-            'material': {},
-            'layer': {},
-            'item': {},
-            'model': {}
-        }
-
+class RefnxWrapper(WrapperBase):
     def create_material(self, name: str):
         """
         Create a material using SLD.
@@ -34,29 +16,6 @@ class RefnxWrapper:
         :param name: The name of the material
         """
         self.storage['material'][name] = reflect.SLD(0, name=name)
-
-    def update_material(self, name: str, **kwargs):
-        """
-        Update a material.
-
-        :param name: The name of the material
-        """
-        material = self.storage['material'][name]
-        for key in kwargs.keys():
-            item = getattr(material, key)
-            setattr(item, 'value', kwargs[key])
-
-    def get_material_value(self, name: str, key: str) -> float:
-        """
-        A function to get a given material value
-
-        :param name: The material name
-        :param key: The given value keys
-        :return: The desired value
-        """
-        material = self.storage['material'][name]
-        item = getattr(material, key)
-        return getattr(item, 'value')
 
     def create_layer(self, name: str):
         """
@@ -66,29 +25,6 @@ class RefnxWrapper:
         """
         self.storage['layer'][name] = reflect.Slab(0, 0, 0, name=name)
 
-    def update_layer(self, name: str, **kwargs):
-        """
-        Update a layer in a given item.
-
-        :param name: The layer name
-        """
-        layer = self.storage['layer'][name]
-        for key in kwargs.keys():
-            ii = getattr(layer, key)
-            setattr(ii, 'value', kwargs[key])
-
-    def get_layer_value(self, name: str, key: str) -> float:
-        """
-        A function to get a given layer value
-
-        :param name: The layer name
-        :param key: The given value keys
-        :return: The desired value
-        """
-        layer = self.storage['layer'][name]
-        ii = getattr(layer, key)
-        return getattr(ii, 'value')
-
     def create_item(self, name: str):
         """
         Create an item using Stack.
@@ -96,29 +32,6 @@ class RefnxWrapper:
         :param name: The name of the item
         """
         self.storage['item'][name] = reflect.Stack(name=name)
-
-    def update_item(self, name: str, **kwargs):
-        """
-        Update a layer.
-
-        :param name: The item name
-        """
-        item = self.storage['item'][name]
-        for key in kwargs.keys():
-            ii = getattr(item, key)
-            setattr(ii, 'value', kwargs[key])
-
-    def get_item_value(self, name: str, key: str) -> float:
-        """
-        A function to get a given item value
-
-        :param name: The item name
-        :param key: The given value keys
-        :return: The desired value
-        """
-        item = self.storage['item'][name]
-        item = getattr(item, key)
-        return getattr(item, 'value')
 
     def create_model(self, name: str):
         """
@@ -177,8 +90,7 @@ class RefnxWrapper:
         :param item_name: items to add to model
         :param model_name: Name for the model
         """
-        self.storage['model'][model_name].structure.components.append(
-            self.storage['item'][item_name])
+        self.storage['model'][model_name].structure.components.append(self.storage['item'][item_name])
 
     def remove_layer_from_item(self, layer_name: str, item_name: str):
         """
@@ -187,8 +99,7 @@ class RefnxWrapper:
         :param layer_name: The layer name
         :param item_name: The item name
         """
-        layer_idx = self.storage['item'][item_name].components.index(
-            self.storage['layer'][layer_name])
+        layer_idx = self.storage['item'][item_name].components.index(self.storage['layer'][layer_name])
         del self.storage['item'][item_name].components[layer_idx]
 
     def remove_item(self, item_name: str, model_name: str):
@@ -198,8 +109,7 @@ class RefnxWrapper:
         :param item_name: The item name
         :param model_name: Name of the model
         """
-        item_idx = self.storage['model'][model_name].structure.components.index(
-            self.storage['item'][item_name])
+        item_idx = self.storage['model'][model_name].structure.components.index(self.storage['item'][item_name])
         del self.storage['model'][model_name].structure.components[item_idx]
         del self.storage['item'][item_name]
 
@@ -211,13 +121,13 @@ class RefnxWrapper:
         :param model_name: Name for the model
         :return: points calculated at `x`
         """
-        structure = _remove_unecessary_stacks(
-            self.storage['model'][model_name].structure)
+        structure = _remove_unecessary_stacks(self.storage['model'][model_name].structure)
         model = reflect.ReflectModel(
             structure,
             scale=self.storage['model'][model_name].scale.value,
             bkg=self.storage['model'][model_name].bkg.value,
-            dq=self.storage['model'][model_name].dq.value)
+            dq=self.storage['model'][model_name].dq.value,
+        )
         return model(x_array)
 
     def sld_profile(self, model_name: str) -> Tuple[np.ndarray, np.ndarray]:
@@ -227,12 +137,10 @@ class RefnxWrapper:
         :param model_name: Name for the model
         :return: z and sld(z)
         """
-        return _remove_unecessary_stacks(
-            self.storage['model'][model_name].structure).sld_profile()
+        return _remove_unecessary_stacks(self.storage['model'][model_name].structure).sld_profile()
 
 
-def _remove_unecessary_stacks(
-        current_structure: reflect.Structure) -> reflect.Structure:
+def _remove_unecessary_stacks(current_structure: reflect.Structure) -> reflect.Structure:
     """
     Removed unnecessary reflect.Stack objects from the structure.
 

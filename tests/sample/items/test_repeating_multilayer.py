@@ -8,11 +8,10 @@ import os
 import unittest
 
 import numpy as np
-from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 from numpy.testing import assert_raises
 
-from EasyReflectometry.interface import InterfaceFactory
+from EasyReflectometry.calculators import CalculatorFactory
 from EasyReflectometry.sample.items import RepeatingMultiLayer
 from EasyReflectometry.sample.layer import Layer
 from EasyReflectometry.sample.layers import Layers
@@ -92,7 +91,7 @@ class TestRepeatingMultiLayer(unittest.TestCase):
         assert_equal(o.layers[1].name, 'thickPotassium')
 
     def test_add_layer_with_interface_refnx(self):
-        interface = InterfaceFactory()
+        interface = CalculatorFactory()
         interface.switch('refnx')
         m = Material.from_pars(6.908, -0.278, 'Boron', interface=interface)
         k = Material.from_pars(0.487, 0.000, 'Potassium', interface=interface)
@@ -121,7 +120,7 @@ class TestRepeatingMultiLayer(unittest.TestCase):
         assert_equal(o.layers[2].name, 'thickPotassium duplicate')
 
     def test_duplicate_layer_with_interface_refnx(self):
-        interface = InterfaceFactory()
+        interface = CalculatorFactory()
         interface.switch('refnx')
         m = Material.from_pars(6.908, -0.278, 'Boron', interface=interface)
         k = Material.from_pars(0.487, 0.000, 'Potassium', interface=interface)
@@ -159,7 +158,7 @@ class TestRepeatingMultiLayer(unittest.TestCase):
         assert_equal(o.layers[0].name, 'thinBoron')
 
     def test_remove_layer_with_interface_refnx(self):
-        interface = InterfaceFactory()
+        interface = CalculatorFactory()
         interface.switch('refnx')
         m = Material.from_pars(6.908, -0.278, 'Boron', interface=interface)
         k = Material.from_pars(0.487, 0.000, 'Potassium', interface=interface)
