@@ -1,14 +1,13 @@
-__author__ = "github.com/wardsimon"
+__author__ = 'github.com/wardsimon'
 
 from easyCore.Objects.Inferface import InterfaceFactoryTemplate
 
-from EasyReflectometry.interfaces import InterfaceTemplate
+from EasyReflectometry.calculators import CalculatorBase
 
 
-class InterfaceFactory(InterfaceFactoryTemplate):
-
+class CalculatorFactory(InterfaceFactoryTemplate):
     def __init__(self):
-        super(InterfaceFactory, self).__init__(InterfaceTemplate._interfaces)
+        super().__init__(interface_list=CalculatorBase._calculators)
 
     def reset_storage(self) -> None:
         return self().reset_storage()

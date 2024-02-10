@@ -11,7 +11,7 @@ import EasyReflectometry
 from EasyReflectometry.data import load
 from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.fitting import Fitter
-from EasyReflectometry.interface import InterfaceFactory as Interface
+from EasyReflectometry.calculators import CalculatorFactory
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import Sample
 from EasyReflectometry.sample import Material
@@ -51,7 +51,7 @@ class TestFitting(unittest.TestCase):
         model.background.bounds = (1e-7, 1e-5)
         # Scale
         model.scale.bounds = (0.5, 1.5)
-        interface = Interface()
+        interface = CalculatorFactory()
         model.interface = interface
         fitter = Fitter(model)
         analysed = fitter.fit(data)

@@ -7,7 +7,7 @@ Tests for Refnx class module
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from EasyReflectometry.interfaces.refnx.interface import Refnx
+from EasyReflectometry.calculators.refnx.calculator import Refnx
 
 
 class TestRefnx(unittest.TestCase):

@@ -11,7 +11,7 @@ from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
 from EasyReflectometry.experiment.model import Model
-from EasyReflectometry.interface import InterfaceFactory
+from EasyReflectometry.calculators import CalculatorFactory
 from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultiLayer
 from EasyReflectometry.sample.elementals.layers.layer import Layer
 from EasyReflectometry.sample.elementals.layer_collection import LayerCollection
@@ -96,7 +96,7 @@ class TestModel(unittest.TestCase):
         assert_equal(issubclass(mod.sample[1].__class__, RepeatingMultiLayer), True)
 
     def test_add_item_with_interface_refnx(self):
-        interface = InterfaceFactory()
+        interface = CalculatorFactory()
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
         m2 = Material.from_pars(0.487, 0.000, 'Potassium')
         l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
@@ -114,7 +114,7 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
     def test_add_item_with_interface_refl1d(self):
-        interface = InterfaceFactory()
+        interface = CalculatorFactory()
         interface.switch('refl1d')
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
         m2 = Material.from_pars(0.487, 0.000, 'Potassium')
@@ -133,7 +133,7 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
     # def test_add_item_with_interface_bornagain(self):
-    #     interface = InterfaceFactory()
+    #     interface = CalculatorFactory()
     #     interface.switch('BornAgain')
     #     m1 = Material.from_pars(6.908, 0.278, 'Boron')
     #     m2 = Material.from_pars(0.487, 0.000, 'Potassium')
@@ -171,7 +171,7 @@ class TestModel(unittest.TestCase):
         assert_equal(issubclass(mod.sample[2].__class__, RepeatingMultiLayer), True)
 
     def test_duplicate_item_with_interface_refnx(self):
-        interface = InterfaceFactory()
+        interface = CalculatorFactory()
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
         m2 = Material.from_pars(0.487, 0.000, 'Potassium')
         l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
@@ -189,7 +189,7 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.interface()._wrapper.storage['item']), 3)
 
     def test_duplicate_item_with_interface_refl1d(self):
-        interface = InterfaceFactory()
+        interface = CalculatorFactory()
         interface.switch('refl1d')
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
         m2 = Material.from_pars(0.487, 0.000, 'Potassium')
@@ -208,7 +208,7 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.interface()._wrapper.storage['item']), 3)
 
     # def test_duplicate_item_with_interface_bornagain(self):
-    #     interface = InterfaceFactory()
+    #     interface = CalculatorFactory()
     #     interface.switch('BornAgain')
     #     m1 = Material.from_pars(6.908, 0.278, 'Boron')
     #     m2 = Material.from_pars(0.487, 0.000, 'Potassium')
@@ -244,7 +244,7 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.sample), 1)
 
     def test_remove_item_with_interface_refnx(self):
-        interface = InterfaceFactory()
+        interface = CalculatorFactory()
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
         m2 = Material.from_pars(0.487, 0.000, 'Potassium')
         l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
@@ -265,7 +265,7 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
     def test_remove_item_with_interface_refl1d(self):
-        interface = InterfaceFactory()
+        interface = CalculatorFactory()
         interface.switch('refl1d')
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
         m2 = Material.from_pars(0.487, 0.000, 'Potassium')
@@ -287,7 +287,7 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
     # def test_remove_item_with_interface_bornagain(self):
-    #     interface = InterfaceFactory()
+    #     interface = CalculatorFactory()
     #     interface.switch('BornAgain')
     #     m1 = Material.from_pars(6.908, 0.278, 'Boron')
     #     m2 = Material.from_pars(0.487, 0.000, 'Potassium')

@@ -7,7 +7,7 @@ Tests for Refl1d class module
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from EasyReflectometry.interfaces.refl1d.wrapper import Refl1dWrapper
+from EasyReflectometry.calculators.refl1d.wrapper import Refl1dWrapper
 
 
 class TestRefl1d(unittest.TestCase):

@@ -1,23 +1,39 @@
-__author__ = "github.com/arm61"
+__author__ = 'github.com/arm61'
 
 import bornagain as ba
 from easyCore import np
 from scipy.stats import norm
 
+from ..wrapper_base import WrapperBase
 
-class BornAgainWrapper:
+"""
+THIS CODE IS NOT FUNCTIONAL
+PLEASE CONSULT ONE OF THE OTHER WRAPPES FOR A FUNCTIONAL EXAMPLE
+"""
 
+
+class BornAgainWrapper(WrapperBase):
     def __init__(self):
+        super().__init__()
         self.storage = {
-            'material': {},
-            'layer': {},
             'layer_material': {},
             'roughness': {},
-            'item': {},
             'item_repeats': {},
-            'model': None,
             'model_items': [],
-            'model_parameters': {}
+            'model_parameters': {},
+        }
+
+    def reset_storage(self):
+        """
+        Reset the storage area to blank.
+        """
+        super().reset_storage()
+        self.storage = {
+            'layer_material': {},
+            'roughness': {},
+            'item_repeats': {},
+            'model_items': [],
+            'model_parameters': {},
         }
 
     def create_material(self, name):
@@ -27,23 +43,7 @@ class BornAgainWrapper:
         :param name: The name of the material
         :type name: str
         """
-        self.storage['material'][name] = ba.MaterialBySLD(str(name), 0., 0.)
-
-    def reset_storage(self):
-        """
-        Reset the storage area to blank.
-        """
-        self.storage = {
-            'material': {},
-            'layer': {},
-            'layer_material': {},
-            'roughness': {},
-            'item': {},
-            'item_repeats': {},
-            'model': None,
-            'model_items': [],
-            'model_parameters': {}
-        }
+        self.storage['material'][name] = ba.MaterialBySLD(str(name), 0.0, 0.0)
 
     def update_material(self, name, **kwargs):
         """
@@ -59,10 +59,7 @@ class BornAgainWrapper:
             real = kwargs['real'] * 1e-6
         if 'imag' in kwargs.keys():
             if kwargs['imag'] < 0:
-                raise ValueError(
-                    'The BornAgain interface does not support negative '
-                    'imaginary scattering length densities'
-                )
+                raise ValueError('The BornAgain interface does not support negative imaginary scattering length densities')
             imag = kwargs['imag'] * 1e-6
         self.storage['material'][name] = ba.MaterialBySLD(str(name), real, imag)
 
@@ -100,8 +97,8 @@ class BornAgainWrapper:
         if 'thickness' in kwargs.keys():
             thickness = kwargs['thickness']
             self.storage['layer'][name] = ba.Layer(
-                self.storage['material'][self.storage['layer_material'][name]],
-                thickness * ba.angstrom)
+                self.storage['material'][self.storage['layer_material'][name]], thickness * ba.angstrom
+            )
         if 'sigma' in kwargs.keys():
             sigma = kwargs['sigma']
             self.storage['roughness'][name] = ba.LayerRoughness()
@@ -264,8 +261,8 @@ class BornAgainWrapper:
 
         scan = ba.QSpecScan(x_array / ba.angstrom)
         scan.setAbsoluteQResolution(
-            distr, x_array / ba.angstrom *
-            (self.storage['model_parameters']['resolution'] * 0.5 / 100))
+            distr, x_array / ba.angstrom * (self.storage['model_parameters']['resolution'] * 0.5 / 100)
+        )
 
         simulation = ba.SpecularSimulation()
         simulation.setScan(scan)
@@ -276,16 +273,17 @@ class BornAgainWrapper:
                 for j in self.storage['item'][i]:
                     layer = ba.Layer(
                         self.storage['material'][self.storage['layer_material'][j]],
-                        self.storage['layer'][j].thickness())
-                    total_model.addLayerWithTopRoughness(layer,
-                                                         self.storage['roughness'][j])
+                        self.storage['layer'][j].thickness(),
+                    )
+                    total_model.addLayerWithTopRoughness(layer, self.storage['roughness'][j])
 
         simulation.setSample(total_model)
         simulation.runSimulation()
 
         return (
-            self.storage['model_parameters']['scale'] * simulation.result().array() +
-            self.storage['model_parameters']['background'])
+            self.storage['model_parameters']['scale'] * simulation.result().array()
+            + self.storage['model_parameters']['background']
+        )
 
     def sld_profile(self) -> np.ndarray:
         """
@@ -298,8 +296,7 @@ class BornAgainWrapper:
         """
         number_of_layers = 0
         for i in self.storage['model_items']:
-            number_of_layers += len(
-                self.storage['item'][i]) * self.storage['item_repeats'][i]
+            number_of_layers += len(self.storage['item'][i]) * self.storage['item_repeats'][i]
         layers = np.zeros((int(number_of_layers), 4))
 
         count = 0
@@ -307,10 +304,8 @@ class BornAgainWrapper:
             for k in range(int(self.storage['item_repeats'][i])):
                 for j in self.storage['item'][i]:
                     layers[count, 0] = self.storage['layer'][j].thickness()
-                    layers[count, 1] = self.storage['material'][
-                        self.storage['layer_material'][j]].materialData().real
-                    layers[count, 2] = self.storage['material'][
-                        self.storage['layer_material'][j]].materialData().imag
+                    layers[count, 1] = self.storage['material'][self.storage['layer_material'][j]].materialData().real
+                    layers[count, 2] = self.storage['material'][self.storage['layer_material'][j]].materialData().imag
                     layers[count, 3] = self.storage['roughness'][j].getSigma()
                     count += 1
 

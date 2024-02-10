@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __author__ = 'github.com/arm61'
 
 from copy import deepcopy
@@ -53,7 +55,7 @@ class Model(BaseObj):
         interface=None,
     ):
         super().__init__(
-            name,
+            name=name,
             sample=sample,
             scale=scale,
             background=background,
@@ -63,7 +65,7 @@ class Model(BaseObj):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> 'Model':
+    def default(cls, interface=None) -> Model:
         """
         Default constructor for the reflectometry experiment model.
 
@@ -85,7 +87,7 @@ class Model(BaseObj):
         resolution: Parameter,
         name: str = 'EasyModel',
         interface=None,
-    ) -> 'Model':
+    ) -> Model:
         """
         Constructor of a reflectometry experiment model where the parameters are known.
 
@@ -113,7 +115,7 @@ class Model(BaseObj):
             interface=interface,
         )
 
-    def add_item(self, *items: Union[Layer, RepeatingMultiLayer]):
+    def add_item(self, *items: Union[Layer, RepeatingMultiLayer]) -> None:
         """
         Add a layer or item to the model sample.
 
@@ -125,7 +127,7 @@ class Model(BaseObj):
                 if self.interface is not None:
                     self.interface().add_item_to_model(arg.uid, self.uid)
 
-    def duplicate_item(self, idx: int):
+    def duplicate_item(self, idx: int) -> None:
         """
         Duplicate a given item or layer in a sample.
 
@@ -148,7 +150,7 @@ class Model(BaseObj):
         )
         self.add_item(duplicate)
 
-    def remove_item(self, idx):
+    def remove_item(self, idx) -> None:
         """
         Remove an item from the model.
 
@@ -160,7 +162,7 @@ class Model(BaseObj):
         del self.sample[idx]
 
     @property
-    def uid(self):
+    def uid(self) -> int:
         """
         Return a UID from the borg map
         """
@@ -168,7 +170,7 @@ class Model(BaseObj):
 
     # Representation
     @property
-    def _dict_repr(self) -> dict:
+    def _dict_repr(self) -> dict[str, dict[str, str]]:
         """
         A simplified dict representation.
 
