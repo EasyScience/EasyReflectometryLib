@@ -4,41 +4,58 @@ import numpy as np
 from easyCore.Objects.Inferface import ItemContainer
 
 from EasyReflectometry.experiment.model import Model
-from EasyReflectometry.sample.items import MultiLayer
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.material import Material
-from EasyReflectometry.sample.material import MaterialMixture
+from EasyReflectometry.sample import Layer
+from EasyReflectometry.sample import Material
+from EasyReflectometry.sample import MaterialMixture
+from EasyReflectometry.sample import MultiLayer
 
-from ..interfaceTemplate import InterfaceTemplate
+from ..calculator_base import CalculatorBase
 from .wrapper import BornAgainWrapper
 
+"""
+THIS CODE IS NOT FUNCTIONAL
+PLEASE CONSULT ONE OF THE OTHER CALCULATORS FOR A FUNCTIONAL EXAMPLE
+"""
 
-class BornAgain(InterfaceTemplate):
+
+class BornAgain(CalculatorBase):
     """
-    A simple interface using BornAgain
+    Calculator for BornAgain
     """
-
-    _material_link = {'sld': 'real', 'isld': 'imag'}
-
-    _layer_link = {'thickness': 'thickness', 'roughness': 'sigma'}
-
-    _item_link = {'repetitions': 'repeats'}
-
-    _model_link = {'scale': 'scale', 'background': 'background', 'resolution': 'resolution'}
 
     name = 'BornAgain'
 
-    def __init__(self):
-        self._wrapper = BornAgainWrapper()
-        self._namespace = {}
+    _material_link = {
+        'sld': 'real',
+        'isld': 'imag',
+    }
 
-    def reset_storage(self):
+    _layer_link = {
+        'thickness': 'thickness',
+        'roughness': 'sigma',
+    }
+
+    _item_link = {
+        'repetitions': 'repeats',
+    }
+
+    _model_link = {
+        'scale': 'scale',
+        'background': 'background',
+        'resolution': 'resolution',
+    }
+
+    def __init__(self):
+        super().__init__()
+        self._wrapper = BornAgainWrapper()
+
+    def reset_storage(self) -> None:
         """
         Reset the storage area of the calculator
         """
         self._wrapper.reset_storage()
 
-    def create(self, model):
+    def create(self, model: Material | Layer | MultiLayer | Model) -> list[ItemContainer]:
         """
         Creation function
 
@@ -54,35 +71,66 @@ class BornAgain(InterfaceTemplate):
             if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
-                ItemContainer(key, self._material_link, self._wrapper.get_material_value, self._wrapper.update_material)
+                ItemContainer(
+                    key,
+                    self._material_link,
+                    self._wrapper.get_material_value,
+                    self._wrapper.update_material,
+                )
             )
         elif issubclass(t_, MaterialMixture):
             key = model.uid
             if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
-                ItemContainer(key, self._material_link, self._wrapper.get_material_value, self._wrapper.update_material)
+                ItemContainer(
+                    key,
+                    self._material_link,
+                    self._wrapper.get_material_value,
+                    self._wrapper.update_material,
+                )
             )
         elif issubclass(t_, Layer):
             key = model.uid
             if key not in self._wrapper.storage['layer'].keys():
                 self._wrapper.create_layer(key)
-            r_list.append(ItemContainer(key, self._layer_link, self._wrapper.get_layer_value, self._wrapper.update_layer))
+            r_list.append(
+                ItemContainer(
+                    key,
+                    self._layer_link,
+                    self._wrapper.get_layer_value,
+                    self._wrapper.update_layer,
+                )
+            )
             self.assign_material_to_layer(model.material.uid, key)
         elif issubclass(t_, MultiLayer):
             key = model.uid
             self._wrapper.create_item(key)
-            r_list.append(ItemContainer(key, self._item_link, self._wrapper.get_item_value, self._wrapper.update_item))
+            r_list.append(
+                ItemContainer(
+                    key,
+                    self._item_link,
+                    self._wrapper.get_item_value,
+                    self._wrapper.update_item,
+                )
+            )
             for i in model.layers:
                 self.add_layer_to_item(i.uid, model.uid)
         elif issubclass(t_, Model):
             self._wrapper.create_model()
-            r_list.append(ItemContainer('model', self._model_link, self._wrapper.get_model_value, self._wrapper.update_model))
+            r_list.append(
+                ItemContainer(
+                    'model',
+                    self._model_link,
+                    self._wrapper.get_model_value,
+                    self._wrapper.update_model,
+                )
+            )
             for i in model.structure:
                 self.add_item_to_model(i.uid)
         return r_list
 
-    def assign_material_to_layer(self, material_id: int, layer_id: int):
+    def assign_material_to_layer(self, material_id: int, layer_id: int) -> None:
         """
         Assign a material to a layer.
 
@@ -93,7 +141,7 @@ class BornAgain(InterfaceTemplate):
         """
         self._wrapper.assign_material_to_layer(material_id, layer_id)
 
-    def add_layer_to_item(self, layer_id: int, item_id: int):
+    def add_layer_to_item(self, layer_id: int, item_id: int) -> None:
         """
         Add a layer to the item stack
 
@@ -104,18 +152,16 @@ class BornAgain(InterfaceTemplate):
         """
         self._wrapper.add_layer_to_item(layer_id, item_id)
 
-    def remove_layer_from_item(self, layer_id: int, item_id: int):
+    def remove_layer_from_item(self, layer_id: int, item_id: int) -> None:
         """
         Remove a layer from an item stack
 
         :param item_id: The item id
-        :type item_id: int
         :param layer_id: The layer id
-        :type layer_id: int
         """
         self._wrapper.remove_layer_from_item(layer_id, item_id)
 
-    def add_item_to_model(self, item_id: int):
+    def add_item_to_model(self, item_id: int) -> None:
         """
         Add a layer to the item stack
 
@@ -124,7 +170,7 @@ class BornAgain(InterfaceTemplate):
         """
         self._wrapper.add_item(item_id)
 
-    def remove_item_from_model(self, item_id: int):
+    def remove_item_from_model(self, item_id: int) -> None:
         """
         Remove a layer from the item stack
 
@@ -145,7 +191,7 @@ class BornAgain(InterfaceTemplate):
         """
         return self._wrapper.calculate(x_array)
 
-    def sld_profile(self) -> tuple:
+    def sld_profile(self) -> tuple([np.ndarray, np.ndarray]):
         """
         Return the scattering length density profile.
 
