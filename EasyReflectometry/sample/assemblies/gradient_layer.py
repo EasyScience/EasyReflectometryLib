@@ -5,10 +5,10 @@ from numpy import arange
 
 from ..elements.layers.layer import Layer
 from ..elements.materials.material import Material
-from .multilayer import MultiLayer
+from .multilayer import Multilayer
 
 
-class GradientLayer(MultiLayer):
+class GradientLayer(Multilayer):
     """
     A :py:class:`GradientLayer` constructs a gradient multilayer for the
     provided initial and final material.

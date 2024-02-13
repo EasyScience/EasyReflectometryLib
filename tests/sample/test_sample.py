@@ -5,7 +5,7 @@ import unittest
 
 from numpy.testing import assert_equal
 
-from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultiLayer
+from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
 from EasyReflectometry.sample.elements.layers.layer import Layer
 from EasyReflectometry.sample.elements.layer_collection import LayerCollection
 from EasyReflectometry.sample.elements.materials.material import Material
@@ -18,8 +18,8 @@ class TestSample(unittest.TestCase):
         p = Sample.default()
         assert_equal(p.name, 'EasySample')
         assert_equal(p.interface, None)
-        assert_equal(p[0].name, 'EasyMultiLayer')
-        assert_equal(p[1].name, 'EasyMultiLayer')
+        assert_equal(p[0].name, 'EasyMultilayer')
+        assert_equal(p[1].name, 'EasyMultilayer')
 
     def test_from_pars(self):
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
@@ -28,8 +28,8 @@ class TestSample(unittest.TestCase):
         l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
         ls1 = LayerCollection.from_pars(l1, l2, name='twoLayer1')
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
-        o1 = RepeatingMultiLayer.from_pars(ls1, 2.0, 'twoLayerItem1')
-        o2 = RepeatingMultiLayer.from_pars(ls2, 1.0, 'oneLayerItem2')
+        o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
+        o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, o2, name='myModel')
         assert_equal(d.name, 'myModel')
         assert_equal(d.interface, None)
@@ -55,7 +55,7 @@ class TestSample(unittest.TestCase):
     def test_repr(self):
         p = Sample.default()
         assert p.__repr__(
-        ) == 'EasySample:\n- EasyMultiLayer:\n    EasyLayers:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n- EasyMultiLayer:\n    EasyLayers:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n'
+        ) == 'EasySample:\n- EasyMultilayer:\n    EasyLayers:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n- EasyMultilayer:\n    EasyLayers:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n'
 
     def test_dict_round_trip(self):
         p = Sample.default()

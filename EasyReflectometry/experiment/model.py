@@ -12,8 +12,8 @@ from easyCore.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
-from EasyReflectometry.sample import MultiLayer
-from EasyReflectometry.sample import RepeatingMultiLayer
+from EasyReflectometry.sample import Multilayer
+from EasyReflectometry.sample import RepeatingMultilayer
 from EasyReflectometry.sample import Sample
 
 LAYER_DETAILS = {
@@ -115,14 +115,14 @@ class Model(BaseObj):
             interface=interface,
         )
 
-    def add_item(self, *items: Union[Layer, RepeatingMultiLayer]) -> None:
+    def add_item(self, *items: Union[Layer, RepeatingMultilayer]) -> None:
         """
         Add a layer or item to the model sample.
 
         :param *items: Layers or items to add to model sample
         """
         for arg in items:
-            if issubclass(arg.__class__, MultiLayer):
+            if issubclass(arg.__class__, Multilayer):
                 self.sample.append(arg)
                 if self.interface is not None:
                     self.interface().add_item_to_model(arg.uid, self.uid)

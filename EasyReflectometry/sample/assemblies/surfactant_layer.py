@@ -6,10 +6,10 @@ from easyCore.Objects.ObjectClasses import Parameter
 from ..elements.layer_collection import LayerCollection
 from ..elements.layers.layer_apm import LayerApm
 from ..elements.materials.material import Material
-from .multilayer import MultiLayer
+from .multilayer import Multilayer
 
 
-class SurfactantLayer(MultiLayer):
+class SurfactantLayer(Multilayer):
     """
     A :py:class:`SurfactantLayer` constructs a series of layers representing the
     head and tail groups of a surfactant. This item allows the definition of a

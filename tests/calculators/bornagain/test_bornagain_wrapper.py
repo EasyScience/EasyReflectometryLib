@@ -95,7 +95,7 @@ Tests for the bornagain class for calculation.
 #     def test_create_model(self):
 #         p = BornAgain()
 #         p.create_model()
-#         assert_equal(isinstance(p.storage['model'], ba.MultiLayer), True)
+#         assert_equal(isinstance(p.storage['model'], ba.Multilayer), True)
 #         assert_equal(p.storage['model'].roughnessModel(), 2)
 #         assert_equal(list(p.storage['model_parameters'].keys()), ['scale', 'background', 'resolution'])
 

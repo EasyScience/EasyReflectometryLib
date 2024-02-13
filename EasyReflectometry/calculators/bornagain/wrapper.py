@@ -160,7 +160,7 @@ class BornAgainWrapper(WrapperBase):
         """
         Create a model for analysis
         """
-        self.storage['model'] = ba.MultiLayer()
+        self.storage['model'] = ba.Multilayer()
         self.storage['model'].setRoughnessModel(ba.RoughnessModel.NEVOT_CROCE)
         self.storage['model_items'] = []
         self.storage['model_parameters']['scale'] = 1
@@ -267,7 +267,7 @@ class BornAgainWrapper(WrapperBase):
         simulation = ba.SpecularSimulation()
         simulation.setScan(scan)
 
-        total_model = ba.MultiLayer()
+        total_model = ba.Multilayer()
         for i in self.storage['model_items']:
             for k in range(int(self.storage['item_repeats'][i])):
                 for j in self.storage['item'][i]:

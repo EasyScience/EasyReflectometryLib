@@ -6,13 +6,13 @@ import yaml
 from easyCore.Objects.Groups import BaseCollection
 
 from . import Layer
-from . import MultiLayer
+from . import Multilayer
 
 
 class Sample(BaseCollection):
     def __init__(
         self,
-        *args: list[Layer | MultiLayer],
+        *args: list[Layer | Multilayer],
         name: str = 'EasySample',
         interface=None,
         **kwargs,
@@ -20,8 +20,8 @@ class Sample(BaseCollection):
         new_items = []
         for i in args:
             if issubclass(type(i), Layer):
-                new_items.append(MultiLayer.from_pars(i, name=i.name))
-            elif issubclass(type(i), MultiLayer):
+                new_items.append(Multilayer.from_pars(i, name=i.name))
+            elif issubclass(type(i), Multilayer):
                 new_items.append(i)
             else:
                 raise ValueError('The items must be either a Layer or an Assembly.')
@@ -37,14 +37,14 @@ class Sample(BaseCollection):
         :return: Default sample container
         :rtype: Structure
         """
-        item1 = MultiLayer.default()
-        item2 = MultiLayer.default()
+        item1 = Multilayer.default()
+        item2 = Multilayer.default()
         return cls(item1, item2, interface=interface)
 
     @classmethod
     def from_pars(
         cls,
-        *args: list[MultiLayer],
+        *args: list[Multilayer],
         name: str = 'EasyStructure',
         interface=None,
     ) -> Sample:

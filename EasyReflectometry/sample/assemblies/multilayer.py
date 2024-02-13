@@ -5,9 +5,9 @@ from ..elements.layers.layer import Layer
 from .base_assembly import BaseAssembly
 
 
-class MultiLayer(BaseAssembly):
+class Multilayer(BaseAssembly):
     """
-    A :py:class:`MultiLayer` consists of a series of
+    A :py:class:`Multilayer` consists of a series of
     :py:class:`EasyReflectometry.sample.layer.Layer` or
     :py:class:`EasyReflectometry.sample.layers.Layers`.
     This :py:mod:`item` will arrange the layers as slabs, one on top of another,
@@ -22,7 +22,7 @@ class MultiLayer(BaseAssembly):
     def __init__(
         self,
         layers: LayerCollection | Layer | list[Layer],
-        name: str = 'EasyMultiLayer',
+        name: str = 'EasyMultilayer',
         interface=None,
         type: str = 'Multi-layer',
     ):
@@ -35,25 +35,25 @@ class MultiLayer(BaseAssembly):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> MultiLayer:
+    def default(cls, interface=None) -> Multilayer:
         """
         Default constructor for a multi-layer item.
 
-        :return: MultiLayer container
-        :rtype: MultiLayer
+        :return: Multilayer container
+        :rtype: Multilayer
         """
         layers = LayerCollection.default()
         return cls(layers, interface=interface)
 
     @classmethod
-    def from_pars(cls, layers: LayerCollection, name: str = 'EasyMultiLayer', interface=None) -> MultiLayer:
+    def from_pars(cls, layers: LayerCollection, name: str = 'EasyMultilayer', interface=None) -> Multilayer:
         """
         Constructor of a multi-layer item where the parameters are known.
 
         :param layers: The layers in the multi-layer
         :type layers: EasyReflectometry.layers.Layers
-        :return: MultiLayer container
-        :rtype: MultiLayer
+        :return: Multilayer container
+        :rtype: Multilayer
         """
         return cls(layers=layers, name=name, interface=interface)
 

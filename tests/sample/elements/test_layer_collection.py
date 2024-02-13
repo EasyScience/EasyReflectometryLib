@@ -8,7 +8,7 @@ import unittest
 
 from numpy.testing import assert_equal
 
-from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultiLayer
+from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
 from EasyReflectometry.sample.elements.layers.layer import Layer
 from EasyReflectometry.sample.elements.layer_collection import LayerCollection
 from EasyReflectometry.sample.elements.materials.material import Material
@@ -39,7 +39,7 @@ class TestLayerCollection(unittest.TestCase):
     def test_from_pars_item(self):
         m = Material.from_pars(6.908, -0.278, 'Boron')
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
-        i = RepeatingMultiLayer.from_pars(LayerCollection.default(), 2)
+        i = RepeatingMultilayer.from_pars(LayerCollection.default(), 2)
         l = LayerCollection.from_pars(p, i, name='twoLayer')
         assert_equal(l.name, 'twoLayer')
         assert_equal(l.interface, None)

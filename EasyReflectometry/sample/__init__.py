@@ -1,6 +1,6 @@
 from .assemblies.gradient_layer import GradientLayer
-from .assemblies.multilayer import MultiLayer
-from .assemblies.repeating_multilayer import RepeatingMultiLayer
+from .assemblies.multilayer import Multilayer
+from .assemblies.repeating_multilayer import RepeatingMultilayer
 from .assemblies.surfactant_layer import SurfactantLayer
 from .elements.layer_collection import LayerCollection
 from .elements.layers.layer import Layer
@@ -12,8 +12,8 @@ from .sample import Sample
 
 __all__ = (
     GradientLayer,
-    MultiLayer,
-    RepeatingMultiLayer,
+    Multilayer,
+    RepeatingMultilayer,
     SurfactantLayer,
     Layer,
     LayerApm,

@@ -6,7 +6,7 @@ from easyCore.Objects.ObjectClasses import Parameter
 
 from ..elements.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
-from .multilayer import MultiLayer
+from .multilayer import Multilayer
 
 REPEATINGMULTILAYER_DETAILS = {
     'repetitions': {
@@ -19,12 +19,12 @@ REPEATINGMULTILAYER_DETAILS = {
 }
 
 
-class RepeatingMultiLayer(MultiLayer):
+class RepeatingMultilayer(Multilayer):
     """
-    A :py:class:`RepeatingMultiLayer` takes a :py:class:`MultiLayer` and repeats
+    A :py:class:`RepeatingMultilayer` takes a :py:class:`Multilayer` and repeats
     it a some number of times. This enables a computational efficiency in many
     reflectometry engines as the operation can be performed for a single
-    :py:class:`MultiLayer` and cheaply combined for the appropriate number of
+    :py:class:`Multilayer` and cheaply combined for the appropriate number of
     :py:attr:`repetitions`.
 
     More information about the usage of this item is available in the
@@ -37,7 +37,7 @@ class RepeatingMultiLayer(MultiLayer):
         self,
         layers: LayerCollection | Layer | list[Layer],
         repetitions: Parameter,
-        name: str = 'EasyRepeatingMultiLayer',
+        name: str = 'EasyRepeatingMultilayer',
         interface=None,
     ):
         if isinstance(layers, Layer):
@@ -51,7 +51,7 @@ class RepeatingMultiLayer(MultiLayer):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> RepeatingMultiLayer:
+    def default(cls, interface=None) -> RepeatingMultilayer:
         """
         Default constructor for the reflectometry repeating multi layer.
 
@@ -70,9 +70,9 @@ class RepeatingMultiLayer(MultiLayer):
         cls,
         layers: LayerCollection,
         repetitions: float = 1.0,
-        name: str = 'EasyRepeatingMultiLayer',
+        name: str = 'EasyRepeatingMultilayer',
         interface=None,
-    ) -> RepeatingMultiLayer:
+    ) -> RepeatingMultilayer:
         """
         Constructor of a reflectometry repeating multi layer where the
         parameters are known.

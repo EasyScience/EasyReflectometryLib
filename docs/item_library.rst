@@ -6,53 +6,55 @@ These items offer flexibility for the user and enable more powerful analysis by 
 In this page, we will document the items that are available with simple examples of the constructors that exist.
 Full API documentation is also available for the :py:mod:`EasyReflectometry.sample.item` module.
 
-:py:class:`MultiLayer`
+:py:class:`Multilayer`
 ----------------------
 
 This item should be used for a series of layers that, for whatever reason, should be thought of as a single object. 
 For example, in the `simple fitting tutorial`_ this item type is used to combine the silicon and silicon dioxide layer that as formed into a single object. 
 All of the separate layers in these objects will be fitted individually, i.e. there is no constraints present, however, there is some cognative benefit to grouping layers together. 
 
-To create a :py:class:`MultiLayer` object, we use the following construction.
+To create a :py:class:`Multilayer` object, we use the following construction.
 
 .. code-block:: python 
 
-    from EasyReflectometry.sample import Layer, Material
-    from EasyReflectometry.sample.item import MultiLayer
+    from EasyReflectometry.sample import Layer
+    from EasyReflectometry.sample import Material
+    from EasyReflectometry.sample import Multilayer
 
     si = Material.from_pars(2.07, 0, 'Si')
     sio2 = Material.from_pars(3.47, 0, 'SiO2')
     si_layer = Layer.from_pars(si, 0, 0, 'Si layer')
     sio2_layer = Layer.from_pars(sio2, 30, 3, 'SiO2 layer')
 
-    subphase = MultiLayer.from_pars([si_layer, sio2_layer], 
+    subphase = Multilayer.from_pars([si_layer, sio2_layer], 
                                     name='Si/SiO2 subphase')
 
-This will create a :py:class:`MultiLayer` object named :code:`subphase` which we can use in some :py:class:`Structure` for our analysis. 
+This will create a :py:class:`Multilayer` object named :code:`subphase` which we can use in some :py:class:`Structure` for our analysis. 
 
-:py:class:`RepeatingMultiLayer`
+:py:class:`RepeatingMultilayer`
 -------------------------------
 
-The :py:class:`RepeatingMultiLayer` item type is an extension of the :py:class:`MultiLayer` for the analysis of systems with a multilayer that has some number of repeats. 
+The :py:class:`RepeatingMultilayer` item type is an extension of the :py:class:`Multilayer` for the analysis of systems with a multilayer that has some number of repeats. 
 This item type imposes some constraints, specifically that all of the repeats have the exact same structure (i.e. thicknesses, roughnesses, and scattering length densities), 
 which brings with it some computational saving as the reflectometry coefficients only needs to be calculated once for this structure and propagated for the correct number of repeats. 
 There is a `tutorial`_ that discusses the utilisation of this item type for a nickel-titanium multilayer system. 
 
-The creation of a :py:class:`RepeatingMultiLayer` object is very similar to that for the :py:class:`MultiLayer`, with the addition of a number of repetitions. 
+The creation of a :py:class:`RepeatingMultilayer` object is very similar to that for the :py:class:`Multilayer`, with the addition of a number of repetitions. 
 
 .. code-block:: python 
 
-    from EasyReflectometry.sample import Layer, Material
-    from EasyReflectometry.sample.item import RepeatingMultiLayer
+    from EasyReflectometry.sample import Layer
+    from EasyReflectometry.sample import Material
+    from EasyReflectometry.sample import RepeatingMultilayer
 
     ti = Material.from_pars(-1.9493, 0, 'Ti')
     ni = Material.from_pars(9.4245, 0, 'Ni')
     ti_layer = Layer.from_pars(ti, 40, 0, 'Ti Layer')
     ni_layer = Layer.from_pars(ni, 70, 0, 'Ni Layer')
 
-    ni_ti = RepeatingMultiLayer.from_pars([ti_layer, ni_layer], 
+    ni_ti = RepeatingMultilayer.from_pars([ti_layer, ni_layer], 
                                           repetitions=10, 
-                                          name='Ni/Ti MultiLayer')
+                                          name='Ni/Ti Multilayer')
 
 The number of repeats is a parameter that can be varied in the optimisation process, however given this is a value that depends on the synthesis of the sample this is unlikely to be necessary.
 
