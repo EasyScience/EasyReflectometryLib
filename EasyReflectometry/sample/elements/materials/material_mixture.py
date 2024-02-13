@@ -8,7 +8,7 @@ from easyCore.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.special.calculations import weighted_average_sld
 
-from ..base import BaseElement
+from ..base_element import BaseElement
 from .material import MATERIAL_DEFAULTS
 from .material import Material
 

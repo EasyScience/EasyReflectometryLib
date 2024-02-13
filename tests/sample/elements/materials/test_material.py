@@ -8,7 +8,7 @@ import unittest
 
 import numpy as np
 
-from EasyReflectometry.sample.elementals.materials.material import Material
+from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestMaterial(unittest.TestCase):

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
-from .base import BaseElementCollection
+from .base_element_collection import BaseElementCollection
 from .materials.material import Material
 from .materials.material_mixture import MaterialMixture
 

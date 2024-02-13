@@ -3,9 +3,9 @@ from __future__ import annotations
 from easyCore.Fitting.Constraints import ObjConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
-from ..elementals.layer_collection import LayerCollection
-from ..elementals.layers.layer_apm import LayerApm
-from ..elementals.materials.material import Material
+from ..elements.layer_collection import LayerCollection
+from ..elements.layers.layer_apm import LayerApm
+from ..elements.materials.material import Material
 from .multilayer import MultiLayer
 
 

@@ -3,8 +3,8 @@ from __future__ import annotations
 from easyCore.Fitting.Constraints import ObjConstraint
 from numpy import arange
 
-from ..elementals.layers.layer import Layer
-from ..elementals.materials.material import Material
+from ..elements.layers.layer import Layer
+from ..elements.materials.material import Material
 from .multilayer import MultiLayer
 
 

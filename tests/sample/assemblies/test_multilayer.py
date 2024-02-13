@@ -11,9 +11,9 @@ from numpy.testing import assert_raises
 
 from EasyReflectometry.calculators.factory import CalculatorFactory
 from EasyReflectometry.sample.assemblies.multilayer import MultiLayer
-from EasyReflectometry.sample.elementals.layers.layer import Layer
-from EasyReflectometry.sample.elementals.layer_collection import LayerCollection
-from EasyReflectometry.sample.elementals.materials.material import Material
+from EasyReflectometry.sample.elements.layers.layer import Layer
+from EasyReflectometry.sample.elements.layer_collection import LayerCollection
+from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestMultiLayer(unittest.TestCase):

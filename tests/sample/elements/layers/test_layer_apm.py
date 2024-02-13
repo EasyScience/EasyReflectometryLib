@@ -2,8 +2,8 @@ import unittest
 
 from numpy.testing import assert_almost_equal
 
-from EasyReflectometry.sample.elementals.layers.layer_apm import LayerApm
-from EasyReflectometry.sample.elementals.materials.material import Material
+from EasyReflectometry.sample.elements.layers.layer_apm import LayerApm
+from EasyReflectometry.sample.elements.materials.material import Material
 
 class TestLayerApm(unittest.TestCase):
 

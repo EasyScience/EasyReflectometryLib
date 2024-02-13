@@ -10,8 +10,8 @@ from EasyReflectometry.sample.assemblies.gradient_layer import (
     _linear_gradient,
     _prepare_gradient_layers,
 )
-from EasyReflectometry.sample.elementals.layers.layer import Layer
-from EasyReflectometry.sample.elementals.materials.material import Material
+from EasyReflectometry.sample.elements.layers.layer import Layer
+from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestGradientLayer():

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from ..elementals.layer_collection import LayerCollection
-from ..elementals.layers.layer import Layer
-from .base import BaseAssembly
+from ..elements.layer_collection import LayerCollection
+from ..elements.layers.layer import Layer
+from .base_assembly import BaseAssembly
 
 
 class MultiLayer(BaseAssembly):

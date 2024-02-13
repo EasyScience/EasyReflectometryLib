@@ -4,8 +4,8 @@ from copy import deepcopy
 
 from easyCore.Objects.ObjectClasses import Parameter
 
-from ..elementals.layer_collection import LayerCollection
-from ..elementals.layers.layer import Layer
+from ..elements.layer_collection import LayerCollection
+from ..elements.layers.layer import Layer
 from .multilayer import MultiLayer
 
 REPEATINGMULTILAYER_DETAILS = {

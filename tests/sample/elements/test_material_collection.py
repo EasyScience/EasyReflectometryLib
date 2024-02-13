@@ -6,8 +6,8 @@ Tests for Layers class module
 
 import unittest
 
-from EasyReflectometry.sample.elementals.materials.material import Material
-from EasyReflectometry.sample.elementals.material_collection import MaterialCollection
+from EasyReflectometry.sample.elements.materials.material import Material
+from EasyReflectometry.sample.elements.material_collection import MaterialCollection
 
 
 class TestLayerCollection(unittest.TestCase):

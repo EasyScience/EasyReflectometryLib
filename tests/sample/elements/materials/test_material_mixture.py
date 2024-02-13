@@ -2,8 +2,8 @@ import unittest
 
 from numpy.testing import assert_almost_equal
 
-from EasyReflectometry.sample.elementals.materials.material import Material
-from EasyReflectometry.sample.elementals.materials.material_mixture import MaterialMixture
+from EasyReflectometry.sample.elements.materials.material import Material
+from EasyReflectometry.sample.elements.materials.material_mixture import MaterialMixture
 
 class TestMaterialMixture(unittest.TestCase):
 

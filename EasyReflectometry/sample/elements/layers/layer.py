@@ -8,7 +8,7 @@ from typing import ClassVar
 from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter
 
-from ..base import BaseElement
+from ..base_element import BaseElement
 from ..materials.material import Material
 
 LAYER_DETAILS = {

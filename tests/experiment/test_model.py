@@ -12,11 +12,11 @@ from numpy.testing import assert_equal
 
 from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.calculators import CalculatorFactory
-from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultiLayer
-from EasyReflectometry.sample.elementals.layers.layer import Layer
-from EasyReflectometry.sample.elementals.layer_collection import LayerCollection
-from EasyReflectometry.sample.elementals.materials.material import Material
-from EasyReflectometry.sample.sample import Sample
+from EasyReflectometry.sample import RepeatingMultiLayer
+from EasyReflectometry.sample import Layer
+from EasyReflectometry.sample import LayerCollection
+from EasyReflectometry.sample import Material
+from EasyReflectometry.sample import Sample
 
 
 class TestModel(unittest.TestCase):
