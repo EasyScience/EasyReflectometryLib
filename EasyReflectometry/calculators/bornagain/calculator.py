@@ -4,10 +4,10 @@ import numpy as np
 from easyCore.Objects.Inferface import ItemContainer
 
 from EasyReflectometry.experiment.model import Model
-from EasyReflectometry.sample.items import MultiLayer
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.material import Material
-from EasyReflectometry.sample.material import MaterialMixture
+from EasyReflectometry.sample import Layer
+from EasyReflectometry.sample import Material
+from EasyReflectometry.sample import MaterialMixture
+from EasyReflectometry.sample import Multilayer
 
 from ..calculator_base import CalculatorBase
 from .wrapper import BornAgainWrapper
@@ -55,7 +55,7 @@ class BornAgain(CalculatorBase):
         """
         self._wrapper.reset_storage()
 
-    def create(self, model: Material | Layer | MultiLayer | Model) -> list[ItemContainer]:
+    def create(self, model: Material | Layer | Multilayer | Model) -> list[ItemContainer]:
         """
         Creation function
 
@@ -103,7 +103,7 @@ class BornAgain(CalculatorBase):
                 )
             )
             self.assign_material_to_layer(model.material.uid, key)
-        elif issubclass(t_, MultiLayer):
+        elif issubclass(t_, Multilayer):
             key = model.uid
             self._wrapper.create_item(key)
             r_list.append(

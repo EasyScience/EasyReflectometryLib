@@ -1,18 +1,15 @@
 from __future__ import annotations
 
-from typing import List
-
 from easyCore.Fitting.Constraints import ObjConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.sample.layer import LayerApm
-from EasyReflectometry.sample.layers import Layers
-from EasyReflectometry.sample.material import Material
+from ..elements.layer_collection import LayerCollection
+from ..elements.layers.layer_apm import LayerApm
+from ..elements.materials.material import Material
+from .multilayer import Multilayer
 
-from .multilayer import MultiLayer
 
-
-class SurfactantLayer(MultiLayer):
+class SurfactantLayer(Multilayer):
     """
     A :py:class:`SurfactantLayer` constructs a series of layers representing the
     head and tail groups of a surfactant. This item allows the definition of a
@@ -28,7 +25,7 @@ class SurfactantLayer(MultiLayer):
 
     def __init__(
         self,
-        layers: List[LayerApm],
+        layers: list[LayerApm],
         name: str = 'EasySurfactantLayer',
         constrain_apm: bool = False,
         conformal_roughness: bool = False,
@@ -39,7 +36,7 @@ class SurfactantLayer(MultiLayer):
         :param tail: Tail layer object
         :param name: Name for surfactant layer
         """
-        surfactant = Layers(layers[0], layers[1], name=name)
+        surfactant = LayerCollection(layers[0], layers[1], name=name)
         super().__init__(surfactant, name, interface)
 
         self.interface = interface

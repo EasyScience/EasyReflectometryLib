@@ -11,10 +11,10 @@ from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.sample import Layer
-from EasyReflectometry.sample import Layers
-from EasyReflectometry.sample import Structure
-from EasyReflectometry.sample.items import MultiLayer
-from EasyReflectometry.sample.items import RepeatingMultiLayer
+from EasyReflectometry.sample import LayerCollection
+from EasyReflectometry.sample import Multilayer
+from EasyReflectometry.sample import RepeatingMultilayer
+from EasyReflectometry.sample import Sample
 
 LAYER_DETAILS = {
     'scale': {
@@ -47,7 +47,7 @@ LAYER_DETAILS = {
 class Model(BaseObj):
     def __init__(
         self,
-        structure: Structure,
+        sample: Sample,
         scale: Parameter,
         background: Parameter,
         resolution: Parameter,
@@ -56,7 +56,7 @@ class Model(BaseObj):
     ):
         super().__init__(
             name=name,
-            structure=structure,
+            sample=sample,
             scale=scale,
             background=background,
             resolution=resolution,
@@ -72,16 +72,16 @@ class Model(BaseObj):
         :return: Default model container
         :rtype: Model
         """
-        structure = Structure.default()
+        sample = Sample.default()
         scale = Parameter('scale', **LAYER_DETAILS['scale'])
         background = Parameter('background', **LAYER_DETAILS['background'])
         resolution = Parameter('resolution', **LAYER_DETAILS['resolution'])
-        return cls(structure, scale, background, resolution, interface=interface)
+        return cls(sample, scale, background, resolution, interface=interface)
 
     @classmethod
     def from_pars(
         cls,
-        structure: Structure,
+        sample: Sample,
         scale: Parameter,
         background: Parameter,
         resolution: Parameter,
@@ -91,7 +91,7 @@ class Model(BaseObj):
         """
         Constructor of a reflectometry experiment model where the parameters are known.
 
-        :param structure: The structure being modelled
+        :param sample: The sample being modelled
         :param scale: Scaling factor of profile
         :param background: Linear background magnitude
         :param background: Constant resolution smearing percentage
@@ -107,7 +107,7 @@ class Model(BaseObj):
         resolution = Parameter('resolution', resolution, **default_options['resolution'])
 
         return cls(
-            structure=structure,
+            sample=sample,
             scale=scale,
             background=background,
             resolution=resolution,
@@ -115,25 +115,25 @@ class Model(BaseObj):
             interface=interface,
         )
 
-    def add_item(self, *items: Union[Layer, RepeatingMultiLayer]) -> None:
+    def add_item(self, *items: Union[Layer, RepeatingMultilayer]) -> None:
         """
-        Add a layer or item to the model structure.
+        Add a layer or item to the model sample.
 
-        :param *items: Layers or items to add to model structure
+        :param *items: Layers or items to add to model sample
         """
         for arg in items:
-            if issubclass(arg.__class__, MultiLayer):
-                self.structure.append(arg)
+            if issubclass(arg.__class__, Multilayer):
+                self.sample.append(arg)
                 if self.interface is not None:
                     self.interface().add_item_to_model(arg.uid, self.uid)
 
     def duplicate_item(self, idx: int) -> None:
         """
-        Duplicate a given item or layer in a structure.
+        Duplicate a given item or layer in a sample.
 
         :param idx: Index of the item or layer to duplicate
         """
-        to_duplicate = self.structure[idx]
+        to_duplicate = self.sample[idx]
         duplicate_layers = []
         for i in to_duplicate.layers:
             duplicate_layers.append(
@@ -145,7 +145,7 @@ class Model(BaseObj):
                 )
             )
         duplicate = to_duplicate.__class__.from_pars(
-            Layers.from_pars(*duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
+            LayerCollection.from_pars(*duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
             name=to_duplicate.name + ' duplicate',
         )
         self.add_item(duplicate)
@@ -158,8 +158,8 @@ class Model(BaseObj):
         :type idx: int
         """
         if self.interface is not None:
-            self.interface().remove_item_from_model(self.structure[idx].uid, self.uid)
-        del self.structure[idx]
+            self.interface().remove_item_from_model(self.sample[idx].uid, self.uid)
+        del self.sample[idx]
 
     @property
     def uid(self) -> int:
@@ -181,7 +181,7 @@ class Model(BaseObj):
                 'scale': self.scale.raw_value,
                 'background': self.background.raw_value,
                 'resolution': f'{self.resolution.raw_value} %',
-                'structure': self.structure._dict_repr,
+                'sample': self.sample._dict_repr,
             }
         }
 

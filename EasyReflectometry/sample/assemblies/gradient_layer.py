@@ -3,13 +3,12 @@ from __future__ import annotations
 from easyCore.Fitting.Constraints import ObjConstraint
 from numpy import arange
 
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.material import Material
+from ..elements.layers.layer import Layer
+from ..elements.materials.material import Material
+from .multilayer import Multilayer
 
-from .multilayer import MultiLayer
 
-
-class GradientLayer(MultiLayer):
+class GradientLayer(Multilayer):
     """
     A :py:class:`GradientLayer` constructs a gradient multilayer for the
     provided initial and final material.

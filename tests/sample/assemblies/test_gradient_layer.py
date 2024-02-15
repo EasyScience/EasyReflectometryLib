@@ -3,15 +3,15 @@ from unittest.mock import MagicMock
 import pytest
 from numpy.testing import assert_almost_equal
 
-import EasyReflectometry.sample.items.gradient_layer
-from EasyReflectometry.sample.items import GradientLayer
-from EasyReflectometry.sample.items.gradient_layer import (
+import EasyReflectometry.sample.assemblies.gradient_layer
+from EasyReflectometry.sample.assemblies.gradient_layer import GradientLayer
+from EasyReflectometry.sample.assemblies.gradient_layer import (
     _apply_thickness_constraints,
     _linear_gradient,
     _prepare_gradient_layers,
 )
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.elements.layers.layer import Layer
+from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestGradientLayer():
@@ -177,9 +177,9 @@ def test_prepare_gradient_layers(monkeypatch):
     mock_Material = MagicMock()
     mock_Material.from_pars = MagicMock(return_value='Material_from_pars')
     mock_linear_gradient = MagicMock(return_value=[1.0, 2.0, 3.0])
-    monkeypatch.setattr(EasyReflectometry.sample.items.gradient_layer, '_linear_gradient', mock_linear_gradient)
-    monkeypatch.setattr(EasyReflectometry.sample.items.gradient_layer, 'Layer', mock_Layer)
-    monkeypatch.setattr(EasyReflectometry.sample.items.gradient_layer, 'Material', mock_Material)
+    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, '_linear_gradient', mock_linear_gradient)
+    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'Layer', mock_Layer)
+    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'Material', mock_Material)
 
     # Then
     result = _prepare_gradient_layers(mock_material_1, mock_material_2, 3, None)
@@ -205,7 +205,7 @@ def test_apply_thickness_constraints(monkeypatch):
     mock_layer_1.thickness = MagicMock()
     mock_obj_constraint = MagicMock()
     mock_ObjConstraint = MagicMock(return_value=mock_obj_constraint)
-    monkeypatch.setattr(EasyReflectometry.sample.items.gradient_layer, 'ObjConstraint', mock_ObjConstraint)
+    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'ObjConstraint', mock_ObjConstraint)
 
     #Then
     _apply_thickness_constraints(layers)

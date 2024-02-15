@@ -1,61 +1,58 @@
 from __future__ import annotations
 
-__author__ = "github.com/arm61"
-
-from typing import List
-from typing import Union
+__author__ = 'github.com/arm61'
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 
-from EasyReflectometry.sample.items import MultiLayer
-from EasyReflectometry.sample.layer import Layer
+from . import Layer
+from . import Multilayer
 
 
-class Structure(BaseCollection):
+class Sample(BaseCollection):
     def __init__(
         self,
-        *args: List[Union[Layer, MultiLayer]],
-        name: str = "EasyStructure",
+        *args: list[Layer | Multilayer],
+        name: str = 'EasySample',
         interface=None,
         **kwargs,
     ):
         new_items = []
         for i in args:
             if issubclass(type(i), Layer):
-                new_items.append(MultiLayer.from_pars(i, name=i.name))
-            elif issubclass(type(i), MultiLayer):
+                new_items.append(Multilayer.from_pars(i, name=i.name))
+            elif issubclass(type(i), Multilayer):
                 new_items.append(i)
             else:
-                raise ValueError("The items must be either a Layer or an Item")
+                raise ValueError('The items must be either a Layer or an Assembly.')
         super().__init__(name, *new_items, **kwargs)
         self.interface = interface
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> Structure:
+    def default(cls, interface=None) -> Sample:
         """
-        Default constructor for the reflectometry structure.
+        Default constructor for the reflectometry sample.
 
-        :return: Default structure container
+        :return: Default sample container
         :rtype: Structure
         """
-        item1 = MultiLayer.default()
-        item2 = MultiLayer.default()
+        item1 = Multilayer.default()
+        item2 = Multilayer.default()
         return cls(item1, item2, interface=interface)
 
     @classmethod
     def from_pars(
         cls,
-        *args: List[Union[MultiLayer]],
-        name: str = "EasyStructure",
+        *args: list[Multilayer],
+        name: str = 'EasyStructure',
         interface=None,
-    ) -> "Structure":
+    ) -> Sample:
         """
-        Constructor of a reflectometry structure where the parameters are known.
+        Constructor of a reflectometry sample where the parameters are known.
 
-        :param args: The items in the structure
-        :type args: List[EasyReflectometry.item.Item]
+        :param args: The items in the sample
+        :type args: list[EasyReflectometry.item.Item]
         :return: Structure container
         :rtype: Structure
         """

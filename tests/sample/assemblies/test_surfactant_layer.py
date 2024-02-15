@@ -4,21 +4,11 @@ __version__ = '0.0.1'
 Tests for Item class module
 """
 
-import os
 import unittest
 
-import numpy as np
-from numpy.testing import assert_almost_equal
-from numpy.testing import assert_equal
-from numpy.testing import assert_raises
-
-from EasyReflectometry.calculators import CalculatorFactory
-from EasyReflectometry.sample.items import MultiLayer
-from EasyReflectometry.sample.items import RepeatingMultiLayer
-from EasyReflectometry.sample.items import SurfactantLayer
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.layers import Layers
-from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.assemblies.surfactant_layer import SurfactantLayer
+from EasyReflectometry.sample.elements.layers.layer import Layer
+from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestSurfactantLayer(unittest.TestCase):

@@ -1,15 +1,12 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import List
-from typing import Union
 
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.layers import Layers
-
-from .multilayer import MultiLayer
+from ..elements.layer_collection import LayerCollection
+from ..elements.layers.layer import Layer
+from .multilayer import Multilayer
 
 REPEATINGMULTILAYER_DETAILS = {
     'repetitions': {
@@ -22,12 +19,12 @@ REPEATINGMULTILAYER_DETAILS = {
 }
 
 
-class RepeatingMultiLayer(MultiLayer):
+class RepeatingMultilayer(Multilayer):
     """
-    A :py:class:`RepeatingMultiLayer` takes a :py:class:`MultiLayer` and repeats
+    A :py:class:`RepeatingMultilayer` takes a :py:class:`Multilayer` and repeats
     it a some number of times. This enables a computational efficiency in many
     reflectometry engines as the operation can be performed for a single
-    :py:class:`MultiLayer` and cheaply combined for the appropriate number of
+    :py:class:`Multilayer` and cheaply combined for the appropriate number of
     :py:attr:`repetitions`.
 
     More information about the usage of this item is available in the
@@ -38,15 +35,15 @@ class RepeatingMultiLayer(MultiLayer):
 
     def __init__(
         self,
-        layers: Union[Layers, Layer, List[Layer]],
+        layers: LayerCollection | Layer | list[Layer],
         repetitions: Parameter,
-        name: str = 'EasyRepeatingMultiLayer',
+        name: str = 'EasyRepeatingMultilayer',
         interface=None,
     ):
         if isinstance(layers, Layer):
-            layers = Layers(layers, name=layers.name)
+            layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
-            layers = Layers(*layers, name='/'.join([layer.name for layer in layers]))
+            layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
         super().__init__(layers, name, interface)
         self._add_component('repetitions', repetitions)
         self.interface = interface
@@ -54,13 +51,13 @@ class RepeatingMultiLayer(MultiLayer):
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> RepeatingMultiLayer:
+    def default(cls, interface=None) -> RepeatingMultilayer:
         """
         Default constructor for the reflectometry repeating multi layer.
 
         :return: Default repeating multi-layer container
         """
-        layers = Layers.default()
+        layers = LayerCollection.default()
         repetitions = Parameter('repetitions', **REPEATINGMULTILAYER_DETAILS['repetitions'])
         return cls(
             layers,
@@ -71,11 +68,11 @@ class RepeatingMultiLayer(MultiLayer):
     @classmethod
     def from_pars(
         cls,
-        layers: Layers,
+        layers: LayerCollection,
         repetitions: float = 1.0,
-        name: str = 'EasyRepeatingMultiLayer',
+        name: str = 'EasyRepeatingMultilayer',
         interface=None,
-    ) -> RepeatingMultiLayer:
+    ) -> RepeatingMultilayer:
         """
         Constructor of a reflectometry repeating multi layer where the
         parameters are known.

@@ -1,17 +1,13 @@
 from __future__ import annotations
 
-from typing import Union
-
-import yaml
-from easyCore.Objects.ObjectClasses import BaseObj
-
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.layers import Layers
+from ..elements.layer_collection import LayerCollection
+from ..elements.layers.layer import Layer
+from .base_assembly import BaseAssembly
 
 
-class MultiLayer(BaseObj):
+class Multilayer(BaseAssembly):
     """
-    A :py:class:`MultiLayer` consists of a series of
+    A :py:class:`Multilayer` consists of a series of
     :py:class:`EasyReflectometry.sample.layer.Layer` or
     :py:class:`EasyReflectometry.sample.layers.Layers`.
     This :py:mod:`item` will arrange the layers as slabs, one on top of another,
@@ -25,40 +21,39 @@ class MultiLayer(BaseObj):
 
     def __init__(
         self,
-        layers: Union[Layers, Layer, list[Layer]],
-        name: str = 'EasyMultiLayer',
+        layers: LayerCollection | Layer | list[Layer],
+        name: str = 'EasyMultilayer',
         interface=None,
         type: str = 'Multi-layer',
     ):
         if isinstance(layers, Layer):
-            layers = Layers(layers, name=layers.name)
+            layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
-            layers = Layers(*layers, name='/'.join([layer.name for layer in layers]))
+            layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
         self.type = type
-        super().__init__(name, layers=layers)
-        self.interface = interface
+        super().__init__(name, layers=layers, interface=interface)
 
     # Class constructors
     @classmethod
-    def default(cls, interface=None) -> MultiLayer:
+    def default(cls, interface=None) -> Multilayer:
         """
         Default constructor for a multi-layer item.
 
-        :return: MultiLayer container
-        :rtype: MultiLayer
+        :return: Multilayer container
+        :rtype: Multilayer
         """
-        layers = Layers.default()
+        layers = LayerCollection.default()
         return cls(layers, interface=interface)
 
     @classmethod
-    def from_pars(cls, layers: Layers, name: str = 'EasyMultiLayer', interface=None) -> MultiLayer:
+    def from_pars(cls, layers: LayerCollection, name: str = 'EasyMultilayer', interface=None) -> Multilayer:
         """
         Constructor of a multi-layer item where the parameters are known.
 
         :param layers: The layers in the multi-layer
         :type layers: EasyReflectometry.layers.Layers
-        :return: MultiLayer container
-        :rtype: MultiLayer
+        :return: Multilayer container
+        :rtype: Multilayer
         """
         return cls(layers=layers, name=name, interface=interface)
 
@@ -102,13 +97,6 @@ class MultiLayer(BaseObj):
             self.interface().remove_layer_from_item(self.layers[idx].uid, self.uid)
         del self.layers[idx]
 
-    @property
-    def uid(self):
-        """
-        Return a UID from the borg map
-        """
-        return self._borg.map.convert_id_to_key(self)
-
     # Representation
     @property
     def _dict_repr(self) -> dict:
@@ -120,12 +108,3 @@ class MultiLayer(BaseObj):
         if len(self.layers) == 1:
             return self.layers[0]._dict_repr
         return {self.name: self.layers._dict_repr}
-
-    def __repr__(self) -> str:
-        """
-        String representation of the layer.
-
-        :return: a string representation of the layer
-        :rtype: str
-        """
-        return yaml.dump(self._dict_repr, sort_keys=False)
