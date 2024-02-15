@@ -63,34 +63,29 @@ class GradientLayer(Multilayer):
         """
         :return: Thickness of the gradient layer
         """
-        # Layer 0 is the deciding layer as set in apply_thickness_constraints
-        return self.layers[0].thickness.raw_value * self._discretisation_elements
+        return self.top_layer.thickness.raw_value * self._discretisation_elements
 
     @thickness.setter
     def thickness(self, thickness: float) -> None:
         """
         :param thickness: Thickness of the gradient layer
         """
-        # Layer 0 is the deciding layer as set in apply_thickness_constraints
-        self.layers[0].thickness.value = thickness / self._discretisation_elements
+        self.top_layer.thickness.value = thickness / self._discretisation_elements
 
     @property
     def roughness(self) -> float:
         """
         :return: Roughness of the gradient layer
         """
-        # Layer 0 ir -1 is the deciding layer
-        return self.layers[0].roughness.raw_value
+        return self.top_layer.roughness.raw_value
 
     @roughness.setter
     def roughness(self, roughness: float) -> None:
         """
         :param roughness: Roughness of the gradient layer
         """
-        # Layer 0 is facing the beam
-        # Layer -1 is away from the beam
-        self.layers[0].roughness.value = roughness
-        self.layers[-1].roughness.value = roughness
+        self.top_layer.roughness.value = roughness
+        self.bottom_layer.roughness.value = roughness
 
     # Class constructors
     @classmethod
@@ -166,8 +161,8 @@ class GradientLayer(Multilayer):
             'type': self.type,
             'thickness': self.thickness,
             'discretisation_elements': self._discretisation_elements,
-            'initial_layer': self.layers[0]._dict_repr,
-            'final_layer': self.layers[-1]._dict_repr,
+            'top_layer': self.top_layer._dict_repr,
+            'bottom_layer': self.bottom_layer._dict_repr,
         }
 
     def as_dict(self, skip: list = None) -> dict:

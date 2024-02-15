@@ -41,14 +41,14 @@ class SurfactantLayer(Multilayer):
 
         self.interface = interface
         self.type = 'Surfactant Layer'
-        self.layers[1].area_per_molecule.enabled = True
-        apm = ObjConstraint(self.layers[1].area_per_molecule, '', self.layers[0].area_per_molecule)
-        self.layers[0].area_per_molecule.user_constraints['apm'] = apm
-        self.layers[0].area_per_molecule.user_constraints['apm'].enabled = constrain_apm
-        self.layers[1].roughness.enabled = True
-        roughness = ObjConstraint(self.layers[1].roughness, '', self.layers[0].roughness)
-        self.layers[0].roughness.user_constraints['roughness'] = roughness
-        self.layers[0].roughness.user_constraints['roughness'].enabled = conformal_roughness
+        self.bottom_layer.area_per_molecule.enabled = True
+        apm = ObjConstraint(self.bottom_layer.area_per_molecule, '', self.top_layer.area_per_molecule)
+        self.top_layer.area_per_molecule.user_constraints['apm'] = apm
+        self.top_layer.area_per_molecule.user_constraints['apm'].enabled = constrain_apm
+        self.bottom_layer.roughness.enabled = True
+        roughness = ObjConstraint(self.bottom_layer.roughness, '', self.top_layer.roughness)
+        self.top_layer.roughness.user_constraints['roughness'] = roughness
+        self.top_layer.roughness.user_constraints['roughness'].enabled = conformal_roughness
 
     # Class constructors
     @classmethod
@@ -128,7 +128,7 @@ class SurfactantLayer(Multilayer):
         """
         :return: if the area per molecule is constrained
         """
-        return self.layers[0].area_per_molecule.user_constraints['apm'].enabled
+        return self.top_layer.area_per_molecule.user_constraints['apm'].enabled
 
     @constrain_apm.setter
     def constrain_apm(self, x: bool):
@@ -138,23 +138,23 @@ class SurfactantLayer(Multilayer):
 
         :param x: Boolean description the presence of the constraint.
         """
-        self.layers[0].area_per_molecule.user_constraints['apm'].enabled = x
-        self.layers[0].area_per_molecule.value = self.layers[0].area_per_molecule.raw_value
+        self.top_layer.area_per_molecule.user_constraints['apm'].enabled = x
+        self.top_layer.area_per_molecule.value = self.top_layer.area_per_molecule.raw_value
 
     @property
     def conformal_roughness(self) -> bool:
         """
         :return: is the roughness is the same for both layers.
         """
-        return self.layers[0].roughness.user_constraints['roughness'].enabled
+        return self.top_layer.roughness.user_constraints['roughness'].enabled
 
     @conformal_roughness.setter
     def conformal_roughness(self, x: bool):
         """
         Set the roughness to be the same for both layers.
         """
-        self.layers[0].roughness.user_constraints['roughness'].enabled = x
-        self.layers[0].roughness.value = self.layers[0].roughness.raw_value
+        self.top_layer.roughness.user_constraints['roughness'].enabled = x
+        self.top_layer.roughness.value = self.top_layer.roughness.raw_value
 
     def constrain_solvent_roughness(self, solvent_roughness: Parameter):
         """
@@ -164,9 +164,9 @@ class SurfactantLayer(Multilayer):
         """
         if not self.conformal_roughness:
             raise ValueError('Roughness must be conformal to use this function.')
-        solvent_roughness.value = self.layers[0].roughness.value
-        rough = ObjConstraint(solvent_roughness, '', self.layers[0].roughness)
-        self.layers[0].roughness.user_constraints['solvent_roughness'] = rough
+        solvent_roughness.value = self.top_layer.roughness.value
+        rough = ObjConstraint(solvent_roughness, '', self.top_layer.roughness)
+        self.top_layer.roughness.user_constraints['solvent_roughness'] = rough
 
     def constain_multiple_contrast(
         self,
@@ -184,37 +184,39 @@ class SurfactantLayer(Multilayer):
         :param another_contrast: The surfactant layer to constrain
         """
         if layer1_thickness:
-            layer1_thickness_constraint = ObjConstraint(self.layers[0].thickness, '', another_contrast.layers[0].thickness)
-            another_contrast.layers[0].thickness.user_constraints[f'{another_contrast.name}'] = layer1_thickness_constraint
+            layer1_thickness_constraint = ObjConstraint(self.top_layer.thickness, '', another_contrast.top_layer.thickness)
+            another_contrast.top_layer.thickness.user_constraints[f'{another_contrast.name}'] = layer1_thickness_constraint
         if layer2_thickness:
-            layer2_thickness_constraint = ObjConstraint(self.layers[1].thickness, '', another_contrast.layers[1].thickness)
-            another_contrast.layers[1].thickness.user_constraints[f'{another_contrast.name}'] = layer2_thickness_constraint
+            layer2_thickness_constraint = ObjConstraint(
+                self.bottom_layer.thickness, '', another_contrast.bottom_layer.thickness
+            )
+            another_contrast.bottom_layer.thickness.user_constraints[f'{another_contrast.name}'] = layer2_thickness_constraint
         if layer1_area_per_molecule:
             layer1_area_per_molecule_constraint = ObjConstraint(
-                self.layers[0].area_per_molecule, '', another_contrast.layers[0].area_per_molecule
+                self.top_layer.area_per_molecule, '', another_contrast.top_layer.area_per_molecule
             )
-            another_contrast.layers[0].area_per_molecule.user_constraints[
+            another_contrast.top_layer.area_per_molecule.user_constraints[
                 f'{another_contrast.name}'
             ] = layer1_area_per_molecule_constraint
         if layer2_area_per_molecule:
             layer2_area_per_molecule_constraint = ObjConstraint(
-                self.layers[1].area_per_molecule, '', another_contrast.layers[1].area_per_molecule
+                self.bottom_layer.area_per_molecule, '', another_contrast.bottom_layer.area_per_molecule
             )
-            another_contrast.layers[1].area_per_molecule.user_constraints[
+            another_contrast.bottom_layer.area_per_molecule.user_constraints[
                 f'{another_contrast.name}'
             ] = layer2_area_per_molecule_constraint
         if layer1_fraction:
             layer1_fraction_constraint = ObjConstraint(
-                self.layers[0].material.fraction, '', another_contrast.layers[0].material.fraction
+                self.top_layer.material.fraction, '', another_contrast.top_layer.material.fraction
             )
-            another_contrast.layers[0].material.fraction.user_constraints[
+            another_contrast.top_layer.material.fraction.user_constraints[
                 f'{another_contrast.name}'
             ] = layer1_fraction_constraint
         if layer2_fraction:
             layer2_fraction_constraint = ObjConstraint(
-                self.layers[1].material.fraction, '', another_contrast.layers[1].material.fraction
+                self.bottom_layer.material.fraction, '', another_contrast.bottom_layer.material.fraction
             )
-            another_contrast.layers[1].material.fraction.user_constraints[
+            another_contrast.bottom_layer.material.fraction.user_constraints[
                 f'{another_contrast.name}'
             ] = layer2_fraction_constraint
 
@@ -226,8 +228,8 @@ class SurfactantLayer(Multilayer):
         :return: Simple dictionary
         """
         return {
-            'layer1': self.layers[0]._dict_repr,
-            'layer2': self.layers[1]._dict_repr,
+            'layer1': self.top_layer._dict_repr,
+            'layer2': self.bottom_layer._dict_repr,
             'area per molecule constrained': self.constrain_apm,
             'conformal roughness': self.conformal_roughness,
         }

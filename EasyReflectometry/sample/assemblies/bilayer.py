@@ -67,10 +67,10 @@ class Bilayer(BaseAssembly):
             thickness=thickness,
             roughness=roughness,
             name=name,
-            interface=None,
+            interface=interface,
         )
 
-    @LayerCollection.top_layer.setter
+    @BaseAssembly.top_layer.setter
     def top_layer(self, layer: Layer) -> None:
         """
         Setter for the top layer
@@ -78,7 +78,7 @@ class Bilayer(BaseAssembly):
         self.top_layer = layer
         self.top_layer.thickness = self.bottom_layer.thickness
 
-    @LayerCollection.bottom_layer.setter
+    @BaseAssembly.bottom_layer.setter
     def bottom_layer(self, layer: Layer) -> None:
         """
         Setter for the bottom layer

@@ -48,7 +48,7 @@ class LayerCollection(BaseElementCollection):
 
     # Representation
     @property
-    def _dict_repr(self) -> dict:
+    def _dict_repr(self) -> dict[str, list[dict]]:
         """
         A simplified dict representation.
 

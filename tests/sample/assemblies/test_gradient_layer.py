@@ -94,7 +94,7 @@ class TestGradientLayer():
 
     def test_repr(self, gradient_layer):
         # When Then Expect
-        expected_str = "type: Gradient-layer\nthickness: 1.0\ndiscretisation_elements: 10\ninitial_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nfinal_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"
+        expected_str = "type: Gradient-layer\nthickness: 1.0\ndiscretisation_elements: 10\ntop_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nbottom_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"
         assert gradient_layer.__repr__() == expected_str
 
     def test_dict_round_trip(self, gradient_layer):
