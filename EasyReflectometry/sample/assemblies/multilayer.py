@@ -30,8 +30,7 @@ class Multilayer(BaseAssembly):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
-        self.type = type
-        super().__init__(name, layers=layers, interface=interface)
+        super().__init__(name, layers=layers, type=type, interface=interface)
 
     # Class constructors
     @classmethod

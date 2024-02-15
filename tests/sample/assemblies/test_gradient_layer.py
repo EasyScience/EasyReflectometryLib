@@ -16,7 +16,7 @@ from EasyReflectometry.sample.elements.materials.material import Material
 class TestGradientLayer():
 
     @pytest.fixture
-    def gradient_layer(self):
+    def gradient_layer(self) -> GradientLayer:
         self.init = Material.from_pars(10.0, -10.0, 'Material_1')
         self.final = Material.from_pars(0.0, 0.0, 'Material_2')
 
@@ -34,10 +34,9 @@ class TestGradientLayer():
         # When Then Expect
         assert len(gradient_layer.layers) == 10 
         assert gradient_layer.name, 'Test'
-        assert gradient_layer.type, 'Gradient-layer'
+        assert gradient_layer._type, 'Gradient-layer'
         assert gradient_layer.interface is None
         assert gradient_layer.thickness == 1.0
-        assert gradient_layer.layers.name == '0/1/2/3/4/5/6/7/8/9'
         assert gradient_layer.layers[0].material.sld.raw_value == 10.0
         assert gradient_layer.layers[5].material.sld.raw_value == 5.0
         assert gradient_layer.layers[0].thickness.raw_value == 0.1
@@ -50,10 +49,9 @@ class TestGradientLayer():
         
         # Expect
         assert result.name == 'Air-Deuterium'
-        assert result.type, 'Gradient-layer'
+        assert result._type, 'Gradient-layer'
         assert result.interface is None
         assert len(result.layers) == 10
-        assert result.layers.name == '0/1/2/3/4/5/6/7/8/9'
 
     def test_from_pars(self):
         # When
@@ -72,10 +70,9 @@ class TestGradientLayer():
 
         # Expect
         assert result.name, 'gradientItem'
-        assert result.type, 'Gradient-layer'
+        assert result._type, 'Gradient-layer'
         assert result.interface is None
         assert len(result.layers) == 5
-        assert result.layers.name == '0/1/2/3/4'
 
     def test_add_layer(self, gradient_layer):
         # When Then Expect
@@ -173,15 +170,17 @@ def test_prepare_gradient_layers(monkeypatch):
     mock_material_1 = MagicMock()
     mock_material_2 = MagicMock()
     mock_Layer = MagicMock()
+    mock_LayerCollection = MagicMock()
     mock_Material = MagicMock()
     mock_Material.from_pars = MagicMock(return_value='Material_from_pars')
     mock_linear_gradient = MagicMock(return_value=[1.0, 2.0, 3.0])
     monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, '_linear_gradient', mock_linear_gradient)
     monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'Layer', mock_Layer)
     monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'Material', mock_Material)
+    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'LayerCollection', mock_LayerCollection)
 
     # Then
-    result = _prepare_gradient_layers(mock_material_1, mock_material_2, 3, None)
+    _prepare_gradient_layers(mock_material_1, mock_material_2, 3, None)
 
     # When
     assert mock_Material.from_pars.call_count == 3

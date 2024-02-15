@@ -15,11 +15,15 @@ class BaseAssembly(BaseObj):
     def __init__(
         self,
         name: str,
+        type: str,
         interface,
         **layers: LayerCollection,
     ):
         super().__init__(name=name, **layers)
+
+        # interface is define in the base object
         self.interface = interface
+        self._type = type
 
     @abstractmethod
     def default(cls, interface=None) -> Any:

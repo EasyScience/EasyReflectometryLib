@@ -2,13 +2,14 @@ from __future__ import annotations
 
 from numpy import arange
 
+from ..elements.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
 from ..elements.materials.material import Material
+from .base_assembly import BaseAssembly
 from .base_assembly import apply_thickness_constraints
-from .multilayer import Multilayer
 
 
-class GradientLayer(Multilayer):
+class GradientLayer(BaseAssembly):
     """
     A :py:class:`GradientLayer` constructs a gradient multilayer for the
     provided initial and final material.
@@ -158,7 +159,7 @@ class GradientLayer(Multilayer):
         :return: Simple dictionary
         """
         return {
-            'type': self.type,
+            'type': self._type,
             'thickness': self.thickness,
             'discretisation_elements': self._discretisation_elements,
             'top_layer': self.top_layer._dict_repr,
@@ -193,8 +194,11 @@ def _linear_gradient(
 
 
 def _prepare_gradient_layers(
-    initial_material: Material, final_material: Material, discretisation_elements: int, interface=None
-) -> list[Layer]:
+    initial_material: Material,
+    final_material: Material,
+    discretisation_elements: int,
+    interface=None,
+) -> LayerCollection:
     gradient_sld = _linear_gradient(
         init_value=initial_material.sld.raw_value,
         final_value=final_material.sld.raw_value,
@@ -215,4 +219,4 @@ def _prepare_gradient_layers(
             interface=interface,
         )
         gradient_layers.append(layer)
-    return gradient_layers
+    return LayerCollection(gradient_layers)
