@@ -3,7 +3,6 @@ from __future__ import annotations
 __author__ = 'github.com/arm61'
 
 from copy import deepcopy
-from typing import ClassVar
 
 from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter
@@ -35,8 +34,9 @@ LAYER_DETAILS = {
 
 class Layer(BaseElement):
     # Added in super().__init__
-    thickness: ClassVar[Parameter]
-    roughness: ClassVar[Parameter]
+    material: Material
+    thickness: Parameter
+    roughness: Parameter
 
     def __init__(
         self,

@@ -46,7 +46,12 @@ class Multilayer(BaseAssembly):
         return cls(layers, interface=interface)
 
     @classmethod
-    def from_pars(cls, layers: LayerCollection, name: str = 'EasyMultilayer', interface=None) -> Multilayer:
+    def from_pars(
+        cls,
+        layers: LayerCollection,
+        name: str = 'EasyMultilayer',
+        interface=None,
+    ) -> Multilayer:
         """
         Constructor of a multi-layer item where the parameters are known.
 
@@ -55,9 +60,13 @@ class Multilayer(BaseAssembly):
         :return: Multilayer container
         :rtype: Multilayer
         """
-        return cls(layers=layers, name=name, interface=interface)
+        return cls(
+            layers=layers,
+            name=name,
+            interface=interface,
+        )
 
-    def add_layer(self, *layers):
+    def add_layer(self, *layers: tuple[Layer]) -> None:
         """
         Add a layer to the item.
 
@@ -70,7 +79,7 @@ class Multilayer(BaseAssembly):
                 if self.interface is not None:
                     self.interface().add_layer_to_item(arg.uid, self.uid)
 
-    def duplicate_layer(self, idx):
+    def duplicate_layer(self, idx: int) -> None:
         """
         Duplicate a given layer.
 
@@ -86,7 +95,7 @@ class Multilayer(BaseAssembly):
         )
         self.add_layer(duplicate_layer)
 
-    def remove_layer(self, idx):
+    def remove_layer(self, idx: int) -> None:
         """
         Remove a layer from the item.
 

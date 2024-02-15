@@ -2,11 +2,16 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
+from easyCore.Fitting.Constraints import ObjConstraint
+
 from .base_element_collection import BaseElementCollection
 from .layers.layer import Layer
 
 
 class LayerCollection(BaseElementCollection):
+    # Added in super().__init__
+    layers: list[Layer]
+
     def __init__(
         self,
         *layers: tuple[Layer],
@@ -52,3 +57,48 @@ class LayerCollection(BaseElementCollection):
         :return: Simple dictionary
         """
         return {self.name: [i._dict_repr for i in self]}
+
+    @property
+    def top_layer(self) -> Layer:
+        """
+        :return: The top layer
+        """
+        return self.layers[0]
+
+    @top_layer.setter
+    def top_layer(self, layer: Layer) -> None:
+        """
+        Setter for the top layer
+        """
+        self.layers[0] = layer
+
+    @property
+    def bottom_layer(self) -> Layer:
+        """
+        :return: The bottom layer
+        """
+        return self.layers[-1]
+
+    @bottom_layer.setter
+    def bottom_layer(self, layer: Layer) -> None:
+        """
+        Setter for the bottom layer
+        """
+        self.layers[-1] = layer
+
+
+def apply_thickness_constraints(layers: list[Layer]) -> None:
+    """
+    Add thickness constraint, layer 0 is the deciding layer
+    """
+    for i in range(1, len(layers)):
+        layers[i].thickness.enabled = True
+        layer_constraint = ObjConstraint(
+            dependent_obj=layers[i].thickness,
+            operator='',
+            independent_obj=layers[0].thickness,
+        )
+        layers[0].thickness.user_constraints[f'thickness_{i}'] = layer_constraint
+        layers[0].thickness.user_constraints[f'thickness_{i}'].enabled = True
+
+    layers[0].thickness.enabled = True

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from easyCore.Fitting.Constraints import ObjConstraint
 from numpy import arange
 
+from ..elements.layer_collection import apply_thickness_constraints
 from ..elements.layers.layer import Layer
 from ..elements.materials.material import Material
 from .multilayer import Multilayer
@@ -53,7 +53,7 @@ class GradientLayer(Multilayer):
             type='Gradient-layer',
         )
 
-        _apply_thickness_constraints(self.layers)
+        apply_thickness_constraints(self.layers)
         # Set the thickness and roughness properties
         self.thickness = thickness
         self.roughness = roughness
@@ -63,7 +63,7 @@ class GradientLayer(Multilayer):
         """
         :return: Thickness of the gradient layer
         """
-        # Layer 0 is the deciding layer as set in _apply_thickness_constraints
+        # Layer 0 is the deciding layer as set in apply_thickness_constraints
         return self.layers[0].thickness.raw_value * self._discretisation_elements
 
     @thickness.setter
@@ -71,7 +71,7 @@ class GradientLayer(Multilayer):
         """
         :param thickness: Thickness of the gradient layer
         """
-        # Layer 0 is the deciding layer as set in _apply_thickness_constraints
+        # Layer 0 is the deciding layer as set in apply_thickness_constraints
         self.layers[0].thickness.value = thickness / self._discretisation_elements
 
     @property
@@ -221,18 +221,3 @@ def _prepare_gradient_layers(
         )
         gradient_layers.append(layer)
     return gradient_layers
-
-
-def _apply_thickness_constraints(layers) -> None:
-    # Add thickness constraint, layer 0 is the deciding layer
-    for i in range(1, len(layers)):
-        layers[i].thickness.enabled = True
-        layer_constraint = ObjConstraint(
-            dependent_obj=layers[i].thickness,
-            operator='',
-            independent_obj=layers[0].thickness,
-        )
-        layers[0].thickness.user_constraints[f'thickness_{i}'] = layer_constraint
-        layers[0].thickness.user_constraints[f'thickness_{i}'].enabled = True
-
-    layers[0].thickness.enabled = True

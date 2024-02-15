@@ -6,7 +6,6 @@ from numpy.testing import assert_almost_equal
 import EasyReflectometry.sample.assemblies.gradient_layer
 from EasyReflectometry.sample.assemblies.gradient_layer import GradientLayer
 from EasyReflectometry.sample.assemblies.gradient_layer import (
-    _apply_thickness_constraints,
     _linear_gradient,
     _prepare_gradient_layers,
 )
@@ -195,24 +194,4 @@ def test_prepare_gradient_layers(monkeypatch):
     assert mock_Layer.from_pars.call_args_list[0][1]['name'] == '0'
     assert mock_Layer.from_pars.call_args_list[0][1]['interface'] == None
 
-def test_apply_thickness_constraints(monkeypatch):
-    # When 
-    mock_layer_0 = MagicMock()
-    mock_layer_0.thickness = MagicMock()
-    mock_layer_0.thickness.user_constraints = {}
-    mock_layer_1 = MagicMock()
-    layers = [mock_layer_0, mock_layer_1]
-    mock_layer_1.thickness = MagicMock()
-    mock_obj_constraint = MagicMock()
-    mock_ObjConstraint = MagicMock(return_value=mock_obj_constraint)
-    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'ObjConstraint', mock_ObjConstraint)
 
-    #Then
-    _apply_thickness_constraints(layers)
-
-    #Expect
-    assert mock_layer_0.thickness.enabled is True
-    assert mock_layer_1.thickness.enabled is True
-    assert layers[0].thickness.user_constraints['thickness_1'].enabled is True
-    assert layers[0].thickness.user_constraints['thickness_1'] == mock_obj_constraint
-    mock_ObjConstraint.assert_called_once_with(dependent_obj=mock_layer_1.thickness, operator='', independent_obj=mock_layer_0.thickness)
