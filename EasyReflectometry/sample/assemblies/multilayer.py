@@ -115,5 +115,5 @@ class Multilayer(BaseAssembly):
         :return: Simple dictionary
         """
         if len(self.layers) == 1:
-            return self.layers[0]._dict_repr
+            return self.top_layer._dict_repr
         return {self.name: self.layers._dict_repr}

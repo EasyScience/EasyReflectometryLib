@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from numpy import arange
 
-from ..elements.layer_collection import apply_thickness_constraints
 from ..elements.layers.layer import Layer
 from ..elements.materials.material import Material
+from .base_assembly import apply_thickness_constraints
 from .multilayer import Multilayer
 
 

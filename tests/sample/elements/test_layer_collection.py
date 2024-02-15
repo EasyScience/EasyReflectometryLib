@@ -5,16 +5,12 @@ Tests for Layers class module
 """
 
 import unittest
-from unittest.mock import MagicMock
 
 from numpy.testing import assert_equal
-
-import EasyReflectometry.sample.elements.layer_collection
 
 from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
 from EasyReflectometry.sample.elements.layers.layer import Layer
 from EasyReflectometry.sample.elements.layer_collection import LayerCollection
-from EasyReflectometry.sample.elements.layer_collection import apply_thickness_constraints
 from EasyReflectometry.sample.elements.materials.material import Material
 
 
@@ -86,26 +82,3 @@ class TestLayerCollection(unittest.TestCase):
         p = LayerCollection.default()
         q = LayerCollection.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
-
-
-def test_apply_thickness_constraints(monkeypatch):
-    # When 
-    mock_layer_0 = MagicMock()
-    mock_layer_0.thickness = MagicMock()
-    mock_layer_0.thickness.user_constraints = {}
-    mock_layer_1 = MagicMock()
-    layers = [mock_layer_0, mock_layer_1]
-    mock_layer_1.thickness = MagicMock()
-    mock_obj_constraint = MagicMock()
-    mock_ObjConstraint = MagicMock(return_value=mock_obj_constraint)
-    monkeypatch.setattr(EasyReflectometry.sample.elements.layer_collection, 'ObjConstraint', mock_ObjConstraint)
-
-    #Then
-    apply_thickness_constraints(layers)
-
-    #Expect
-    assert mock_layer_0.thickness.enabled is True
-    assert mock_layer_1.thickness.enabled is True
-    assert layers[0].thickness.user_constraints['thickness_1'].enabled is True
-    assert layers[0].thickness.user_constraints['thickness_1'] == mock_obj_constraint
-    mock_ObjConstraint.assert_called_once_with(dependent_obj=mock_layer_1.thickness, operator='', independent_obj=mock_layer_0.thickness)

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from ..layer_collection import LayerCollection
-from ..layer_collection import apply_thickness_constraints
-from .layer import Layer
+from ..elements.layer_collection import LayerCollection
+from ..elements.layers.layer import Layer
+from .base_assembly import BaseAssembly
+from .base_assembly import apply_thickness_constraints
 
 
-class Bilayer(LayerCollection):
+class Bilayer(BaseAssembly):
     def __init__(
         self,
         top_layer: Layer,
