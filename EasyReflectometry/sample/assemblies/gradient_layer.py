@@ -6,7 +6,6 @@ from ..elements.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
 from ..elements.materials.material import Material
 from .base_assembly import BaseAssembly
-from .base_assembly import apply_thickness_constraints
 
 
 class GradientLayer(BaseAssembly):
@@ -54,7 +53,8 @@ class GradientLayer(BaseAssembly):
             type='Gradient-layer',
         )
 
-        apply_thickness_constraints(self.layers)
+        self._setup_thickness_constraints()
+        self._enable_thickness_constaints()
         # Set the thickness and roughness properties
         self.thickness = thickness
         self.roughness = roughness

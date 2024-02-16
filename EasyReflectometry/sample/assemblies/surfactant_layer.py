@@ -6,10 +6,10 @@ from easyCore.Objects.ObjectClasses import Parameter
 from ..elements.layer_collection import LayerCollection
 from ..elements.layers.layer_apm import LayerApm
 from ..elements.materials.material import Material
-from .multilayer import Multilayer
+from .base_assembly import BaseAssembly
 
 
-class SurfactantLayer(Multilayer):
+class SurfactantLayer(BaseAssembly):
     """
     A :py:class:`SurfactantLayer` constructs a series of layers representing the
     head and tail groups of a surfactant. This item allows the definition of a
@@ -37,18 +37,26 @@ class SurfactantLayer(Multilayer):
         :param name: Name for surfactant layer
         """
         surfactant = LayerCollection(layers[0], layers[1], name=name)
-        super().__init__(surfactant, name, interface)
+        super().__init__(
+            name=name,
+            type='Surfactant Layer',
+            layers=surfactant,
+            interface=interface,
+        )
 
         self.interface = interface
-        self.type = 'Surfactant Layer'
         self.bottom_layer.area_per_molecule.enabled = True
         apm = ObjConstraint(self.bottom_layer.area_per_molecule, '', self.top_layer.area_per_molecule)
         self.top_layer.area_per_molecule.user_constraints['apm'] = apm
         self.top_layer.area_per_molecule.user_constraints['apm'].enabled = constrain_apm
-        self.bottom_layer.roughness.enabled = True
-        roughness = ObjConstraint(self.bottom_layer.roughness, '', self.top_layer.roughness)
-        self.top_layer.roughness.user_constraints['roughness'] = roughness
-        self.top_layer.roughness.user_constraints['roughness'].enabled = conformal_roughness
+
+        self._setup_roughness_constraints()
+        if conformal_roughness:
+            self._enable_roughness_constaints()
+        # self.bottom_layer.roughness.enabled = True
+        # roughness = ObjConstraint(self.bottom_layer.roughness, '', self.top_layer.roughness)
+        # self.top_layer.roughness.user_constraints['roughness'] = roughness
+        # self.top_layer.roughness.user_constraints['roughness'].enabled = conformal_roughness
 
     # Class constructors
     @classmethod
@@ -146,15 +154,18 @@ class SurfactantLayer(Multilayer):
         """
         :return: is the roughness is the same for both layers.
         """
-        return self.top_layer.roughness.user_constraints['roughness'].enabled
+        return self.top_layer.roughness.user_constraints['roughness_1'].enabled
 
     @conformal_roughness.setter
     def conformal_roughness(self, x: bool):
         """
         Set the roughness to be the same for both layers.
         """
-        self.top_layer.roughness.user_constraints['roughness'].enabled = x
-        self.top_layer.roughness.value = self.top_layer.roughness.raw_value
+        if x:
+            self._enable_roughness_constaints()
+            self.top_layer.roughness.value = self.top_layer.roughness.raw_value
+        else:
+            self._disable_roughness_constaints()
 
     def constrain_solvent_roughness(self, solvent_roughness: Parameter):
         """

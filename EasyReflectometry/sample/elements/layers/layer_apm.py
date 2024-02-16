@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import ClassVar
 
 from easyCore import np
 from easyCore.Fitting.Constraints import FunctionalConstraint
@@ -76,12 +75,12 @@ class LayerApm(Layer):
 
     """
 
-    solvation: ClassVar[Parameter]
+    solvation: Parameter
     # Added in __init__
-    area_per_molecule: ClassVar[Parameter]
-    scattering_length_real: ClassVar[Parameter]
-    scattering_length_imag: ClassVar[Parameter]
-    roughness: ClassVar[Parameter]
+    area_per_molecule: Parameter
+    scattering_length_real: Parameter
+    scattering_length_imag: Parameter
+    roughness: Parameter
 
     # Passed in __init__
     material: MaterialMixture

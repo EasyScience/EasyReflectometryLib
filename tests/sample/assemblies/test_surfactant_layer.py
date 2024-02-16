@@ -20,7 +20,7 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.layers[1].name == 'DPPC Head'
         assert p.layers[0].chemical_structure == 'C32D64'
         assert p.layers[1].chemical_structure == 'C10H18NO8P'
-        assert p.type == 'Surfactant Layer'
+        assert p._type == 'Surfactant Layer'
 
     def test_from_pars(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
@@ -165,26 +165,26 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.as_data_dict() == q.as_data_dict()
 
 
-    def test_dict_round_trip_apm(self):
+    def test_dict_round_trip_apm_constraint_enabled(self):
         p = SurfactantLayer.default()
         p.constrain_apm = True
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
     
-    def test_dict_round_trip_apm2(self):
+    def test_dict_round_trip_apm_constraint_disabled(self):
         p = SurfactantLayer.default()
         p.constrain_apm = True
         p.constrain_apm = False
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
 
-    def test_dict_round_trip_roughness(self):
+    def test_dict_round_trip_roughness_constraint_enabled(self):
         p = SurfactantLayer.default()
         p.conformal_roughness = True
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
 
-    def test_dict_round_trip_roughness2(self):
+    def test_dict_round_trip_roughness_constraint_disabled(self):
         p = SurfactantLayer.default()
         p.conformal_roughness = True
         p.conformal_roughness = False

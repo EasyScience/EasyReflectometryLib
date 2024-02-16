@@ -24,6 +24,8 @@ class BaseAssembly(BaseObj):
         # interface is define in the base object
         self.interface = interface
         self._type = type
+        self._roughness_constraints_setup = False
+        self._thickness_constraints_setup = False
 
     @abstractmethod
     def default(cls, interface=None) -> Any:
@@ -77,19 +79,80 @@ class BaseAssembly(BaseObj):
         """
         self.layers[-1] = layer
 
+    def _setup_thickness_constraints(self) -> None:
+        """
+        Setup thickness constraint, top layer is the deciding layer
+        """
+        for i in range(1, len(self.layers)):
+            layer_constraint = ObjConstraint(
+                dependent_obj=self.layers[i].thickness,
+                operator='',
+                independent_obj=self.top_layer.thickness,
+            )
+            self.top_layer.thickness.user_constraints[f'thickness_{i}'] = layer_constraint
+            self.top_layer.thickness.user_constraints[f'thickness_{i}'].enabled = False
+        self._thickness_constraints_setup = True
 
-def apply_thickness_constraints(layers: list[Layer]) -> None:
-    """
-    Add thickness constraint, layer 0 is the deciding layer
-    """
-    for i in range(1, len(layers)):
-        layers[i].thickness.enabled = True
-        layer_constraint = ObjConstraint(
-            dependent_obj=layers[i].thickness,
-            operator='',
-            independent_obj=layers[0].thickness,
-        )
-        layers[0].thickness.user_constraints[f'thickness_{i}'] = layer_constraint
-        layers[0].thickness.user_constraints[f'thickness_{i}'].enabled = True
+    def _enable_thickness_constaints(self):
+        """
+        Enable the thickness constraint.
+        """
+        if self._thickness_constraints_setup:
+            # Make sure that the thickness constraint is enabled
+            for i in range(1, len(self.layers)):
+                self.top_layer.thickness.user_constraints[f'thickness_{i}'].enabled = True
+            # Make sure that the thickness parameter is enabled
+            for i in range(len(self.layers)):
+                self.layers[i].thickness.enabled = True
+            self.top_layer.thickness.value = self.top_layer.thickness.raw_value
+        else:
+            raise Exception('Roughness constraints not setup')
 
-    layers[0].thickness.enabled = True
+    def _disable_thickness_constaints(self):
+        """
+        Disable the thickness constraint.
+        """
+        if self._thickness_constraints_setup:
+            for i in range(1, len(self.layers)):
+                self.top_layer.thickness.user_constraints[f'thickness_{i}'].enabled = False
+        else:
+            raise Exception('Roughness constraints not setup')
+
+    def _setup_roughness_constraints(self) -> None:
+        """
+        Setup roughness constraint, top layer is the deciding layer
+        """
+        for i in range(1, len(self.layers)):
+            layer_constraint = ObjConstraint(
+                dependent_obj=self.layers[i].roughness,
+                operator='',
+                independent_obj=self.top_layer.roughness,
+            )
+            self.top_layer.roughness.user_constraints[f'roughness_{i}'] = layer_constraint
+            self.top_layer.roughness.user_constraints[f'roughness_{i}'].enabled = False
+        self._roughness_constraints_setup = True
+
+    def _enable_roughness_constaints(self):
+        """
+        Enable the roughness constraint.
+        """
+        if self._roughness_constraints_setup:
+            # Make sure that the roughness constraint is enabled
+            for i in range(1, len(self.layers)):
+                self.top_layer.roughness.user_constraints[f'roughness_{i}'].enabled = True
+            # Make sure that the roughness parameter is enabled
+            for i in range(len(self.layers)):
+                self.layers[i].roughness.enabled = True
+            self.top_layer.roughness.value = self.top_layer.roughness.raw_value
+        else:
+            raise Exception('Roughness constraints not setup')
+
+    def _disable_roughness_constaints(self):
+        """
+        Disable the roughness constraint.
+        """
+        if self._roughness_constraints_setup:
+            for i in range(1, len(self.layers)):
+                self.top_layer.roughness.user_constraints[f'roughness_{i}'].enabled = False
+        else:
+            raise Exception('Roughness constraints not setup')

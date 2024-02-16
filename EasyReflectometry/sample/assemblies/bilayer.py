@@ -3,7 +3,7 @@ from __future__ import annotations
 from ..elements.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
 from .base_assembly import BaseAssembly
-from .base_assembly import apply_thickness_constraints
+from .base_assembly import setup_thickness_constraints
 
 
 class Bilayer(BaseAssembly):
@@ -22,7 +22,7 @@ class Bilayer(BaseAssembly):
             interface=interface,
         )
 
-        apply_thickness_constraints(self.layers)
+        setup_thickness_constraints(self.layers)
         self.thickness = thickness
         self.roughness = roughness
 

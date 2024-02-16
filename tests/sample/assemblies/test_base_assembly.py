@@ -1,27 +1,128 @@
+import pytest
 from unittest.mock import MagicMock
 
 import EasyReflectometry.sample.assemblies.base_assembly
-from EasyReflectometry.sample.assemblies.base_assembly import apply_thickness_constraints
+from EasyReflectometry.sample.assemblies.base_assembly import BaseAssembly
 
+class TestBaseAssembly():
 
-def test_apply_thickness_constraints(monkeypatch):
-    # When 
-    mock_layer_0 = MagicMock()
-    mock_layer_0.thickness = MagicMock()
-    mock_layer_0.thickness.user_constraints = {}
-    mock_layer_1 = MagicMock()
-    layers = [mock_layer_0, mock_layer_1]
-    mock_layer_1.thickness = MagicMock()
-    mock_obj_constraint = MagicMock()
-    mock_ObjConstraint = MagicMock(return_value=mock_obj_constraint)
-    monkeypatch.setattr(EasyReflectometry.sample.assemblies.base_assembly, 'ObjConstraint', mock_ObjConstraint)
+    @pytest.fixture
+    def base_assembly(self) -> BaseAssembly:
+        self.mock_layer_0 = MagicMock()
+        self.mock_layer_1 = MagicMock()
+        self.mock_layers = [self.mock_layer_0, self.mock_layer_1]
+        self.mock_interface = MagicMock()
+        BaseAssembly.__abstractmethods__=set()
+        return BaseAssembly(
+            name='name',
+            type='type',
+            interface=self.mock_interface,
+            layers=self.mock_layers
+        )
+    
+    def test_init(self, base_assembly):
+        # When Then Expect
+        assert base_assembly.name == 'name'
+        assert base_assembly._type == 'type'
+        assert base_assembly.interface == self.mock_interface
+        assert base_assembly.layers == self.mock_layers
+        assert base_assembly._roughness_constraints_setup is False
+        assert base_assembly._thickness_constraints_setup is False
 
-    #Then
-    apply_thickness_constraints(layers)
+    def test_setup_thickness_constraints(self, base_assembly, monkeypatch):
+        # When
+        self.mock_layer_0.thickness = MagicMock()
+        self.mock_layer_0.thickness.user_constraints = {}
+        self.mock_layer_1.thickness = MagicMock()
+        mock_obj_constraint = MagicMock()
+        mock_ObjConstraint = MagicMock(return_value=mock_obj_constraint)
+        monkeypatch.setattr(EasyReflectometry.sample.assemblies.base_assembly, 'ObjConstraint', mock_ObjConstraint)
 
-    #Expect
-    assert mock_layer_0.thickness.enabled is True
-    assert mock_layer_1.thickness.enabled is True
-    assert layers[0].thickness.user_constraints['thickness_1'].enabled is True
-    assert layers[0].thickness.user_constraints['thickness_1'] == mock_obj_constraint
-    mock_ObjConstraint.assert_called_once_with(dependent_obj=mock_layer_1.thickness, operator='', independent_obj=mock_layer_0.thickness)
+        #Then
+        base_assembly._setup_thickness_constraints()
+
+        #Expect
+        assert self.mock_layers[0].thickness.user_constraints['thickness_1'].enabled is False
+        assert self.mock_layers[0].thickness.user_constraints['thickness_1'] == mock_obj_constraint
+        mock_ObjConstraint.assert_called_once_with(dependent_obj=self.mock_layer_1.thickness, operator='', independent_obj=self.mock_layer_0.thickness)
+        assert base_assembly._thickness_constraints_setup is True
+
+    def test_enable_thickness_constraints(self, base_assembly):
+        # When
+        base_assembly._thickness_constraints_setup = True
+
+        #Then
+        base_assembly._enable_thickness_constaints()
+
+        #Expect
+        assert self.mock_layer_0.thickness.user_constraints['thickness_1'].enabled is True
+        assert self.mock_layer_0.thickness.value == self.mock_layer_0.thickness.raw_value
+        assert self.mock_layer_0.thickness.enabled is True
+        assert self.mock_layer_1.thickness.enabled is True
+
+    def test_enable_thickness_constraints_exception(self, base_assembly):
+        # When
+        base_assembly._thickness_constraints_setup = False
+
+        #Then
+        with pytest.raises(Exception):
+            base_assembly._enable_thickness_constaints()
+
+    def test_disable_thickness_constraints(self, base_assembly):
+        # When
+        base_assembly._thickness_constraints_setup = True
+
+        #Then
+        base_assembly._disable_thickness_constaints()
+
+        #Expect
+        assert self.mock_layer_0.thickness.user_constraints['thickness_1'].enabled is False
+
+    def test_setup_roughness_constraints(self, base_assembly, monkeypatch):
+        # When
+        self.mock_layer_0.roughness = MagicMock()
+        self.mock_layer_0.roughness.user_constraints = {}
+        self.mock_layer_1.roughness = MagicMock()
+        mock_obj_constraint = MagicMock()
+        mock_ObjConstraint = MagicMock(return_value=mock_obj_constraint)
+        monkeypatch.setattr(EasyReflectometry.sample.assemblies.base_assembly, 'ObjConstraint', mock_ObjConstraint)
+
+        #Then
+        base_assembly._setup_roughness_constraints()
+
+        #Expect
+        assert self.mock_layers[0].roughness.user_constraints['roughness_1'].enabled is False
+        assert self.mock_layers[0].roughness.user_constraints['roughness_1'] == mock_obj_constraint
+        mock_ObjConstraint.assert_called_once_with(dependent_obj=self.mock_layer_1.roughness, operator='', independent_obj=self.mock_layer_0.roughness)
+        assert base_assembly._roughness_constraints_setup is True
+
+    def test_enable_roughness_constraints(self, base_assembly):
+        # When
+        base_assembly._roughness_constraints_setup = True
+
+        #Then
+        base_assembly._enable_roughness_constaints()
+
+        #Expect
+        assert self.mock_layer_0.roughness.user_constraints['roughness_1'].enabled is True
+        assert self.mock_layer_0.roughness.value == self.mock_layer_0.roughness.raw_value
+        assert self.mock_layer_0.roughness.enabled is True
+        assert self.mock_layer_1.roughness.enabled is True
+
+    def test_enable_roughness_constraints_exception(self, base_assembly):
+        # When
+        base_assembly._roughness_constraints_setup = False
+
+        #Then
+        with pytest.raises(Exception):
+            base_assembly._enable_roughness_constaints(True)
+
+    def test_disable_roughness_constraints(self, base_assembly):
+        # When
+        base_assembly._roughness_constraints_setup = True
+
+        #Then
+        base_assembly._disable_roughness_constaints()
+
+        #Expect
+        assert self.mock_layer_0.roughness.user_constraints['roughness_1'].enabled is False
