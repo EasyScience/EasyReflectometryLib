@@ -101,7 +101,7 @@ class TestSurfactantLayer(unittest.TestCase):
     def test_dict_repr(self):
         p = SurfactantLayer.default()
         assert p._dict_repr == {
-            'layer1': {
+            'top_layer': {
                 'DPPC Tail': {
                     'material': {
                         'C32D64/Air': {
@@ -128,7 +128,7 @@ class TestSurfactantLayer(unittest.TestCase):
                 'chemical_structure': 'C32D64',
                 'area_per_molecule': '48.2 angstrom ** 2'
             },
-            'layer2': {
+            'bottom_layer': {
                 'DPPC Head': {
                     'material': {
                         'C10H18NO8P/D2O': {
