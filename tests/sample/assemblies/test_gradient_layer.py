@@ -74,21 +74,6 @@ class TestGradientLayer():
         assert result.interface is None
         assert len(result.layers) == 5
 
-    def test_add_layer(self, gradient_layer):
-        # When Then Expect
-        with pytest.raises(NotImplementedError, match=r".* add .*"):
-            gradient_layer.add_layer(Layer.default())
-
-    def test_duplicate_layer(self, gradient_layer):
-        # When Then Expect
-        with pytest.raises(NotImplementedError, match=r".* duplicate .*"):
-            gradient_layer.duplicate_layer(1)
-
-    def test_remove_layer(self, gradient_layer):
-        # When Then Expect
-        with pytest.raises(NotImplementedError, match=r".* remove .*"):
-            gradient_layer.remove_layer(1)
-
     def test_repr(self, gradient_layer):
         # When Then Expect
         expected_str = "type: Gradient-layer\nthickness: 1.0\ndiscretisation_elements: 10\ntop_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nbottom_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"

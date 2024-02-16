@@ -55,6 +55,9 @@ class GradientLayer(BaseAssembly):
 
         self._setup_thickness_constraints()
         self._enable_thickness_constaints()
+        self._setup_roughness_constraints()
+        self._enable_roughness_constaints()
+
         # Set the thickness and roughness properties
         self.thickness = thickness
         self.roughness = roughness
@@ -86,7 +89,6 @@ class GradientLayer(BaseAssembly):
         :param roughness: Roughness of the gradient layer
         """
         self.top_layer.roughness.value = roughness
-        self.bottom_layer.roughness.value = roughness
 
     # Class constructors
     @classmethod
@@ -141,15 +143,6 @@ class GradientLayer(BaseAssembly):
             name=name,
             interface=interface,
         )
-
-    def add_layer(self, layer: Layer) -> None:
-        raise NotImplementedError('Cannot add layers to a gradient layer.')
-
-    def duplicate_layer(self, idx: int) -> None:
-        raise NotImplementedError('Cannot duplicate a layer for a gradient layer.')
-
-    def remove_layer(self, idx: int) -> None:
-        raise NotImplementedError('Cannot remove layer from a gradient layer.')
 
     @property
     def _dict_repr(self) -> dict[str, str]:
