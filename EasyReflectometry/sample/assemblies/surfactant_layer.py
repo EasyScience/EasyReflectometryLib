@@ -72,60 +72,60 @@ class SurfactantLayer(BaseAssembly):
     @classmethod
     def from_pars(
         cls,
-        layer1_chemical_structure: str,
-        layer1_thickness: float,
-        layer1_solvent: Material,
-        layer1_solvation: float,
-        layer1_area_per_molecule: float,
-        layer1_roughness: float,
-        layer2_chemical_structure: str,
-        layer2_thickness: float,
-        layer2_solvent: Material,
-        layer2_solvation: float,
-        layer2_area_per_molecule: float,
-        layer2_roughness: float,
+        top_layer_chemical_structure: str,
+        top_layer_thickness: float,
+        top_layer_solvent: Material,
+        top_layer_solvation: float,
+        top_layer_area_per_molecule: float,
+        top_layer_roughness: float,
+        bottom_layer_chemical_structure: str,
+        bottom_layer_thickness: float,
+        bottom_layer_solvent: Material,
+        bottom_layer_solvation: float,
+        bottom_layer_area_per_molecule: float,
+        bottom_layer_roughness: float,
         name: str = 'EasySurfactantLayer',
         interface=None,
     ) -> SurfactantLayer:
         """
         Constructor for the surfactant layer where the parameters are known,
-        :py:attr:`layer1` is that which the neutrons interact with first.
+        :py:attr:`top_layer` is that which the neutrons interact with first.
 
-        :param layer1_chemical_structure: Chemical formula for first layer
-        :param layer1_thickness: Thicknkess of first layer
-        :param layer1_solvent: Solvent in first layer
-        :param layer1_solvation: Fractional solvation of first layer by
-            :py:attr:`layer1_solvent`
-        :param layer1_area_per_molecule: Area per molecule of first layer
-        :param layer1_roughness: Roughness of first layer
-        :param layer2_chemical_structure: Chemical formula for second layer
-        :param layer2_thickness: Thicknkess of second layer
-        :param layer2_solvent: Solvent in second layer
-        :param layer2_solvation: Fractional solvation of second layer by
-            :py:attr:`layer2_solvent`
-        :param layer2_area_per_molecule: Area per molecule of second layer
-        :param layer2_roughness: Roughness of second layer
+        :param top_layer_chemical_structure: Chemical formula for first layer
+        :param top_layer_thickness: Thicknkess of first layer
+        :param top_layer_solvent: Solvent in first layer
+        :param top_layer_solvation: Fractional solvation of first layer by
+            :py:attr:`top_layer_solvent`
+        :param top_layer_area_per_molecule: Area per molecule of first layer
+        :param top_layer_roughness: Roughness of first layer
+        :param bottom_layer_chemical_structure: Chemical formula for second layer
+        :param bottom_layer_thickness: Thicknkess of second layer
+        :param bottom_layer_solvent: Solvent in second layer
+        :param bottom_layer_solvation: Fractional solvation of second layer by
+            :py:attr:`bottom_layer_solvent`
+        :param bottom_layer_area_per_molecule: Area per molecule of second layer
+        :param bottom_layer_roughness: Roughness of second layer
         :param name: Name for surfactant layer
         """
-        layer1 = LayerApm.from_pars(
-            layer1_chemical_structure,
-            layer1_thickness,
-            layer1_solvent,
-            layer1_solvation,
-            layer1_area_per_molecule,
-            layer1_roughness,
-            name=name + ' Layer 1',
+        top_layer = LayerApm.from_pars(
+            top_layer_chemical_structure,
+            top_layer_thickness,
+            top_layer_solvent,
+            top_layer_solvation,
+            top_layer_area_per_molecule,
+            top_layer_roughness,
+            name=name + ' Top Layer',
         )
-        layer2 = LayerApm.from_pars(
-            layer2_chemical_structure,
-            layer2_thickness,
-            layer2_solvent,
-            layer2_solvation,
-            layer2_area_per_molecule,
-            layer2_roughness,
-            name=name + ' Layer 2',
+        bottom_layer = LayerApm.from_pars(
+            bottom_layer_chemical_structure,
+            bottom_layer_thickness,
+            bottom_layer_solvent,
+            bottom_layer_solvation,
+            bottom_layer_area_per_molecule,
+            bottom_layer_roughness,
+            name=name + ' Bottom Layer',
         )
-        return cls([layer1, layer2], name, interface)
+        return cls([top_layer, bottom_layer], name, interface)
 
     @property
     def constrain_apm(self) -> bool:
@@ -178,54 +178,56 @@ class SurfactantLayer(BaseAssembly):
     def constain_multiple_contrast(
         self,
         another_contrast: 'SurfactantLayer',
-        layer1_thickness: bool = True,
-        layer2_thickness: bool = True,
-        layer1_area_per_molecule: bool = True,
-        layer2_area_per_molecule: bool = True,
-        layer1_fraction: bool = True,
-        layer2_fraction: bool = True,
+        top_layer_thickness: bool = True,
+        bottom_layer_thickness: bool = True,
+        top_layer_area_per_molecule: bool = True,
+        bottom_layer_area_per_molecule: bool = True,
+        top_layer_fraction: bool = True,
+        bottom_layer_fraction: bool = True,
     ):
         """
         Constrain structural parameters between surfactant layer objects.
 
         :param another_contrast: The surfactant layer to constrain
         """
-        if layer1_thickness:
-            layer1_thickness_constraint = ObjConstraint(self.top_layer.thickness, '', another_contrast.top_layer.thickness)
-            another_contrast.top_layer.thickness.user_constraints[f'{another_contrast.name}'] = layer1_thickness_constraint
-        if layer2_thickness:
-            layer2_thickness_constraint = ObjConstraint(
+        if top_layer_thickness:
+            top_layer_thickness_constraint = ObjConstraint(self.top_layer.thickness, '', another_contrast.top_layer.thickness)
+            another_contrast.top_layer.thickness.user_constraints[f'{another_contrast.name}'] = top_layer_thickness_constraint
+        if bottom_layer_thickness:
+            bottom_layer_thickness_constraint = ObjConstraint(
                 self.bottom_layer.thickness, '', another_contrast.bottom_layer.thickness
             )
-            another_contrast.bottom_layer.thickness.user_constraints[f'{another_contrast.name}'] = layer2_thickness_constraint
-        if layer1_area_per_molecule:
-            layer1_area_per_molecule_constraint = ObjConstraint(
+            another_contrast.bottom_layer.thickness.user_constraints[
+                f'{another_contrast.name}'
+            ] = bottom_layer_thickness_constraint
+        if top_layer_area_per_molecule:
+            top_layer_area_per_molecule_constraint = ObjConstraint(
                 self.top_layer.area_per_molecule, '', another_contrast.top_layer.area_per_molecule
             )
             another_contrast.top_layer.area_per_molecule.user_constraints[
                 f'{another_contrast.name}'
-            ] = layer1_area_per_molecule_constraint
-        if layer2_area_per_molecule:
-            layer2_area_per_molecule_constraint = ObjConstraint(
+            ] = top_layer_area_per_molecule_constraint
+        if bottom_layer_area_per_molecule:
+            bottom_layer_area_per_molecule_constraint = ObjConstraint(
                 self.bottom_layer.area_per_molecule, '', another_contrast.bottom_layer.area_per_molecule
             )
             another_contrast.bottom_layer.area_per_molecule.user_constraints[
                 f'{another_contrast.name}'
-            ] = layer2_area_per_molecule_constraint
-        if layer1_fraction:
-            layer1_fraction_constraint = ObjConstraint(
+            ] = bottom_layer_area_per_molecule_constraint
+        if top_layer_fraction:
+            top_layer_fraction_constraint = ObjConstraint(
                 self.top_layer.material.fraction, '', another_contrast.top_layer.material.fraction
             )
             another_contrast.top_layer.material.fraction.user_constraints[
                 f'{another_contrast.name}'
-            ] = layer1_fraction_constraint
-        if layer2_fraction:
-            layer2_fraction_constraint = ObjConstraint(
+            ] = top_layer_fraction_constraint
+        if bottom_layer_fraction:
+            bottom_layer_fraction_constraint = ObjConstraint(
                 self.bottom_layer.material.fraction, '', another_contrast.bottom_layer.material.fraction
             )
             another_contrast.bottom_layer.material.fraction.user_constraints[
                 f'{another_contrast.name}'
-            ] = layer2_fraction_constraint
+            ] = bottom_layer_fraction_constraint
 
     @property
     def _dict_repr(self) -> dict:

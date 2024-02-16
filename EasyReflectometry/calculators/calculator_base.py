@@ -7,6 +7,7 @@ from easyCore.Objects.core import ComponentSerializer
 from easyCore.Objects.Inferface import ItemContainer
 
 from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.sample import BaseAssembly
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import Material
 from EasyReflectometry.sample import MaterialMixture
@@ -97,7 +98,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
                 )
             )
             self.assign_material_to_layer(model.material.uid, key)
-        elif issubclass(t_, Multilayer):
+        elif issubclass(t_, BaseAssembly):
             key = model.uid
             self._wrapper.create_item(key)
             r_list.append(
