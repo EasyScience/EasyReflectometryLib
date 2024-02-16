@@ -10,7 +10,7 @@ from ..elements.layers.layer import Layer
 
 
 class BaseAssembly(BaseObj):
-    # Defined in the base object
+    # Added in super().__init__
     name: str
     layers: LayerCollection
     interface: Any
