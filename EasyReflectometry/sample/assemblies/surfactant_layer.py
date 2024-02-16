@@ -53,10 +53,6 @@ class SurfactantLayer(BaseAssembly):
         self._setup_roughness_constraints()
         if conformal_roughness:
             self._enable_roughness_constaints()
-        # self.bottom_layer.roughness.enabled = True
-        # roughness = ObjConstraint(self.bottom_layer.roughness, '', self.top_layer.roughness)
-        # self.top_layer.roughness.user_constraints['roughness'] = roughness
-        # self.top_layer.roughness.user_constraints['roughness'].enabled = conformal_roughness
 
     # Class constructors
     @classmethod
@@ -239,8 +235,8 @@ class SurfactantLayer(BaseAssembly):
         :return: Simple dictionary
         """
         return {
-            'layer1': self.top_layer._dict_repr,
-            'layer2': self.bottom_layer._dict_repr,
+            'top_layer': self.top_layer._dict_repr,
+            'bottom_layer': self.bottom_layer._dict_repr,
             'area per molecule constrained': self.constrain_apm,
             'conformal roughness': self.conformal_roughness,
         }
