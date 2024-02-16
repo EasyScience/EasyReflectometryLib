@@ -10,7 +10,10 @@ from ..elements.layers.layer import Layer
 
 
 class BaseAssembly(BaseObj):
+    # Defined in the base object
+    name: str
     layers: LayerCollection
+    interface: Any
 
     def __init__(
         self,
@@ -21,7 +24,7 @@ class BaseAssembly(BaseObj):
     ):
         super().__init__(name=name, **layers)
 
-        # interface is define in the base object
+        # Updates interface using property in base object
         self.interface = interface
         self._type = type
         self._roughness_constraints_setup = False
