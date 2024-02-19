@@ -112,13 +112,13 @@ class TestLayerApm(unittest.TestCase):
                         'fraction': 0.2,
                         'sld': '2.269e-6 1 / angstrom ** 2',
                         'isld': '0.000e-6 1 / angstrom ** 2',
-                        'material1': {
+                        'material_a': {
                             'C10H18NO8P': {
                                 'sld': '1.246e-6 1 / angstrom ** 2',
                                 'isld': '0.000e-6 1 / angstrom ** 2'
                             }
                         },
-                        'material2': {
+                        'material_b': {
                             'D2O': {
                                 'sld': '6.360e-6 1 / angstrom ** 2',
                                 'isld': '0.000e-6 1 / angstrom ** 2'

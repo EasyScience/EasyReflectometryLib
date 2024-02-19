@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import ClassVar
 
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import Parameter
@@ -26,7 +25,9 @@ MATERIALMIXTURE_DEFAULTS = {
 
 class MaterialMixture(BaseElement):
     # Added in super().__init__
-    fraction: ClassVar[Parameter]
+    _material_a: Material
+    _material_b: Material
+    _fraction: Parameter
 
     def __init__(
         self,
@@ -42,49 +43,79 @@ class MaterialMixture(BaseElement):
             name,
             _material_a=material_a,
             _material_b=material_b,
-            fraction=fraction,
+            _fraction=fraction,
             interface=interface,
         )
-        sld = weighted_average_sld(self._material_a.sld.raw_value, self._material_b.sld.raw_value, self.fraction.raw_value)
-        isld = weighted_average_sld(self._material_a.isld.raw_value, self._material_b.isld.raw_value, self.fraction.raw_value)
+        sld = weighted_average_sld(
+            a=self._material_a.sld.raw_value,
+            b=self._material_b.sld.raw_value,
+            p=self._fraction.raw_value,
+        )
+        isld = weighted_average_sld(
+            a=self._material_a.isld.raw_value,
+            b=self._material_b.isld.raw_value,
+            p=self._fraction.raw_value,
+        )
         default_options = deepcopy(MATERIAL_DEFAULTS)
         del default_options['sld']['value']
         del default_options['isld']['value']
-        self._slds = [
-            Parameter('sld', sld, **default_options['sld']),
-            Parameter('isld', isld, **default_options['isld']),
-        ]
+
+        self._sld = Parameter('sld', sld, **default_options['sld'])
+        self._isld = Parameter('isld', isld, **default_options['isld'])
+
         self._materials_constraints()
         self.interface = interface
 
     def _get_linkable_attributes(self):
-        return self._slds
+        return [self._sld, self._isld]
 
     @property
     def sld(self):
-        return self._slds[0]
+        return self._sld
 
     @property
     def isld(self):
-        return self._slds[1]
+        return self._isld
 
     def _materials_constraints(self):
-        self._slds[0].enabled = True
-        self._slds[1].enabled = True
+        self._sld.enabled = True
+        self._isld.enabled = True
         constraint = FunctionalConstraint(
-            self._slds[0], weighted_average_sld, [self._material_a.sld, self._material_b.sld, self.fraction]
+            dependent_obj=self._sld,
+            func=weighted_average_sld,
+            independent_objs=[self._material_a.sld, self._material_b.sld, self._fraction],
         )
         self._material_a.sld.user_constraints['sld'] = constraint
         self._material_b.sld.user_constraints['sld'] = constraint
-        self.fraction.user_constraints['sld'] = constraint
+        self._fraction.user_constraints['sld'] = constraint
         constraint()
         iconstraint = FunctionalConstraint(
-            self._slds[1], weighted_average_sld, [self._material_a.isld, self._material_b.isld, self.fraction]
+            dependent_obj=self._isld,
+            func=weighted_average_sld,
+            independent_objs=[self._material_a.isld, self._material_b.isld, self._fraction],
         )
         self._material_a.isld.user_constraints['isld'] = iconstraint
         self._material_b.isld.user_constraints['isld'] = iconstraint
-        self.fraction.user_constraints['isld'] = iconstraint
+        self._fraction.user_constraints['isld'] = iconstraint
         iconstraint()
+
+    @property
+    def fraction(self) -> Parameter:
+        """
+        :return: the fraction of material a.
+        """
+        return self._fraction
+
+    @fraction.setter
+    def fraction(self, fraction: float) -> None:
+        """
+        Setter for fraction of material a.
+
+        :param fraction: double
+        """
+        if not isinstance(fraction, float):
+            raise ValueError('fraction must be a float')
+        self._fraction = fraction
 
     @property
     def material_a(self) -> Material:
@@ -165,7 +196,13 @@ class MaterialMixture(BaseElement):
         del default_options['fraction']['value']
         fraction = Parameter('fraction', fraction, **default_options['fraction'])
 
-        return cls(material_a=material_a, material_b=material_b, fraction=fraction, name=name, interface=interface)
+        return cls(
+            material_a=material_a,
+            material_b=material_b,
+            fraction=fraction,
+            name=name,
+            interface=interface,
+        )
 
     # Representation
     @property
@@ -177,11 +214,11 @@ class MaterialMixture(BaseElement):
         """
         return {
             self.name: {
-                'fraction': self.fraction.raw_value,
-                'sld': f'{self.sld.raw_value:.3f}e-6 {self.sld.unit}',
-                'isld': f'{self.isld.raw_value:.3f}e-6 {self.isld.unit}',
-                'material1': self.material_a._dict_repr,
-                'material2': self.material_b._dict_repr,
+                'fraction': self._fraction.raw_value,
+                'sld': f'{self._sld.raw_value:.3f}e-6 {self._sld.unit}',
+                'isld': f'{self._isld.raw_value:.3f}e-6 {self._isld.unit}',
+                'material_a': self._material_a._dict_repr,
+                'material_b': self._material_b._dict_repr,
             }
         }
 

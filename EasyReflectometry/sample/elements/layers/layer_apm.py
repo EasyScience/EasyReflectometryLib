@@ -11,7 +11,7 @@ from EasyReflectometry.special.calculations import apm_to_sld
 from EasyReflectometry.special.calculations import neutron_scattering_length
 
 from ..materials.material import Material
-from ..materials.material_mixture import MaterialMixture
+from ..materials.material_solvated import MaterialSolvated
 from .layer import Layer
 
 LAYERAPM_DETAILS = {
@@ -83,8 +83,8 @@ class LayerApm(Layer):
     scattering_length_imag: ClassVar[Parameter]
     roughness: ClassVar[Parameter]
 
-    # Passed in __init__
-    material: MaterialMixture
+    # Passed in __init__.super()
+    material: MaterialSolvated
 
     def __init__(
         self,
@@ -128,10 +128,10 @@ class LayerApm(Layer):
         area_per_molecule.user_constraints['iapm'] = iconstraint
         scattering_length_imag.user_constraints['iapm'] = iconstraint
 
-        solvated_material = MaterialMixture(
-            material,
-            solvent,
-            solvation,
+        solvated_material = MaterialSolvated(
+            material=material,
+            solvent=solvent,
+            fraction=solvation,
             name=chemical_structure + '/' + solvent.name,
             interface=interface,
         )
@@ -154,14 +154,14 @@ class LayerApm(Layer):
         """
         :return: Solvent material
         """
-        return self.material.material_b
+        return self.material.solvent
 
     @solvent.setter
     def solvent(self, new_solvent: Material) -> None:
         """
         :param new_solvent: New solvent material.
         """
-        self.material.material_b = new_solvent
+        self.material.solvent = new_solvent
 
     @property
     def solvation(self) -> Parameter:
@@ -171,11 +171,11 @@ class LayerApm(Layer):
         return self.material.fraction
 
     @solvation.setter
-    def solvation(self, fraction: float) -> None:
+    def solvation(self, solvation: float) -> None:
         """
-        :param fraction: Fraction of solvent.
+        :param solvation: Fraction of solvent.
         """
-        self.material.fraction = fraction
+        self.material.solvation = solvation
 
     # Class constructors
     @classmethod
