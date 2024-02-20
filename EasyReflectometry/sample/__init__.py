@@ -8,6 +8,7 @@ from .elements.layers.layer_apm import LayerApm
 from .elements.material_collection import MaterialCollection
 from .elements.materials.material import Material
 from .elements.materials.material_mixture import MaterialMixture
+from .elements.materials.material_solvated import MaterialSolvated
 from .sample import Sample
 
 __all__ = (
@@ -21,5 +22,6 @@ __all__ = (
     Material,
     MaterialMixture,
     MaterialCollection,
+    MaterialSolvated,
     Sample,
 )

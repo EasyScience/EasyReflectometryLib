@@ -80,3 +80,21 @@ class MaterialSolvated(MaterialMixture):
 
     def _update_name(self) -> None:
         self.name = self._material_a.name + ' solvated in ' + self._material_b.name
+
+    # Representation
+    @property
+    def _dict_repr(self) -> dict[str, str]:
+        """
+        A simplified dict representation.
+
+        :return: Simple dictionary
+        """
+        return {
+            self.name: {
+                'solvation': self.solvation.raw_value,
+                'sld': f'{self._sld.raw_value:.3f}e-6 {self._sld.unit}',
+                'isld': f'{self._isld.raw_value:.3f}e-6 {self._isld.unit}',
+                'material': self.material._dict_repr,
+                'solvent': self.solvent._dict_repr,
+            }
+        }

@@ -197,9 +197,9 @@ class MaterialMixture(BaseElement):
         fraction = Parameter('fraction', fraction, **default_options['fraction'])
 
         return cls(
-            material_a=material_a,
-            material_b=material_b,
-            fraction=fraction,
+            material_a,
+            material_b,
+            fraction,
             name=name,
             interface=interface,
         )
