@@ -1,28 +1,24 @@
 __author__ = 'github.com/arm61'
-"""
-Tests for fitting module
-"""
 
 import os
 import unittest
 
-
 import EasyReflectometry
+from EasyReflectometry.calculators import CalculatorFactory
 from EasyReflectometry.data import load
 from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.fitting import Fitter
-from EasyReflectometry.calculators import CalculatorFactory
 from EasyReflectometry.sample import Layer
-from EasyReflectometry.sample import Sample
 from EasyReflectometry.sample import Material
+from EasyReflectometry.sample import Sample
 
 
 class TestFitting(unittest.TestCase):
-
     def test_fitting(self):
         fpath = os.path.join(
             os.path.dirname(os.path.dirname(EasyReflectometry.__file__)),
-            'tests/_static/example.ort')
+            'tests/_static/example.ort',
+        )
         data = load(fpath)
         si = Material.from_pars(2.07, 0, 'Si')
         sio2 = Material.from_pars(3.47, 0, 'SiO2')
@@ -32,11 +28,13 @@ class TestFitting(unittest.TestCase):
         sio2_layer = Layer.from_pars(sio2, 30, 3, 'SiO2 layer')
         film_layer = Layer.from_pars(film, 250, 3, 'Film Layer')
         superphase = Layer.from_pars(d2o, 0, 3, 'D2O Subphase')
-        sample = Sample.from_pars(si_layer,
-                                        sio2_layer,
-                                        film_layer,
-                                        superphase,
-                                        name='Film Structure')
+        sample = Sample.from_pars(
+            si_layer,
+            sio2_layer,
+            film_layer,
+            superphase,
+            name='Film Structure',
+        )
         model = Model.from_pars(sample, 1, 1e-6, 0.02, 'Film Model')
         # Thicknesses
         sio2_layer.thickness.bounds = (15, 50)

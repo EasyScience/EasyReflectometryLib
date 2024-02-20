@@ -1,17 +1,16 @@
 __author__ = 'github.com/arm61'
 
 import periodictable as pt
-from easyCore.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.special.parsing import parse_formula
 
 
-def weighted_average_sld(a: Parameter, b: Parameter, p: Parameter) -> Parameter:
+def weighted_average(a: float, b: float, p: float) -> float:
     """
-    Determine the weighted average SLD between a and b, where p is the weight.
+    Determine the weighted average for a and b, where p is the weight.
 
-    :param a: First sld
-    :param b: Second sld
+    :param a: First value
+    :param b: Second value
     :param p: Weight
     :return: Weighted average
     """
@@ -28,7 +27,7 @@ def neutron_scattering_length(formula: str) -> complex:
     formula_as_dict = parse_formula(formula)
     scattering_length = 0 + 0j
     for key, value in formula_as_dict.items():
-        scattering_length += (pt.elements.symbol(key).neutron.b_c * value)
+        scattering_length += pt.elements.symbol(key).neutron.b_c * value
         if pt.elements.symbol(key).neutron.b_c_i:
             inc = pt.elements.symbol(key).neutron.b_c_i
         else:
@@ -47,12 +46,11 @@ def molecular_weight(formula: str) -> float:
     formula_as_dict = parse_formula(formula)
     mw = 0
     for key, value in formula_as_dict.items():
-        mw += (pt.elements.symbol(key).mass * value)
+        mw += pt.elements.symbol(key).mass * value
     return mw
 
 
-def apm_to_sld(scattering_length: float, thickness: Parameter,
-               area_per_molecule: Parameter) -> Parameter:
+def apm_to_sld(scattering_length: float, thickness: float, area_per_molecule: float) -> float:
     """
     Find the scattering length density for a given area per molecule.
 
@@ -64,8 +62,7 @@ def apm_to_sld(scattering_length: float, thickness: Parameter,
     return scattering_length / (thickness * area_per_molecule) * 1e6
 
 
-def density_to_sld(scattering_length: float, molecular_weight: float,
-                   density: Parameter):
+def density_to_sld(scattering_length: float, molecular_weight: float, density: float) -> float:
     """
     Find the scattering length density from the mass density of a material.
 

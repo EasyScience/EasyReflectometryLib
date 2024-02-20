@@ -5,7 +5,7 @@ from copy import deepcopy
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.special.calculations import weighted_average_sld
+from EasyReflectometry.special.calculations import weighted_average
 
 from ..base_element import BaseElement
 from .material import MATERIAL_DEFAULTS
@@ -46,12 +46,12 @@ class MaterialMixture(BaseElement):
             _fraction=fraction,
             interface=interface,
         )
-        sld = weighted_average_sld(
+        sld = weighted_average(
             a=self._material_a.sld.raw_value,
             b=self._material_b.sld.raw_value,
             p=self._fraction.raw_value,
         )
-        isld = weighted_average_sld(
+        isld = weighted_average(
             a=self._material_a.isld.raw_value,
             b=self._material_b.isld.raw_value,
             p=self._fraction.raw_value,
@@ -82,7 +82,7 @@ class MaterialMixture(BaseElement):
         self._isld.enabled = True
         constraint = FunctionalConstraint(
             dependent_obj=self._sld,
-            func=weighted_average_sld,
+            func=weighted_average,
             independent_objs=[self._material_a.sld, self._material_b.sld, self._fraction],
         )
         self._material_a.sld.user_constraints['sld'] = constraint
@@ -91,7 +91,7 @@ class MaterialMixture(BaseElement):
         constraint()
         iconstraint = FunctionalConstraint(
             dependent_obj=self._isld,
-            func=weighted_average_sld,
+            func=weighted_average,
             independent_objs=[self._material_a.isld, self._material_b.isld, self._fraction],
         )
         self._material_a.isld.user_constraints['isld'] = iconstraint
