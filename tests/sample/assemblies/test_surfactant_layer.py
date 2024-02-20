@@ -105,16 +105,16 @@ class TestSurfactantLayer(unittest.TestCase):
                 'DPPC Tail': {
                     'material': {
                         'C32D64/Air': {
-                            'fraction': 0.0,
+                            'solvation': 0.0,
                             'sld': '8.297e-6 1 / angstrom ** 2',
                             'isld': '0.000e-6 1 / angstrom ** 2',
-                            'material_a': {
+                            'material': {
                                 'C32D64': {
                                     'sld': '8.297e-6 1 / angstrom ** 2',
                                     'isld': '0.000e-6 1 / angstrom ** 2'
                                 }
                             },
-                            'material_b': {
+                            'solvent': {
                                 'Air': {
                                     'sld': '0.000e-6 1 / angstrom ** 2',
                                     'isld': '0.000e-6 1 / angstrom ** 2'
@@ -132,16 +132,16 @@ class TestSurfactantLayer(unittest.TestCase):
                 'DPPC Head': {
                     'material': {
                         'C10H18NO8P/D2O': {
-                            'fraction': 0.2,
+                            'solvation': 0.2,
                             'sld': '2.269e-6 1 / angstrom ** 2',
                             'isld': '0.000e-6 1 / angstrom ** 2',
-                            'material_a': {
+                            'material': {
                                 'C10H18NO8P': {
                                     'sld': '1.246e-6 1 / angstrom ** 2',
                                     'isld': '0.000e-6 1 / angstrom ** 2'
                                 }
                             },
-                            'material_b': {
+                            'solvent': {
                                 'D2O': {
                                     'sld': '6.360e-6 1 / angstrom ** 2',
                                     'isld': '0.000e-6 1 / angstrom ** 2'

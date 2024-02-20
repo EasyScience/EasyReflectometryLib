@@ -103,22 +103,20 @@ class TestLayerApm(unittest.TestCase):
 
     def test_dict_repr(self):
         p = LayerApm.default()
-        print(p.material.sld)
-        print(p.material.isld)
         assert p._dict_repr == {
             'EasyLayerApm': {
                 'material': {
                     'C10H18NO8P/D2O': {
-                        'fraction': 0.2,
+                        'solvation': 0.2,
                         'sld': '2.269e-6 1 / angstrom ** 2',
                         'isld': '0.000e-6 1 / angstrom ** 2',
-                        'material_a': {
+                        'material': {
                             'C10H18NO8P': {
                                 'sld': '1.246e-6 1 / angstrom ** 2',
                                 'isld': '0.000e-6 1 / angstrom ** 2'
                             }
                         },
-                        'material_b': {
+                        'solvent': {
                             'D2O': {
                                 'sld': '6.360e-6 1 / angstrom ** 2',
                                 'isld': '0.000e-6 1 / angstrom ** 2'
