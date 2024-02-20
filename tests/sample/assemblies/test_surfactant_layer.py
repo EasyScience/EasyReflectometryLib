@@ -18,8 +18,8 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.name == 'DPPC'
         assert p.layers[0].name == 'DPPC Tail'
         assert p.layers[1].name == 'DPPC Head'
-        assert p.layers[0].chemical_structure == 'C32D64'
-        assert p.layers[1].chemical_structure == 'C10H18NO8P'
+        assert p.layers[0].molecular_formula == 'C32D64'
+        assert p.layers[1].molecular_formula == 'C10H18NO8P'
         assert p.type == 'Surfactant Layer'
 
     def test_from_pars(self):
@@ -39,14 +39,14 @@ class TestSurfactantLayer(unittest.TestCase):
                                       3,
                                       name='A Test')
         assert p.layers[0].name == 'A Test Layer 1'
-        assert p.layers[0].chemical_structure == 'C8O10H12P'
+        assert p.layers[0].molecular_formula == 'C8O10H12P'
         assert p.layers[0].thickness.raw_value == 12
         assert p.layers[0].solvent.as_data_dict() == h2o.as_data_dict()
         assert p.layers[0].solvation.raw_value == 0.5
         assert p.layers[0].area_per_molecule.raw_value == 50
         assert p.layers[0].roughness.raw_value == 2
         assert p.layers[1].name == 'A Test Layer 2'
-        assert p.layers[1].chemical_structure == 'C10H24'
+        assert p.layers[1].molecular_formula == 'C10H24'
         assert p.layers[1].thickness.raw_value == 10
         assert p.layers[1].solvent.as_data_dict() == noth2o.as_data_dict()
         assert p.layers[1].solvation.raw_value == 0.2
@@ -125,7 +125,7 @@ class TestSurfactantLayer(unittest.TestCase):
                     'thickness': '16.000 angstrom',
                     'roughness': '3.000 angstrom'
                 },
-                'chemical_structure': 'C32D64',
+                'molecular_formula': 'C32D64',
                 'area_per_molecule': '48.2 angstrom ** 2'
             },
             'layer2': {
@@ -152,7 +152,7 @@ class TestSurfactantLayer(unittest.TestCase):
                     'thickness': '10.000 angstrom',
                     'roughness': '3.000 angstrom'
                 },
-                'chemical_structure': 'C10H18NO8P',
+                'molecular_formula': 'C10H18NO8P',
                 'area_per_molecule': '48.2 angstrom ** 2'
             },
             'area per molecule constrained': False,
