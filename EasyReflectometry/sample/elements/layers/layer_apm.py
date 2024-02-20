@@ -76,9 +76,9 @@ class LayerApm(Layer):
     """
 
     # Added in __init__
-    area_per_molecule: Parameter
-    scattering_length_real: Parameter
-    scattering_length_imag: Parameter
+    _area_per_molecule: Parameter
+    _scattering_length_real: Parameter
+    _scattering_length_imag: Parameter
 
     # Other typer than in __init__.super()
     material: MaterialSolvated
@@ -115,12 +115,20 @@ class LayerApm(Layer):
 
         material = Material.from_pars(sld, isld, name=molecular_formula, interface=interface)
 
-        constraint = FunctionalConstraint(material.sld, apm_to_sld, [scattering_length_real, thickness, area_per_molecule])
+        constraint = FunctionalConstraint(
+            dependent_obj=material.sld,
+            func=apm_to_sld,
+            independent_objs=[scattering_length_real, thickness, area_per_molecule],
+        )
         thickness.user_constraints['apm'] = constraint
         area_per_molecule.user_constraints['apm'] = constraint
         scattering_length_real.user_constraints['apm'] = constraint
 
-        iconstraint = FunctionalConstraint(material.isld, apm_to_sld, [scattering_length_imag, thickness, area_per_molecule])
+        iconstraint = FunctionalConstraint(
+            dependent_obj=material.isld,
+            func=apm_to_sld,
+            independent_objs=[scattering_length_imag, thickness, area_per_molecule],
+        )
         thickness.user_constraints['iapm'] = iconstraint
         area_per_molecule.user_constraints['iapm'] = iconstraint
         scattering_length_imag.user_constraints['iapm'] = iconstraint
@@ -139,11 +147,18 @@ class LayerApm(Layer):
             name=name,
             interface=interface,
         )
-        self._add_component('scattering_length_real', scattering_length_real)
-        self._add_component('scattering_length_imag', scattering_length_imag)
-        self._add_component('area_per_molecule', area_per_molecule)
+        self._add_component('_scattering_length_real', scattering_length_real)
+        self._add_component('_scattering_length_imag', scattering_length_imag)
+        self._add_component('_area_per_molecule', area_per_molecule)
         self._molecular_formula = molecular_formula
         self.interface = interface
+
+    @property
+    def area_per_molecule(self) -> Parameter:
+        """
+        :return: Area per molecule
+        """
+        return self._area_per_molecule
 
     @property
     def solvent(self) -> Material:
@@ -261,8 +276,8 @@ class LayerApm(Layer):
         """
         self._molecular_formula = formula_string
         scattering_length = neutron_scattering_length(formula_string)
-        self.scattering_length_real.value = scattering_length.real
-        self.scattering_length_imag.value = scattering_length.imag
+        self._scattering_length_real.value = scattering_length.real
+        self._scattering_length_imag.value = scattering_length.imag
         self.material.name = formula_string + '/' + self.material._material_b.name
 
     @property
@@ -274,7 +289,7 @@ class LayerApm(Layer):
         """
         layerapm_dict = super()._dict_repr
         layerapm_dict['molecular_formula'] = self._molecular_formula
-        layerapm_dict['area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} ' f'{self.area_per_molecule.unit}'
+        layerapm_dict['area_per_molecule'] = f'{self._area_per_molecule.raw_value:.1f} ' f'{self._area_per_molecule.unit}'
         return layerapm_dict
 
     def as_dict(self, skip: list = None) -> dict[str, str]:
@@ -286,6 +301,7 @@ class LayerApm(Layer):
         if skip is None:
             skip = []
         this_dict = super().as_dict(skip=skip)
-        del this_dict['material'], this_dict['scattering_length_real']
-        del this_dict['scattering_length_imag']
+        del this_dict['material']
+        del this_dict['_scattering_length_real']
+        del this_dict['_scattering_length_imag']
         return this_dict
