@@ -59,3 +59,24 @@ class TestMaterialMixture():
     def test_set_solvation_exception(self, material_solvated: MaterialSolvated) -> None:
         with pytest.raises(ValueError):
             material_solvated.solvation = 'not float'
+    
+    def test_dict_repr(self, material_solvated: MaterialSolvated) -> None:
+        material_solvated._sld = MagicMock()
+        material_solvated._sld.raw_value = 1.0
+        material_solvated._sld.unit = 'sld_unit'
+        material_solvated._isld = MagicMock()
+        material_solvated._isld.raw_value = 2.0
+        material_solvated._isld.unit = 'isld_unit'
+        material_solvated.material._dict_repr = 'material_dict_repr'
+        material_solvated.solvent._dict_repr = 'solvent_dict_repr'
+        material_solvated.solvation.raw_value = "solvation_value"        
+
+        assert material_solvated._dict_repr == {
+            'name': {
+                'solvation': 'solvation_value',
+                'sld': '1.000e-6 sld_unit',
+                'isld': '2.000e-6 isld_unit',
+                'material': 'material_dict_repr',
+                'solvent': 'solvent_dict_repr'
+            }
+        }
