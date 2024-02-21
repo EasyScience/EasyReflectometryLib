@@ -52,7 +52,7 @@ class SurfactantLayer(BaseAssembly):
 
         self._setup_roughness_constraints()
         if conformal_roughness:
-            self._enable_roughness_constaints()
+            self._enable_roughness_constraints()
 
     # Class constructors
     @classmethod
@@ -158,10 +158,10 @@ class SurfactantLayer(BaseAssembly):
         Set the roughness to be the same for both layers.
         """
         if x:
-            self._enable_roughness_constaints()
+            self._enable_roughness_constraints()
             self.top_layer.roughness.value = self.top_layer.roughness.raw_value
         else:
-            self._disable_roughness_constaints()
+            self._disable_roughness_constraints()
 
     def constrain_solvent_roughness(self, solvent_roughness: Parameter):
         """

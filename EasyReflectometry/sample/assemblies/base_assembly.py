@@ -96,7 +96,7 @@ class BaseAssembly(BaseObj):
             self.top_layer.thickness.user_constraints[f'thickness_{i}'].enabled = False
         self._thickness_constraints_setup = True
 
-    def _enable_thickness_constaints(self):
+    def _enable_thickness_constraints(self):
         """
         Enable the thickness constraint.
         """
@@ -111,7 +111,7 @@ class BaseAssembly(BaseObj):
         else:
             raise Exception('Roughness constraints not setup')
 
-    def _disable_thickness_constaints(self):
+    def _disable_thickness_constraints(self):
         """
         Disable the thickness constraint.
         """
@@ -135,7 +135,7 @@ class BaseAssembly(BaseObj):
             self.top_layer.roughness.user_constraints[f'roughness_{i}'].enabled = False
         self._roughness_constraints_setup = True
 
-    def _enable_roughness_constaints(self):
+    def _enable_roughness_constraints(self):
         """
         Enable the roughness constraint.
         """
@@ -150,7 +150,7 @@ class BaseAssembly(BaseObj):
         else:
             raise Exception('Roughness constraints not setup')
 
-    def _disable_roughness_constaints(self):
+    def _disable_roughness_constraints(self):
         """
         Disable the roughness constraint.
         """

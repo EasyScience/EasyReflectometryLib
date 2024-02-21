@@ -54,9 +54,9 @@ class GradientLayer(BaseAssembly):
         )
 
         self._setup_thickness_constraints()
-        self._enable_thickness_constaints()
+        self._enable_thickness_constraints()
         self._setup_roughness_constraints()
-        self._enable_roughness_constaints()
+        self._enable_roughness_constraints()
 
         # Set the thickness and roughness properties
         self.thickness = thickness
