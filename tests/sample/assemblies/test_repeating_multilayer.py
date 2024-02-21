@@ -21,7 +21,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
     def test_default(self):
         p = RepeatingMultilayer.default()
         assert_equal(p.name, 'EasyRepeatingMultilayer')
-        assert_equal(p.type, 'Repeating Multi-layer')
+        assert_equal(p._type, 'Repeating Multi-layer')
         assert_equal(p.interface, None)
         assert_equal(len(p.layers), 2)
         assert_equal(p.repetitions.display_name, 'repetitions')
@@ -40,7 +40,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         l = LayerCollection.from_pars(p, q, name='twoLayer')
         o = RepeatingMultilayer.from_pars(l, 2.0, 'twoLayerItem')
         assert_equal(o.name, 'twoLayerItem')
-        assert_equal(o.type, 'Repeating Multi-layer')
+        assert_equal(o._type, 'Repeating Multi-layer')
         assert_equal(o.interface, None)
         assert_equal(o.repetitions.display_name, 'repetitions')
         assert_equal(str(o.repetitions.unit), 'dimensionless')

@@ -44,10 +44,14 @@ class RepeatingMultilayer(Multilayer):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
-        super().__init__(layers, name, interface)
+        super().__init__(
+            layers=layers,
+            name=name,
+            interface=interface,
+            type='Repeating Multi-layer',
+        )
         self._add_component('repetitions', repetitions)
         self.interface = interface
-        self.type = 'Repeating Multi-layer'
 
     # Class constructors
     @classmethod

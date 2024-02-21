@@ -7,6 +7,9 @@ from .layers.layer import Layer
 
 
 class LayerCollection(BaseElementCollection):
+    # Added in super().__init__
+    layers: list[Layer]
+
     def __init__(
         self,
         *layers: tuple[Layer],
@@ -45,7 +48,7 @@ class LayerCollection(BaseElementCollection):
 
     # Representation
     @property
-    def _dict_repr(self) -> dict:
+    def _dict_repr(self) -> dict[str, list[dict]]:
         """
         A simplified dict representation.
 
