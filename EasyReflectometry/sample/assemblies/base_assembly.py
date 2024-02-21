@@ -26,6 +26,7 @@ class BaseAssembly(BaseObj):
 
         # Updates interface using property in base object
         self.interface = interface
+        # Type is needed when fitting in EasyCore
         self._type = type
         self._roughness_constraints_setup = False
         self._thickness_constraints_setup = False

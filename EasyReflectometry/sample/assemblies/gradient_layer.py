@@ -152,7 +152,6 @@ class GradientLayer(BaseAssembly):
         :return: Simple dictionary
         """
         return {
-            'type': self._type,
             'thickness': self.thickness,
             'discretisation_elements': self._discretisation_elements,
             'top_layer': self.top_layer._dict_repr,
