@@ -1,3 +1,4 @@
+from .assemblies.base_assembly import BaseAssembly
 from .assemblies.gradient_layer import GradientLayer
 from .assemblies.multilayer import Multilayer
 from .assemblies.repeating_multilayer import RepeatingMultilayer
@@ -11,6 +12,7 @@ from .elements.materials.material_mixture import MaterialMixture
 from .sample import Sample
 
 __all__ = (
+    BaseAssembly,
     GradientLayer,
     Multilayer,
     RepeatingMultilayer,

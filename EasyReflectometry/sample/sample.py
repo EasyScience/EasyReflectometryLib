@@ -5,24 +5,25 @@ __author__ = 'github.com/arm61'
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 
-from . import Layer
-from . import Multilayer
+from .assemblies.base_assembly import BaseAssembly
+from .assemblies.multilayer import Multilayer
+from .elements.layers.layer import Layer
 
 
 class Sample(BaseCollection):
     def __init__(
         self,
-        *args: list[Layer | Multilayer],
+        *args: list[Layer | BaseAssembly],
         name: str = 'EasySample',
         interface=None,
         **kwargs,
     ):
         new_items = []
-        for i in args:
-            if issubclass(type(i), Layer):
-                new_items.append(Multilayer.from_pars(i, name=i.name))
-            elif issubclass(type(i), Multilayer):
-                new_items.append(i)
+        for layer_like in args:
+            if issubclass(type(layer_like), Layer):
+                new_items.append(Multilayer.from_pars(layer_like, name=layer_like.name))
+            elif issubclass(type(layer_like), BaseAssembly):
+                new_items.append(layer_like)
             else:
                 raise ValueError('The items must be either a Layer or an Assembly.')
         super().__init__(name, *new_items, **kwargs)

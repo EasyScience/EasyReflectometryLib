@@ -21,7 +21,7 @@ class TestMultilayer(unittest.TestCase):
     def test_default(self):
         p = Multilayer.default()
         assert_equal(p.name, 'EasyMultilayer')
-        assert_equal(p.type, 'Multi-layer')
+        assert_equal(p._type, 'Multi-layer')
         assert_equal(p.interface, None)
         assert_equal(len(p.layers), 2)
         assert_equal(p.layers.name, 'EasyLayers')
@@ -34,7 +34,7 @@ class TestMultilayer(unittest.TestCase):
         l = LayerCollection.from_pars(p, q, name='twoLayer')
         o = Multilayer.from_pars(l, 'twoLayerItem')
         assert_equal(o.name, 'twoLayerItem')
-        assert_equal(o.type, 'Multi-layer')
+        assert_equal(o._type, 'Multi-layer')
         assert_equal(o.interface, None)
         assert_equal(o.layers.name, 'twoLayer')
 

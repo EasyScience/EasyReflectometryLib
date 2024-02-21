@@ -6,7 +6,6 @@ from numpy.testing import assert_almost_equal
 import EasyReflectometry.sample.assemblies.gradient_layer
 from EasyReflectometry.sample.assemblies.gradient_layer import GradientLayer
 from EasyReflectometry.sample.assemblies.gradient_layer import (
-    _apply_thickness_constraints,
     _linear_gradient,
     _prepare_gradient_layers,
 )
@@ -17,7 +16,7 @@ from EasyReflectometry.sample.elements.materials.material import Material
 class TestGradientLayer():
 
     @pytest.fixture
-    def gradient_layer(self):
+    def gradient_layer(self) -> GradientLayer:
         self.init = Material.from_pars(10.0, -10.0, 'Material_1')
         self.final = Material.from_pars(0.0, 0.0, 'Material_2')
 
@@ -31,32 +30,30 @@ class TestGradientLayer():
             interface=None
         )
 
-    def test_init(self, gradient_layer):
+    def test_init(self, gradient_layer: GradientLayer) -> None:
         # When Then Expect
         assert len(gradient_layer.layers) == 10 
         assert gradient_layer.name, 'Test'
-        assert gradient_layer.type, 'Gradient-layer'
+        assert gradient_layer._type, 'Gradient-layer'
         assert gradient_layer.interface is None
         assert gradient_layer.thickness == 1.0
-        assert gradient_layer.layers.name == '0/1/2/3/4/5/6/7/8/9'
         assert gradient_layer.layers[0].material.sld.raw_value == 10.0
         assert gradient_layer.layers[5].material.sld.raw_value == 5.0
         assert gradient_layer.layers[0].thickness.raw_value == 0.1
         assert gradient_layer.layers[5].material.isld.raw_value == -5.0
         assert gradient_layer.layers[9].material.isld.raw_value == -1.0
 
-    def test_default(self):
+    def test_default(self) -> None:
         # When Then
         result = GradientLayer.default()
         
         # Expect
         assert result.name == 'Air-Deuterium'
-        assert result.type, 'Gradient-layer'
+        assert result._type, 'Gradient-layer'
         assert result.interface is None
         assert len(result.layers) == 10
-        assert result.layers.name == '0/1/2/3/4/5/6/7/8/9'
 
-    def test_from_pars(self):
+    def test_from_pars(self) -> None:
         # When
         init = Material.from_pars(6.908, -0.278, 'Boron')
         final = Material.from_pars(0.487, 0.000, 'Potassium')
@@ -73,32 +70,16 @@ class TestGradientLayer():
 
         # Expect
         assert result.name, 'gradientItem'
-        assert result.type, 'Gradient-layer'
+        assert result._type, 'Gradient-layer'
         assert result.interface is None
         assert len(result.layers) == 5
-        assert result.layers.name == '0/1/2/3/4'
 
-    def test_add_layer(self, gradient_layer):
+    def test_repr(self, gradient_layer: GradientLayer) -> None:
         # When Then Expect
-        with pytest.raises(NotImplementedError, match=r".* add .*"):
-            gradient_layer.add_layer(Layer.default())
-
-    def test_duplicate_layer(self, gradient_layer):
-        # When Then Expect
-        with pytest.raises(NotImplementedError, match=r".* duplicate .*"):
-            gradient_layer.duplicate_layer(1)
-
-    def test_remove_layer(self, gradient_layer):
-        # When Then Expect
-        with pytest.raises(NotImplementedError, match=r".* remove .*"):
-            gradient_layer.remove_layer(1)
-
-    def test_repr(self, gradient_layer):
-        # When Then Expect
-        expected_str = "type: Gradient-layer\nthickness: 1.0\ndiscretisation_elements: 10\ninitial_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nfinal_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"
+        expected_str = "thickness: 1.0\ndiscretisation_elements: 10\ntop_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nbottom_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"
         assert gradient_layer.__repr__() == expected_str
 
-    def test_dict_round_trip(self, gradient_layer):
+    def test_dict_round_trip(self, gradient_layer: GradientLayer) -> None:
         # When Then
         result = GradientLayer.from_dict(gradient_layer.as_dict())
         
@@ -108,7 +89,7 @@ class TestGradientLayer():
         # Just one layer of the generated layers is checked
         assert gradient_layer.layers[5].__repr__() == result.layers[5].__repr__()
 
-    def test_thickness_setter(self, gradient_layer):
+    def test_thickness_setter(self, gradient_layer: GradientLayer) -> None:
         # When
         gradient_layer.thickness = 10.0
 
@@ -117,16 +98,16 @@ class TestGradientLayer():
         assert gradient_layer.layers[0].thickness.raw_value == 1.0
         assert gradient_layer.layers[9].thickness.raw_value == 1.0
 
-    def test_thickness_getter(self, gradient_layer):
+    def test_thickness_getter(self, gradient_layer: GradientLayer) -> None:
         # When
-        gradient_layer.layers = MagicMock()
+        gradient_layer.layers = [MagicMock(), MagicMock()]
         gradient_layer.layers[0].thickness.raw_value = 10.0
 
         # Then
         # discretisation_elements * discrete_layer_thickness
-        assert gradient_layer.thickness == 10.0
+        assert gradient_layer.thickness == 100.0
 
-    def test_roughness_setter(self, gradient_layer):
+    def test_roughness_setter(self, gradient_layer: GradientLayer) -> None:
         # When
         gradient_layer.roughness = 10.0
 
@@ -135,9 +116,9 @@ class TestGradientLayer():
         assert gradient_layer.layers[0].roughness.raw_value == 10.0
         assert gradient_layer.layers[9].roughness.raw_value == 10.0
 
-    def test_thickness_getter(self, gradient_layer):
+    def test_roughness_getter(self, gradient_layer: GradientLayer) -> None:
         # When
-        gradient_layer.layers = MagicMock()
+        gradient_layer.layers = [MagicMock(), MagicMock()]
         gradient_layer.layers[0].roughness.raw_value = 10.0
 
         # Then
@@ -174,15 +155,17 @@ def test_prepare_gradient_layers(monkeypatch):
     mock_material_1 = MagicMock()
     mock_material_2 = MagicMock()
     mock_Layer = MagicMock()
+    mock_LayerCollection = MagicMock()
     mock_Material = MagicMock()
     mock_Material.from_pars = MagicMock(return_value='Material_from_pars')
     mock_linear_gradient = MagicMock(return_value=[1.0, 2.0, 3.0])
     monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, '_linear_gradient', mock_linear_gradient)
     monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'Layer', mock_Layer)
     monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'Material', mock_Material)
+    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'LayerCollection', mock_LayerCollection)
 
     # Then
-    result = _prepare_gradient_layers(mock_material_1, mock_material_2, 3, None)
+    _prepare_gradient_layers(mock_material_1, mock_material_2, 3, None)
 
     # When
     assert mock_Material.from_pars.call_count == 3
@@ -195,24 +178,4 @@ def test_prepare_gradient_layers(monkeypatch):
     assert mock_Layer.from_pars.call_args_list[0][1]['name'] == '0'
     assert mock_Layer.from_pars.call_args_list[0][1]['interface'] == None
 
-def test_apply_thickness_constraints(monkeypatch):
-    # When 
-    mock_layer_0 = MagicMock()
-    mock_layer_0.thickness = MagicMock()
-    mock_layer_0.thickness.user_constraints = {}
-    mock_layer_1 = MagicMock()
-    layers = [mock_layer_0, mock_layer_1]
-    mock_layer_1.thickness = MagicMock()
-    mock_obj_constraint = MagicMock()
-    mock_ObjConstraint = MagicMock(return_value=mock_obj_constraint)
-    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'ObjConstraint', mock_ObjConstraint)
 
-    #Then
-    _apply_thickness_constraints(layers)
-
-    #Expect
-    assert mock_layer_0.thickness.enabled is True
-    assert mock_layer_1.thickness.enabled is True
-    assert layers[0].thickness.user_constraints['thickness_1'].enabled is True
-    assert layers[0].thickness.user_constraints['thickness_1'] == mock_obj_constraint
-    mock_ObjConstraint.assert_called_once_with(dependent_obj=mock_layer_1.thickness, operator='', independent_obj=mock_layer_0.thickness)
