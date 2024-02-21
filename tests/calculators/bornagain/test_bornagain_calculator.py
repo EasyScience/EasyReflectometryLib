@@ -1,14 +1,14 @@
-__author__ = 'github.com/arm61'
-__version__ = '0.0.1'
-"""
-Tests for BornAgain class module
-"""
+# __author__ = 'github.com/arm61'
+# __version__ = '0.0.1'
+# """
+# Tests for BornAgain class module
+# """
 
 # import os
 # import unittest
 # import numpy as np
 # from numpy.testing import assert_almost_equal, assert_equal, assert_allclose
-# from EasyReflectometry.interfaces.bornagain import BornAgain
+# from EasyReflectometry.calculators.bornagain import BornAgain
 # from EasyReflectometry.sample.material import Material
 
 # class TestBornAgain(unittest.TestCase):

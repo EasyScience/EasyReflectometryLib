@@ -25,6 +25,7 @@ classifiers = [
 ]
 requires-python = ">=3.9,<3.12"
 dependencies = [
+    "BornAgain>=21.1",
     "easyScienceCore>=0.3.1",
     "refnx>=0.1.15",
     "refl1d>=0.8.14",
