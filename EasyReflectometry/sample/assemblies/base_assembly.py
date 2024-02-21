@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from typing import Any
+from typing import Optional
 
 import yaml
 from easyCore.Fitting.Constraints import ObjConstraint
@@ -56,7 +57,7 @@ class BaseAssembly(BaseObj):
         return yaml.dump(self._dict_repr, sort_keys=False)
 
     @property
-    def top_layer(self) -> Layer | None:
+    def top_layer(self) -> Optional[Layer]:
         """
         :return: The top layer
         """
@@ -75,7 +76,7 @@ class BaseAssembly(BaseObj):
             self.layers[0] = layer
 
     @property
-    def bottom_layer(self) -> Layer | None:
+    def bottom_layer(self) -> Optional[None]:
         """
         :return: The bottom layer
         """
