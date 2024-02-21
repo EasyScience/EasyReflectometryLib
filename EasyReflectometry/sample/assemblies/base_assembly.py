@@ -55,10 +55,12 @@ class BaseAssembly(BaseObj):
         return yaml.dump(self._dict_repr, sort_keys=False)
 
     @property
-    def top_layer(self) -> Layer:
+    def top_layer(self) -> Layer | None:
         """
         :return: The top layer
         """
+        if len(self.layers) == 0:
+            return None
         return self.layers[0]
 
     @top_layer.setter
@@ -66,13 +68,18 @@ class BaseAssembly(BaseObj):
         """
         Setter for the top layer
         """
-        self.layers[0] = layer
+        if len(self.layers) == 0:
+            self.layers.append(layer)
+        else:
+            self.layers[0] = layer
 
     @property
-    def bottom_layer(self) -> Layer:
+    def bottom_layer(self) -> Layer | None:
         """
         :return: The bottom layer
         """
+        if len(self.layers) < 2:
+            return None
         return self.layers[-1]
 
     @bottom_layer.setter
@@ -80,7 +87,12 @@ class BaseAssembly(BaseObj):
         """
         Setter for the bottom layer
         """
-        self.layers[-1] = layer
+        if len(self.layers) == 0:
+            raise Exception('There is no top layer to add the bottom layer to. Please add a top layer first.')
+        if len(self.layers) == 1:
+            self.layers.append(layer)
+        else:
+            self.layers[-1] = layer
 
     def _setup_thickness_constraints(self) -> None:
         """

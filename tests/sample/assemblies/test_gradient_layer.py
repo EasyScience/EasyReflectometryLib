@@ -30,7 +30,7 @@ class TestGradientLayer():
             interface=None
         )
 
-    def test_init(self, gradient_layer):
+    def test_init(self, gradient_layer: GradientLayer) -> None:
         # When Then Expect
         assert len(gradient_layer.layers) == 10 
         assert gradient_layer.name, 'Test'
@@ -43,7 +43,7 @@ class TestGradientLayer():
         assert gradient_layer.layers[5].material.isld.raw_value == -5.0
         assert gradient_layer.layers[9].material.isld.raw_value == -1.0
 
-    def test_default(self):
+    def test_default(self) -> None:
         # When Then
         result = GradientLayer.default()
         
@@ -53,7 +53,7 @@ class TestGradientLayer():
         assert result.interface is None
         assert len(result.layers) == 10
 
-    def test_from_pars(self):
+    def test_from_pars(self) -> None:
         # When
         init = Material.from_pars(6.908, -0.278, 'Boron')
         final = Material.from_pars(0.487, 0.000, 'Potassium')
@@ -74,12 +74,12 @@ class TestGradientLayer():
         assert result.interface is None
         assert len(result.layers) == 5
 
-    def test_repr(self, gradient_layer):
+    def test_repr(self, gradient_layer: GradientLayer) -> None:
         # When Then Expect
         expected_str = "type: Gradient-layer\nthickness: 1.0\ndiscretisation_elements: 10\ntop_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nbottom_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"
         assert gradient_layer.__repr__() == expected_str
 
-    def test_dict_round_trip(self, gradient_layer):
+    def test_dict_round_trip(self, gradient_layer: GradientLayer) -> None:
         # When Then
         result = GradientLayer.from_dict(gradient_layer.as_dict())
         
@@ -89,7 +89,7 @@ class TestGradientLayer():
         # Just one layer of the generated layers is checked
         assert gradient_layer.layers[5].__repr__() == result.layers[5].__repr__()
 
-    def test_thickness_setter(self, gradient_layer):
+    def test_thickness_setter(self, gradient_layer: GradientLayer) -> None:
         # When
         gradient_layer.thickness = 10.0
 
@@ -98,16 +98,16 @@ class TestGradientLayer():
         assert gradient_layer.layers[0].thickness.raw_value == 1.0
         assert gradient_layer.layers[9].thickness.raw_value == 1.0
 
-    def test_thickness_getter(self, gradient_layer):
+    def test_thickness_getter(self, gradient_layer: GradientLayer) -> None:
         # When
-        gradient_layer.layers = MagicMock()
+        gradient_layer.layers = [MagicMock(), MagicMock()]
         gradient_layer.layers[0].thickness.raw_value = 10.0
 
         # Then
         # discretisation_elements * discrete_layer_thickness
-        assert gradient_layer.thickness == 10.0
+        assert gradient_layer.thickness == 100.0
 
-    def test_roughness_setter(self, gradient_layer):
+    def test_roughness_setter(self, gradient_layer: GradientLayer) -> None:
         # When
         gradient_layer.roughness = 10.0
 
@@ -116,9 +116,9 @@ class TestGradientLayer():
         assert gradient_layer.layers[0].roughness.raw_value == 10.0
         assert gradient_layer.layers[9].roughness.raw_value == 10.0
 
-    def test_thickness_getter(self, gradient_layer):
+    def test_roughness_getter(self, gradient_layer: GradientLayer) -> None:
         # When
-        gradient_layer.layers = MagicMock()
+        gradient_layer.layers = [MagicMock(), MagicMock()]
         gradient_layer.layers[0].roughness.raw_value = 10.0
 
         # Then
