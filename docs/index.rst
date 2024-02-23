@@ -7,12 +7,12 @@
    
    installation
    usage
-   library
+   sample/sample
    calculators
-   tutorials
+   tutorials/tutorials
    contributing
    authors
-   api
+   api/api
 
 
 Indices and tables
