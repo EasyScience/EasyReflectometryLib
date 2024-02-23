@@ -9,4 +9,4 @@ In order to achieve this, we can populating a set of libraries with different fu
 
    material_library
    layer_library
-   item_library
+   assemblies_library

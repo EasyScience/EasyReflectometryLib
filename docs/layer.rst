@@ -1,6 +1,6 @@
 Layer
 =====
-.. automodule:: EasyReflectometry.sample.layer
+.. automodule:: EasyReflectometry.sample.elements.layers.layer
     :members:
     :undoc-members:
     :show-inheritance:

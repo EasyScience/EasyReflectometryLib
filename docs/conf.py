@@ -19,6 +19,7 @@
 #
 import os
 import sys
+import datetime
 
 sys.path.insert(0, os.path.abspath('..'))
 
@@ -62,7 +63,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'EasyReflectometry'
-copyright = "2022, EasyReflectometry"
+copyright = f"{datetime.date.today().year}, EasyReflectometry"
 author = "EasyReflectometry"
 
 # The version info for the project you're documenting, acts as replacement

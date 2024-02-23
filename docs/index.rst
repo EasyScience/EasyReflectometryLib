@@ -12,7 +12,7 @@
    tutorials
    contributing
    authors
-   modules
+   api
 
 
 Indices and tables

@@ -12,15 +12,15 @@ from .base_assembly import BaseAssembly
 class SurfactantLayer(BaseAssembly):
     """
     A :py:class:`SurfactantLayer` constructs a series of layers representing the
-    head and tail groups of a surfactant. This item allows the definition of a
+    head and tail groups of a surfactant. This assembly allows the definition of a
     surfactant or lipid using the chemistry of the head and tail regions, additionally
     this approach will make the application of constraints such as conformal roughness
     or area per molecule more straight forward.
 
-    More information about the usage of this item is available in the
-    `item library documentation`_
+    More information about the usage of this assembly is available in the
+    `surfactant documentation`_
 
-    .. _`item library documentation`: ./item_library.html#surfactantlayer
+    .. _`surfactant documentation`: ./assemblies_library.html#surfactantlayer
     """
 
     def __init__(

@@ -27,10 +27,10 @@ class RepeatingMultilayer(Multilayer):
     :py:class:`Multilayer` and cheaply combined for the appropriate number of
     :py:attr:`repetitions`.
 
-    More information about the usage of this item is available in the
-    `item library documentation`_
+    More information about the usage of this assembly is available in the
+    `repeating multilayer documentation`_
 
-    .. _`item library documentation`: ./item_library.html#repeatingmultilayer
+    .. _`repeating multilayer documentation`: ./assemblies_library.html#repeatingmultilayer
     """
 
     def __init__(
