@@ -9,13 +9,10 @@ from orsopy.fileio import Header
 from orsopy.fileio import orso
 
 
-def load(fname: Union[TextIO, str]) -> sc.DataGroup:
-    """
-    Load data from an ORSO .ort file.
+def load(fname: TextIO | str) -> sc.DataGroup:
+    """Load data from an ORSO .ort file.
 
     :param fname: The file to be read.
-
-    :return: A scipp DataGroup for the loaded datasets.
     """
     try:
         return _load_orso(fname)
@@ -71,11 +68,7 @@ def _load_txt(fname: Union[TextIO, str]) -> sc.DataGroup:
     :return: A populated scipp DataGroup.
     """
     f_data = np.loadtxt(fname)
-    data = {
-        'R_0': sc.array(
-            dims=['Qz_0'], values=f_data[:, 1], variances=np.square(f_data[:, 2])
-        )
-    }
+    data = {'R_0': sc.array(dims=['Qz_0'], values=f_data[:, 1], variances=np.square(f_data[:, 2]))}
     coords = {
         data['R_0'].dims[0]: sc.array(
             dims=['Qz_0'],

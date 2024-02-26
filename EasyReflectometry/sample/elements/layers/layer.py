@@ -70,7 +70,7 @@ class Layer(BaseElement):
     def default(cls, interface=None) -> Layer:
         """Default instance of the reflectometry layer.
 
-        :param interface: Calculator interface.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         material = Material.default()
         thickness = Parameter('thickness', **LAYER_DETAILS['thickness'])
