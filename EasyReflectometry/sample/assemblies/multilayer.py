@@ -13,10 +13,10 @@ class Multilayer(BaseAssembly):
     This :py:mod:`item` will arrange the layers as slabs, one on top of another,
     allowing the reflectometry to be determined from them.
 
-    More information about the usage of this item is available in the
-    `item library documentation`_
+    More information about the usage of this assembly is available in the
+    `multilayer documentation`_
 
-    .. _`item library documentation`: ./item_library.html#multilayer
+    .. _`multilayer documentation`: ./assemblies_library.html#multilayer
     """
 
     def __init__(
@@ -69,7 +69,7 @@ class Multilayer(BaseAssembly):
         """
         Add a layer to the item.
 
-        :param *layers: Layers to add to item
+        :param \*layers: Layers to add to item
         :type layers: Layer
         """
         for arg in layers:

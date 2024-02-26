@@ -4,9 +4,9 @@ API
 .. toctree::
    :maxdepth: 1
 
-   item
+   assemblies
    material
    layer
-   structure
+   sample
    experiment
    data
