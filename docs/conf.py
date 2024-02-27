@@ -107,7 +107,10 @@ autodoc_class_signature = "separated"
 html_theme = 'sphinx_book_theme'
 html_logo = os.path.join('_static', 'logo.png')
 html_favicon = os.path.join('_static', 'favicon.ico')
-html_theme_options = {'logo_only': True}
+html_theme_options = {
+#    'logo_only': True,
+    'navigation_with_keys': True
+}
 html_baseurl = 'https://docs.easyreflectometry.org'
 
 # Theme options are theme-specific and customize the look and feel of a

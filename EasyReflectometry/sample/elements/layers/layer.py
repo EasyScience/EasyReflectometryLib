@@ -51,11 +51,11 @@ class Layer(BaseElement):
     ):
         """Constructor.
 
-        :param material: Material that makes up the layer.
-        :param thickness: Thickness of the layer in Angstrom.
-        :param roughness:Roughness of the layer in Angstrom.
-        :param name: Name of the layer, defaults to 'EasyLayer'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param material: The material for the layer.
+        :param thickness: Layer thickness in Angstrom.
+        :param roughness: Upper roughness on the layer in Angstrom.
+        :param name: Name of the layer, defaults to 'EasyLayer'
+        :param interface: Interface object, defaults to :py:attr:`None`
         """
         super().__init__(
             name=name,
