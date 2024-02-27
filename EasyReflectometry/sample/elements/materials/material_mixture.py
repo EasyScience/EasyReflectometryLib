@@ -57,6 +57,47 @@ class MaterialMixture(BaseElement):
         self._materials_constraints()
         self.interface = interface
 
+    # Class methods for instance creation
+    @classmethod
+    def default(cls, interface=None) -> MaterialMixture:
+        """
+        Default constructor for a mixture of two materials.
+
+        :return: Default material mixture container.
+        """
+        material_a = Material.default()
+        material_b = Material.default()
+        fraction = Parameter('fraction', **MATERIALMIXTURE_DEFAULTS['fraction'])
+        return cls(
+            material_a,
+            material_b,
+            fraction,
+            interface=interface,
+        )
+
+    @classmethod
+    def from_pars(
+        cls,
+        material_a: Material,
+        material_b: Material,
+        fraction: float,
+        name=None,
+        interface=None,
+    ) -> MaterialMixture:
+        """
+        Constructor of a mixture of two materials where the parameters are known.
+
+        :param material_a: The first material
+        :param material_b: The second material
+        :param fraction: The fraction of material_b in material_a
+        :return: MaterialMixture container.
+        """
+        default_options = deepcopy(MATERIALMIXTURE_DEFAULTS)
+        del default_options['fraction']['value']
+        fraction = Parameter('fraction', fraction, **default_options['fraction'])
+
+        return cls(material_a=material_a, material_b=material_b, fraction=fraction, name=name, interface=interface)
+
     def _get_linkable_attributes(self):
         return self._slds
 
@@ -125,47 +166,6 @@ class MaterialMixture(BaseElement):
         self._materials_constraints()
         if self.interface is not None:
             self.interface.generate_bindings(self)
-
-    # Class constructors
-    @classmethod
-    def default(cls, interface=None) -> MaterialMixture:
-        """
-        Default constructor for a mixture of two materials.
-
-        :return: Default material mixture container.
-        """
-        material_a = Material.default()
-        material_b = Material.default()
-        fraction = Parameter('fraction', **MATERIALMIXTURE_DEFAULTS['fraction'])
-        return cls(
-            material_a,
-            material_b,
-            fraction,
-            interface=interface,
-        )
-
-    @classmethod
-    def from_pars(
-        cls,
-        material_a: Material,
-        material_b: Material,
-        fraction: float,
-        name=None,
-        interface=None,
-    ) -> MaterialMixture:
-        """
-        Constructor of a mixture of two materials where the parameters are known.
-
-        :param material_a: The first material
-        :param material_b: The second material
-        :param fraction: The fraction of material_b in material_a
-        :return: MaterialMixture container.
-        """
-        default_options = deepcopy(MATERIALMIXTURE_DEFAULTS)
-        del default_options['fraction']['value']
-        fraction = Parameter('fraction', fraction, **default_options['fraction'])
-
-        return cls(material_a=material_a, material_b=material_b, fraction=fraction, name=name, interface=interface)
 
     # Representation
     @property

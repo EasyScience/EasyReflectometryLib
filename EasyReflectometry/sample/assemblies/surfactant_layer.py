@@ -54,7 +54,7 @@ class SurfactantLayer(BaseAssembly):
         if conformal_roughness:
             self._enable_roughness_constraints()
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> SurfactantLayer:
         """

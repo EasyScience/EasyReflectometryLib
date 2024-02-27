@@ -115,24 +115,7 @@ class MaterialDensity(Material):
         self._chemical_structure = chemical_structure
         self.interface = interface
 
-    @property
-    def chemical_structure(self) -> str:
-        """
-        :returns: Chemical structure string
-        """
-        return self._chemical_structure
-
-    @chemical_structure.setter
-    def chemical_structure(self, structure_string: str) -> None:
-        """
-        :param structure_string: String that defines the chemical structure.
-        """
-        self._chemical_structure = structure_string
-        scattering_length = neutron_scattering_length(structure_string)
-        self.scattering_length_real.value = scattering_length.real
-        self.scattering_length_imag.value = scattering_length.imag
-
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> MaterialDensity:
         """
@@ -167,6 +150,23 @@ class MaterialDensity(Material):
         density = Parameter('density', density, **default_options['density'])
 
         return cls(chemical_structure, density, name=name, interface=interface)
+
+    @property
+    def chemical_structure(self) -> str:
+        """
+        :returns: Chemical structure string
+        """
+        return self._chemical_structure
+
+    @chemical_structure.setter
+    def chemical_structure(self, structure_string: str) -> None:
+        """
+        :param structure_string: String that defines the chemical structure.
+        """
+        self._chemical_structure = structure_string
+        scattering_length = neutron_scattering_length(structure_string)
+        self.scattering_length_real.value = scattering_length.real
+        self.scattering_length_imag.value = scattering_length.imag
 
     @property
     def _dict_repr(self) -> dict[str, str]:

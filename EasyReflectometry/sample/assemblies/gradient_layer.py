@@ -62,35 +62,7 @@ class GradientLayer(BaseAssembly):
         self.thickness = thickness
         self.roughness = roughness
 
-    @property
-    def thickness(self) -> float:
-        """
-        :return: Thickness of the gradient layer
-        """
-        return self.top_layer.thickness.raw_value * self._discretisation_elements
-
-    @thickness.setter
-    def thickness(self, thickness: float) -> None:
-        """
-        :param thickness: Thickness of the gradient layer
-        """
-        self.top_layer.thickness.value = thickness / self._discretisation_elements
-
-    @property
-    def roughness(self) -> float:
-        """
-        :return: Roughness of the gradient layer
-        """
-        return self.top_layer.roughness.raw_value
-
-    @roughness.setter
-    def roughness(self, roughness: float) -> None:
-        """
-        :param roughness: Roughness of the gradient layer
-        """
-        self.top_layer.roughness.value = roughness
-
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, name: str = 'Air-Deuterium', interface=None) -> GradientLayer:
         """
@@ -143,6 +115,34 @@ class GradientLayer(BaseAssembly):
             name=name,
             interface=interface,
         )
+
+    @property
+    def thickness(self) -> float:
+        """
+        :return: Thickness of the gradient layer
+        """
+        return self.top_layer.thickness.raw_value * self._discretisation_elements
+
+    @thickness.setter
+    def thickness(self, thickness: float) -> None:
+        """
+        :param thickness: Thickness of the gradient layer
+        """
+        self.top_layer.thickness.value = thickness / self._discretisation_elements
+
+    @property
+    def roughness(self) -> float:
+        """
+        :return: Roughness of the gradient layer
+        """
+        return self.top_layer.roughness.raw_value
+
+    @roughness.setter
+    def roughness(self, roughness: float) -> None:
+        """
+        :param roughness: Roughness of the gradient layer
+        """
+        self.top_layer.roughness.value = roughness
 
     @property
     def _dict_repr(self) -> dict[str, str]:

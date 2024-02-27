@@ -150,31 +150,7 @@ class LayerApm(Layer):
         self._chemical_structure = chemical_structure
         self.interface = interface
 
-    @property
-    def solvent(self) -> Material:
-        """Getter for the solvent material."""
-        return self.material.material_b
-
-    @solvent.setter
-    def solvent(self, new_solvent: Material) -> None:
-        """
-        :param new_solvent: New solvent material.
-        """
-        self.material.material_b = new_solvent
-
-    @property
-    def solvation(self) -> Parameter:
-        """Getter for the solvation parameter."""
-        return self.material.fraction
-
-    @solvation.setter
-    def solvation(self, fraction: Parameter) -> None:
-        """
-        :param fraction: Fraction of solvent.
-        """
-        self.material.fraction = fraction
-
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> LayerApm:
         """A default instance for layer defined from chemical structure
@@ -243,6 +219,30 @@ class LayerApm(Layer):
             name=name,
             interface=interface,
         )
+
+    @property
+    def solvent(self) -> Material:
+        """Getter for the solvent material."""
+        return self.material.material_b
+
+    @solvent.setter
+    def solvent(self, new_solvent: Material) -> None:
+        """
+        :param new_solvent: New solvent material.
+        """
+        self.material.material_b = new_solvent
+
+    @property
+    def solvation(self) -> Parameter:
+        """Getter for the solvation parameter."""
+        return self.material.fraction
+
+    @solvation.setter
+    def solvation(self, fraction: Parameter) -> None:
+        """
+        :param fraction: Fraction of solvent.
+        """
+        self.material.fraction = fraction
 
     @property
     def chemical_structure(self) -> str:

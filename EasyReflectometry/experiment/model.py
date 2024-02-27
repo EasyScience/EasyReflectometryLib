@@ -63,7 +63,7 @@ class Model(BaseObj):
         )
         self.interface = interface
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> Model:
         """Default instance of the reflectometry experiment model.

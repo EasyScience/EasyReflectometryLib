@@ -53,7 +53,7 @@ class RepeatingMultilayer(Multilayer):
         self._add_component('repetitions', repetitions)
         self.interface = interface
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> RepeatingMultilayer:
         """

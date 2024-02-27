@@ -32,7 +32,7 @@ class Multilayer(BaseAssembly):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
         super().__init__(name, layers=layers, type=type, interface=interface)
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> Multilayer:
         """

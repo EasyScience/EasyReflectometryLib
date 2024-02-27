@@ -46,7 +46,7 @@ class Material(BaseElement):
     ):
         super().__init__(name=name, interface=interface, sld=sld, isld=isld)
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> Material:
         """

@@ -19,7 +19,7 @@ class LayerCollection(BaseElementCollection):
     ):
         super().__init__(name, interface, *layers, **kwargs)
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> LayerCollection:
         """

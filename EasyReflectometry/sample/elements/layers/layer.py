@@ -65,7 +65,7 @@ class Layer(BaseElement):
             roughness=roughness,
         )
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> Layer:
         """Default instance of the reflectometry layer.
