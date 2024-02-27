@@ -69,11 +69,12 @@ class MaterialDensity(Material):
         name: str = 'EasyMaterialDensity',
         interface=None,
     ) -> MaterialDensity:
-        """
-        :param chemical_structure: Chemical formula for the material
-        :param density: Mass density for the material
-        :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`
-        :param interface: Interface object, defaults to :py:attr:`None`
+        """Constructor.
+
+        :param chemical_structure: Chemical formula for the material.
+        :param density: Mass density for the material.
+        :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`.
+        :param interface: Interface object, defaults to :py:attr:`None`.
         """
         scattering_length = neutron_scattering_length(chemical_structure)
         default_options = deepcopy(MATERIALDENSITY_DEFAULTS)

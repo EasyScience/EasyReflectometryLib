@@ -49,11 +49,11 @@ class Layer(BaseElement):
         name: str = 'EasyLayer',
         interface=None,
     ):
-        """Constructor for the reflectometry layer.
+        """Constructor.
 
         :param material: Material that makes up the layer.
-        :param thickness: Thickness of the layer in angstrom.
-        :param roughness:Roughness of the layer in angstrom.
+        :param thickness: Thickness of the layer in Angstrom.
+        :param roughness:Roughness of the layer in Angstrom.
         :param name: Name of the layer, defaults to 'EasyLayer'.
         :param interface: Calculator interface, defaults to :py:attr:`None`.
         """

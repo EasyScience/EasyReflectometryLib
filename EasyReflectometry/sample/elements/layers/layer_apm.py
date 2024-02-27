@@ -76,7 +76,7 @@ class LayerApm(Layer):
     #: Solvation as a fraction.
     solvation: Parameter
     # Added in __init__
-    #: Area per molecule for the chemical material.
+    #: Area per molecule for the chemical material in Anstrom^2.
     area_per_molecule: Parameter
     #: Real part of the scattering length.
     scattering_length_real: Parameter
@@ -98,13 +98,14 @@ class LayerApm(Layer):
         name: str = 'EasyLayerApm',
         interface=None,
     ):
-        """
+        """Constructor.
+
         :param chemical_structure: Chemical formula for the material in the layer.
-        :param thickness: Layer thickness in angstrom.
+        :param thickness: Layer thickness in Angstrom.
         :param solvent: Solvent present in material.
         :param solvation: Fraction of solvent present.
         :param area_per_molecule: Area per molecule for the chemical material.
-        :param roughness: Upper roughness on the layer in angstrom.
+        :param roughness: Upper roughness on the layer in Angstrom.
         :param name: Name of the layer, defaults to 'EasyLayerApm'
         :param interface: Interface object, defaults to :py:attr:`None`
         """
@@ -153,8 +154,7 @@ class LayerApm(Layer):
     # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> LayerApm:
-        """A default instance for layer defined from chemical structure
-        and area per molecule.
+        """A default instance for layer defined from chemical structure and area per molecule.
 
         :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
@@ -185,8 +185,7 @@ class LayerApm(Layer):
         name: str = 'EasyLayerApm',
         interface=None,
     ) -> LayerApm:
-        """An instance for a layer described with the area per molecule,
-        where the parameters are known.
+        """An instance for a layer described with the area per molecule, where the parameters are known.
 
         :param chemical_structure: Chemical formula for the material in the layer
         :param thickness: Layer thickness
@@ -252,6 +251,7 @@ class LayerApm(Layer):
     @chemical_structure.setter
     def chemical_structure(self, structure_string: str) -> None:
         """Setter for the chemical structure.
+
         :param structure_string: String that defines the chemical structure.
         """
         self._chemical_structure = structure_string
@@ -262,17 +262,16 @@ class LayerApm(Layer):
 
     @property
     def _dict_repr(self) -> dict[str, str]:
-        """Dictionary representation of the :py:class:`LayerApm` object.
-        Produces a simple dictionary
-        """
+        """Dictionary representation of the :py:class:`LayerApm` object. Produces a simple dictionary"""
         layerapm_dict = super()._dict_repr
         layerapm_dict['chemical_structure'] = self._chemical_structure
         layerapm_dict['area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} ' f'{self.area_per_molecule.unit}'
         return layerapm_dict
 
     def as_dict(self, skip: list = None) -> dict[str, str]:
-        """Custom as_dict method to skip necessary things.
-        Produces a cleaned dictionary.
+        """Produces a cleaned  using a austom as_dict method to skip necessary things.
+
+        :param skip: List of keys to skip, defaults to :py:attr:`None`.
         """
         if skip is None:
             skip = []
