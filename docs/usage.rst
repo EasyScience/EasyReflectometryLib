@@ -8,4 +8,4 @@ To use EasyReflectometry in a project::
 
 Details of specific usage of :py:mod:`EasyReflectometry` can be found in the `tutorials`_.
 
-.. _`tutorials`: ./tutorials.html
+.. _`tutorials`: ./tutorials/tutorials.html

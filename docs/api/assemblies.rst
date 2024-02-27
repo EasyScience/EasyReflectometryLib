@@ -1,7 +1,7 @@
 Assemblies
-##########
+==========
 
-Assemblies are collections of layers that are used to represent a specific structure.
+Assemblies are collections of layers that are used to represent a specific physical setup.
 
 .. automodule:: EasyReflectometry.sample.assemblies.multilayer
     :members:

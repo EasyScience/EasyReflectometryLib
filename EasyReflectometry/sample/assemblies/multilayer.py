@@ -6,17 +6,14 @@ from .base_assembly import BaseAssembly
 
 
 class Multilayer(BaseAssembly):
-    """
-    A :py:class:`Multilayer` consists of a series of
-    :py:class:`EasyReflectometry.sample.layer.Layer` or
-    :py:class:`EasyReflectometry.sample.layers.Layers`.
-    This :py:mod:`item` will arrange the layers as slabs, one on top of another,
+    """A multi layer is build from a single or a list of :py:class:`Layer` or :py:class:`LayerCollection`.
+    The multi layer will arrange the layers as slabs, one on top of another,
     allowing the reflectometry to be determined from them.
 
     More information about the usage of this assembly is available in the
     `multilayer documentation`_
 
-    .. _`multilayer documentation`: ./assemblies_library.html#multilayer
+    .. _`multilayer documentation`: ../sample/assemblies_library.html#multilayer
     """
 
     def __init__(
@@ -26,6 +23,13 @@ class Multilayer(BaseAssembly):
         interface=None,
         type: str = 'Multi-layer',
     ):
+        """Constructor.
+
+        :param layers: The layers that make up the multi-layer.
+        :param name: Name for multi layer, defaults to 'EasyMultilayer'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param type: Type of the constructed instance, defaults to 'Multi-layer'
+        """
         if isinstance(layers, Layer):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
@@ -35,11 +39,9 @@ class Multilayer(BaseAssembly):
     # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> Multilayer:
-        """
-        Default constructor for a multi-layer item.
+        """Default instance of a multi-layer.
 
-        :return: Multilayer container
-        :rtype: Multilayer
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         layers = LayerCollection.default()
         return cls(layers, interface=interface)
@@ -51,13 +53,11 @@ class Multilayer(BaseAssembly):
         name: str = 'EasyMultilayer',
         interface=None,
     ) -> Multilayer:
-        """
-        Constructor of a multi-layer item where the parameters are known.
+        """Instance of a multi-layer where the parameters are known.
 
-        :param layers: The layers in the multi-layer
-        :type layers: EasyReflectometry.layers.Layers
-        :return: Multilayer container
-        :rtype: Multilayer
+        :param layers: The layers in the multi-layer.
+        :param name: Name of the layer, defaults to 'EasyMultilayer'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         return cls(
             layers=layers,
@@ -66,11 +66,9 @@ class Multilayer(BaseAssembly):
         )
 
     def add_layer(self, *layers: tuple[Layer]) -> None:
-        """
-        Add a layer to the item.
+        """Add a layer to the multi layer.
 
-        :param \*layers: Layers to add to item
-        :type layers: Layer
+        :param \*layers: Layers to add to the multi layer.
         """
         for arg in layers:
             if issubclass(arg.__class__, Layer):
@@ -79,10 +77,9 @@ class Multilayer(BaseAssembly):
                     self.interface().add_layer_to_item(arg.uid, self.uid)
 
     def duplicate_layer(self, idx: int) -> None:
-        """
-        Duplicate a given layer.
+        """Duplicate a given layer.
 
-        :param idx: index of layer to duplicate
+        :param idx: index of layer to duplicate.
         :type idx: int
         """
         to_duplicate = self.layers[idx]
@@ -95,11 +92,9 @@ class Multilayer(BaseAssembly):
         self.add_layer(duplicate_layer)
 
     def remove_layer(self, idx: int) -> None:
-        """
-        Remove a layer from the item.
+        """Remove a layer from the item.
 
         :param idx: index of layer to remove
-        :type idx: int
         """
         if self.interface is not None:
             self.interface().remove_layer_from_item(self.layers[idx].uid, self.uid)
@@ -108,11 +103,7 @@ class Multilayer(BaseAssembly):
     # Representation
     @property
     def _dict_repr(self) -> dict:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+        """A simplified dict representation."""
         if len(self.layers) == 1:
             return self.top_layer._dict_repr
         return {self.name: self.layers._dict_repr}

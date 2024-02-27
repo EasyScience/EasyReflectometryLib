@@ -21,8 +21,8 @@ REPEATINGMULTILAYER_DETAILS = {
 
 class RepeatingMultilayer(Multilayer):
     """
-    A :py:class:`RepeatingMultilayer` takes a :py:class:`Multilayer` and repeats
-    it a some number of times. This enables a computational efficiency in many
+    A repeating multi layer is build from a :py:class:`Multilayer` and which it repeats
+    for a given number of times. This enables a computational efficiency in many
     reflectometry engines as the operation can be performed for a single
     :py:class:`Multilayer` and cheaply combined for the appropriate number of
     :py:attr:`repetitions`.
@@ -30,7 +30,7 @@ class RepeatingMultilayer(Multilayer):
     More information about the usage of this assembly is available in the
     `repeating multilayer documentation`_
 
-    .. _`repeating multilayer documentation`: ./assemblies_library.html#repeatingmultilayer
+    .. _`repeating multilayer documentation`: ../sample/assemblies_library.html#repeatingmultilayer
     """
 
     def __init__(
@@ -40,6 +40,15 @@ class RepeatingMultilayer(Multilayer):
         name: str = 'EasyRepeatingMultilayer',
         interface=None,
     ):
+        """
+        Constructor.
+
+        :param layers: The layers that make up the multi-layer that will be repeated.
+        :param repetitions: Number of repetitions of the given series of layers
+        :param name: Name for the repeating multi layer, defaults to 'EasyRepeatingMultilayer'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        """
+
         if isinstance(layers, Layer):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
@@ -57,7 +66,7 @@ class RepeatingMultilayer(Multilayer):
     @classmethod
     def default(cls, interface=None) -> RepeatingMultilayer:
         """
-        Default constructor for the reflectometry repeating multi layer.
+        Default instance of a repeating multi layer.
 
         :return: Default repeating multi-layer container
         """
@@ -77,13 +86,13 @@ class RepeatingMultilayer(Multilayer):
         name: str = 'EasyRepeatingMultilayer',
         interface=None,
     ) -> RepeatingMultilayer:
-        """
-        Constructor of a reflectometry repeating multi layer where the
+        """Instance of a reflectometry repeating multi layer where the
         parameters are known.
 
-        :param layers: The layers in the repeating multi layer
+        :param layers: The layers in the repeating multi layer.
         :param repetitions: Number of repetitions, defaults to :py:attr`1`.
-        :return: Repeating multi-layer container
+        :param name: Name of the layer, defaults to 'EasyRepeatingMultilayer'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         default_options = deepcopy(REPEATINGMULTILAYER_DETAILS)
         del default_options['repetitions']['value']
@@ -97,21 +106,10 @@ class RepeatingMultilayer(Multilayer):
             interface=interface,
         )
 
-    @property
-    def uid(self) -> int:
-        """
-        :return: UID from the borg map
-        """
-        return self._borg.map.convert_id_to_key(self)
-
     # Representation
     @property
     def _dict_repr(self) -> dict:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+        """A simplified dict representation."""
         d_dict = {self.name: self.layers._dict_repr}
         d_dict[self.name]['repetitions'] = self.repetitions.raw_value
         return d_dict

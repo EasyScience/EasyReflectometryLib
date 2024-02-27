@@ -9,10 +9,7 @@ from .base_assembly import BaseAssembly
 
 
 class GradientLayer(BaseAssembly):
-    """
-    A :py:class:`GradientLayer` constructs a gradient multilayer for the
-    provided initial and final material.
-    """
+    """A set of discrete gradient layers changing from the initial to the final material."""
 
     def __init__(
         self,
@@ -25,13 +22,15 @@ class GradientLayer(BaseAssembly):
         interface=None,
     ) -> GradientLayer:
         """
+        Constructor.
+
         :param initial_material: Material of initial "part" of the layer
         :param final_material: Material of final "part" of the layer
         :param thickness: Thicknkess of the layer
         :param roughness: Roughness of the layer
         :param discretisation_elements: Number of discrete layers
-        :param name: Name for gradient layer
-        :param interface: Interface to use for the layer
+        :param name: Name for gradient layer, defaults to 'EasyGradienLayer'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         self._initial_material = initial_material
         self._final_material = final_material
@@ -65,11 +64,7 @@ class GradientLayer(BaseAssembly):
     # Class methods for instance creation
     @classmethod
     def default(cls, name: str = 'Air-Deuterium', interface=None) -> GradientLayer:
-        """
-        Default constructor for a gradient layer object. The default is air to deuterium.
-
-        :return: Gradient layer object.
-        """
+        """Default instance  for a gradient layer object. The default is air to deuterium."""
         initial_material = Material.from_pars(0.0, 0.0, 'Air')
         final_material = Material.from_pars(6.36, 0.0, 'D2O')
 
@@ -94,8 +89,7 @@ class GradientLayer(BaseAssembly):
         name: str = 'EasyGradientLayer',
         interface=None,
     ) -> GradientLayer:
-        """
-        Constructor for the gradient layer where the parameters are known,
+        """Instance for the gradient layer where the parameters are known,
         :py:attr:`initial` is facing the neutron beam.
 
         :param initial_material: Material of initial "part" of the layer
@@ -118,39 +112,32 @@ class GradientLayer(BaseAssembly):
 
     @property
     def thickness(self) -> float:
-        """
-        :return: Thickness of the gradient layer
-        """
+        """Get the thickness of the gradient layer in Angstrom."""
         return self.top_layer.thickness.raw_value * self._discretisation_elements
 
     @thickness.setter
     def thickness(self, thickness: float) -> None:
-        """
-        :param thickness: Thickness of the gradient layer
+        """Set the thickness of the gradient layer.
+
+        :param thickness: Thickness of the gradient layer in Angstroms.
         """
         self.top_layer.thickness.value = thickness / self._discretisation_elements
 
     @property
     def roughness(self) -> float:
-        """
-        :return: Roughness of the gradient layer
-        """
+        """Get the Roughness of the gradient layer in Angstrom."""
         return self.top_layer.roughness.raw_value
 
     @roughness.setter
     def roughness(self, roughness: float) -> None:
-        """
-        :param roughness: Roughness of the gradient layer
+        """Set the roughness of the gradient layer.
+        :param roughness: Roughness of the gradient layer in Angstroms.
         """
         self.top_layer.roughness.value = roughness
 
     @property
     def _dict_repr(self) -> dict[str, str]:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+        """A simplified dict representation."""
         return {
             'thickness': self.thickness,
             'discretisation_elements': self._discretisation_elements,
@@ -160,9 +147,7 @@ class GradientLayer(BaseAssembly):
 
     def as_dict(self, skip: list = None) -> dict:
         """
-        Custom as_dict method to skip generated layers.
-
-        :return: Cleaned dictionary.
+        Cleaned dictionary. Custom as_dict method to skip generated layers.
         """
         if skip is None:
             skip = []

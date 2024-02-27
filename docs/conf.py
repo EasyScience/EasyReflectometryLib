@@ -94,8 +94,10 @@ pygments_style = 'sphinx'
 todo_include_todos = False
 
 # Ensuring the order in the file is kept.
-# autodoc_member_order = 'bysource'
-
+autoclass_content = 'class'
+autodoc_member_order = 'bysource'
+autodoc_typehints = 'signature'
+autodoc_class_signature = "separated"
 
 # -- Options for HTML output -------------------------------------------
 

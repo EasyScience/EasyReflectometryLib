@@ -11,6 +11,8 @@ from .elements.layers.layer import Layer
 
 
 class Sample(BaseCollection):
+    """Collection of assemblies that represent the sample for which experimental measurements exist."""
+
     def __init__(
         self,
         *args: list[Layer | BaseAssembly],
@@ -18,7 +20,7 @@ class Sample(BaseCollection):
         interface=None,
         **kwargs,
     ):
-        """Constructor for the sample.
+        """Constructor.
 
         :param args: The assemblies in the sample.
         :param name: Name of the sample, defaults to 'EasySample'.

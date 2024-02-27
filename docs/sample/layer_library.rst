@@ -41,5 +41,5 @@ We can construct a 10 Å thick :py:class:`LayerApm` of phosphatidylcholine, with
 It is expected that the typical user will not interface directly with the :py:class:`LayerApm` assembly type, but instead the :py:class:`SurfactantLayer` `assemblies library`_ will be used instead. 
 
 .. _`materials`: ./material_library.html
-.. _`tutorials`: ./tutorials.html
+.. _`tutorials`: ../tutorials/tutorials.html
 .. _`assemblies library`: ./assemblies_library.html

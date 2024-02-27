@@ -45,6 +45,10 @@ LAYER_DETAILS = {
 
 
 class Model(BaseObj):
+    """Model is the class that represents the experiment.
+    It is used to store the information about the experiment and to perform the calculations.
+    """
+
     def __init__(
         self,
         sample: Sample,
@@ -54,6 +58,16 @@ class Model(BaseObj):
         name: str = 'EasyModel',
         interface=None,
     ):
+        """Constructor.
+
+        :param sample: The sample being modelled.
+        :param scale: Scaling factor of profile.
+        :param background: Linear background magnitude.
+        :param resolution: Constant resolution smearing percentage.
+        :param name: Name of the model, defaults to 'EasyModel'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
+
+        """
         super().__init__(
             name=name,
             sample=sample,
@@ -88,10 +102,10 @@ class Model(BaseObj):
     ) -> Model:
         """Instance of a reflectometry experiment model where the parameters are known.
 
-        :param sample: The sample being modelled
-        :param scale: Scaling factor of profile
-        :param background: Linear background magnitude
-        :param resolution: Constant resolution smearing percentage
+        :param sample: The sample being modelled.
+        :param scale: Scaling factor of profile.
+        :param background: Linear background magnitude.
+        :param resolution: Constant resolution smearing percentage.
         :param name: Name of the layer, defaults to 'EasyModel'.
         :param interface: Calculator interface, defaults to :py:attr:`None`.
         """

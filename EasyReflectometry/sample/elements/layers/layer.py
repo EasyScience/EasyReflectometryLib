@@ -36,9 +36,9 @@ class Layer(BaseElement):
     # Added in super().__init__
     #: Material that makes up the layer.
     material: Material
-    #: Thickness of the layer in angstrom.
+    #: Thickness of the layer in Angstrom.
     thickness: Parameter
-    #: Roughness of the layer in angstrom.
+    #: Roughness of the layer in Angstrom.
     roughness: Parameter
 
     def __init__(
@@ -126,10 +126,7 @@ class Layer(BaseElement):
     # Representation
     @property
     def _dict_repr(self) -> dict[str, str]:
-        """A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+        """A simplified dict representation."""
         return {
             self.name: {
                 'material': self.material._dict_repr,

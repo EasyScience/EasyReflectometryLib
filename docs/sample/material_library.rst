@@ -3,7 +3,7 @@ Materials
 
 In order to support a wide range of applications (and to build complex `assemblies`_) there are a few different types of material that can be utilised in :py:mod:`EasyReflectometry`. 
 These can include constraints or enabel the user to define the material based on chemical or physical properties. 
-Full API documentation for the :py:mod:`EasyReflectoemtry.sample.material` mdoule is also available, but here we will give some simple uses for them. 
+Full API documentation for the :py:mod:`EasyReflectoemtry.sample.elements.material` mdoule is also available, but here we will give some simple uses for them. 
 
 :py:class:`Material`
 --------------------
@@ -62,7 +62,7 @@ So to produce a material that is 20 % D2O in a polymer, the following is used.
 For the :py:attr:`solvated_polymer` object, the :py:attr:`sld` will be :code:`2.872 1 / angstrom ** 2` (the weighted average of the two scattering length densities). 
 The :py:class:`MaterialMixture` includes a constraint such that if the value of either constituent scattering length densities (both real and imaginary components) or the fraction changes, then the resulting material :py:attr:`sld` and :py:attr:`isld` will change appropriately. 
 
-.. _`assemblies`: ./library.html
-.. _`tutorials`: ./tutorials.html
+.. _`assemblies`: ./assemblies_library.html
+.. _`tutorials`: ../tutorials/tutorials.html
 .. _`slab models`: https://www.reflectometry.org/isis_school/3_reflectometry_slab_models/the_slab_model.html
-.. _`solvation tutorial`: ./solvation.html
+.. _`solvation tutorial`: ../tutorials/solvation.html
