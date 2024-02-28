@@ -78,32 +78,6 @@ class MaterialMixture(BaseElement):
         return self._slds
 
     @property
-    def sld(self):
-        return self._slds[0]
-
-    @property
-    def isld(self):
-        return self._slds[1]
-
-    def _materials_constraints(self):
-        self._slds[0].enabled = True
-        self._slds[1].enabled = True
-        constraint = FunctionalConstraint(
-            self._slds[0], weighted_average_sld, [self._material_a.sld, self._material_b.sld, self.fraction]
-        )
-        self._material_a.sld.user_constraints['sld'] = constraint
-        self._material_b.sld.user_constraints['sld'] = constraint
-        self.fraction.user_constraints['sld'] = constraint
-        constraint()
-        iconstraint = FunctionalConstraint(
-            self._slds[1], weighted_average_sld, [self._material_a.isld, self._material_b.isld, self.fraction]
-        )
-        self._material_a.isld.user_constraints['isld'] = iconstraint
-        self._material_b.isld.user_constraints['isld'] = iconstraint
-        self.fraction.user_constraints['isld'] = iconstraint
-        iconstraint()
-
-    @property
     def material_a(self) -> Material:
         """Getter for material_a."""
         return self._material_a
