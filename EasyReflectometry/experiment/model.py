@@ -3,7 +3,6 @@ from __future__ import annotations
 __author__ = 'github.com/arm61'
 
 from copy import deepcopy
-from typing import Union
 
 import yaml
 from easyCore import np
@@ -45,6 +44,10 @@ LAYER_DETAILS = {
 
 
 class Model(BaseObj):
+    """Model is the class that represents the experiment.
+    It is used to store the information about the experiment and to perform the calculations.
+    """
+
     def __init__(
         self,
         sample: Sample,
@@ -54,6 +57,16 @@ class Model(BaseObj):
         name: str = 'EasyModel',
         interface=None,
     ):
+        """Constructor.
+
+        :param sample: The sample being modelled.
+        :param scale: Scaling factor of profile.
+        :param background: Linear background magnitude.
+        :param resolution: Constant resolution smearing percentage.
+        :param name: Name of the model, defaults to 'EasyModel'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
+
+        """
         super().__init__(
             name=name,
             sample=sample,
@@ -63,14 +76,12 @@ class Model(BaseObj):
         )
         self.interface = interface
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> Model:
-        """
-        Default constructor for the reflectometry experiment model.
+        """Default instance of the reflectometry experiment model.
 
-        :return: Default model container
-        :rtype: Model
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         sample = Sample.default()
         scale = Parameter('scale', **LAYER_DETAILS['scale'])
@@ -88,14 +99,14 @@ class Model(BaseObj):
         name: str = 'EasyModel',
         interface=None,
     ) -> Model:
-        """
-        Constructor of a reflectometry experiment model where the parameters are known.
+        """Instance of a reflectometry experiment model where the parameters are known.
 
-        :param sample: The sample being modelled
-        :param scale: Scaling factor of profile
-        :param background: Linear background magnitude
-        :param background: Constant resolution smearing percentage
-        :return: Model container
+        :param sample: The sample being modelled.
+        :param scale: Scaling factor of profile.
+        :param background: Linear background magnitude.
+        :param resolution: Constant resolution smearing percentage.
+        :param name: Name of the layer, defaults to 'EasyModel'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         default_options = deepcopy(LAYER_DETAILS)
         del default_options['scale']['value']
@@ -115,11 +126,10 @@ class Model(BaseObj):
             interface=interface,
         )
 
-    def add_item(self, *items: Union[Layer, RepeatingMultilayer]) -> None:
-        """
-        Add a layer or item to the model sample.
+    def add_item(self, *items: Layer | RepeatingMultilayer) -> None:
+        """Add a layer or item to the model sample.
 
-        :param *items: Layers or items to add to model sample
+        :param items: Layers or items to add to model sample.
         """
         for arg in items:
             if issubclass(arg.__class__, Multilayer):
@@ -128,8 +138,7 @@ class Model(BaseObj):
                     self.interface().add_item_to_model(arg.uid, self.uid)
 
     def duplicate_item(self, idx: int) -> None:
-        """
-        Duplicate a given item or layer in a sample.
+        """Duplicate a given item or layer in a sample.
 
         :param idx: Index of the item or layer to duplicate
         """
@@ -150,12 +159,10 @@ class Model(BaseObj):
         )
         self.add_item(duplicate)
 
-    def remove_item(self, idx) -> None:
-        """
-        Remove an item from the model.
+    def remove_item(self, idx: int) -> None:
+        """Remove an item from the model.
 
-        :param idx: Index of the item to remove
-        :type idx: int
+        :param idx: Index of the item to remove.
         """
         if self.interface is not None:
             self.interface().remove_item_from_model(self.sample[idx].uid, self.uid)
@@ -163,19 +170,13 @@ class Model(BaseObj):
 
     @property
     def uid(self) -> int:
-        """
-        Return a UID from the borg map
-        """
+        """Return a UID from the borg map."""
         return self._borg.map.convert_id_to_key(self)
 
     # Representation
     @property
     def _dict_repr(self) -> dict[str, dict[str, str]]:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+        """A simplified dict representation."""
         return {
             self.name: {
                 'scale': self.scale.raw_value,
@@ -186,10 +187,5 @@ class Model(BaseObj):
         }
 
     def __repr__(self) -> str:
-        """
-        String representation of the layer.
-
-        :return: a string representation of the layer
-        :rtype: str
-        """
+        """String representation of the layer."""
         return yaml.dump(self._dict_repr, sort_keys=False)

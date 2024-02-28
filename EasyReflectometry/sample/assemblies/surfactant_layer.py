@@ -10,17 +10,16 @@ from .base_assembly import BaseAssembly
 
 
 class SurfactantLayer(BaseAssembly):
-    """
-    A :py:class:`SurfactantLayer` constructs a series of layers representing the
-    head and tail groups of a surfactant. This item allows the definition of a
+    """A surfactant layer constructs a series of layers representing the
+    head and tail groups of a surfactant. This assembly allows the definition of a
     surfactant or lipid using the chemistry of the head and tail regions, additionally
     this approach will make the application of constraints such as conformal roughness
     or area per molecule more straight forward.
 
-    More information about the usage of this item is available in the
-    `item library documentation`_
+    More information about the usage of this assembly is available in the
+    `surfactant documentation`_
 
-    .. _`item library documentation`: ./item_library.html#surfactantlayer
+    .. _`surfactant documentation`: ../sample/assemblies_library.html#surfactantlayer
     """
 
     def __init__(
@@ -31,10 +30,13 @@ class SurfactantLayer(BaseAssembly):
         conformal_roughness: bool = False,
         interface=None,
     ):
-        """
-        :param head: Head layer object
-        :param tail: Tail layer object
-        :param name: Name for surfactant layer
+        """Constructor.
+
+        :param layers: List with the head and tail layer.
+        :param name: Name for surfactant layer, defaults to 'EasySurfactantLayer'.
+        :param constrain_apm: Constrain the area per molecule, defaults to :py:attr:`False`.
+        :param conformal_roughness: Constrain the roughness to be the same for both layers, defaults to :py:attr:`False`.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         surfactant = LayerCollection(layers[0], layers[1], name=name)
         super().__init__(
@@ -54,11 +56,10 @@ class SurfactantLayer(BaseAssembly):
         if conformal_roughness:
             self._enable_roughness_constraints()
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> SurfactantLayer:
-        """
-        Default constructor for a surfactant layer object. The default lipid
+        """Default instance of a surfactant layer object. The default lipid
         type is DPPC.
 
         :return: Surfactant layer object.
@@ -87,22 +88,19 @@ class SurfactantLayer(BaseAssembly):
         name: str = 'EasySurfactantLayer',
         interface=None,
     ) -> SurfactantLayer:
-        """
-        Constructor for the surfactant layer where the parameters are known,
+        """Instance of a surfactant layer where the parameters are known,
         :py:attr:`top_layer` is that which the neutrons interact with first.
 
         :param top_layer_chemical_structure: Chemical formula for first layer
         :param top_layer_thickness: Thicknkess of first layer
         :param top_layer_solvent: Solvent in first layer
-        :param top_layer_solvation: Fractional solvation of first layer by
-            :py:attr:`top_layer_solvent`
+        :param top_layer_solvation: Fractional solvation of first layer by :py:attr:`top_layer_solvent`
         :param top_layer_area_per_molecule: Area per molecule of first layer
         :param top_layer_roughness: Roughness of first layer
         :param bottom_layer_chemical_structure: Chemical formula for second layer
         :param bottom_layer_thickness: Thicknkess of second layer
         :param bottom_layer_solvent: Solvent in second layer
-        :param bottom_layer_solvation: Fractional solvation of second layer by
-            :py:attr:`bottom_layer_solvent`
+        :param bottom_layer_solvation: Fractional solvation of second layer by :py:attr:`bottom_layer_solvent`
         :param bottom_layer_area_per_molecule: Area per molecule of second layer
         :param bottom_layer_roughness: Roughness of second layer
         :param name: Name for surfactant layer
@@ -129,43 +127,35 @@ class SurfactantLayer(BaseAssembly):
 
     @property
     def constrain_apm(self) -> bool:
-        """
-        :return: if the area per molecule is constrained
-        """
+        """Get the area per molecule constraint status."""
         return self.top_layer.area_per_molecule.user_constraints['apm'].enabled
 
     @constrain_apm.setter
-    def constrain_apm(self, x: bool):
-        """
-        Set the constraint such that the head and tail layers have the
+    def constrain_apm(self, status: bool):
+        """Set the status for the area per molecule constraint such that the head and tail layers have the
         same area per molecule.
 
-        :param x: Boolean description the presence of the constraint.
+        :param x: Boolean description the wanted of the constraint.
         """
-        self.top_layer.area_per_molecule.user_constraints['apm'].enabled = x
+        self.top_layer.area_per_molecule.user_constraints['apm'].enabled = status
         self.top_layer.area_per_molecule.value = self.top_layer.area_per_molecule.raw_value
 
     @property
     def conformal_roughness(self) -> bool:
-        """
-        :return: is the roughness is the same for both layers.
-        """
+        """Get the roughness constraint status."""
         return self.top_layer.roughness.user_constraints['roughness_1'].enabled
 
     @conformal_roughness.setter
-    def conformal_roughness(self, x: bool):
-        """
-        Set the roughness to be the same for both layers.
-        """
-        if x:
+    def conformal_roughness(self, status: bool):
+        """Set the status for the roughness to be the same for both layers."""
+        if status:
             self._enable_roughness_constraints()
             self.top_layer.roughness.value = self.top_layer.roughness.raw_value
         else:
             self._disable_roughness_constraints()
 
     def constrain_solvent_roughness(self, solvent_roughness: Parameter):
-        """
-        Add the constraint to the solvent roughness.
+        """Add the constraint to the solvent roughness.
 
         :param solvent_roughness: The solvent roughness parameter.
         """
@@ -185,8 +175,7 @@ class SurfactantLayer(BaseAssembly):
         top_layer_fraction: bool = True,
         bottom_layer_fraction: bool = True,
     ):
-        """
-        Constrain structural parameters between surfactant layer objects.
+        """Constrain structural parameters between surfactant layer objects.
 
         :param another_contrast: The surfactant layer to constrain
         """
@@ -231,11 +220,7 @@ class SurfactantLayer(BaseAssembly):
 
     @property
     def _dict_repr(self) -> dict:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+        """A simplified dict representation."""
         return {
             'top_layer': self.top_layer._dict_repr,
             'bottom_layer': self.bottom_layer._dict_repr,
@@ -244,11 +229,7 @@ class SurfactantLayer(BaseAssembly):
         }
 
     def as_dict(self, skip: list = None) -> dict:
-        """
-        Custom as_dict method to skip necessary things.
-
-        :return: Cleaned dictionary.
-        """
+        """Cleaned dictionary. Custom as_dict method to skip necessary things."""
         if skip is None:
             skip = []
         this_dict = super().as_dict(skip=skip)

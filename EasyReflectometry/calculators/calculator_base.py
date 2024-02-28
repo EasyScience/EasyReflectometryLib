@@ -27,16 +27,11 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
     _item_link: dict[str, str]
     _model_link: dict[str, str]
 
-    def __init_subclass__(cls, is_abstract: bool = False, **kwargs):
-        """
-        Initialise all subclasses so that they can be created in the factory
+    def __init_subclass__(cls, is_abstract: bool = False, **kwargs) -> None:
+        r"""Initialise all subclasses so that they can be created in the factory
 
         :param is_abstract: Is this a subclass which shouldn't be dded
-        :type is_abstract: bool
         :param kwargs: key word arguments
-        :type kwargs: dict
-        :return: None
-        :rtype: noneType
         """
         super().__init_subclass__(**kwargs)
         if not is_abstract:
@@ -47,17 +42,13 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         self._wrapper: WrapperBase
 
     def reset_storage(self) -> None:
-        """
-        Reset the storage area of the calculator
-        """
+        """Reset the storage area of the calculator"""
         self._wrapper.reset_storage()
 
     def create(self, model: Material | Layer | Multilayer | Model) -> list[ItemContainer]:
-        """
-        Creation function
+        """Creation function
 
         :param model: Object to be created
-        :return: Item containers of the objects
         """
         r_list = []
         t_ = type(model)
@@ -127,8 +118,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         return r_list
 
     def assign_material_to_layer(self, material_id: str, layer_id: str) -> None:
-        """
-        Assign a material to a layer.
+        """Assign a material to a layer.
 
         :param material_id: The material name
         :param layer_id: The layer name
@@ -136,8 +126,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         self._wrapper.assign_material_to_layer(material_id, layer_id)
 
     def add_layer_to_item(self, layer_id: str, item_id: str) -> None:
-        """
-        Add a layer to the item stack
+        """Add a layer to the item stack
 
         :param item_id: The item id
         :param layer_id: The layer id
@@ -145,8 +134,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         self._wrapper.add_layer_to_item(layer_id, item_id)
 
     def remove_layer_from_item(self, layer_id: str, item_id: str) -> None:
-        """
-        Remove a layer from an item stack
+        """Remove a layer from an item stack
 
         :param item_id: The item id
         :param layer_id: The layer id
@@ -154,8 +142,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         self._wrapper.remove_layer_from_item(layer_id, item_id)
 
     def add_item_to_model(self, item_id: str, model_id: str) -> None:
-        """
-        Add a layer to the item stack
+        """Add a layer to the item stack
 
         :param item_id: The item id
         :param model_id: The model id
@@ -163,8 +150,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         self._wrapper.add_item(item_id, model_id)
 
     def remove_item_from_model(self, item_id: str, model_id: str) -> None:
-        """
-        Remove an item from the model
+        """Remove an item from the model
 
         :param item_id: The item id
         :param model_id: The model id
@@ -172,12 +158,10 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         self._wrapper.remove_item(item_id, model_id)
 
     def fit_func(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
-        """
-        Function to perform a fit
+        """Function to perform a fit.
 
         :param x_array: points to be calculated at
         :param model_id: The model id
-        :return: calculated points
         """
         return self._wrapper.calculate(x_array, model_id)
 

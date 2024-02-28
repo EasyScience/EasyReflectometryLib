@@ -69,11 +69,12 @@ class MaterialDensity(Material):
         name: str = 'EasyMaterialDensity',
         interface=None,
     ) -> MaterialDensity:
-        """
-        :param chemical_structure: Chemical formula for the material
-        :param density: Mass density for the material
-        :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`
-        :param interface: Interface object, defaults to :py:attr:`None`
+        """Constructor.
+
+        :param chemical_structure: Chemical formula for the material.
+        :param density: Mass density for the material.
+        :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`.
+        :param interface: Interface object, defaults to :py:attr:`None`.
         """
         scattering_length = neutron_scattering_length(chemical_structure)
         default_options = deepcopy(MATERIALDENSITY_DEFAULTS)
@@ -115,31 +116,12 @@ class MaterialDensity(Material):
         self._chemical_structure = chemical_structure
         self.interface = interface
 
-    @property
-    def chemical_structure(self) -> str:
-        """
-        :returns: Chemical structure string
-        """
-        return self._chemical_structure
-
-    @chemical_structure.setter
-    def chemical_structure(self, structure_string: str) -> None:
-        """
-        :param structure_string: String that defines the chemical structure.
-        """
-        self._chemical_structure = structure_string
-        scattering_length = neutron_scattering_length(structure_string)
-        self.scattering_length_real.value = scattering_length.real
-        self.scattering_length_imag.value = scattering_length.imag
-
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> MaterialDensity:
-        """
-        Default constructor for the material defined by density and chemical structure.
+        """Default instance of material defined by density and chemical structure.
 
         :param interface: Interface object, defaults to :py:attr:`None`
-        :return: Material container
         """
         density = Parameter('density', **MATERIALDENSITY_DEFAULTS['density'])
         return cls(MATERIALDENSITY_DEFAULTS['chemical_structure'], density, interface=interface)
@@ -152,8 +134,7 @@ class MaterialDensity(Material):
         name: str = 'EasyMaterialDensity',
         interface=None,
     ) -> MaterialDensity:
-        """
-        Constructor for a material based on the mass density and chemical structure,
+        """Instance of a material from mass density and chemical structure,
         where these are known.
         :param chemical_structure: Chemical formula for the material
         :param density: Mass density for the material
@@ -169,23 +150,31 @@ class MaterialDensity(Material):
         return cls(chemical_structure, density, name=name, interface=interface)
 
     @property
-    def _dict_repr(self) -> dict[str, str]:
-        """
-        Dictionary representation of the :py:class:`MaterialDensity` object.
+    def chemical_structure(self) -> str:
+        """Get the chemical structure string."""
+        return self._chemical_structure
 
-        :return: Simple dictionary
+    @chemical_structure.setter
+    def chemical_structure(self, structure_string: str) -> None:
+        """Set the chemical structure string.
+
+        :param structure_string: String that defines the chemical structure.
         """
+        self._chemical_structure = structure_string
+        scattering_length = neutron_scattering_length(structure_string)
+        self.scattering_length_real.value = scattering_length.real
+        self.scattering_length_imag.value = scattering_length.imag
+
+    @property
+    def _dict_repr(self) -> dict[str, str]:
+        """Dictionary representation of the instance."""
         mat_dict = super()._dict_repr
         mat_dict['chemical_structure'] = self._chemical_structure
         mat_dict['density'] = f'{self.density.raw_value:.2e} {self.density.unit}'
         return mat_dict
 
     def as_dict(self, skip: list = []) -> dict[str, str]:
-        """
-        Custom as_dict method to skip necessary things.
-
-        :return: Cleaned dictionary.
-        """
+        """Custom as_dict method to skip necessary things."""
         this_dict = super().as_dict(skip=skip)
         del this_dict['sld'], this_dict['isld'], this_dict['scattering_length_real']
         del this_dict['scattering_length_imag'], this_dict['molecular_weight']

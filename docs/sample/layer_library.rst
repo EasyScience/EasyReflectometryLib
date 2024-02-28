@@ -11,7 +11,8 @@ So we construct a :py:class:`Layer` as follows for a 100 Å thick layer of boron
 
 .. code-block:: python
 
-    from EasyReflectometry.sample import Material, Layer
+    from EasyReflectometry.sample import Material
+    from EasyReflectometry.sample import Layer
 
     b = Material.from_pars(6.908, -0.278, 'Boron')
     boron_layer = Layer.from_pars(b, 100, 10, 'Boron Layer')
@@ -21,7 +22,7 @@ This type of layer is used extensively in the `tutorials`_
 :py:class:`LayerApm`
 --------------------
 
-The :py:class:`LayerApm` layer type is the fundation of the :py:class:`SurfactantLayer` item type (further information on this can be found in the `item library`_).
+The :py:class:`LayerApm` layer type is the fundation of the :py:class:`SurfactantLayer` assemblies type (further information on this can be found in the `assemblies library`_).
 The purpose of the :py:class:`LayerApm` is to allow a layer to be defined in terms of the chemical formula of the material and the area per molecule of the layer. 
 The area per molecule is a common description of surface density in the surfactant monolayer and bilayer community. 
 
@@ -29,15 +30,16 @@ We can construct a 10 Å thick :py:class:`LayerApm` of phosphatidylcholine, with
 
 .. code-block:: python
 
-    from EasyReflectometry.sample import Material, LayerApm
+    from EasyReflectometry.sample import Material
+    from EasyReflectometry.sample import LayerApm
 
     d2o = Material.from_pars(6.36, 0, 'D2O')
 
     pc_formula = 'C10H18NO8P'
     pc = LayerApm.from_pars(pc_formula, 10, d2o, 0.2, 48, 3, name='PC Layer')
 
-It is expected that the typical user will not interface directly with the :py:class:`LayerApm` item type, but instead the :py:class:`SurfactantLayer` `item type`_ will be used instead. 
+It is expected that the typical user will not interface directly with the :py:class:`LayerApm` assembly type, but instead the :py:class:`SurfactantLayer` `assemblies library`_ will be used instead. 
 
 .. _`materials`: ./material_library.html
-.. _`tutorials`: ./tutorials.html
-.. _`item library`: ./item_library.html
+.. _`tutorials`: ../tutorials/tutorials.html
+.. _`assemblies library`: ./assemblies_library.html

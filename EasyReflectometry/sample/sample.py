@@ -11,6 +11,8 @@ from .elements.layers.layer import Layer
 
 
 class Sample(BaseCollection):
+    """Collection of assemblies that represent the sample for which experimental measurements exist."""
+
     def __init__(
         self,
         *args: list[Layer | BaseAssembly],
@@ -18,6 +20,12 @@ class Sample(BaseCollection):
         interface=None,
         **kwargs,
     ):
+        """Constructor.
+
+        :param args: The assemblies in the sample.
+        :param name: Name of the sample, defaults to 'EasySample'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        """
         new_items = []
         for layer_like in args:
             if issubclass(type(layer_like), Layer):
@@ -29,14 +37,13 @@ class Sample(BaseCollection):
         super().__init__(name, *new_items, **kwargs)
         self.interface = interface
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> Sample:
         """
-        Default constructor for the reflectometry sample.
+        Default instance of the reflectometry sample.
 
-        :return: Default sample container
-        :rtype: Structure
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         item1 = Multilayer.default()
         item2 = Multilayer.default()
@@ -45,42 +52,29 @@ class Sample(BaseCollection):
     @classmethod
     def from_pars(
         cls,
-        *args: list[Multilayer],
+        *args: list[Layer | BaseAssembly],
         name: str = 'EasyStructure',
         interface=None,
     ) -> Sample:
-        """
-        Constructor of a reflectometry sample where the parameters are known.
+        """Constructor of a reflectometry sample where the parameters are known.
 
-        :param args: The items in the sample
-        :type args: list[EasyReflectometry.item.Item]
-        :return: Structure container
-        :rtype: Structure
+        :param args: The assemblies in the sample
+        :param name: Name of the sample, defaults to 'EasySample'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         return cls(*args, name=name, interface=interface)
 
     @property
     def uid(self) -> int:
-        """
-        :return: UID from the borg map
-        """
+        """The UID from the borg map."""
         return self._borg.map.convert_id_to_key(self)
 
     # Representation
     @property
     def _dict_repr(self) -> dict:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+        """A simplified dict representation."""
         return {self.name: [i._dict_repr for i in self]}
 
     def __repr__(self) -> str:
-        """
-        String representation of the layer.
-
-        :return: a string representation of the layer
-        :rtype: str
-        """
+        """String representation of the layer."""
         return yaml.dump(self._dict_repr, sort_keys=False)

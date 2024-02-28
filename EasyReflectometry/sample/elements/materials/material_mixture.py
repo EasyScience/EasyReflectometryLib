@@ -33,9 +33,17 @@ class MaterialMixture(BaseElement):
         material_a: Material,
         material_b: Material,
         fraction: Parameter,
-        name=None,
+        name: str = None,
         interface=None,
     ):
+        """Constructor.
+
+        :param material_a: The first material.
+        :param material_b: The second material.
+        :param fraction: The fraction of material_b in material_a.
+        :param name: Name of the material, defaults to None that causes the name to be constructed.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        """
         if name is None:
             name = material_a.name + '/' + material_b.name
         super().__init__(
@@ -57,8 +65,42 @@ class MaterialMixture(BaseElement):
         self._materials_constraints()
         self.interface = interface
 
-    def _get_linkable_attributes(self):
-        return self._slds
+    # Class methods for instance creation
+    @classmethod
+    def default(cls, interface=None) -> MaterialMixture:
+        """Default instance for a mixture of two materials."""
+        material_a = Material.default()
+        material_b = Material.default()
+        fraction = Parameter('fraction', **MATERIALMIXTURE_DEFAULTS['fraction'])
+        return cls(
+            material_a,
+            material_b,
+            fraction,
+            interface=interface,
+        )
+
+    @classmethod
+    def from_pars(
+        cls,
+        material_a: Material,
+        material_b: Material,
+        fraction: float,
+        name: str = 'EasyMaterialMixture',
+        interface=None,
+    ) -> MaterialMixture:
+        """Instance of mixture of two materials where the parameters are known.
+
+        :param material_a: The first material.
+        :param material_b: The second material.
+        :param fraction: The fraction of material_b in material_a.
+        :param name: Name of the material, defaults to 'EasyMaterialMixture'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        """
+        default_options = deepcopy(MATERIALMIXTURE_DEFAULTS)
+        del default_options['fraction']['value']
+        fraction = Parameter('fraction', fraction, **default_options['fraction'])
+
+        return cls(material_a=material_a, material_b=material_b, fraction=fraction, name=name, interface=interface)
 
     @property
     def sld(self):
@@ -67,6 +109,9 @@ class MaterialMixture(BaseElement):
     @property
     def isld(self):
         return self._slds[1]
+
+    def _get_linkable_attributes(self):
+        return self._slds
 
     def _materials_constraints(self):
         self._slds[0].enabled = True
@@ -88,17 +133,14 @@ class MaterialMixture(BaseElement):
 
     @property
     def material_a(self) -> Material:
-        """
-        :return: the first material.
-        """
+        """Getter for material_a."""
         return self._material_a
 
     @material_a.setter
     def material_a(self, new_material_a: Material) -> None:
-        """
-        Setter for material_a
+        """Setter for material_a
 
-        :param new_material_a: New material_a
+        :param new_material_a: New Material for material_a
         """
         self.name = new_material_a.name + '/' + self._material_b.name
         self._material_a = new_material_a
@@ -108,17 +150,14 @@ class MaterialMixture(BaseElement):
 
     @property
     def material_b(self) -> Material:
-        """
-        :return: the second material.
-        """
+        """Getter for material_b."""
         return self._material_b
 
     @material_b.setter
     def material_b(self, new_material_b: Material) -> None:
-        """
-        Setter for material_b
+        """Setter for material_b
 
-        :param new_material_b: New material_b
+        :param new_material_b: New Materialfor material_b
         """
         self.name = self._material_a.name + '/' + new_material_b.name
         self._material_b = new_material_b
@@ -126,55 +165,10 @@ class MaterialMixture(BaseElement):
         if self.interface is not None:
             self.interface.generate_bindings(self)
 
-    # Class constructors
-    @classmethod
-    def default(cls, interface=None) -> MaterialMixture:
-        """
-        Default constructor for a mixture of two materials.
-
-        :return: Default material mixture container.
-        """
-        material_a = Material.default()
-        material_b = Material.default()
-        fraction = Parameter('fraction', **MATERIALMIXTURE_DEFAULTS['fraction'])
-        return cls(
-            material_a,
-            material_b,
-            fraction,
-            interface=interface,
-        )
-
-    @classmethod
-    def from_pars(
-        cls,
-        material_a: Material,
-        material_b: Material,
-        fraction: float,
-        name=None,
-        interface=None,
-    ) -> MaterialMixture:
-        """
-        Constructor of a mixture of two materials where the parameters are known.
-
-        :param material_a: The first material
-        :param material_b: The second material
-        :param fraction: The fraction of material_b in material_a
-        :return: MaterialMixture container.
-        """
-        default_options = deepcopy(MATERIALMIXTURE_DEFAULTS)
-        del default_options['fraction']['value']
-        fraction = Parameter('fraction', fraction, **default_options['fraction'])
-
-        return cls(material_a=material_a, material_b=material_b, fraction=fraction, name=name, interface=interface)
-
     # Representation
     @property
     def _dict_repr(self) -> dict[str, str]:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+        """A simplified dict representation."""
         return {
             self.name: {
                 'fraction': self.fraction.raw_value,
@@ -186,11 +180,7 @@ class MaterialMixture(BaseElement):
         }
 
     def as_dict(self, skip: list = None) -> dict[str, str]:
-        """
-        Custom as_dict method to skip necessary things.
-
-        :return: Cleaned dictionary.
-        """
+        """Custom as_dict method to skip necessary things."""
         if skip is None:
             skip = []
         this_dict = super().as_dict(skip=skip)
