@@ -3,10 +3,11 @@ API
 
 Model
 =====
-
 Model is a sample, a background and a resolution.
 
-.. toctree::   
+.. toctree::
+   :maxdepth: 1
+
    model
 
 Sample
@@ -14,25 +15,52 @@ Sample
 Sample is build from assemblies.
 
 .. toctree::   
+   :maxdepth: 1
+   
    sample
 
 Assemblies
 ==========
-Assemblies are constructured from layers.
+Assemblies are collections of layers that are used to represent a specific physical setup.
 
-.. toctree::   
-   assemblies
+.. toctree::
+   :maxdepth: 1
+   
+   assemblies/multilayer
+   assemblies/repeating_multilayer
+   assemblies/surfactant_layer
+   assemblies/gradient_layer
 
 Elements
 ========
-Elements are the building blocks of the sample model. 
+Elements are the building blocks that are required to construct a sample.
 
-.. toctree::   
-   elements
+Layers
+------
+Layers are basic elements and used to represent a single layer of material with a thickness and a roughness.
+
+.. toctree::
+   :maxdepth: 1
+   
+   elements/layer
+   elements/layer_apm
+
+Materials
+---------
+Materials are the most basic elements and are used to represent a material with given physical properties.
+
+.. toctree::
+   :maxdepth: 1
+   
+   elements/material
+   elements/material_density
+   elements/material_mixture
 
 Data
 ====
-Data is a set of helper functions.
+Collection of helper functions.
 
 .. toctree::
+   :maxdepth: 1
+   
    data

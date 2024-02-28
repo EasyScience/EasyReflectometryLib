@@ -1,5 +1,3 @@
-Sample
-======
 
 .. automodule:: EasyReflectometry.sample.sample
     :members:
