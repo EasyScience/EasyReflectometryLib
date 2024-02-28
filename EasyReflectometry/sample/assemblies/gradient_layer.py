@@ -21,8 +21,7 @@ class GradientLayer(BaseAssembly):
         name: str = 'EasyGradienLayer',
         interface=None,
     ) -> GradientLayer:
-        """
-        Constructor.
+        """Constructor.
 
         :param initial_material: Material of initial "part" of the layer
         :param final_material: Material of final "part" of the layer
@@ -131,6 +130,7 @@ class GradientLayer(BaseAssembly):
     @roughness.setter
     def roughness(self, roughness: float) -> None:
         """Set the roughness of the gradient layer.
+
         :param roughness: Roughness of the gradient layer in Angstroms.
         """
         self.top_layer.roughness.value = roughness

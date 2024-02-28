@@ -49,11 +49,7 @@ class Material(BaseElement):
     # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> Material:
-        """
-        Default constructor for the reflectometry material.
-
-        :return: Default material container
-        """
+        """Default instance of a material."""
         sld = Parameter('sld', **MATERIAL_DEFAULTS['sld'])
         isld = Parameter('isld', **MATERIAL_DEFAULTS['isld'])
         return cls(sld, isld, interface=interface)
@@ -67,11 +63,12 @@ class Material(BaseElement):
         interface=None,
     ) -> Material:
         """
-        Constructor of a reflectometry material where the parameters are known.
+        Instance of a  material where the parameters are known.
 
-        :param sld: Real scattering length density
-        :param isld: Imaginary scattering length density
-        :return: Material container
+        :param sld: Real scattering length density.
+        :param isld: Imaginary scattering length density.
+        :param name: Name of the material, defaults to 'EasyMaterial'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         default_options = deepcopy(MATERIAL_DEFAULTS)
         del default_options['sld']['value']
@@ -84,12 +81,8 @@ class Material(BaseElement):
 
     # Representation
     @property
-    def _dict_repr(self) -> dict:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+    def _dict_repr(self) -> dict[str, str]:
+        """A simplified dict representation."""
         return {
             self.name: {
                 'sld': f'{self.sld.raw_value:.3f}e-6 {self.sld.unit}',

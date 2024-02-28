@@ -30,8 +30,7 @@ class SurfactantLayer(BaseAssembly):
         conformal_roughness: bool = False,
         interface=None,
     ):
-        """
-        Constructor.
+        """Constructor.
 
         :param layers: List with the head and tail layer.
         :param name: Name for surfactant layer, defaults to 'EasySurfactantLayer'.
@@ -60,8 +59,7 @@ class SurfactantLayer(BaseAssembly):
     # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> SurfactantLayer:
-        """
-        Default constructor for a surfactant layer object. The default lipid
+        """Default instance of a surfactant layer object. The default lipid
         type is DPPC.
 
         :return: Surfactant layer object.
@@ -90,22 +88,19 @@ class SurfactantLayer(BaseAssembly):
         name: str = 'EasySurfactantLayer',
         interface=None,
     ) -> SurfactantLayer:
-        """
-        Constructor for the surfactant layer where the parameters are known,
+        """Instance of a surfactant layer where the parameters are known,
         :py:attr:`top_layer` is that which the neutrons interact with first.
 
         :param top_layer_chemical_structure: Chemical formula for first layer
         :param top_layer_thickness: Thicknkess of first layer
         :param top_layer_solvent: Solvent in first layer
-        :param top_layer_solvation: Fractional solvation of first layer by
-            :py:attr:`top_layer_solvent`
+        :param top_layer_solvation: Fractional solvation of first layer by :py:attr:`top_layer_solvent`
         :param top_layer_area_per_molecule: Area per molecule of first layer
         :param top_layer_roughness: Roughness of first layer
         :param bottom_layer_chemical_structure: Chemical formula for second layer
         :param bottom_layer_thickness: Thicknkess of second layer
         :param bottom_layer_solvent: Solvent in second layer
-        :param bottom_layer_solvation: Fractional solvation of second layer by
-            :py:attr:`bottom_layer_solvent`
+        :param bottom_layer_solvation: Fractional solvation of second layer by :py:attr:`bottom_layer_solvent`
         :param bottom_layer_area_per_molecule: Area per molecule of second layer
         :param bottom_layer_roughness: Roughness of second layer
         :param name: Name for surfactant layer

@@ -21,12 +21,9 @@ def load(fname: TextIO | str) -> sc.DataGroup:
 
 
 def _load_orso(fname: Union[TextIO, str]) -> sc.DataGroup:
-    """
-    Load from an ORSO compatible file.
+    """Load from an ORSO compatible file.
 
     :param fname: The path for the file to be read.
-
-    :return: A populated scipp DataGroup.
     """
     data = {}
     coords = {}
@@ -60,12 +57,9 @@ def _load_orso(fname: Union[TextIO, str]) -> sc.DataGroup:
 
 
 def _load_txt(fname: Union[TextIO, str]) -> sc.DataGroup:
-    """
-    Load data from a simple txt file.
+    """Load data from a simple txt file.
 
     :param fname: The path for the file to be read.
-
-    :return: A populated scipp DataGroup.
     """
     f_data = np.loadtxt(fname)
     data = {'R_0': sc.array(dims=['Qz_0'], values=f_data[:, 1], variances=np.square(f_data[:, 2]))}

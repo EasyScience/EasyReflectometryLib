@@ -40,8 +40,7 @@ class RepeatingMultilayer(Multilayer):
         name: str = 'EasyRepeatingMultilayer',
         interface=None,
     ):
-        """
-        Constructor.
+        """Constructor.
 
         :param layers: The layers that make up the multi-layer that will be repeated.
         :param repetitions: Number of repetitions of the given series of layers
@@ -65,8 +64,7 @@ class RepeatingMultilayer(Multilayer):
     # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> RepeatingMultilayer:
-        """
-        Default instance of a repeating multi layer.
+        """Default instance of a repeating multi layer.
 
         :return: Default repeating multi-layer container
         """
@@ -86,7 +84,7 @@ class RepeatingMultilayer(Multilayer):
         name: str = 'EasyRepeatingMultilayer',
         interface=None,
     ) -> RepeatingMultilayer:
-        """Instance of a reflectometry repeating multi layer where the
+        """Instance of a repeating multi layer where the
         parameters are known.
 
         :param layers: The layers in the repeating multi layer.
