@@ -17,9 +17,9 @@
 # relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
 #
+import datetime
 import os
 import sys
-import datetime
 
 sys.path.insert(0, os.path.abspath('..'))
 
