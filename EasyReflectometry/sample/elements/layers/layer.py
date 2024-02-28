@@ -34,8 +34,11 @@ LAYER_DETAILS = {
 
 class Layer(BaseElement):
     # Added in super().__init__
+    #: Material that makes up the layer.
     material: Material
+    #: Thickness of the layer in Angstrom.
     thickness: Parameter
+    #: Roughness of the layer in Angstrom.
     roughness: Parameter
 
     def __init__(
@@ -46,6 +49,14 @@ class Layer(BaseElement):
         name: str = 'EasyLayer',
         interface=None,
     ):
+        """Constructor.
+
+        :param material: The material for the layer.
+        :param thickness: Layer thickness in Angstrom.
+        :param roughness: Upper roughness on the layer in Angstrom.
+        :param name: Name of the layer, defaults to 'EasyLayer'
+        :param interface: Interface object, defaults to :py:attr:`None`
+        """
         super().__init__(
             name=name,
             interface=interface,
@@ -54,14 +65,12 @@ class Layer(BaseElement):
             roughness=roughness,
         )
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> Layer:
-        """
-        Default constructor for the reflectometry layer.
+        """Default instance of the reflectometry layer.
 
-        :return: Default layer container
-        :rtype: Layer
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         material = Material.default()
         thickness = Parameter('thickness', **LAYER_DETAILS['thickness'])
@@ -82,17 +91,13 @@ class Layer(BaseElement):
         name: str = 'EasyLayer',
         interface=None,
     ) -> Layer:
-        """
-        Constructor of a reflectometry layer where the parameters are known.
+        """Instance of a reflectometry layer where the parameters are known.
 
-        :param material: The material that makes up the layer
-        :type material: EasyReflectometry.material.Material
-        :param thickness: Layer thickness in angstrom
-        :type thickness: float
-        :param roughness: Layer roughness in angstrom
-        :type roughness: float
-        :return: Layer container
-        :rtype: Layer
+        :param material: The material that makes up the layer.
+        :param thickness: Layer thickness in angstrom.
+        :param roughness: Layer roughness in angstrom.
+        :param name: Name of the layer, defaults to 'EasyLayer'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         default_options = deepcopy(LAYER_DETAILS)
         del default_options['thickness']['value']
@@ -110,8 +115,9 @@ class Layer(BaseElement):
         )
 
     def assign_material(self, material: Material) -> None:
-        """
-        Assign a material to the layer interface
+        """Assign a material to the layer interface.
+
+        :param material: The material to assign to the layer.
         """
         self.material = material
         if self.interface is not None:
@@ -120,11 +126,7 @@ class Layer(BaseElement):
     # Representation
     @property
     def _dict_repr(self) -> dict[str, str]:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+        """A simplified dict representation."""
         return {
             self.name: {
                 'material': self.material._dict_repr,

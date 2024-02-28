@@ -22,7 +22,7 @@ class MaterialCollection(BaseElementCollection):
             **kwargs,
         )
 
-    # Class constructors
+    # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> MaterialCollection:
         """

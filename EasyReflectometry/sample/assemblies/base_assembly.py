@@ -12,8 +12,11 @@ from ..elements.layers.layer import Layer
 
 class BaseAssembly(BaseObj):
     # Added in super().__init__
+    #: Name of the assembly.
     name: str
+    #: Layers in the assembly.
     layers: LayerCollection
+    #: Interface to the calculator.
     interface: Any
 
     def __init__(
@@ -42,33 +45,25 @@ class BaseAssembly(BaseObj):
 
     @property
     def uid(self) -> int:
-        """
-        :return: UID from the borg map
-        """
+        """Get UID from the borg map"""
         return self._borg.map.convert_id_to_key(self)
 
     def __repr__(self) -> str:
-        """
-        String representation of the layer.
-
-        :return: a string representation of the layer
-        :rtype: str
-        """
+        """String representation of the object."""
         return yaml.dump(self._dict_repr, sort_keys=False)
 
     @property
     def top_layer(self) -> Optional[Layer]:
-        """
-        :return: The top layer
-        """
+        """Get the top layer in the assembly."""
         if len(self.layers) == 0:
             return None
         return self.layers[0]
 
     @top_layer.setter
     def top_layer(self, layer: Layer) -> None:
-        """
-        Setter for the top layer
+        """Set the top layer in the assembly.
+
+        :param layer: Layer to set as the top layer.
         """
         if len(self.layers) == 0:
             self.layers.append(layer)
@@ -77,18 +72,19 @@ class BaseAssembly(BaseObj):
 
     @property
     def bottom_layer(self) -> Optional[None]:
-        """
-        :return: The bottom layer
-        """
+        """Get the bottom layer in the assembly."""
+
         if len(self.layers) < 2:
             return None
         return self.layers[-1]
 
     @bottom_layer.setter
     def bottom_layer(self, layer: Layer) -> None:
+        """Set the bottom layer in the assembly.
+
+        :param layer: Layer to set as the bottom layer.
         """
-        Setter for the bottom layer
-        """
+
         if len(self.layers) == 0:
             raise Exception('There is no top layer to add the bottom layer to. Please add a top layer first.')
         if len(self.layers) == 1:

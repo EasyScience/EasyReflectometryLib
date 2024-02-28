@@ -1,18 +1,17 @@
 .. include:: ../README.rst
 
 .. toctree::
-   :maxdepth: 1
    :hidden:
    :caption: Contents:
    
    installation
    usage
-   library
+   sample/sample
    calculators
-   tutorials
+   tutorials/tutorials
    contributing
    authors
-   modules
+   api/api
 
 
 Indices and tables

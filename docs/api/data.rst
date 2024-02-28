@@ -1,6 +1,3 @@
-Data
-====
-
 .. automodule:: EasyReflectometry.data
     :members:
     :undoc-members:
