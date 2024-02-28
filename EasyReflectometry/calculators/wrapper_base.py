@@ -59,7 +59,7 @@ class WrapperBase:
         """Update the non-structural parameters of the model
 
         :param name: Name for the model
-        :param /*/kwargs:
+        :param kwargs:
 
         """
         ...
@@ -161,7 +161,7 @@ class WrapperBase:
         """Update a layer in a given item.
 
         :param name: The layer name.
-        :param /*/kwargs:
+        :param kwargs:
         """
         layer = self.storage['layer'][name]
         for key in kwargs.keys():

@@ -13,7 +13,7 @@ class Fitter:
         which will populate the :py:class:`sc.DataGroup` appropriately
         after the fitting is performed.
 
-        :param /*args: Reflectometry model
+        :param args: Reflectometry model
         """
 
         # This lets the uid be passed with the fit_func.

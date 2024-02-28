@@ -31,7 +31,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         r"""Initialise all subclasses so that they can be created in the factory
 
         :param is_abstract: Is this a subclass which shouldn't be dded
-        :param /*/*kwargs: key word arguments
+        :param kwargs: key word arguments
         """
         super().__init_subclass__(**kwargs)
         if not is_abstract:
