@@ -33,7 +33,7 @@ class MaterialMixture(BaseElement):
         material_a: Material,
         material_b: Material,
         fraction: Parameter,
-        name: str = 'EasyMaterialMixture',
+        name: str = None,
         interface=None,
     ):
         """Constructor.
@@ -41,7 +41,7 @@ class MaterialMixture(BaseElement):
         :param material_a: The first material.
         :param material_b: The second material.
         :param fraction: The fraction of material_b in material_a.
-        :param name: Name of the material, defaults to 'EasyMaterialMixture'.
+        :param name: Name of the material, defaults to None that causes the name to be constructed.
         :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         if name is None:
