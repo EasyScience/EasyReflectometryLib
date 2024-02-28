@@ -9,7 +9,7 @@ from orsopy.fileio import Header
 from orsopy.fileio import orso
 
 
-def load(fname: TextIO | str) -> sc.DataGroup:
+def load(fname: Union[TextIO, str]) -> sc.DataGroup:
     """Load data from an ORSO .ort file.
 
     :param fname: The file to be read.
