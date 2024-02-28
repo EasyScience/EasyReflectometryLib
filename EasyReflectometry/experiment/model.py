@@ -127,9 +127,9 @@ class Model(BaseObj):
         )
 
     def add_item(self, *items: Layer | RepeatingMultilayer) -> None:
-        """Add a layer or item to the model sample.
+        r"""Add a layer or item to the model sample.
 
-        :param \*items: Layers or items to add to model sample.
+        :param /*items: Layers or items to add to model sample.
         """
         for arg in items:
             if issubclass(arg.__class__, Multilayer):

@@ -66,9 +66,9 @@ class Multilayer(BaseAssembly):
         )
 
     def add_layer(self, *layers: tuple[Layer]) -> None:
-        """Add a layer to the multi layer.
+        r"""Add a layer to the multi layer.
 
-        :param \*layers: Layers to add to the multi layer.
+        :param /*layers: Layers to add to the multi layer.
         """
         for arg in layers:
             if issubclass(arg.__class__, Layer):
