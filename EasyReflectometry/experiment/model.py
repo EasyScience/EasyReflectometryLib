@@ -3,7 +3,6 @@ from __future__ import annotations
 __author__ = 'github.com/arm61'
 
 from copy import deepcopy
-from typing import Union
 
 import yaml
 from easyCore import np
