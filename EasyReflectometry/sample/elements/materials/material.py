@@ -44,6 +44,13 @@ class Material(BaseElement):
         name: str = 'EasyMaterial',
         interface=None,
     ):
+        """Constructor.
+
+        :param sld: Real scattering length density.
+        :param isld: Imaginary scattering length density.
+        :param name: Name of the material, defaults to 'EasyMaterial'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        """
         super().__init__(name=name, interface=interface, sld=sld, isld=isld)
 
     # Class methods for instance creation
@@ -62,8 +69,7 @@ class Material(BaseElement):
         name: str = 'EasyMaterial',
         interface=None,
     ) -> Material:
-        """
-        Instance of a  material where the parameters are known.
+        """Instance of a  material where the parameters are known.
 
         :param sld: Real scattering length density.
         :param isld: Imaginary scattering length density.
