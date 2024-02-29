@@ -17,7 +17,7 @@ class MaterialSolvated(MaterialMixture):
 
         :param material: The material being solvated.
         :param solvent: The solvent material.
-        :param solvation: The fraction of the solvent in the material.
+        :param solvation: The fraction of the material in the solvent.
         :param name: Name of the material, defaults to None that causes the name to be constructed.
         :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
@@ -63,7 +63,7 @@ class MaterialSolvated(MaterialMixture):
 
     @solvation.setter
     def solvation(self, solvation: float) -> None:
-        """Set solvation fraction.
+        """Set solvation fraction of the material in the solvent.
 
         :param solvation: float
         """

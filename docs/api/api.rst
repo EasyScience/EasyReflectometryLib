@@ -55,6 +55,7 @@ Materials are the most basic elements and are used to represent a material with 
    elements/material
    elements/material_density
    elements/material_mixture
+   elements/material_solvated
 
 Data
 ====
