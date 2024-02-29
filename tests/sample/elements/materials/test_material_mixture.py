@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import MagicMock
 
 from numpy.testing import assert_almost_equal
 
@@ -125,3 +126,19 @@ class TestMaterialMixture(unittest.TestCase):
         p = MaterialMixture.default()
         q = MaterialMixture.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
+    
+    def test_update_name(self):
+        # When
+        p = MaterialMixture.default()
+        mock_material_a = MagicMock()
+        mock_material_a.name = 'name_a'
+        p._material_a = mock_material_a
+        mock_material_b = MagicMock()
+        mock_material_b.name = 'name_b'
+        p._material_b = mock_material_b
+
+        # Then
+        p._update_name()
+
+        # Expect
+        assert p.name == 'name_a/name_b'

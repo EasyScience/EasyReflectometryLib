@@ -13,6 +13,14 @@ class MaterialSolvated(MaterialMixture):
         name=None,
         interface=None,
     ):
+        """Constructor.
+
+        :param material: The material being solvated.
+        :param solvent: The solvent material.
+        :param solvation: The fraction of the solvent in the material.
+        :param name: Name of the material, defaults to None that causes the name to be constructed.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        """
         super().__init__(
             material_a=material,
             material_b=solvent,
@@ -20,56 +28,42 @@ class MaterialSolvated(MaterialMixture):
             name=name,
             interface=interface,
         )
-        if name is None:
-            self._update_name()
 
     @property
     def material(self) -> Material:
-        """
-        :return: the material.
-        """
+        """Get material."""
         return self._material_a
 
     @material.setter
     def material(self, new_material: Material) -> None:
-        """
-        Setter for material
+        """Set the material.
 
-        :param new_material: Matrerial
+        :param new_material: Matrerial to be useed.
         """
-        # Should set the property
         self.material_a = new_material
-        self._update_name()
 
     @property
     def solvent(self) -> Material:
-        """
-        :return: the solvent.
-        """
+        """Get solvent."""
         return self._material_b
 
     @solvent.setter
     def solvent(self, new_solvent: Material) -> None:
-        """
-        Setter for solvent
+        """Set the solvent.
 
-        :param solvent: Matrerial
+        :param new_solvent: Solvent to be used.
         """
         # Should set the property
         self.material_b = new_solvent
-        self._update_name()
 
     @property
     def solvation(self) -> Parameter:
-        """
-        :return: the solvation.
-        """
+        """Get solvation fraction."""
         return self.fraction
 
     @solvation.setter
     def solvation(self, solvation: float) -> None:
-        """
-        Setter for solvation
+        """Set solvation fraction.
 
         :param solvation: float
         """
@@ -84,11 +78,7 @@ class MaterialSolvated(MaterialMixture):
     # Representation
     @property
     def _dict_repr(self) -> dict[str, str]:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
+        """A simplified dict representation."""
         return {
             self.name: {
                 'solvation': self.solvation.raw_value,

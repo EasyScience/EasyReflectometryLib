@@ -45,8 +45,6 @@ class MaterialMixture(BaseElement):
         :param name: Name of the material, defaults to None that causes the name to be constructed.
         :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
-        if name is None:
-            name = material_a.name + '/' + material_b.name
         super().__init__(
             name,
             _material_a=material_a,
@@ -54,6 +52,9 @@ class MaterialMixture(BaseElement):
             _fraction=fraction,
             interface=interface,
         )
+        if name is None:
+            self._update_name()
+
         sld = weighted_average(
             a=self._material_a.sld.raw_value,
             b=self._material_b.sld.raw_value,
@@ -73,47 +74,6 @@ class MaterialMixture(BaseElement):
 
         self._materials_constraints()
         self.interface = interface
-
-    def _get_linkable_attributes(self):
-        return self._slds
-
-    @property
-    def material_a(self) -> Material:
-        """Getter for material_a."""
-        return self._material_a
-
-    @material_a.setter
-    def material_a(self, new_material_a: Material) -> None:
-        """
-        Setter for material_a
-
-        :param new_material_a: New material_a
-        """
-        self.name = new_material_a.name + '/' + self._material_b.name
-        self._material_a = new_material_a
-        self._materials_constraints()
-        if self.interface is not None:
-            self.interface.generate_bindings(self)
-
-    @property
-    def material_b(self) -> Material:
-        """
-        :return: the second material.
-        """
-        return self._material_b
-
-    @material_b.setter
-    def material_b(self, new_material_b: Material) -> None:
-        """
-        Setter for material_b
-
-        :param new_material_b: New material_b
-        """
-        self.name = self._material_a.name + '/' + new_material_b.name
-        self._material_b = new_material_b
-        self._materials_constraints()
-        if self.interface is not None:
-            self.interface.generate_bindings(self)
 
     # Class constructors
     @classmethod
@@ -139,7 +99,6 @@ class MaterialMixture(BaseElement):
         interface=None,
     ) -> MaterialMixture:
         """Instance of mixture of two materials where the parameters are known.
-
 
         :param material_a: The first material.
         :param material_b: The second material.
@@ -169,9 +128,6 @@ class MaterialMixture(BaseElement):
     @property
     def isld(self):
         return self._isld
-
-    def _get_linkable_attributes(self):
-        return self._slds
 
     def _materials_constraints(self):
         self._sld.enabled = True
@@ -242,11 +198,11 @@ class MaterialMixture(BaseElement):
 
         :param new_material_a: New Material for material_a
         """
-        self.name = new_material_a.name + '/' + self._material_b.name
         self._material_a = new_material_a
         self._materials_constraints()
         if self.interface is not None:
             self.interface.generate_bindings(self)
+        self._update_name()
 
     @property
     def material_b(self) -> Material:
@@ -259,11 +215,14 @@ class MaterialMixture(BaseElement):
 
         :param new_material_b: New Materialfor material_b
         """
-        self.name = self._material_a.name + '/' + new_material_b.name
         self._material_b = new_material_b
         self._materials_constraints()
         if self.interface is not None:
             self.interface.generate_bindings(self)
+        self._update_name()
+
+    def _update_name(self) -> None:
+        self.name = self._material_a.name + '/' + self._material_b.name
 
     # Representation
     @property

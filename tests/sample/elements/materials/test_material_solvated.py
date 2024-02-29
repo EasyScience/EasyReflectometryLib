@@ -22,6 +22,7 @@ class TestMaterialMixture():
         return MaterialSolvated(self.mock_material, self.mock_solvent, self.mock_solvation, name='name', interface=self.mock_interface)
 
     def test_init(self, material_solvated: MaterialSolvated) -> None:
+        # When Then Expect
         assert material_solvated.material_a == self.mock_material
         assert material_solvated.material_b == self.mock_solvent
         assert material_solvated.fraction == self.mock_solvation
@@ -30,37 +31,55 @@ class TestMaterialMixture():
         self.mock_interface.generate_bindings.call_count == 2
 
     def test_material(self, material_solvated: MaterialSolvated) -> None:
+        # When Then Expect
         assert material_solvated.material == self.mock_material
 
     def test_set_material(self, material_solvated: MaterialSolvated) -> None:
+        # When
         new_material = MagicMock()
         new_material.name = 'new_material'
+
+        # Then
         material_solvated.material = new_material
+
+        # Expect
         assert material_solvated.material == new_material
         assert material_solvated.name == 'new_material solvated in solvent'
 
     def test_solvent(self, material_solvated: MaterialSolvated) -> None:
+        # When Then Expect
         assert material_solvated.solvent == self.mock_solvent
 
     def test_set_solvent(self, material_solvated: MaterialSolvated) -> None:
+        # When
         new_solvent = MagicMock()
         new_solvent.name = 'new_solvent'
+
+        # Then
         material_solvated.solvent = new_solvent
+
+        # Expect
         assert material_solvated.solvent == new_solvent
         assert material_solvated.name == 'material solvated in new_solvent'
 
     def test_solvation(self, material_solvated: MaterialSolvated) -> None:
+        # When Then Expect
         assert material_solvated.solvation == self.mock_solvation
 
     def test_set_solvation(self, material_solvated: MaterialSolvated) -> None:
+        # When Then
         material_solvated.solvation = 1.0
+
+        # Expect
         assert material_solvated.solvation == 1.0
     
     def test_set_solvation_exception(self, material_solvated: MaterialSolvated) -> None:
+        # When Then Expect
         with pytest.raises(ValueError):
             material_solvated.solvation = 'not float'
     
     def test_dict_repr(self, material_solvated: MaterialSolvated) -> None:
+        # When Then
         material_solvated._sld = MagicMock()
         material_solvated._sld.raw_value = 1.0
         material_solvated._sld.unit = 'sld_unit'
@@ -71,6 +90,7 @@ class TestMaterialMixture():
         material_solvated.solvent._dict_repr = 'solvent_dict_repr'
         material_solvated.solvation.raw_value = "solvation_value"        
 
+        # Expect
         assert material_solvated._dict_repr == {
             'name': {
                 'solvation': 'solvation_value',
@@ -80,3 +100,18 @@ class TestMaterialMixture():
                 'solvent': 'solvent_dict_repr'
             }
         }
+
+    def test_update_name(self, material_solvated: MaterialSolvated) -> None:
+        # When
+        mock_material_a = MagicMock()
+        mock_material_a.name = 'name_a'
+        material_solvated._material_a = mock_material_a
+        mock_material_b = MagicMock()
+        mock_material_b.name = 'name_b'
+        material_solvated._material_b = mock_material_b
+
+        # Then
+        material_solvated._update_name()
+
+        # Expect
+        assert material_solvated.name == 'name_a solvated in name_b'
