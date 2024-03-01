@@ -42,14 +42,14 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.layers[0].chemical_formula == 'C8O10H12P'
         assert p.layers[0].thickness.raw_value == 12
         assert p.layers[0].solvent.as_data_dict() == h2o.as_data_dict()
-        assert p.layers[0].solvation.raw_value == 0.5
+        assert p.layers[0].solvent_surface_coverage.raw_value == 0.5
         assert p.layers[0].area_per_molecule.raw_value == 50
         assert p.layers[0].roughness.raw_value == 2
         assert p.layers[1].name == 'A Test Bottom Layer'
         assert p.layers[1].chemical_formula == 'C10H24'
         assert p.layers[1].thickness.raw_value == 10
         assert p.layers[1].solvent.as_data_dict() == noth2o.as_data_dict()
-        assert p.layers[1].solvation.raw_value == 0.2
+        assert p.layers[1].solvent_surface_coverage.raw_value == 0.2
         assert p.layers[1].area_per_molecule.raw_value == 40
         assert p.name == 'A Test'
 
@@ -101,11 +101,11 @@ class TestSurfactantLayer(unittest.TestCase):
     def test_dict_repr(self):
         p = SurfactantLayer.default()
         assert p._dict_repr == {
-            'top_layer': {
+            'head_layer': {
                 'DPPC Tail': {
                     'material': {
                         'C32D64 in Air': {
-                            'solvation': 0.0,
+                            'solvent_surface_coverage': 0.0,
                             'sld': '8.297e-6 1 / angstrom ** 2',
                             'isld': '0.000e-6 1 / angstrom ** 2',
                             'material': {
@@ -128,11 +128,11 @@ class TestSurfactantLayer(unittest.TestCase):
                 'chemical_formula': 'C32D64',
                 'area_per_molecule': '48.2 angstrom ** 2'
             },
-            'bottom_layer': {
+            'tail_layer': {
                 'DPPC Head': {
                     'material': {
                         'C10H18NO8P in D2O': {
-                            'solvation': 0.2,
+                            'solvent_surface_coverage': 0.2,
                             'sld': '2.269e-6 1 / angstrom ** 2',
                             'isld': '0.000e-6 1 / angstrom ** 2',
                             'material': {

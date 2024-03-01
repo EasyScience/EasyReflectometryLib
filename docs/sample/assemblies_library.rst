@@ -26,8 +26,10 @@ To create a :py:class:`Multilayer` object, we use the following construction.
     si_layer = Layer.from_pars(si, 0, 0, 'Si layer')
     sio2_layer = Layer.from_pars(sio2, 30, 3, 'SiO2 layer')
 
-    subphase = Multilayer.from_pars([si_layer, sio2_layer], 
-                                    name='Si/SiO2 subphase')
+    subphase = Multilayer.from_pars(
+        layers=[si_layer, sio2_layer], 
+        name='Si/SiO2 subphase'
+    )
 
 This will create a :py:class:`Multilayer` object named :code:`subphase` which we can use in some :py:class:`Structure` for our analysis. 
 
@@ -52,9 +54,11 @@ The creation of a :py:class:`RepeatingMultilayer` object is very similar to that
     ti_layer = Layer.from_pars(ti, 40, 0, 'Ti Layer')
     ni_layer = Layer.from_pars(ni, 70, 0, 'Ni Layer')
 
-    ni_ti = RepeatingMultilayer.from_pars([ti_layer, ni_layer], 
-                                          repetitions=10, 
-                                          name='Ni/Ti Multilayer')
+    ni_ti = RepeatingMultilayer.from_pars(
+        layers=[ti_layer, ni_layer], 
+        repetitions=10, 
+        name='Ni/Ti Multilayer'
+    )
 
 The number of repeats is a parameter that can be varied in the optimisation process, however given this is a value that depends on the synthesis of the sample this is unlikely to be necessary.
 
@@ -81,15 +85,25 @@ The creation of a :py:class:`SurfactantLayer` object takes a large number argume
     tail_formula = 'C30D64'
     head_thickness = 10.0
     tail_thickness = 16.0
-    head_solvation = 0.2
-    tail_solvation = 0.0
+    head_solvent_surface_coverage = 0.2
+    tail_solvent_surface_coverage = 0.0
     area_per_molecule = 48
     roughness = 3.3
 
-    dppc = SurfactantLayer.from_pars(tail_formula, tail_thickness, superphase, tail_solvation, 
-                                     area_per_molecule, roughness,
-                                     head_formula, head_thickness, subphase, head_solvation, 
-                                     area_per_molecule, roughness)
+    dppc = SurfactantLayer.from_pars(
+        head_layer_molecular_formula=tail_formula,
+        head_layer_thicness=tail_thickness,
+        head_layer_solvent=superphase,
+        head_layer_solvent_surface_coverage=tail_solvent_surface_coverage, 
+        head_layer_area_per_molecule=area_per_molecule,
+        head_layer_roughness=roughness,
+        bottom_layer_molecular_formula=head_formula,
+        bottom_layer_thickness=head_thickness,
+        bottom_layer_solvent=subphase,
+        bottom_layer_solvent_surface_coverage=head_solvent_surface_coverage, 
+        bottom_layer_area_per_molecule=area_per_molecule,
+        bottom_layer_roughness=roughness
+    )
     
 On creation, the area per molecule and roughness above both the head and tail layers can be constrained to be the same. 
 These constraints can be addded by setting :code:`dppc.constrain_apm = True` or :code:`dppc.conformal_roughness = True`. 

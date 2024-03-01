@@ -39,7 +39,7 @@ LAYERAPM_DETAILS = {
         'max': np.inf,
         'fixed': True,
     },
-    'solvation': {
+    'solvent_surface_coverage': {
         'description': 'Fraction of solvent present',
         'value': 0.2,
         'units': 'dimensionless',
@@ -75,7 +75,7 @@ class LayerApm(Layer):
     """
 
     #: Solvation as a fraction.
-    solvation: Parameter
+    solvent_surface_coverage: Parameter
     # Added in __init__
     #: Area per molecule for the chemical material in Anstrom^2.
     _area_per_molecule: Parameter
@@ -92,7 +92,7 @@ class LayerApm(Layer):
         chemical_formula: str,
         thickness: Parameter,
         solvent: Material,
-        solvation: Parameter,
+        solvent_surface_coverage: Parameter,
         area_per_molecule: Parameter,
         roughness: Parameter,
         name: str = 'EasyLayerApm',
@@ -103,7 +103,7 @@ class LayerApm(Layer):
         :param chemical_formula: Formula for the chemical in the layer.
         :param thickness: Layer thickness in Angstrom.
         :param solvent: Solvent containing the chemical.
-        :param solvation: Fraction of solvent present.
+        :param solvent_surface_coverage: Fraction of layer not covered by chemical.
         :param area_per_molecule: Area per molecule in the layer
         :param roughness: Upper roughness on the layer in Angstrom.
         :param name: Name of the layer, defaults to :py:attr:`EasyLayerApm`
@@ -141,7 +141,7 @@ class LayerApm(Layer):
         solvated_material = MaterialSolvated(
             material=material,
             solvent=solvent,
-            solvation=solvation,
+            solvent_surface_coverage=solvent_surface_coverage,
             interface=interface,
         )
         super().__init__(
@@ -168,12 +168,12 @@ class LayerApm(Layer):
         thickness = Parameter('thickness', **LAYERAPM_DETAILS['thickness'])
         roughness = Parameter('roughness', **LAYERAPM_DETAILS['roughness'])
         solvent = Material.from_pars(6.36, 0, 'D2O', interface=interface)
-        solvation = Parameter('solvation', **LAYERAPM_DETAILS['solvation'])
+        solvent_surface_coverage = Parameter('solvent_surface_coverage', **LAYERAPM_DETAILS['solvent_surface_coverage'])
         return cls(
             LAYERAPM_DETAILS['chemical_formula'],
             thickness,
             solvent,
-            solvation,
+            solvent_surface_coverage,
             area_per_molecule,
             roughness,
             interface=interface,
@@ -185,7 +185,7 @@ class LayerApm(Layer):
         chemical_formula: str,
         thickness: float,
         solvent: Material,
-        solvation: float,
+        solvent_surface_coverage: float,
         area_per_molecule: float,
         roughness: float,
         name: str = 'EasyLayerApm',
@@ -196,7 +196,7 @@ class LayerApm(Layer):
         :param chemical_formula: Formula for the chemical in the layer.
         :param thickness: Layer thickness in Angstrom.
         :param solvent: Solvent in the layer.
-        :param solvation: Fraction of solvent.
+        :param solvent_surface_coverage: Fraction of layer not covered by chemical.
         :param area_per_molecule: Area per chemical component.
         :param roughness: Upper roughness on the layer in Angstrom.
         :param name: Identifier, defaults to 'EasyLayerApm'.
@@ -206,19 +206,21 @@ class LayerApm(Layer):
         del default_options['area_per_molecule']['value']
         del default_options['thickness']['value']
         del default_options['roughness']['value']
-        del default_options['solvation']['value']
+        del default_options['solvent_surface_coverage']['value']
         del default_options['chemical_formula']
 
         area_per_molecule = Parameter('area_per_molecule', area_per_molecule, **default_options['area_per_molecule'])
         thickness = Parameter('thickness', thickness, **default_options['thickness'])
         roughness = Parameter('roughness', roughness, **default_options['roughness'])
-        solvation = Parameter('solvation', solvation, **default_options['solvation'])
+        solvent_surface_coverage = Parameter(
+            'solvent_surface_coverage', solvent_surface_coverage, **default_options['solvent_surface_coverage']
+        )
 
         return cls(
             chemical_formula,
             thickness,
             solvent,
-            solvation,
+            solvent_surface_coverage,
             area_per_molecule,
             roughness,
             name=name,
@@ -244,17 +246,17 @@ class LayerApm(Layer):
         self.material.solvent = new_solvent
 
     @property
-    def solvation(self) -> Parameter:
-        """Get the solvation fraction of the material in the solvent."""
+    def solvent_surface_coverage(self) -> Parameter:
+        """Get the fraction of layer not covered by the chemical."""
         return self.material.fraction
 
-    @solvation.setter
-    def solvation(self, solvation: float) -> None:
-        """Set the fraction of the material in the solvent.
+    @solvent_surface_coverage.setter
+    def solvent_surface_coverage(self, solvent_surface_coverage: float) -> None:
+        """Set the fraction of layer not covered by the chemical.
 
-        :param solvation: Fraction of solvent.
+        :param solvent_surface_coverage: Fraction of solvent.
         """
-        self.material.solvation = solvation
+        self.material.solvent_surface_coverage = solvent_surface_coverage
 
     @property
     def chemical_formula(self) -> str:

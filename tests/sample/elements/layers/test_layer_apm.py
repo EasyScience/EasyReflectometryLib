@@ -25,9 +25,9 @@ class TestLayerApm(unittest.TestCase):
         assert p.solvent.sld.raw_value == 6.36
         assert p.solvent.isld.raw_value == 0
         assert p.solvent.name == 'D2O'
-        assert p.solvation.raw_value == 0.2
-        assert str(p.solvation.unit) == 'dimensionless'
-        assert p.solvation.fixed is True
+        assert p.solvent_surface_coverage.raw_value == 0.2
+        assert str(p.solvent_surface_coverage.unit) == 'dimensionless'
+        assert p.solvent_surface_coverage.fixed is True
 
     def test_from_pars(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
@@ -38,7 +38,7 @@ class TestLayerApm(unittest.TestCase):
         assert p.roughness.raw_value == 2
         assert p.solvent.sld.raw_value == -0.561
         assert p.solvent.isld.raw_value == 0
-        assert p.solvation.raw_value == 0.5
+        assert p.solvent_surface_coverage.raw_value == 0.5
 
     def test_from_pars_constraint(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
@@ -50,7 +50,7 @@ class TestLayerApm(unittest.TestCase):
         assert p.roughness.raw_value == 2
         assert p.solvent.sld.raw_value == -0.561
         assert p.solvent.isld.raw_value == 0
-        assert p.solvation.raw_value == 0.5
+        assert p.solvent_surface_coverage.raw_value == 0.5
         p._area_per_molecule.value = 30
         assert p._area_per_molecule.raw_value == 30
         assert_almost_equal(p.material.sld.raw_value, 0.712227778)
@@ -69,7 +69,7 @@ class TestLayerApm(unittest.TestCase):
         assert p.roughness.raw_value == 2
         assert p.solvent.sld.raw_value == -0.561
         assert p.solvent.isld.raw_value == 0
-        assert p.solvation.raw_value == 0.5
+        assert p.solvent_surface_coverage.raw_value == 0.5
         d2o = Material.from_pars(6.335, 0, 'D2O')
         p.solvent = d2o
         assert p.chemical_formula == 'C8O10H12P'
@@ -79,7 +79,7 @@ class TestLayerApm(unittest.TestCase):
         assert p.roughness.raw_value == 2
         assert p.solvent.sld.raw_value == 6.335
         assert p.solvent.isld.raw_value == 0
-        assert p.solvation.raw_value == 0.5
+        assert p.solvent_surface_coverage.raw_value == 0.5
 
     def test_chemical_formula_change(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
@@ -92,7 +92,7 @@ class TestLayerApm(unittest.TestCase):
 
         assert p.solvent.sld.raw_value == -0.561
         assert p.solvent.isld.raw_value == 0
-        assert p.solvation.raw_value == 0.5
+        assert p.solvent_surface_coverage.raw_value == 0.5
         assert p.material.name == 'C8O10H12P in H2O'
         p.chemical_formula = 'C8O10D12P'
         assert p.chemical_formula == 'C8O10D12P'
@@ -102,7 +102,7 @@ class TestLayerApm(unittest.TestCase):
         assert p.roughness.raw_value == 2
         assert p.solvent.sld.raw_value == -0.561
         assert p.solvent.isld.raw_value == 0
-        assert p.solvation.raw_value == 0.5 
+        assert p.solvent_surface_coverage.raw_value == 0.5 
         assert p.material.name == 'C8O10D12P/H2O'
 
     def test_dict_repr(self):
@@ -111,7 +111,7 @@ class TestLayerApm(unittest.TestCase):
             'EasyLayerApm': {
                 'material': {
                     'C10H18NO8P in D2O': {
-                        'solvation': 0.2,
+                        'solvent_surface_coverage': 0.2,
                         'sld': '2.269e-6 1 / angstrom ** 2',
                         'isld': '0.000e-6 1 / angstrom ** 2',
                         'material': {
