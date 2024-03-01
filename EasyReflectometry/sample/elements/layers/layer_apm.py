@@ -142,7 +142,6 @@ class LayerApm(Layer):
             material=material,
             solvent=solvent,
             solvation=solvation,
-            name=molecular_formula + '/' + solvent.name,
             interface=interface,
         )
         super().__init__(
@@ -228,49 +227,44 @@ class LayerApm(Layer):
 
     @property
     def area_per_molecule(self) -> Parameter:
-        """
-        :return: Area per molecule
-        """
+        """Get the area per molecule."""
         return self._area_per_molecule
 
     @property
     def solvent(self) -> Material:
-        """
-        :return: Solvent material
-        """
+        """Get the solvent material."""
         return self.material.solvent
 
     @solvent.setter
     def solvent(self, new_solvent: Material) -> None:
-        """
+        """Set the solvent material.
+
         :param new_solvent: New solvent material.
         """
         self.material.solvent = new_solvent
 
     @property
     def solvation(self) -> Parameter:
-        """
-        :return: Solvation fraction.
-        """
+        """Get the solvation fraction of the material in the solvent."""
         return self.material.fraction
 
     @solvation.setter
     def solvation(self, solvation: float) -> None:
-        """
+        """Set the fraction of the material in the solvent.
+
         :param solvation: Fraction of solvent.
         """
         self.material.solvation = solvation
 
     @property
     def molecular_formula(self) -> str:
-        """
-        :return: Molecular formula
-        """
+        """Get the molecular formula of the material."""
         return self._molecular_formula
 
     @molecular_formula.setter
     def molecular_formula(self, formula_string: str) -> None:
-        """
+        """Set the molecular formula of the material.
+
         :param formula_string: String that defines the molecular formula.
         """
         self._molecular_formula = formula_string
