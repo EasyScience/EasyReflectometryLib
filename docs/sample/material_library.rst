@@ -37,30 +37,30 @@ The :py:class:`MaterialDensity` material can be create as follows.
 
 The density should be in units of grams per cubic centimeter and the scattering length is calculated from :code:`'SiO2'`. 
 
-:py:class:`MaterialMixture`
----------------------------
+:py:class:`MaterialSolvated`
+----------------------------
 
-Sometimes it is desirable to have a layer that consists of two materials in some ratio.
+Sometimes it is desirable to have a layer that consists of a material and a solvent in some ratio.
 An example of this is shown in the `solvation tutorial`_, where a polymer film solvated with D2O is modelled. 
-To produce a material that is described by such a mixture, there is the :py:class:`MaterialMixture` material option. 
-This is constructed from two constituent materials and the fractional amount of the second in the first. 
-So to produce a material that is 20 % D2O in a polymer, the following is used. 
+To produce a material that is described by such a mixture, there is :py:class:`MaterialSolvated`. 
+This is constructed from two constituent :py:class:`Materials` and the fractional amount of the material in the solvent. 
+So to produce a :py:class:`MaterialSolvated` that is 20 % D2O in a polymer, the following is used. 
 
 .. code-block:: python
 
     from EasyReflectometry.sample.material import Material 
-    from EasyReflectometry.sample.material import MaterialMixture
+    from EasyReflectometry.sample.material import MaterialSolvated
 
     polymer = Material.from_pars(2., 0., 'Polymer')
     d2o = Material.from_pars(6.36, 0, 'D2O')
 
-    solvated_polymer = MaterialMixture.from_pars(polymer, 
+    solvated_polymer = MaterialSolvated.from_pars(polymer, 
                                                  d2o, 
                                                  0.2, 
                                                  'Solvated Polymer')
 
 For the :py:attr:`solvated_polymer` object, the :py:attr:`sld` will be :code:`2.872 1 / angstrom ** 2` (the weighted average of the two scattering length densities). 
-The :py:class:`MaterialMixture` includes a constraint such that if the value of either constituent scattering length densities (both real and imaginary components) or the fraction changes, then the resulting material :py:attr:`sld` and :py:attr:`isld` will change appropriately. 
+The :py:class:`MaterialSolvated` includes a constraint such that if the value of either constituent scattering length densities (both real and imaginary components) or the fraction changes, then the resulting material :py:attr:`sld` and :py:attr:`isld` will change appropriately. 
 
 .. _`assemblies`: ./assemblies_library.html
 .. _`tutorials`: ../tutorials/tutorials.html

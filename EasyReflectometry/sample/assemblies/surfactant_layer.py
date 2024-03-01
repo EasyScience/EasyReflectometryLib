@@ -235,8 +235,8 @@ class SurfactantLayer(BaseAssembly):
         this_dict = super().as_dict(skip=skip)
         for i in this_dict['layers']['data']:
             del i['material']
-            del i['scattering_length_real']
-            del i['scattering_length_imag']
+            del i['_scattering_length_real']
+            del i['_scattering_length_imag']
         this_dict['constrain_apm'] = self.constrain_apm
         this_dict['conformal_roughness'] = self.conformal_roughness
         return this_dict
