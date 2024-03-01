@@ -73,7 +73,7 @@ class MaterialSolvated(MaterialMixture):
             raise ValueError('solvation must be a float')
 
     def _update_name(self) -> None:
-        self.name = self._material_a.name + ' solvated in ' + self._material_b.name
+        self.name = self._material_a.name + ' in ' + self._material_b.name
 
     # Representation
     @property

@@ -104,7 +104,7 @@ class TestSurfactantLayer(unittest.TestCase):
             'top_layer': {
                 'DPPC Tail': {
                     'material': {
-                        'C32D64/Air': {
+                        'C32D64 in Air': {
                             'solvation': 0.0,
                             'sld': '8.297e-6 1 / angstrom ** 2',
                             'isld': '0.000e-6 1 / angstrom ** 2',
@@ -131,7 +131,7 @@ class TestSurfactantLayer(unittest.TestCase):
             'bottom_layer': {
                 'DPPC Head': {
                     'material': {
-                        'C10H18NO8P/D2O': {
+                        'C10H18NO8P in D2O': {
                             'solvation': 0.2,
                             'sld': '2.269e-6 1 / angstrom ** 2',
                             'isld': '0.000e-6 1 / angstrom ** 2',

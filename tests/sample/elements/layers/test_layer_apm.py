@@ -19,9 +19,9 @@ class TestLayerApm(unittest.TestCase):
         assert p.roughness.raw_value == 3
         assert str(p.roughness.unit) == 'angstrom'
         assert p.roughness.fixed is True
-        assert p.material.sld.raw_value == -0.561
-        assert p.material.isld.raw_value == 0
-        assert p.material.name == 'C10H18NO8P solvated in D2O'
+        assert_almost_equal(p.material.sld.raw_value, 2.2691419)
+        assert_almost_equal(p.material.isld.raw_value, 0)
+        assert p.material.name == 'C10H18NO8P in D2O'
         assert p.solvent.sld.raw_value == 6.36
         assert p.solvent.isld.raw_value == 0
         assert p.solvent.name == 'D2O'
@@ -93,7 +93,7 @@ class TestLayerApm(unittest.TestCase):
         assert p.solvent.sld.raw_value == -0.561
         assert p.solvent.isld.raw_value == 0
         assert p.solvation.raw_value == 0.5
-        assert p.material.name == 'C8O10H12P solvated in H2O'
+        assert p.material.name == 'C8O10H12P in H2O'
         p.molecular_formula = 'C8O10D12P'
         assert p.molecular_formula == 'C8O10D12P'
         assert p._area_per_molecule.raw_value == 50
@@ -110,7 +110,7 @@ class TestLayerApm(unittest.TestCase):
         assert p._dict_repr == {
             'EasyLayerApm': {
                 'material': {
-                    'C10H18NO8P solvated in D2O': {
+                    'C10H18NO8P in D2O': {
                         'solvation': 0.2,
                         'sld': '2.269e-6 1 / angstrom ** 2',
                         'isld': '0.000e-6 1 / angstrom ** 2',

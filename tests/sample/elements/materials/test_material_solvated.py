@@ -44,7 +44,7 @@ class TestMaterialMixture():
 
         # Expect
         assert material_solvated.material == new_material
-        assert material_solvated.name == 'new_material solvated in solvent'
+        assert material_solvated.name == 'new_material in solvent'
 
     def test_solvent(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
@@ -60,7 +60,7 @@ class TestMaterialMixture():
 
         # Expect
         assert material_solvated.solvent == new_solvent
-        assert material_solvated.name == 'material solvated in new_solvent'
+        assert material_solvated.name == 'material in new_solvent'
 
     def test_solvation(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
@@ -114,4 +114,4 @@ class TestMaterialMixture():
         material_solvated._update_name()
 
         # Expect
-        assert material_solvated.name == 'name_a solvated in name_b'
+        assert material_solvated.name == 'name_a in name_b'
