@@ -128,41 +128,10 @@ class TestBaseAssembly():
         #Expect
         assert self.mock_layer_0.roughness.user_constraints['roughness_1'].enabled is False
 
-    def test_top_layer(self, base_assembly: BaseAssembly) -> None:
-        # When Then Expect
-        assert base_assembly.top_layer == self.mock_layer_0
-
-    def test_top_layer_none(self, base_assembly: BaseAssembly) -> None:
-        # When
-        base_assembly.layers = []
-
-        # Then 
-        result = base_assembly.top_layer
-
-        # Expect
-        assert result is None
-
-    def test_set_top_layer(self, base_assembly: BaseAssembly) -> None:
-        # When Then
-        base_assembly.top_layer = self.mock_layer_1
-
-        # Expect
-        assert base_assembly.layers == [self.mock_layer_1, self.mock_layer_1]
-
-    def test_set_top_layer_empty(self, base_assembly: BaseAssembly) -> None:
-        # When
-        base_assembly.layers = []
-
-        # Then
-        base_assembly.top_layer = self.mock_layer_1
-
-        # Expect
-        assert base_assembly.layers == [self.mock_layer_1]
-
     def test_bottom_layer(self, base_assembly: BaseAssembly) -> None:
         # When Then Expect
-        assert base_assembly.bottom_layer == self.mock_layer_1
-    
+        assert base_assembly.bottom_layer == self.mock_layer_0
+
     def test_bottom_layer_none(self, base_assembly: BaseAssembly) -> None:
         # When
         base_assembly.layers = []
@@ -175,25 +144,56 @@ class TestBaseAssembly():
 
     def test_set_bottom_layer(self, base_assembly: BaseAssembly) -> None:
         # When Then
-        base_assembly.bottom_layer = self.mock_layer_0
+        base_assembly.bottom_layer = self.mock_layer_1
+
+        # Expect
+        assert base_assembly.layers == [self.mock_layer_1, self.mock_layer_1]
+
+    def test_set_bottom_layer_empty(self, base_assembly: BaseAssembly) -> None:
+        # When
+        base_assembly.layers = []
+
+        # Then
+        base_assembly.bottom_layer = self.mock_layer_1
+
+        # Expect
+        assert base_assembly.layers == [self.mock_layer_1]
+
+    def test_top_layer(self, base_assembly: BaseAssembly) -> None:
+        # When Then Expect
+        assert base_assembly.top_layer == self.mock_layer_1
+    
+    def test_top_layer_none(self, base_assembly: BaseAssembly) -> None:
+        # When
+        base_assembly.layers = []
+
+        # Then 
+        result = base_assembly.top_layer
+
+        # Expect
+        assert result is None
+
+    def test_set_top_layer(self, base_assembly: BaseAssembly) -> None:
+        # When Then
+        base_assembly.top_layer = self.mock_layer_0
 
         # Expect
         assert base_assembly.layers == [self.mock_layer_0, self.mock_layer_0]
 
-    def test_set_bottom_layer_exception(self, base_assembly: BaseAssembly) -> None:
+    def test_set_top_layer_exception(self, base_assembly: BaseAssembly) -> None:
         # When
         base_assembly.layers = []
 
         # Then
         with pytest.raises(Exception):
-            base_assembly.bottom_layer = self.mock_layer_1
+            base_assembly.top_layer = self.mock_layer_1
 
-    def test_set_bottom_layer_with_top(self, base_assembly: BaseAssembly) -> None:
+    def test_set_top_layer_with_bottom(self, base_assembly: BaseAssembly) -> None:
         # When
         base_assembly.layers = [self.mock_layer_0]
 
         # Then
-        base_assembly.bottom_layer = self.mock_layer_1
+        base_assembly.top_layer = self.mock_layer_1
 
         # Expect
         assert base_assembly.layers == [self.mock_layer_0, self.mock_layer_1]

@@ -34,7 +34,7 @@ class SurfactantLayer(BaseAssembly):
     ):
         """Constructor.
 
-        :param layers: List with the head and tail layer.
+        :param layers: List with the tail (index 0) and head (index 1) layer.
         :param name: Name for surfactant layer, defaults to 'EasySurfactantLayer'.
         :param constrain_apm: Constrain the area per molecule, defaults to :py:attr:`False`.
         :param conformal_roughness: Constrain the roughness to be the same for both layers, defaults to :py:attr:`False`.
@@ -49,10 +49,10 @@ class SurfactantLayer(BaseAssembly):
         )
 
         self.interface = interface
-        self.tail_layer.area_per_molecule.enabled = True
-        apm = ObjConstraint(self.tail_layer.area_per_molecule, '', self.head_layer.area_per_molecule)
-        self.head_layer.area_per_molecule.user_constraints['apm'] = apm
-        self.head_layer.area_per_molecule.user_constraints['apm'].enabled = constrain_apm
+        self.head_layer.area_per_molecule.enabled = True
+        apm = ObjConstraint(self.head_layer.area_per_molecule, '', self.tail_layer.area_per_molecule)
+        self.tail_layer.area_per_molecule.user_constraints['apm'] = apm
+        self.tail_layer.area_per_molecule.user_constraints['apm'].enabled = constrain_apm
 
         self._setup_roughness_constraints()
         if conformal_roughness:
@@ -68,43 +68,43 @@ class SurfactantLayer(BaseAssembly):
         """
         d2o = Material.from_pars(6.36, 0, 'D2O')
         air = Material.from_pars(0, 0, 'Air')
-        head = LayerApm.from_pars('C10H18NO8P', 10.0, d2o, 0.2, 48.2, 3.0, 'DPPC Head')
         tail = LayerApm.from_pars('C32D64', 16, air, 0.0, 48.2, 3, 'DPPC Tail')
+        head = LayerApm.from_pars('C10H18NO8P', 10.0, d2o, 0.2, 48.2, 3.0, 'DPPC Head')
         return cls([tail, head], name='DPPC', interface=interface)
 
     @classmethod
     def from_pars(
         cls,
-        head_layer_molecular_formula: str,
-        head_layer_thickness: float,
-        head_layer_solvent: Material,
-        head_layer_solvent_surface_coverage: float,
-        head_layer_area_per_molecule: float,
-        head_layer_roughness: float,
         tail_layer_molecular_formula: str,
         tail_layer_thickness: float,
         tail_layer_solvent: Material,
         tail_layer_solvent_surface_coverage: float,
         tail_layer_area_per_molecule: float,
         tail_layer_roughness: float,
+        head_layer_molecular_formula: str,
+        head_layer_thickness: float,
+        head_layer_solvent: Material,
+        head_layer_solvent_surface_coverage: float,
+        head_layer_area_per_molecule: float,
+        head_layer_roughness: float,
         name: str = 'EasySurfactantLayer',
         interface=None,
     ) -> SurfactantLayer:
         """Instance of a surfactant layer where the parameters are known,
         :py:attr:`head_layer` is that which the neutrons interact with first.
 
-        :param head_layer_molecular_formula: Molecules in head layer.
-        :param head_layer_thickness: Thicknkess of head layer.
-        :param head_layer_solvent: Solvent in head layer.
-        :param head_layer_solvent_surface_coverage: Fraction of head layer not covered by molecules.
-        :param head_layer_area_per_molecule: Area per molecule of head layer.
-        :param head_layer_roughness: Roughness of head layer.
         :param tail_layer_molecular_formula: Molecules in tail layer.
         :param tail_layer_thickness: Thicknkess of tail layer.
         :param tail_layer_solvent: Solvent in tail layer.
         :param tail_layer_solvent_surface_coverage: Fraction of tail layer not covered by molecules.
         :param tail_layer_area_per_molecule: Area per molecule of tail layer.
         :param tail_layer_roughness: Roughness of tail layer.
+        :param head_layer_molecular_formula: Molecules in head layer.
+        :param head_layer_thickness: Thicknkess of head layer.
+        :param head_layer_solvent: Solvent in head layer.
+        :param head_layer_solvent_surface_coverage: Fraction of head layer not covered by molecules.
+        :param head_layer_area_per_molecule: Area per molecule of head layer.
+        :param head_layer_roughness: Roughness of head layer.
         :param name: Name for surfactant layer.
         """
         head_layer = LayerApm.from_pars(
@@ -125,7 +125,7 @@ class SurfactantLayer(BaseAssembly):
             roughness=tail_layer_roughness,
             name=name + ' Tail Layer',
         )
-        return cls([head_layer, tail_layer], name, interface)
+        return cls([tail_layer, head_layer], name, interface)
 
     @property
     def head_layer(self) -> Optional[LayerApm]:
@@ -150,7 +150,7 @@ class SurfactantLayer(BaseAssembly):
     @property
     def constrain_apm(self) -> bool:
         """Get the area per molecule constraint status."""
-        return self.head_layer.area_per_molecule.user_constraints['apm'].enabled
+        return self.tail_layer.area_per_molecule.user_constraints['apm'].enabled
 
     @constrain_apm.setter
     def constrain_apm(self, status: bool):
@@ -159,20 +159,20 @@ class SurfactantLayer(BaseAssembly):
 
         :param x: Boolean description the wanted of the constraint.
         """
-        self.head_layer.area_per_molecule.user_constraints['apm'].enabled = status
-        self.head_layer.area_per_molecule.value = self.head_layer.area_per_molecule.raw_value
+        self.tail_layer.area_per_molecule.user_constraints['apm'].enabled = status
+        self.tail_layer.area_per_molecule.value = self.tail_layer.area_per_molecule.raw_value
 
     @property
     def conformal_roughness(self) -> bool:
         """Get the roughness constraint status."""
-        return self.head_layer.roughness.user_constraints['roughness_1'].enabled
+        return self.tail_layer.roughness.user_constraints['roughness_1'].enabled
 
     @conformal_roughness.setter
     def conformal_roughness(self, status: bool):
         """Set the status for the roughness to be the same for both layers."""
         if status:
             self._enable_roughness_constraints()
-            self.head_layer.roughness.value = self.head_layer.roughness.raw_value
+            self.tail_layer.roughness.value = self.tail_layer.roughness.raw_value
         else:
             self._disable_roughness_constraints()
 
@@ -183,9 +183,9 @@ class SurfactantLayer(BaseAssembly):
         """
         if not self.conformal_roughness:
             raise ValueError('Roughness must be conformal to use this function.')
-        solvent_roughness.value = self.head_layer.roughness.value
-        rough = ObjConstraint(solvent_roughness, '', self.head_layer.roughness)
-        self.head_layer.roughness.user_constraints['solvent_roughness'] = rough
+        solvent_roughness.value = self.tail_layer.roughness.value
+        rough = ObjConstraint(solvent_roughness, '', self.tail_layer.roughness)
+        self.tail_layer.roughness.user_constraints['solvent_roughness'] = rough
 
     def constain_multiple_contrast(
         self,

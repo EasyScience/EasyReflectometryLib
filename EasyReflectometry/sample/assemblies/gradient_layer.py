@@ -62,8 +62,12 @@ class GradientLayer(BaseAssembly):
 
     # Class methods for instance creation
     @classmethod
-    def default(cls, name: str = 'Air-Deuterium', interface=None) -> GradientLayer:
-        """Default instance  for a gradient layer object. The default is air to deuterium."""
+    def default(cls, name: str = 'EasyGradienLayer', interface=None) -> GradientLayer:
+        """Default instance  for a gradient layer object. The default is air to deuterium.
+
+        :param name: Name for gradient layer, defaults to 'EasyGradienLayer'.
+        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        """
         initial_material = Material.from_pars(0.0, 0.0, 'Air')
         final_material = Material.from_pars(6.36, 0.0, 'D2O')
 
@@ -112,7 +116,7 @@ class GradientLayer(BaseAssembly):
     @property
     def thickness(self) -> float:
         """Get the thickness of the gradient layer in Angstrom."""
-        return self.top_layer.thickness.raw_value * self._discretisation_elements
+        return self.bottom_layer.thickness.raw_value * self._discretisation_elements
 
     @thickness.setter
     def thickness(self, thickness: float) -> None:
@@ -120,12 +124,12 @@ class GradientLayer(BaseAssembly):
 
         :param thickness: Thickness of the gradient layer in Angstroms.
         """
-        self.top_layer.thickness.value = thickness / self._discretisation_elements
+        self.bottom_layer.thickness.value = thickness / self._discretisation_elements
 
     @property
     def roughness(self) -> float:
         """Get the Roughness of the gradient layer in Angstrom."""
-        return self.top_layer.roughness.raw_value
+        return self.bottom_layer.roughness.raw_value
 
     @roughness.setter
     def roughness(self, roughness: float) -> None:
@@ -133,7 +137,7 @@ class GradientLayer(BaseAssembly):
 
         :param roughness: Roughness of the gradient layer in Angstroms.
         """
-        self.top_layer.roughness.value = roughness
+        self.bottom_layer.roughness.value = roughness
 
     @property
     def _dict_repr(self) -> dict[str, str]:
