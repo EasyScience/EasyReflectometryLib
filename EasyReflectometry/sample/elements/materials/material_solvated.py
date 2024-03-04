@@ -65,7 +65,7 @@ class MaterialSolvated(MaterialMixture):
     def solvent_surface_coverage(self, solvent_surface_coverage: float) -> None:
         """Set the fraction of layer not covered by the material.
 
-        :param solvent_surface_coverage: float
+        :param solvent_surface_coverage: Fraction of layer not covered by the material.
         """
         try:
             self.fraction = solvent_surface_coverage
