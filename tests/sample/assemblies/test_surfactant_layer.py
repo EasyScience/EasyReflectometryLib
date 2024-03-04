@@ -6,6 +6,7 @@ __version__ = '0.0.1'
 
 
 import unittest
+from unittest.mock import MagicMock
 
 from EasyReflectometry.sample.assemblies.surfactant_layer import SurfactantLayer
 from EasyReflectometry.sample.elements.layers.layer import Layer
@@ -20,78 +21,78 @@ class TestSurfactantLayer(unittest.TestCase):
 
         assert p.layers[0].name == 'DPPC Tail'
         assert p.bottom_layer.name == 'DPPC Tail'
-        assert p.bottom_layer.name == 'DPPC Tail'
-        assert p.bottom_layer.molecular_formula == 'C32D64'
+        assert p.tail_layer.name == 'DPPC Tail'
+        assert p.tail_layer.molecular_formula == 'C32D64'
 
         assert p.layers[1].name == 'DPPC Head'
         assert p.top_layer.name == 'DPPC Head'
-        assert p.top_layer.name == 'DPPC Head'
-        assert p.top_layer.molecular_formula == 'C10H18NO8P'
+        assert p.head_layer.name == 'DPPC Head'
+        assert p.head_layer.molecular_formula == 'C10H18NO8P'
 
     def test_from_pars(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
         noth2o = Material.from_pars(0.561, 0, 'nH2O')
         p = SurfactantLayer.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, 'C10H24', 10, noth2o, 0.2, 40, 3, name='A Test')
         assert p.layers[0].name == 'A Test Tail Layer'
-        assert p.bottom_layer.name == 'A Test Tail Layer'
-        assert p.bottom_layer.molecular_formula == 'C8O10H12P'
-        assert p.bottom_layer.thickness.raw_value == 12
-        assert p.bottom_layer.solvent.as_data_dict() == h2o.as_data_dict()
-        assert p.bottom_layer.solvent_surface_coverage.raw_value == 0.5
-        assert p.bottom_layer.area_per_molecule.raw_value == 50
-        assert p.bottom_layer.roughness.raw_value == 2
+        assert p.tail_layer.name == 'A Test Tail Layer'
+        assert p.tail_layer.molecular_formula == 'C8O10H12P'
+        assert p.tail_layer.thickness.raw_value == 12
+        assert p.tail_layer.solvent.as_data_dict() == h2o.as_data_dict()
+        assert p.tail_layer.solvent_surface_coverage.raw_value == 0.5
+        assert p.tail_layer.area_per_molecule.raw_value == 50
+        assert p.tail_layer.roughness.raw_value == 2
         assert p.layers[1].name == 'A Test Head Layer'
-        assert p.top_layer.name == 'A Test Head Layer'
-        assert p.top_layer.molecular_formula == 'C10H24'
-        assert p.top_layer.thickness.raw_value == 10
-        assert p.top_layer.solvent.as_data_dict() == noth2o.as_data_dict()
-        assert p.top_layer.solvent_surface_coverage.raw_value == 0.2
-        assert p.top_layer.area_per_molecule.raw_value == 40
+        assert p.head_layer.name == 'A Test Head Layer'
+        assert p.head_layer.molecular_formula == 'C10H24'
+        assert p.head_layer.thickness.raw_value == 10
+        assert p.head_layer.solvent.as_data_dict() == noth2o.as_data_dict()
+        assert p.head_layer.solvent_surface_coverage.raw_value == 0.2
+        assert p.head_layer.area_per_molecule.raw_value == 40
         assert p.name == 'A Test'
 
     def test_constraint_area_per_molecule(self):
         p = SurfactantLayer.default()
-        p.bottom_layer.area_per_molecule.value = 30
-        assert p.bottom_layer.area_per_molecule.raw_value == 30.0
-        assert p.top_layer.area_per_molecule.raw_value == 48.2
+        p.tail_layer.area_per_molecule.value = 30
+        assert p.tail_layer.area_per_molecule.raw_value == 30.0
+        assert p.head_layer.area_per_molecule.raw_value == 48.2
         assert p.constrain_area_per_molecule is False
         p.constrain_area_per_molecule = True
-        assert p.bottom_layer.area_per_molecule.raw_value == 30
-        assert p.top_layer.area_per_molecule.raw_value == 30
+        assert p.tail_layer.area_per_molecule.raw_value == 30
+        assert p.head_layer.area_per_molecule.raw_value == 30
         assert p.constrain_area_per_molecule is True
-        p.bottom_layer.area_per_molecule.value = 40
-        assert p.bottom_layer.area_per_molecule.raw_value == 40
-        assert p.top_layer.area_per_molecule.raw_value == 40
+        p.tail_layer.area_per_molecule.value = 40
+        assert p.tail_layer.area_per_molecule.raw_value == 40
+        assert p.head_layer.area_per_molecule.raw_value == 40
 
     def test_conformal_roughness(self):
         p = SurfactantLayer.default()
-        p.bottom_layer.roughness.value = 2
-        assert p.bottom_layer.roughness.raw_value == 2
-        assert p.top_layer.roughness.raw_value == 3
+        p.tail_layer.roughness.value = 2
+        assert p.tail_layer.roughness.raw_value == 2
+        assert p.head_layer.roughness.raw_value == 3
         p.conformal_roughness = True
-        assert p.bottom_layer.roughness.raw_value == 2
-        assert p.top_layer.roughness.raw_value == 2
+        assert p.tail_layer.roughness.raw_value == 2
+        assert p.head_layer.roughness.raw_value == 2
         assert p.conformal_roughness is True
-        p.bottom_layer.roughness.value = 4
-        assert p.bottom_layer.roughness.raw_value == 4
-        assert p.top_layer.roughness.raw_value == 4
+        p.tail_layer.roughness.value = 4
+        assert p.tail_layer.roughness.raw_value == 4
+        assert p.head_layer.roughness.raw_value == 4
 
     def test_constain_solvent_roughness(self):
         p = SurfactantLayer.default()
         layer = Layer.default()
-        p.bottom_layer.roughness.value = 2
-        assert p.bottom_layer.roughness.raw_value == 2
-        assert p.top_layer.roughness.raw_value == 3
+        p.tail_layer.roughness.value = 2
+        assert p.tail_layer.roughness.raw_value == 2
+        assert p.head_layer.roughness.raw_value == 3
         assert layer.roughness.raw_value == 3.3
         p.conformal_roughness = True
         p.constrain_solvent_roughness(layer.roughness)
-        assert p.bottom_layer.roughness.raw_value == 2
-        assert p.top_layer.roughness.raw_value == 2
+        assert p.tail_layer.roughness.raw_value == 2
+        assert p.head_layer.roughness.raw_value == 2
         assert layer.roughness.raw_value == 2
         assert p.conformal_roughness is True
-        p.bottom_layer.roughness.value = 4
-        assert p.bottom_layer.roughness.raw_value == 4
-        assert p.top_layer.roughness.raw_value == 4
+        p.tail_layer.roughness.value = 4
+        assert p.tail_layer.roughness.raw_value == 4
+        assert p.head_layer.roughness.raw_value == 4
         assert layer.roughness.raw_value == 4
 
     def test_dict_repr(self):
@@ -138,6 +139,48 @@ class TestSurfactantLayer(unittest.TestCase):
             'area per molecule constrained': False,
             'conformal roughness': False,
         }
+
+    def test_get_head_layer(self):
+        # When
+        p = SurfactantLayer.default()
+
+        # Then Expect
+        assert p.head_layer == p.top_layer
+        assert p.head_layer == p.layers[1]
+
+    def test_set_head_layer(self):
+        # When
+        p = SurfactantLayer.default()
+        new_layer = Layer.default()
+
+        # Then
+        p.head_layer = new_layer
+
+        # Expect
+        assert p.head_layer == new_layer
+        assert p.top_layer == new_layer
+        assert p.layers[1] == new_layer
+
+    def test_get_tail_layer(self):
+        # When
+        p = SurfactantLayer.default()
+
+        # Then Expect
+        assert p.tail_layer == p.bottom_layer
+        assert p.tail_layer == p.layers[0]
+
+    def test_set_tail_layer(self):
+        # When
+        p = SurfactantLayer.default()
+        new_layer = Layer.default()
+
+        # Then
+        p.tail_layer = new_layer
+
+        # Expect
+        assert p.tail_layer == new_layer
+        assert p.bottom_layer == new_layer
+        assert p.layers[0] == new_layer
 
     def test_dict_round_trip(self):
         p = SurfactantLayer.default()
