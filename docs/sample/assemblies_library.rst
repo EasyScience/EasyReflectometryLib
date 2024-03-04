@@ -92,7 +92,7 @@ The creation of a :py:class:`SurfactantLayer` object takes a large number argume
 
     dppc = SurfactantLayer.from_pars(
         tail_layer_molecular_formula=tail_formula,
-        tail_layer_thicness=tail_thickness,
+        tail_layer_thickness=tail_thickness,
         tail_layer_solvent=superphase,
         tail_layer_solvent_surface_coverage=tail_solvent_surface_coverage, 
         tail_layer_area_per_molecule=area_per_molecule,
