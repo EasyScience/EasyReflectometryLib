@@ -21,12 +21,12 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.layers[0].name == 'DPPC Tail'
         assert p.bottom_layer.name == 'DPPC Tail'
         assert p.bottom_layer.name == 'DPPC Tail'
-        assert p.bottom_layer.chemical_formula == 'C32D64'
+        assert p.bottom_layer.molecular_formula == 'C32D64'
 
         assert p.layers[1].name == 'DPPC Head'
         assert p.top_layer.name == 'DPPC Head'
         assert p.top_layer.name == 'DPPC Head'
-        assert p.top_layer.chemical_formula == 'C10H18NO8P'
+        assert p.top_layer.molecular_formula == 'C10H18NO8P'
 
     def test_from_pars(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
@@ -34,7 +34,7 @@ class TestSurfactantLayer(unittest.TestCase):
         p = SurfactantLayer.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, 'C10H24', 10, noth2o, 0.2, 40, 3, name='A Test')
         assert p.layers[0].name == 'A Test Tail Layer'
         assert p.bottom_layer.name == 'A Test Tail Layer'
-        assert p.bottom_layer.chemical_formula == 'C8O10H12P'
+        assert p.bottom_layer.molecular_formula == 'C8O10H12P'
         assert p.bottom_layer.thickness.raw_value == 12
         assert p.bottom_layer.solvent.as_data_dict() == h2o.as_data_dict()
         assert p.bottom_layer.solvent_surface_coverage.raw_value == 0.5
@@ -42,7 +42,7 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.bottom_layer.roughness.raw_value == 2
         assert p.layers[1].name == 'A Test Head Layer'
         assert p.top_layer.name == 'A Test Head Layer'
-        assert p.top_layer.chemical_formula == 'C10H24'
+        assert p.top_layer.molecular_formula == 'C10H24'
         assert p.top_layer.thickness.raw_value == 10
         assert p.top_layer.solvent.as_data_dict() == noth2o.as_data_dict()
         assert p.top_layer.solvent_surface_coverage.raw_value == 0.2
@@ -113,7 +113,7 @@ class TestSurfactantLayer(unittest.TestCase):
                     'thickness': '10.000 angstrom',
                     'roughness': '3.000 angstrom',
                 },
-                'chemical_formula': 'C10H18NO8P',
+                'molecular_formula': 'C10H18NO8P',
                 'area_per_molecule': '48.2 angstrom ** 2',
             },
             'tail_layer': {
@@ -132,7 +132,7 @@ class TestSurfactantLayer(unittest.TestCase):
                     'thickness': '16.000 angstrom',
                     'roughness': '3.000 angstrom',
                 },
-                'chemical_formula': 'C32D64',
+                'molecular_formula': 'C32D64',
                 'area_per_molecule': '48.2 angstrom ** 2',
             },
             'area per molecule constrained': False,

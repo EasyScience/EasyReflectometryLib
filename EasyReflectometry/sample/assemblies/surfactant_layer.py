@@ -110,7 +110,7 @@ class SurfactantLayer(BaseAssembly):
         :param name: Name for surfactant layer.
         """
         head_layer = LayerApm.from_pars(
-            chemical_formula=head_layer_molecular_formula,
+            molecular_formula=head_layer_molecular_formula,
             thickness=head_layer_thickness,
             solvent=head_layer_solvent,
             solvent_surface_coverage=head_layer_solvent_surface_coverage,
@@ -119,7 +119,7 @@ class SurfactantLayer(BaseAssembly):
             name=name + ' Head Layer',
         )
         tail_layer = LayerApm.from_pars(
-            chemical_formula=tail_layer_molecular_formula,
+            molecular_formula=tail_layer_molecular_formula,
             thickness=tail_layer_thickness,
             solvent=tail_layer_solvent,
             solvent_surface_coverage=tail_layer_solvent_surface_coverage,

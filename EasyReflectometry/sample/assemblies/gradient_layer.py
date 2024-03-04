@@ -62,7 +62,7 @@ class GradientLayer(BaseAssembly):
 
     # Class methods for instance creation
     @classmethod
-    def default(cls, name: str = 'EasyGradienLayer', interface=None) -> GradientLayer:
+    def default(cls, name: str = 'EasyGradientLayer', interface=None) -> GradientLayer:
         """Default instance  for a gradient layer object. The default is air to deuterium.
 
         :param name: Name for gradient layer, defaults to 'EasyGradienLayer'.
