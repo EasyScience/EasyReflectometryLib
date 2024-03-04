@@ -91,18 +91,18 @@ The creation of a :py:class:`SurfactantLayer` object takes a large number argume
     roughness = 3.3
 
     dppc = SurfactantLayer.from_pars(
-        head_layer_molecular_formula=tail_formula,
-        head_layer_thicness=tail_thickness,
-        head_layer_solvent=superphase,
-        head_layer_solvent_surface_coverage=tail_solvent_surface_coverage, 
+        tail_layer_molecular_formula=tail_formula,
+        tail_layer_thicness=tail_thickness,
+        tail_layer_solvent=superphase,
+        tail_layer_solvent_surface_coverage=tail_solvent_surface_coverage, 
+        tail_layer_area_per_molecule=area_per_molecule,
+        tail_layer_roughness=roughness,
+        head_layer_molecular_formula=head_formula,
+        head_layer_thickness=head_thickness,
+        head_layer_solvent=subphase,
+        head_layer_solvent_surface_coverage=head_solvent_surface_coverage, 
         head_layer_area_per_molecule=area_per_molecule,
-        head_layer_roughness=roughness,
-        bottom_layer_molecular_formula=head_formula,
-        bottom_layer_thickness=head_thickness,
-        bottom_layer_solvent=subphase,
-        bottom_layer_solvent_surface_coverage=head_solvent_surface_coverage, 
-        bottom_layer_area_per_molecule=area_per_molecule,
-        bottom_layer_roughness=roughness
+        head_layer_roughness=roughness
     )
     
 On creation, the area per molecule and roughness above both the head and tail layers can be constrained to be the same. 

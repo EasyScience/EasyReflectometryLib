@@ -18,7 +18,12 @@ class TestBaseAssembly:
         self.mock_layers = [self.mock_layer_0, self.mock_layer_1]
         self.mock_interface = MagicMock()
         BaseAssembly.__abstractmethods__ = set()
-        return BaseAssembly(name='name', type='type', interface=self.mock_interface, layers=self.mock_layers)
+        return BaseAssembly(
+            name='name',
+            type='type',
+            interface=self.mock_interface,
+            layers=self.mock_layers,
+        )
 
     def test_init(self, base_assembly: BaseAssembly) -> None:
         # When Then Expect

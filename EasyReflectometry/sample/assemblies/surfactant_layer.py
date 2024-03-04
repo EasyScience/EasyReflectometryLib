@@ -50,7 +50,11 @@ class SurfactantLayer(BaseAssembly):
 
         self.interface = interface
         self.head_layer.area_per_molecule.enabled = True
-        apm = ObjConstraint(self.head_layer.area_per_molecule, '', self.tail_layer.area_per_molecule)
+        apm = ObjConstraint(
+            dependent_obj=self.head_layer.area_per_molecule,
+            operator='',
+            independent_obj=self.tail_layer.area_per_molecule,
+        )
         self.tail_layer.area_per_molecule.user_constraints['apm'] = apm
         self.tail_layer.area_per_molecule.user_constraints['apm'].enabled = constrain_apm
 

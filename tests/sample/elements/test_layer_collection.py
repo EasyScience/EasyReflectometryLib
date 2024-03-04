@@ -45,7 +45,6 @@ class TestLayerCollection(unittest.TestCase):
 
     def test_dict_repr(self):
         p = LayerCollection.default()
-        print(p._dict_repr)
         assert p._dict_repr == {
             'EasyLayers': [
                 {
