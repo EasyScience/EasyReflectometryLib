@@ -97,13 +97,13 @@ class SurfactantLayer(BaseAssembly):
         """Instance of a surfactant layer where the parameters are known,
         :py:attr:`head_layer` is that which the neutrons interact with first.
 
-        :param tail_layer_molecular_formula: Molecules in tail layer.
+        :param tail_layer_molecular_formula: Molecular formula of species constituting the tail layer.
         :param tail_layer_thickness: Thicknkess of tail layer.
         :param tail_layer_solvent: Solvent in tail layer.
         :param tail_layer_solvent_surface_coverage: Fraction of tail layer not covered by molecules.
         :param tail_layer_area_per_molecule: Area per molecule of tail layer.
         :param tail_layer_roughness: Roughness of tail layer.
-        :param head_layer_molecular_formula: Molecules in head layer.
+        :param head_layer_molecular_formula: Molecular formula of species constituting the head layer.
         :param head_layer_thickness: Thicknkess of head layer.
         :param head_layer_solvent: Solvent in head layer.
         :param head_layer_solvent_surface_coverage: Fraction of head layer not covered by molecules.
