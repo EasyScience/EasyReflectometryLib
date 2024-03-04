@@ -6,6 +6,7 @@ from numpy.testing import assert_almost_equal
 from EasyReflectometry.sample.elements.materials.material import Material
 from EasyReflectometry.sample.elements.materials.material_mixture import MaterialMixture
 
+
 class TestMaterialMixture(unittest.TestCase):
 
     def test_default(self):

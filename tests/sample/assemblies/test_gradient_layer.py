@@ -1,3 +1,6 @@
+"""
+Tests for GradientLayer class module
+"""
 from unittest.mock import MagicMock
 
 import pytest
@@ -5,15 +8,12 @@ from numpy.testing import assert_almost_equal
 
 import EasyReflectometry.sample.assemblies.gradient_layer
 from EasyReflectometry.sample.assemblies.gradient_layer import GradientLayer
-from EasyReflectometry.sample.assemblies.gradient_layer import (
-    _linear_gradient,
-    _prepare_gradient_layers,
-)
+from EasyReflectometry.sample.assemblies.gradient_layer import _linear_gradient
+from EasyReflectometry.sample.assemblies.gradient_layer import _prepare_gradient_layers
 from EasyReflectometry.sample.elements.materials.material import Material
 
 
-class TestGradientLayer():
-
+class TestGradientLayer:
     @pytest.fixture
     def gradient_layer(self) -> GradientLayer:
         self.init = Material.from_pars(10.0, -10.0, 'Material_1')
@@ -26,12 +26,12 @@ class TestGradientLayer():
             roughness=2.0,
             discretisation_elements=10,
             name='Test',
-            interface=None
+            interface=None,
         )
 
     def test_init(self, gradient_layer: GradientLayer) -> None:
         # When Then Expect
-        assert len(gradient_layer.layers) == 10 
+        assert len(gradient_layer.layers) == 10
         assert gradient_layer.name, 'Test'
         assert gradient_layer._type, 'Gradient-layer'
         assert gradient_layer.interface is None
@@ -48,7 +48,7 @@ class TestGradientLayer():
     def test_default(self) -> None:
         # When Then
         result = GradientLayer.default('default-layer')
-        
+
         # Expect
         assert result.name == 'default-layer'
         assert result._type, 'Gradient-layer'
@@ -59,7 +59,7 @@ class TestGradientLayer():
         # When
         init = Material.from_pars(6.908, -0.278, 'Boron')
         final = Material.from_pars(0.487, 0.000, 'Potassium')
-        
+
         # Then
         result = GradientLayer.from_pars(
             initial_material=init,
@@ -67,7 +67,7 @@ class TestGradientLayer():
             thickness=10.0,
             roughness=1.0,
             discretisation_elements=5,
-            name='gradientItem'
+            name='gradientItem',
         )
 
         # Expect
@@ -78,13 +78,13 @@ class TestGradientLayer():
 
     def test_repr(self, gradient_layer: GradientLayer) -> None:
         # When Then Expect
-        expected_str = "thickness: 1.0\ndiscretisation_elements: 10\ntop_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nbottom_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"
+        expected_str = "thickness: 1.0\ndiscretisation_elements: 10\ntop_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nbottom_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"  # noqa: E501
         assert gradient_layer.__repr__() == expected_str
 
     def test_dict_round_trip(self, gradient_layer: GradientLayer) -> None:
         # When Then
         result = GradientLayer.from_dict(gradient_layer.as_dict())
-        
+
         # Expect
         assert result.as_data_dict() == gradient_layer.as_data_dict()
         assert len(gradient_layer.layers) == len(result.layers)
@@ -132,7 +132,7 @@ def test_linear_gradient_increasing():
     result = _linear_gradient(init_value=1.5, final_value=2.5, discretisation_elements=10)
 
     # Expect
-    assert_almost_equal([1.5, 1.6, 1.7, 1.8, 1.9, 2. , 2.1, 2.2, 2.3, 2.4, 2.5], result)
+    assert_almost_equal([1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5], result)
 
 
 def test_linear_gradient_decreasing():
@@ -140,7 +140,7 @@ def test_linear_gradient_decreasing():
     result = _linear_gradient(init_value=2.5, final_value=1.5, discretisation_elements=10)
 
     # Expect
-    assert_almost_equal([2.5, 2.4, 2.3, 2.2, 2.1, 2. , 1.9, 1.8, 1.7, 1.6, 1.5], result)
+    assert_almost_equal([2.5, 2.4, 2.3, 2.2, 2.1, 2.0, 1.9, 1.8, 1.7, 1.6, 1.5], result)
 
 
 def test_linear_gradient_same():
@@ -177,6 +177,4 @@ def test_prepare_gradient_layers(monkeypatch):
     assert mock_Layer.from_pars.call_args_list[0][1]['material'] == 'Material_from_pars'
     assert mock_Layer.from_pars.call_args_list[0][1]['thickness'] == 0.0
     assert mock_Layer.from_pars.call_args_list[0][1]['name'] == '0'
-    assert mock_Layer.from_pars.call_args_list[0][1]['interface'] == None
-
-
+    assert mock_Layer.from_pars.call_args_list[0][1]['interface'] is None

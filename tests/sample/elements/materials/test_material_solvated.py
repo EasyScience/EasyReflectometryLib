@@ -1,12 +1,13 @@
+from unittest.mock import MagicMock
+
 import pytest
+
 import EasyReflectometry.sample.elements.materials.material_mixture
 import EasyReflectometry.sample.elements.materials.material_solvated
-
-from unittest.mock import MagicMock
 from EasyReflectometry.sample.elements.materials.material_solvated import MaterialSolvated
 
-class TestMaterialMixture():
 
+class TestMaterialMixture:
     @pytest.fixture
     def material_solvated(self, monkeypatch) -> MaterialSolvated:
         self.mock_material = MagicMock()
@@ -18,8 +19,18 @@ class TestMaterialMixture():
         self.mock_Parameter = MagicMock()
         self.mock_FunctionalConstraint = MagicMock()
         monkeypatch.setattr(EasyReflectometry.sample.elements.materials.material_mixture, 'Parameter', self.mock_Parameter)
-        monkeypatch.setattr(EasyReflectometry.sample.elements.materials.material_mixture, 'FunctionalConstraint', self.mock_FunctionalConstraint)
-        return MaterialSolvated(self.mock_material, self.mock_solvent, self.mock_solvent_surface_coverage, name='name', interface=self.mock_interface)
+        monkeypatch.setattr(
+            EasyReflectometry.sample.elements.materials.material_mixture,
+            'FunctionalConstraint',
+            self.mock_FunctionalConstraint,
+        )
+        return MaterialSolvated(
+            self.mock_material,
+            self.mock_solvent,
+            self.mock_solvent_surface_coverage,
+            name='name',
+            interface=self.mock_interface,
+        )
 
     def test_init(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
@@ -72,12 +83,12 @@ class TestMaterialMixture():
 
         # Expect
         assert material_solvated.solvent_surface_coverage == 1.0
-    
+
     def test_set_solvent_surface_coverage_exception(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
         with pytest.raises(ValueError):
             material_solvated.solvent_surface_coverage = 'not float'
-    
+
     def test_dict_repr(self, material_solvated: MaterialSolvated) -> None:
         # When Then
         material_solvated._sld = MagicMock()
@@ -88,7 +99,7 @@ class TestMaterialMixture():
         material_solvated._isld.unit = 'isld_unit'
         material_solvated.material._dict_repr = 'material_dict_repr'
         material_solvated.solvent._dict_repr = 'solvent_dict_repr'
-        material_solvated.solvent_surface_coverage.raw_value = "solvent_surface_coverage_value"        
+        material_solvated.solvent_surface_coverage.raw_value = 'solvent_surface_coverage_value'
 
         # Expect
         assert material_solvated._dict_repr == {
@@ -97,7 +108,7 @@ class TestMaterialMixture():
                 'sld': '1.000e-6 sld_unit',
                 'isld': '2.000e-6 isld_unit',
                 'material': 'material_dict_repr',
-                'solvent': 'solvent_dict_repr'
+                'solvent': 'solvent_dict_repr',
             }
         }
 
