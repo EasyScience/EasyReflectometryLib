@@ -6,7 +6,6 @@ __version__ = '0.0.1'
 
 
 import unittest
-from unittest.mock import MagicMock
 
 from EasyReflectometry.sample.assemblies.surfactant_layer import SurfactantLayer
 from EasyReflectometry.sample.elements.layers.layer import Layer
