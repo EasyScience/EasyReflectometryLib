@@ -115,10 +115,10 @@ class LayerAreaPerMolecule(Layer):
         del default_options['isl']['value']
         scattering_length_real = Parameter('scattering_length_real', scattering_length.real, **default_options['sl'])
         scattering_length_imag = Parameter('scattering_length_imag', scattering_length.imag, **default_options['isl'])
-        sld = area_per_molecule_to_sld(scattering_length_real.raw_value, thickness.raw_value, area_per_molecule.raw_value)
-        isld = area_per_molecule_to_sld(scattering_length_imag.raw_value, thickness.raw_value, area_per_molecule.raw_value)
+        sld_real = area_per_molecule_to_sld(scattering_length_real.raw_value, thickness.raw_value, area_per_molecule.raw_value)
+        sld_imag = area_per_molecule_to_sld(scattering_length_imag.raw_value, thickness.raw_value, area_per_molecule.raw_value)
 
-        material = Material.from_pars(sld, isld, name=molecular_formula, interface=interface)
+        material = Material.from_pars(sld_real, sld_imag, name=molecular_formula, interface=interface)
 
         constraint = FunctionalConstraint(
             dependent_obj=material.sld,
