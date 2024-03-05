@@ -1,7 +1,7 @@
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 """
-Tests for BornAgain class module
+Tests for BornAgain calculator.
 """
 
 # import os
@@ -15,7 +15,8 @@ Tests for BornAgain class module
 #     def test_init(self):
 #         p = BornAgain()
 #         assert_equal(list(p.calculator.storage.keys()),
-#                      ['material', 'layer', 'layer_material', 'roughness', 'item', 'item_repeats', 'model', 'model_items', 'model_parameters'])
+#                      ['material', 'layer', 'layer_material', 'roughness', 'item',
+#                       'item_repeats', 'model', 'model_items', 'model_parameters'])
 #         assert_equal(p._material_link['sld'], 'real')
 #         assert_equal(p._material_link['isld'], 'imag')
 #         assert_equal(p._layer_link['thickness'], 'thickness')

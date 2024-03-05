@@ -1,8 +1,9 @@
+"""
+Tests for Model class.
+"""
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
-"""
-Tests for Layer class module
-"""
+
 
 import unittest
 
@@ -10,17 +11,16 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
-from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.calculators import CalculatorFactory
-from EasyReflectometry.sample import RepeatingMultilayer
+from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
 from EasyReflectometry.sample import Material
+from EasyReflectometry.sample import RepeatingMultilayer
 from EasyReflectometry.sample import Sample
 
 
 class TestModel(unittest.TestCase):
-
     def test_default(self):
         p = Model.default()
         assert_equal(p.name, 'EasyModel')
@@ -34,7 +34,7 @@ class TestModel(unittest.TestCase):
         assert_equal(p.scale.fixed, True)
         assert_equal(p.background.display_name, 'background')
         assert_equal(str(p.background.unit), 'dimensionless')
-        assert_almost_equal(p.background.value.n, 1.e-7)
+        assert_almost_equal(p.background.value.n, 1.0e-7)
         assert_equal(p.background.min, 0.0)
         assert_equal(p.background.max, np.Inf)
         assert_equal(p.background.fixed, True)
@@ -67,7 +67,7 @@ class TestModel(unittest.TestCase):
         assert_equal(mod.scale.fixed, True)
         assert_equal(mod.background.display_name, 'background')
         assert_equal(str(mod.background.unit), 'dimensionless')
-        assert_almost_equal(mod.background.value.n, 1.e-5)
+        assert_almost_equal(mod.background.value.n, 1.0e-5)
         assert_equal(mod.background.min, 0.0)
         assert_equal(mod.background.max, np.Inf)
         assert_equal(mod.background.fixed, True)
@@ -314,8 +314,10 @@ class TestModel(unittest.TestCase):
 
     def test_repr(self):
         p = Model.default()
-        assert p.__repr__(
-        ) == "EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n"
+        assert (
+            p.__repr__()
+            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n'  # noqa: E501
+        )
 
     def test_dict_round_trip(self):
         p = Model.default()
