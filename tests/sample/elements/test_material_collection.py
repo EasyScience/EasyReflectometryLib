@@ -1,17 +1,16 @@
+"""
+Tests for LayerCollection class.
+"""
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
-"""
-Tests for Layers class module
-"""
 
 import unittest
 
-from EasyReflectometry.sample.elements.materials.material import Material
 from EasyReflectometry.sample.elements.material_collection import MaterialCollection
+from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestLayerCollection(unittest.TestCase):
-
     def test_default(self):
         p = MaterialCollection.default()
         assert p.name == 'EasyMaterials'
@@ -33,23 +32,18 @@ class TestLayerCollection(unittest.TestCase):
     def test_dict_repr(self):
         p = MaterialCollection.default()
         assert p._dict_repr == {
-            'EasyMaterials': [{
-                'EasyMaterial': {
-                    'isld': '0.000e-6 1 / angstrom ** 2',
-                    'sld': '4.186e-6 1 / angstrom ** 2'
-                }
-            }, {
-                'EasyMaterial': {
-                    'isld': '0.000e-6 1 / angstrom ** 2',
-                    'sld': '4.186e-6 1 / angstrom ** 2'
-                }
-            }]
+            'EasyMaterials': [
+                {'EasyMaterial': {'isld': '0.000e-6 1 / angstrom ** 2', 'sld': '4.186e-6 1 / angstrom ** 2'}},
+                {'EasyMaterial': {'isld': '0.000e-6 1 / angstrom ** 2', 'sld': '4.186e-6 1 / angstrom ** 2'}},
+            ]
         }
 
     def test_repr(self):
         p = MaterialCollection.default()
-        assert p.__repr__(
-        ) == 'EasyMaterials:\n- EasyMaterial:\n    sld: 4.186e-6 1 / angstrom ** 2\n    isld: 0.000e-6 1 / angstrom ** 2\n- EasyMaterial:\n    sld: 4.186e-6 1 / angstrom ** 2\n    isld: 0.000e-6 1 / angstrom ** 2\n'
+        assert (
+            p.__repr__()
+            == 'EasyMaterials:\n- EasyMaterial:\n    sld: 4.186e-6 1 / angstrom ** 2\n    isld: 0.000e-6 1 / angstrom ** 2\n- EasyMaterial:\n    sld: 4.186e-6 1 / angstrom ** 2\n    isld: 0.000e-6 1 / angstrom ** 2\n'  # noqa: E501
+        )
 
     def test_dict_round_trip(self):
         p = MaterialCollection.default()

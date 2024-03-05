@@ -1,8 +1,8 @@
+"""
+Tests for Layer class.
+"""
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
-"""
-Tests for Layer class module
-"""
 
 import unittest
 
@@ -16,7 +16,6 @@ from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestLayer(unittest.TestCase):
-
     def test_default(self):
         p = Layer.default()
         assert_equal(p.name, 'EasyLayer')
@@ -69,39 +68,30 @@ class TestLayer(unittest.TestCase):
         m = Material.from_pars(6.908, -0.278, 'Boron', interface=interface)
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron', interface=interface)
         k = Material.from_pars(2.074, 0.0, 'Silicon', interface=interface)
-        assert_almost_equal(
-            p.interface()._wrapper.storage['layer'][p.uid].sld.real.value, 6.908)
-        assert_almost_equal(
-            p.interface()._wrapper.storage['layer'][p.uid].sld.imag.value, -0.278)
+        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.uid].sld.real.value, 6.908)
+        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.uid].sld.imag.value, -0.278)
         p.assign_material(k)
-        assert_almost_equal(
-            p.interface()._wrapper.storage['layer'][p.uid].sld.real.value, 2.074)
-        assert_almost_equal(
-            p.interface()._wrapper.storage['layer'][p.uid].sld.imag.value, 0.0)
+        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.uid].sld.real.value, 2.074)
+        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.uid].sld.imag.value, 0.0)
 
     def test_dict_repr(self):
         p = Layer.default()
         assert p._dict_repr == {
             'EasyLayer': {
-                'material': {
-                    'EasyMaterial': {
-                        'isld': '0.000e-6 1 / angstrom ** 2',
-                        'sld': '4.186e-6 1 / angstrom ** 2'
-                    }
-                },
+                'material': {'EasyMaterial': {'isld': '0.000e-6 1 / angstrom ** 2', 'sld': '4.186e-6 1 / angstrom ** 2'}},
                 'roughness': '3.300 angstrom',
-                'thickness': '10.000 angstrom'
+                'thickness': '10.000 angstrom',
             }
         }
 
     def test_repr(self):
         p = Layer.default()
-        assert p.__repr__(
-        ) == 'EasyLayer:\n  material:\n    EasyMaterial:\n      sld: 4.186e-6 1 / angstrom ** 2\n      isld: 0.000e-6 1 / angstrom ** 2\n  thickness: 10.000 angstrom\n  roughness: 3.300 angstrom\n'
+        assert (
+            p.__repr__()
+            == 'EasyLayer:\n  material:\n    EasyMaterial:\n      sld: 4.186e-6 1 / angstrom ** 2\n      isld: 0.000e-6 1 / angstrom ** 2\n  thickness: 10.000 angstrom\n  roughness: 3.300 angstrom\n'  # noqa: E501
+        )  # noqa: E501
 
     def test_dict_round_trip(self):
         p = Layer.default()
         q = Layer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
-
-

@@ -7,17 +7,16 @@ from EasyReflectometry.sample.elements.materials.material_density import Materia
 
 
 class TestMaterialDensity(unittest.TestCase):
-
     def test_default(self):
         p = MaterialDensity.default()
         assert p.name == 'EasyMaterialDensity'
-        assert p.interface == None
+        assert p.interface is None
         assert p.density.display_name == 'density'
         assert str(p.density.unit) == 'gram / centimeter ** 3'
         assert p.density.value.n == 2.33
         assert p.density.min == 0
         assert p.density.max == np.Inf
-        assert p.density.fixed == True
+        assert p.density.fixed is True
 
     def test_default_constraint(self):
         p = MaterialDensity.default()
@@ -48,16 +47,12 @@ class TestMaterialDensity(unittest.TestCase):
         p = MaterialDensity.default()
         print(p._dict_repr)
         assert p._dict_repr == {
-            'EasyMaterialDensity': {
-                'sld': '2.074e-6 1 / angstrom ** 2',
-                'isld': '0.000e-6 1 / angstrom ** 2'
-            },
+            'EasyMaterialDensity': {'sld': '2.074e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'},
             'chemical_structure': 'Si',
-            'density': '2.33e+00 gram / centimeter ** 3'
+            'density': '2.33e+00 gram / centimeter ** 3',
         }
 
     def test_dict_round_trip(self):
         p = MaterialDensity.default()
         q = MaterialDensity.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
-

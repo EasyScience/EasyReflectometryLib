@@ -53,30 +53,11 @@ class BaseAssembly(BaseObj):
         return yaml.dump(self._dict_repr, sort_keys=False)
 
     @property
-    def top_layer(self) -> Optional[Layer]:
-        """Get the top layer in the assembly."""
+    def bottom_layer(self) -> Optional[Layer]:
+        """Get the bottom layer in the assembly."""
         if len(self.layers) == 0:
             return None
         return self.layers[0]
-
-    @top_layer.setter
-    def top_layer(self, layer: Layer) -> None:
-        """Set the top layer in the assembly.
-
-        :param layer: Layer to set as the top layer.
-        """
-        if len(self.layers) == 0:
-            self.layers.append(layer)
-        else:
-            self.layers[0] = layer
-
-    @property
-    def bottom_layer(self) -> Optional[None]:
-        """Get the bottom layer in the assembly."""
-
-        if len(self.layers) < 2:
-            return None
-        return self.layers[-1]
 
     @bottom_layer.setter
     def bottom_layer(self, layer: Layer) -> None:
@@ -84,9 +65,28 @@ class BaseAssembly(BaseObj):
 
         :param layer: Layer to set as the bottom layer.
         """
+        if len(self.layers) == 0:
+            self.layers.append(layer)
+        else:
+            self.layers[0] = layer
+
+    @property
+    def top_layer(self) -> Optional[None]:
+        """Get the top layer in the assembly."""
+
+        if len(self.layers) < 2:
+            return None
+        return self.layers[-1]
+
+    @top_layer.setter
+    def top_layer(self, layer: Layer) -> None:
+        """Set the top layer in the assembly.
+
+        :param layer: Layer to set as the top layer.
+        """
 
         if len(self.layers) == 0:
-            raise Exception('There is no top layer to add the bottom layer to. Please add a top layer first.')
+            raise Exception('There is no bottom layer to add the top layer to. Please add a bottom layer first.')
         if len(self.layers) == 1:
             self.layers.append(layer)
         else:
@@ -94,16 +94,16 @@ class BaseAssembly(BaseObj):
 
     def _setup_thickness_constraints(self) -> None:
         """
-        Setup thickness constraint, top layer is the deciding layer
+        Setup thickness constraint, bottom layer is the deciding layer
         """
         for i in range(1, len(self.layers)):
             layer_constraint = ObjConstraint(
                 dependent_obj=self.layers[i].thickness,
                 operator='',
-                independent_obj=self.top_layer.thickness,
+                independent_obj=self.bottom_layer.thickness,
             )
-            self.top_layer.thickness.user_constraints[f'thickness_{i}'] = layer_constraint
-            self.top_layer.thickness.user_constraints[f'thickness_{i}'].enabled = False
+            self.bottom_layer.thickness.user_constraints[f'thickness_{i}'] = layer_constraint
+            self.bottom_layer.thickness.user_constraints[f'thickness_{i}'].enabled = False
         self._thickness_constraints_setup = True
 
     def _enable_thickness_constraints(self):
@@ -113,11 +113,11 @@ class BaseAssembly(BaseObj):
         if self._thickness_constraints_setup:
             # Make sure that the thickness constraint is enabled
             for i in range(1, len(self.layers)):
-                self.top_layer.thickness.user_constraints[f'thickness_{i}'].enabled = True
+                self.bottom_layer.thickness.user_constraints[f'thickness_{i}'].enabled = True
             # Make sure that the thickness parameter is enabled
             for i in range(len(self.layers)):
                 self.layers[i].thickness.enabled = True
-            self.top_layer.thickness.value = self.top_layer.thickness.raw_value
+            self.bottom_layer.thickness.value = self.bottom_layer.thickness.raw_value
         else:
             raise Exception('Roughness constraints not setup')
 
@@ -127,22 +127,22 @@ class BaseAssembly(BaseObj):
         """
         if self._thickness_constraints_setup:
             for i in range(1, len(self.layers)):
-                self.top_layer.thickness.user_constraints[f'thickness_{i}'].enabled = False
+                self.bottom_layer.thickness.user_constraints[f'thickness_{i}'].enabled = False
         else:
             raise Exception('Roughness constraints not setup')
 
     def _setup_roughness_constraints(self) -> None:
         """
-        Setup roughness constraint, top layer is the deciding layer
+        Setup roughness constraint, bottom layer is the deciding layer
         """
         for i in range(1, len(self.layers)):
             layer_constraint = ObjConstraint(
                 dependent_obj=self.layers[i].roughness,
                 operator='',
-                independent_obj=self.top_layer.roughness,
+                independent_obj=self.bottom_layer.roughness,
             )
-            self.top_layer.roughness.user_constraints[f'roughness_{i}'] = layer_constraint
-            self.top_layer.roughness.user_constraints[f'roughness_{i}'].enabled = False
+            self.bottom_layer.roughness.user_constraints[f'roughness_{i}'] = layer_constraint
+            self.bottom_layer.roughness.user_constraints[f'roughness_{i}'].enabled = False
         self._roughness_constraints_setup = True
 
     def _enable_roughness_constraints(self):
@@ -152,11 +152,11 @@ class BaseAssembly(BaseObj):
         if self._roughness_constraints_setup:
             # Make sure that the roughness constraint is enabled
             for i in range(1, len(self.layers)):
-                self.top_layer.roughness.user_constraints[f'roughness_{i}'].enabled = True
+                self.bottom_layer.roughness.user_constraints[f'roughness_{i}'].enabled = True
             # Make sure that the roughness parameter is enabled
             for i in range(len(self.layers)):
                 self.layers[i].roughness.enabled = True
-            self.top_layer.roughness.value = self.top_layer.roughness.raw_value
+            self.bottom_layer.roughness.value = self.bottom_layer.roughness.raw_value
         else:
             raise Exception('Roughness constraints not setup')
 
@@ -166,6 +166,6 @@ class BaseAssembly(BaseObj):
         """
         if self._roughness_constraints_setup:
             for i in range(1, len(self.layers)):
-                self.top_layer.roughness.user_constraints[f'roughness_{i}'].enabled = False
+                self.bottom_layer.roughness.user_constraints[f'roughness_{i}'].enabled = False
         else:
             raise Exception('Roughness constraints not setup')

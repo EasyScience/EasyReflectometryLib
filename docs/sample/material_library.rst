@@ -51,13 +51,23 @@ So to produce a :py:class:`MaterialSolvated` that is 20 % D2O in a polymer, the 
     from EasyReflectometry.sample.material import Material 
     from EasyReflectometry.sample.material import MaterialSolvated
 
-    polymer = Material.from_pars(2., 0., 'Polymer')
-    d2o = Material.from_pars(6.36, 0, 'D2O')
+    polymer = Material.from_pars(
+        sld=2.,
+        isld=0.,
+        name='Polymer'
+    )
+    d2o = Material.from_pars(
+        sld=6.36,
+        isld=0, 
+        name='D2O'
+    )
 
-    solvated_polymer = MaterialSolvated.from_pars(polymer, 
-                                                 d2o, 
-                                                 0.2, 
-                                                 'Solvated Polymer')
+    solvated_polymer = MaterialSolvated.from_pars(
+        material=polymer, 
+        solvent=d2o, 
+        solvent_surface_coverage=0.2, 
+        name='Solvated Polymer'
+    )
 
 For the :py:attr:`solvated_polymer` object, the :py:attr:`sld` will be :code:`2.872 1 / angstrom ** 2` (the weighted average of the two scattering length densities). 
 The :py:class:`MaterialSolvated` includes a constraint such that if the value of either constituent scattering length densities (both real and imaginary components) or the fraction changes, then the resulting material :py:attr:`sld` and :py:attr:`isld` will change appropriately. 

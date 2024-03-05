@@ -14,8 +14,17 @@ So we construct a :py:class:`Layer` as follows for a 100 Å thick layer of boron
     from EasyReflectometry.sample import Material
     from EasyReflectometry.sample import Layer
 
-    b = Material.from_pars(6.908, -0.278, 'Boron')
-    boron_layer = Layer.from_pars(b, 100, 10, 'Boron Layer')
+    b = Material.from_pars(
+        sld=6.908,
+        isld=-0.278,
+        'Boron'
+    )
+    boron_layer = Layer.from_pars(
+        material=b,
+        thickness=100, 
+        roughness=10,
+        name='Boron Layer'
+    )
 
 This type of layer is used extensively in the `tutorials`_
 
@@ -26,7 +35,7 @@ The :py:class:`LayerApm` layer type is the fundation of the :py:class:`Surfactan
 The purpose of the :py:class:`LayerApm` is to allow a layer to be defined in terms of the chemical formula of the material and the area per molecule of the layer. 
 The area per molecule is a common description of surface density in the surfactant monolayer and bilayer community. 
 
-We can construct a 10 Å thick :py:class:`LayerApm` of phosphatidylcholine, with an area per molecule of 48 Å squared and a roughness of 3 Å that has 20 % solvation with D2O using the following.
+We can construct a 10 Å thick :py:class:`LayerApm` of phosphatidylcholine, with an area per molecule of 48 Å squared and a roughness of 3 Å that has 20 % solvent surface coverage with D2O using the following.
 
 .. code-block:: python
 
@@ -36,7 +45,15 @@ We can construct a 10 Å thick :py:class:`LayerApm` of phosphatidylcholine, with
     d2o = Material.from_pars(6.36, 0, 'D2O')
 
     pc_formula = 'C10H18NO8P'
-    pc = LayerApm.from_pars(pc_formula, 10, d2o, 0.2, 48, 3, name='PC Layer')
+    pc = LayerApm.from_pars(
+        chemical_formula=pc_formula, 
+        thickness=10, 
+        solvent=d2o, 
+        solvent_surface_coverage=.2,
+        area_per_molecule=48, 
+        roughness=3,
+        name='PC Layer'
+    )
 
 It is expected that the typical user will not interface directly with the :py:class:`LayerApm` assembly type, but instead the :py:class:`SurfactantLayer` `assemblies library`_ will be used instead. 
 

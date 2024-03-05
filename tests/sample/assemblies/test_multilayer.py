@@ -1,8 +1,8 @@
+"""
+Tests for MultiLayer class module
+"""
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
-"""
-Tests for Item class module
-"""
 
 import unittest
 
@@ -11,13 +11,12 @@ from numpy.testing import assert_raises
 
 from EasyReflectometry.calculators.factory import CalculatorFactory
 from EasyReflectometry.sample.assemblies.multilayer import Multilayer
-from EasyReflectometry.sample.elements.layers.layer import Layer
 from EasyReflectometry.sample.elements.layer_collection import LayerCollection
+from EasyReflectometry.sample.elements.layers.layer import Layer
 from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestMultilayer(unittest.TestCase):
-
     def test_default(self):
         p = Multilayer.default()
         assert_equal(p.name, 'EasyMultilayer')
@@ -31,8 +30,8 @@ class TestMultilayer(unittest.TestCase):
         k = Material.from_pars(0.487, 0.000, 'Potassium')
         p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
         q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium')
-        l = LayerCollection.from_pars(p, q, name='twoLayer')
-        o = Multilayer.from_pars(l, 'twoLayerItem')
+        layers = LayerCollection.from_pars(p, q, name='twoLayer')
+        o = Multilayer.from_pars(layers, 'twoLayerItem')
         assert_equal(o.name, 'twoLayerItem')
         assert_equal(o._type, 'Multi-layer')
         assert_equal(o.interface, None)
@@ -78,9 +77,7 @@ class TestMultilayer(unittest.TestCase):
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
         o.add_layer(q)
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
-        assert_equal(
-            o.interface()._wrapper.storage['item'][o.uid].components[1].thick.value,
-            50.)
+        assert_equal(o.interface()._wrapper.storage['item'][o.uid].components[1].thick.value, 50.0)
 
     def test_duplicate_layer(self):
         m = Material.from_pars(6.908, -0.278, 'Boron')
@@ -107,18 +104,16 @@ class TestMultilayer(unittest.TestCase):
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
         o.add_layer(q)
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
-        assert_equal(
-            o.interface()._wrapper.storage['item'][o.uid].components[1].thick.value,
-            50.)
+        assert_equal(o.interface()._wrapper.storage['item'][o.uid].components[1].thick.value, 50.0)
         o.duplicate_layer(1)
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 3)
-        assert_equal(
-            o.interface()._wrapper.storage['item'][o.uid].components[2].thick.value,
-            50.)
+        assert_equal(o.interface()._wrapper.storage['item'][o.uid].components[2].thick.value, 50.0)
         assert_raises(
-            AssertionError, assert_equal,
+            AssertionError,
+            assert_equal,
             o.interface()._wrapper.storage['item'][o.uid].components[1].name,
-            o.interface()._wrapper.storage['item'][o.uid].components[2].name)
+            o.interface()._wrapper.storage['item'][o.uid].components[2].name,
+        )
 
     def test_remove_layer(self):
         m = Material.from_pars(6.908, -0.278, 'Boron')
@@ -152,8 +147,10 @@ class TestMultilayer(unittest.TestCase):
 
     def test_repr(self):
         p = Multilayer.default()
-        assert p.__repr__(
-        ) == 'EasyMultilayer:\n  EasyLayers:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n'
+        assert (
+            p.__repr__()
+            == 'EasyMultilayer:\n  EasyLayers:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n'  # noqa: E501
+        )
 
     def test_dict_round_trip(self):
         p = Multilayer.default()
