@@ -65,7 +65,7 @@ So to produce a :py:class:`MaterialSolvated` that is 20 % D2O in a polymer, the 
     solvated_polymer = MaterialSolvated.from_pars(
         material=polymer, 
         solvent=d2o, 
-        solvent_surface_coverage=0.2, 
+        solvation=0.2, 
         name='Solvated Polymer'
     )
 

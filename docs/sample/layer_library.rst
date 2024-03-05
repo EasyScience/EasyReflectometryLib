@@ -49,7 +49,7 @@ We can construct a 10 Å thick :py:class:`LayerApm` of phosphatidylcholine, with
         chemical_formula=pc_formula, 
         thickness=10, 
         solvent=d2o, 
-        solvent_surface_coverage=.2,
+        solvation=.2,
         area_per_molecule=48, 
         roughness=3,
         name='PC Layer'

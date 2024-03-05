@@ -85,8 +85,8 @@ The creation of a :py:class:`SurfactantLayer` object takes a large number argume
     tail_formula = 'C30D64'
     head_thickness = 10.0
     tail_thickness = 16.0
-    head_solvent_surface_coverage = 0.2
-    tail_solvent_surface_coverage = 0.0
+    head_solvation = 0.2
+    tail_solvation = 0.0
     area_per_molecule = 48
     roughness = 3.3
 
@@ -94,13 +94,13 @@ The creation of a :py:class:`SurfactantLayer` object takes a large number argume
         tail_layer_molecular_formula=tail_formula,
         tail_layer_thickness=tail_thickness,
         tail_layer_solvent=superphase,
-        tail_layer_solvent_surface_coverage=tail_solvent_surface_coverage, 
+        tail_layer_solvation=tail_solvation, 
         tail_layer_area_per_molecule=area_per_molecule,
         tail_layer_roughness=roughness,
         head_layer_molecular_formula=head_formula,
         head_layer_thickness=head_thickness,
         head_layer_solvent=subphase,
-        head_layer_solvent_surface_coverage=head_solvent_surface_coverage, 
+        head_layer_solvation=head_solvation, 
         head_layer_area_per_molecule=area_per_molecule,
         head_layer_roughness=roughness
     )

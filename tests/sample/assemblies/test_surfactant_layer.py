@@ -37,7 +37,7 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.bottom_layer.molecular_formula == 'C8O10H12P'
         assert p.bottom_layer.thickness.raw_value == 12
         assert p.bottom_layer.solvent.as_data_dict() == h2o.as_data_dict()
-        assert p.bottom_layer.solvent_surface_coverage.raw_value == 0.5
+        assert p.bottom_layer.solvation.raw_value == 0.5
         assert p.bottom_layer.area_per_molecule.raw_value == 50
         assert p.bottom_layer.roughness.raw_value == 2
         assert p.layers[1].name == 'A Test Head Layer'
@@ -45,7 +45,7 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.top_layer.molecular_formula == 'C10H24'
         assert p.top_layer.thickness.raw_value == 10
         assert p.top_layer.solvent.as_data_dict() == noth2o.as_data_dict()
-        assert p.top_layer.solvent_surface_coverage.raw_value == 0.2
+        assert p.top_layer.solvation.raw_value == 0.2
         assert p.top_layer.area_per_molecule.raw_value == 40
         assert p.name == 'A Test'
 
@@ -101,7 +101,7 @@ class TestSurfactantLayer(unittest.TestCase):
                 'DPPC Head': {
                     'material': {
                         'C10H18NO8P in D2O': {
-                            'solvent_surface_coverage': 0.2,
+                            'solvation': 0.2,
                             'sld': '2.269e-6 1 / angstrom ** 2',
                             'isld': '0.000e-6 1 / angstrom ** 2',
                             'material': {
@@ -120,7 +120,7 @@ class TestSurfactantLayer(unittest.TestCase):
                 'DPPC Tail': {
                     'material': {
                         'C32D64 in Air': {
-                            'solvent_surface_coverage': 0.0,
+                            'solvation': 0.0,
                             'sld': '8.297e-6 1 / angstrom ** 2',
                             'isld': '0.000e-6 1 / angstrom ** 2',
                             'material': {

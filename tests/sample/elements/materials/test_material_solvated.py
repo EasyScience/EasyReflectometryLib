@@ -14,7 +14,7 @@ class TestMaterialMixture:
         self.mock_material.name = 'material'
         self.mock_solvent = MagicMock()
         self.mock_solvent.name = 'solvent'
-        self.mock_solvent_surface_coverage = MagicMock()
+        self.mock_solvation = MagicMock()
         self.mock_interface = MagicMock()
         self.mock_Parameter = MagicMock()
         self.mock_FunctionalConstraint = MagicMock()
@@ -27,7 +27,7 @@ class TestMaterialMixture:
         return MaterialSolvated(
             self.mock_material,
             self.mock_solvent,
-            self.mock_solvent_surface_coverage,
+            self.mock_solvation,
             name='name',
             interface=self.mock_interface,
         )
@@ -36,7 +36,7 @@ class TestMaterialMixture:
         # When Then Expect
         assert material_solvated.material_a == self.mock_material
         assert material_solvated.material_b == self.mock_solvent
-        assert material_solvated.fraction == self.mock_solvent_surface_coverage
+        assert material_solvated.fraction == self.mock_solvation
         assert material_solvated.name == 'name'
         assert material_solvated.interface == self.mock_interface
         self.mock_interface.generate_bindings.call_count == 2
@@ -73,21 +73,21 @@ class TestMaterialMixture:
         assert material_solvated.solvent == new_solvent
         assert material_solvated.name == 'material in new_solvent'
 
-    def test_solvent_surface_coverage(self, material_solvated: MaterialSolvated) -> None:
+    def test_solvation(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
-        assert material_solvated.solvent_surface_coverage == self.mock_solvent_surface_coverage
+        assert material_solvated.solvation == self.mock_solvation
 
-    def test_set_solvent_surface_coverage(self, material_solvated: MaterialSolvated) -> None:
+    def test_set_solvation(self, material_solvated: MaterialSolvated) -> None:
         # When Then
-        material_solvated.solvent_surface_coverage = 1.0
+        material_solvated.solvation = 1.0
 
         # Expect
-        assert material_solvated.solvent_surface_coverage == 1.0
+        assert material_solvated.solvation == 1.0
 
-    def test_set_solvent_surface_coverage_exception(self, material_solvated: MaterialSolvated) -> None:
+    def test_set_solvation_exception(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
         with pytest.raises(ValueError):
-            material_solvated.solvent_surface_coverage = 'not float'
+            material_solvated.solvation = 'not float'
 
     def test_dict_repr(self, material_solvated: MaterialSolvated) -> None:
         # When Then
@@ -99,12 +99,12 @@ class TestMaterialMixture:
         material_solvated._isld.unit = 'isld_unit'
         material_solvated.material._dict_repr = 'material_dict_repr'
         material_solvated.solvent._dict_repr = 'solvent_dict_repr'
-        material_solvated.solvent_surface_coverage.raw_value = 'solvent_surface_coverage_value'
+        material_solvated.solvation.raw_value = 'solvation_value'
 
         # Expect
         assert material_solvated._dict_repr == {
             'name': {
-                'solvent_surface_coverage': 'solvent_surface_coverage_value',
+                'solvation': 'solvation_value',
                 'sld': '1.000e-6 sld_unit',
                 'isld': '2.000e-6 isld_unit',
                 'material': 'material_dict_repr',

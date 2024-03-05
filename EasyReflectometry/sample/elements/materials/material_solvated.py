@@ -9,7 +9,7 @@ class MaterialSolvated(MaterialMixture):
         self,
         material: Material,
         solvent: Material,
-        solvent_surface_coverage: Parameter,
+        solvation: Parameter,
         name=None,
         interface=None,
     ):
@@ -17,14 +17,14 @@ class MaterialSolvated(MaterialMixture):
 
         :param material: The material being solvated.
         :param solvent: The solvent material.
-        :param solvent_surface_coverage: Fraction of layer not covered by the material.
+        :param solvation: Fraction of layer not covered by the material.
         :param name: Name of the material, defaults to None that causes the name to be constructed.
         :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
         super().__init__(
             material_a=material,
             material_b=solvent,
-            fraction=solvent_surface_coverage,
+            fraction=solvation,
             name=name,
             interface=interface,
         )
@@ -57,20 +57,22 @@ class MaterialSolvated(MaterialMixture):
         self.material_b = new_solvent
 
     @property
-    def solvent_surface_coverage(self) -> Parameter:
-        """Get the fraction of layer not covered by the material."""
+    def solvation(self) -> Parameter:
+        """Get the fraction of layer not covered by the material.
+        Domain specific term for the fraction of the layer that is covered by the solvent.
+        """
         return self.fraction
 
-    @solvent_surface_coverage.setter
-    def solvent_surface_coverage(self, solvent_surface_coverage: float) -> None:
+    @solvation.setter
+    def solvation(self, solvation: float) -> None:
         """Set the fraction of layer not covered by the material.
 
-        :param solvent_surface_coverage: Fraction of layer not covered by the material.
+        :param solvation: Fraction of layer not covered by the material.
         """
         try:
-            self.fraction = solvent_surface_coverage
+            self.fraction = solvation
         except ValueError:
-            raise ValueError('solvent_surface_coverage must be a float')
+            raise ValueError('solvation must be a float')
 
     def _update_name(self) -> None:
         self.name = self._material_a.name + ' in ' + self._material_b.name
@@ -81,7 +83,7 @@ class MaterialSolvated(MaterialMixture):
         """A simplified dict representation."""
         return {
             self.name: {
-                'solvent_surface_coverage': self.solvent_surface_coverage.raw_value,
+                'solvation': self.solvation.raw_value,
                 'sld': f'{self._sld.raw_value:.3f}e-6 {self._sld.unit}',
                 'isld': f'{self._isld.raw_value:.3f}e-6 {self._isld.unit}',
                 'material': self.material._dict_repr,

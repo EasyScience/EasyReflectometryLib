@@ -80,13 +80,13 @@ class SurfactantLayer(BaseAssembly):
         tail_layer_molecular_formula: str,
         tail_layer_thickness: float,
         tail_layer_solvent: Material,
-        tail_layer_solvent_surface_coverage: float,
+        tail_layer_solvation: float,
         tail_layer_area_per_molecule: float,
         tail_layer_roughness: float,
         head_layer_molecular_formula: str,
         head_layer_thickness: float,
         head_layer_solvent: Material,
-        head_layer_solvent_surface_coverage: float,
+        head_layer_solvation: float,
         head_layer_area_per_molecule: float,
         head_layer_roughness: float,
         name: str = 'EasySurfactantLayer',
@@ -98,13 +98,13 @@ class SurfactantLayer(BaseAssembly):
         :param tail_layer_molecular_formula: Molecular formula of species constituting the tail layer.
         :param tail_layer_thickness: Thickness of tail layer.
         :param tail_layer_solvent: Solvent in tail layer.
-        :param tail_layer_solvent_surface_coverage: Fraction of tail layer not covered by molecules.
+        :param tail_layer_solvation: Fraction of tail layer not covered by molecules.
         :param tail_layer_area_per_molecule: Area per molecule of tail layer.
         :param tail_layer_roughness: Roughness of tail layer.
         :param head_layer_molecular_formula: Molecular formula of species constituting the head layer.
         :param head_layer_thickness: Thickness of head layer.
         :param head_layer_solvent: Solvent in head layer.
-        :param head_layer_solvent_surface_coverage: Fraction of head layer not covered by molecules.
+        :param head_layer_solvation: Fraction of head layer not covered by molecules.
         :param head_layer_area_per_molecule: Area per molecule of head layer.
         :param head_layer_roughness: Roughness of head layer.
         :param name: Name for surfactant layer.
@@ -113,7 +113,7 @@ class SurfactantLayer(BaseAssembly):
             molecular_formula=head_layer_molecular_formula,
             thickness=head_layer_thickness,
             solvent=head_layer_solvent,
-            solvent_surface_coverage=head_layer_solvent_surface_coverage,
+            solvation=head_layer_solvation,
             area_per_molecule=head_layer_area_per_molecule,
             roughness=head_layer_roughness,
             name=name + ' Head Layer',
@@ -122,7 +122,7 @@ class SurfactantLayer(BaseAssembly):
             molecular_formula=tail_layer_molecular_formula,
             thickness=tail_layer_thickness,
             solvent=tail_layer_solvent,
-            solvent_surface_coverage=tail_layer_solvent_surface_coverage,
+            solvation=tail_layer_solvation,
             area_per_molecule=tail_layer_area_per_molecule,
             roughness=tail_layer_roughness,
             name=name + ' Tail Layer',
