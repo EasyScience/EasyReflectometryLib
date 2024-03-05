@@ -50,7 +50,7 @@ def molecular_weight(formula: str) -> float:
     return mw
 
 
-def apm_to_sld(scattering_length: float, thickness: float, area_per_molecule: float) -> float:
+def area_per_molecule_to_sld(scattering_length: float, thickness: float, area_per_molecule: float) -> float:
     """
     Find the scattering length density for a given area per molecule.
 

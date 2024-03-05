@@ -106,7 +106,7 @@ The creation of a :py:class:`SurfactantLayer` object takes a large number argume
     )
     
 On creation, the area per molecule and roughness above both the head and tail layers can be constrained to be the same. 
-These constraints can be addded by setting :code:`dppc.constrain_apm = True` or :code:`dppc.conformal_roughness = True`. 
+These constraints can be addded by setting :code:`dppc.constrain_area_per_molecule = True` or :code:`dppc.conformal_roughness = True`. 
 Furthermore, as shown in the `surfactant monolayer tutorial`_ the conformal roughness can be defined by that of the subphase. 
 
 The use of the :py:class:`SurfactantLayer` in multiple contrast data analysis is shown in a `multiple contrast tutorial`_. 

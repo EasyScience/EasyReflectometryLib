@@ -49,16 +49,16 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.top_layer.area_per_molecule.raw_value == 40
         assert p.name == 'A Test'
 
-    def test_constraint_apm(self):
+    def test_constraint_area_per_molecule(self):
         p = SurfactantLayer.default()
         p.bottom_layer.area_per_molecule.value = 30
         assert p.bottom_layer.area_per_molecule.raw_value == 30.0
         assert p.top_layer.area_per_molecule.raw_value == 48.2
-        assert p.constrain_apm is False
-        p.constrain_apm = True
+        assert p.constrain_area_per_molecule is False
+        p.constrain_area_per_molecule = True
         assert p.bottom_layer.area_per_molecule.raw_value == 30
         assert p.top_layer.area_per_molecule.raw_value == 30
-        assert p.constrain_apm is True
+        assert p.constrain_area_per_molecule is True
         p.bottom_layer.area_per_molecule.value = 40
         assert p.bottom_layer.area_per_molecule.raw_value == 40
         assert p.top_layer.area_per_molecule.raw_value == 40
@@ -144,16 +144,16 @@ class TestSurfactantLayer(unittest.TestCase):
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
 
-    def test_dict_round_trip_apm_constraint_enabled(self):
+    def test_dict_round_trip_area_per_molecule_constraint_enabled(self):
         p = SurfactantLayer.default()
-        p.constrain_apm = True
+        p.constrain_area_per_molecule = True
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
 
-    def test_dict_round_trip_apm_constraint_disabled(self):
+    def test_dict_round_trip_area_per_molecule_constraint_disabled(self):
         p = SurfactantLayer.default()
-        p.constrain_apm = True
-        p.constrain_apm = False
+        p.constrain_area_per_molecule = True
+        p.constrain_area_per_molecule = False
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
 

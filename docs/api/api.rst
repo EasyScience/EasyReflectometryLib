@@ -43,7 +43,7 @@ Layers are basic elements and used to represent a single layer of material with 
    :maxdepth: 1
    
    elements/layer
-   elements/layer_apm
+   elements/layer_area_per_molecule
 
 Materials
 ---------
