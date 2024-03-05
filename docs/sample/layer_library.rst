@@ -28,24 +28,24 @@ So we construct a :py:class:`Layer` as follows for a 100 Å thick layer of boron
 
 This type of layer is used extensively in the `tutorials`_
 
-:py:class:`LayerApm`
+:py:class:`LayerAreaPerMolecule`
 --------------------
 
-The :py:class:`LayerApm` layer type is the fundation of the :py:class:`SurfactantLayer` assemblies type (further information on this can be found in the `assemblies library`_).
-The purpose of the :py:class:`LayerApm` is to allow a layer to be defined in terms of the chemical formula of the material and the area per molecule of the layer. 
+The :py:class:`LayerAreaPerMolecule` layer type is the fundation of the :py:class:`SurfactantLayer` assemblies type (further information on this can be found in the `assemblies library`_).
+The purpose of the :py:class:`LayerAreaPerMolecule` is to allow a layer to be defined in terms of the chemical formula of the material and the area per molecule of the layer. 
 The area per molecule is a common description of surface density in the surfactant monolayer and bilayer community. 
 
-We can construct a 10 Å thick :py:class:`LayerApm` of phosphatidylcholine, with an area per molecule of 48 Å squared and a roughness of 3 Å that has 20 % solvent surface coverage with D2O using the following.
+We can construct a 10 Å thick :py:class:`LayerAreaPerMolecule` of phosphatidylcholine, with an area per molecule of 48 Å squared and a roughness of 3 Å that has 20 % solvent surface coverage with D2O using the following.
 
 .. code-block:: python
 
     from EasyReflectometry.sample import Material
-    from EasyReflectometry.sample import LayerApm
+    from EasyReflectometry.sample import LayerAreaPerMolecule
 
     d2o = Material.from_pars(6.36, 0, 'D2O')
 
     pc_formula = 'C10H18NO8P'
-    pc = LayerApm.from_pars(
+    pc = LayerAreaPerMolecule.from_pars(
         chemical_formula=pc_formula, 
         thickness=10, 
         solvent=d2o, 
@@ -55,7 +55,7 @@ We can construct a 10 Å thick :py:class:`LayerApm` of phosphatidylcholine, with
         name='PC Layer'
     )
 
-It is expected that the typical user will not interface directly with the :py:class:`LayerApm` assembly type, but instead the :py:class:`SurfactantLayer` `assemblies library`_ will be used instead. 
+It is expected that the typical user will not interface directly with the :py:class:`LayerAreaPerMolecule` assembly type, but instead the :py:class:`SurfactantLayer` `assemblies library`_ will be used instead. 
 
 .. _`materials`: ./material_library.html
 .. _`tutorials`: ../tutorials/tutorials.html

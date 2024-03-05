@@ -1,17 +1,17 @@
 """
-Tests for LayerApm class.
+Tests for LayerAreaPerMolecule class.
 """
 import unittest
 
 from numpy.testing import assert_almost_equal
 
-from EasyReflectometry.sample.elements.layers.layer_apm import LayerApm
+from EasyReflectometry.sample.elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
 from EasyReflectometry.sample.elements.materials.material import Material
 
 
-class TestLayerApm(unittest.TestCase):
+class TestLayerAreaPerMolecule(unittest.TestCase):
     def test_default(self):
-        p = LayerApm.default()
+        p = LayerAreaPerMolecule.default()
         assert p.molecular_formula == 'C10H18NO8P'
         assert p._area_per_molecule.raw_value == 48.2
         assert str(p._area_per_molecule.unit) == 'angstrom ** 2'
@@ -34,7 +34,7 @@ class TestLayerApm(unittest.TestCase):
 
     def test_from_pars(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
-        p = LayerApm.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
+        p = LayerAreaPerMolecule.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
         assert p.molecular_formula == 'C8O10H12P'
         assert p._area_per_molecule.raw_value == 50
         assert p.thickness.raw_value == 12
@@ -45,7 +45,7 @@ class TestLayerApm(unittest.TestCase):
 
     def test_from_pars_constraint(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
-        p = LayerApm.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
+        p = LayerAreaPerMolecule.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
         assert p.molecular_formula == 'C8O10H12P'
         assert p._area_per_molecule.raw_value == 50
         assert_almost_equal(p.material.sld.raw_value, 0.31513666667)
@@ -63,7 +63,7 @@ class TestLayerApm(unittest.TestCase):
 
     def test_solvent_change(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
-        p = LayerApm.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
+        p = LayerAreaPerMolecule.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
         assert p.molecular_formula == 'C8O10H12P'
         assert p._area_per_molecule.raw_value == 50
         print(p.material)
@@ -86,7 +86,7 @@ class TestLayerApm(unittest.TestCase):
 
     def test_molecular_formula_change(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
-        p = LayerApm.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2)
+        p = LayerAreaPerMolecule.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2)
         assert p.molecular_formula == 'C8O10H12P'
         assert p._area_per_molecule.raw_value == 50
         assert_almost_equal(p.material.sld.raw_value, 0.31513666667)
@@ -109,9 +109,9 @@ class TestLayerApm(unittest.TestCase):
         assert p.material.name == 'C8O10D12P/H2O'
 
     def test_dict_repr(self):
-        p = LayerApm.default()
+        p = LayerAreaPerMolecule.default()
         assert p._dict_repr == {
-            'EasyLayerApm': {
+            'EasyLayerAreaPerMolecule': {
                 'material': {
                     'C10H18NO8P in D2O': {
                         'solvation': 0.2,
@@ -131,6 +131,6 @@ class TestLayerApm(unittest.TestCase):
         }
 
     def test_dict_round_trip(self):
-        p = LayerApm.default()
-        q = LayerApm.from_dict(p.as_dict())
+        p = LayerAreaPerMolecule.default()
+        q = LayerAreaPerMolecule.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()

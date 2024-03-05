@@ -1,17 +1,19 @@
+"""
+Tests for Refl1d wrapper.
+"""
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
-"""
-Tests for Refl1d class module
-"""
 
 import unittest
+
 import numpy as np
-from numpy.testing import assert_almost_equal, assert_equal
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_equal
+
 from EasyReflectometry.calculators.refl1d.wrapper import Refl1dWrapper
 
 
 class TestRefl1d(unittest.TestCase):
-
     def test_init(self):
         p = Refl1dWrapper()
         assert_equal(list(p.storage.keys()), ['material', 'layer', 'item', 'model'])
@@ -196,8 +198,16 @@ class TestRefl1d(unittest.TestCase):
         p.add_item('Item', 'MyModel')
         q = np.linspace(0.001, 0.3, 10)
         expected = [
-            1.0000001e+00, 2.1749216e-03, 1.1433942e-04, 1.9337269e-05, 4.9503970e-06,
-            1.5447182e-06, 5.4663919e-07, 2.2701724e-07, 1.2687053e-07, 1.0188127e-07
+            1.0000001e00,
+            2.1749216e-03,
+            1.1433942e-04,
+            1.9337269e-05,
+            4.9503970e-06,
+            1.5447182e-06,
+            5.4663919e-07,
+            2.2701724e-07,
+            1.2687053e-07,
+            1.0188127e-07,
         ]
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)
 
@@ -232,8 +242,16 @@ class TestRefl1d(unittest.TestCase):
         p.update_item('Item2', repeat=10)
         q = np.linspace(0.001, 0.3, 10)
         expected = [
-            1.0000001e+00, 1.8923350e-05, 1.2274125e-04, 2.4073165e-06, 6.7232911e-06,
-            8.3051185e-07, 1.1546344e-06, 4.1351306e-07, 3.5132221e-07, 2.5347996e-07
+            1.0000001e00,
+            1.8923350e-05,
+            1.2274125e-04,
+            2.4073165e-06,
+            6.7232911e-06,
+            8.3051185e-07,
+            1.1546344e-06,
+            4.1351306e-07,
+            3.5132221e-07,
+            2.5347996e-07,
         ]
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)

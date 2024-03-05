@@ -1,18 +1,21 @@
+"""
+Tests for Refnx wrapper.
+"""
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
-"""
-Tests for Refnx class module
-"""
+
 
 import unittest
+
 import numpy as np
-from numpy.testing import assert_almost_equal, assert_equal
-from EasyReflectometry.calculators.refnx.wrapper import RefnxWrapper
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_equal
 from refnx import reflect
+
+from EasyReflectometry.calculators.refnx.wrapper import RefnxWrapper
 
 
 class TestRefnx(unittest.TestCase):
-
     def test_init(self):
         p = RefnxWrapper()
         assert_equal(list(p.storage.keys()), ['material', 'layer', 'item', 'model'])
@@ -196,9 +199,16 @@ class TestRefnx(unittest.TestCase):
         p.add_item('Item', 'MyModel')
         q = np.linspace(0.001, 0.3, 10)
         expected = [
-            9.99956517e-01, 2.16286891e-03, 1.14086254e-04, 1.93031759e-05,
-            4.94188894e-06, 1.54191953e-06, 5.45592112e-07, 2.26619392e-07,
-            1.26726993e-07, 1.01842852e-07
+            9.99956517e-01,
+            2.16286891e-03,
+            1.14086254e-04,
+            1.93031759e-05,
+            4.94188894e-06,
+            1.54191953e-06,
+            5.45592112e-07,
+            2.26619392e-07,
+            1.26726993e-07,
+            1.01842852e-07,
         ]
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)
 
@@ -232,8 +242,16 @@ class TestRefnx(unittest.TestCase):
         p.update_item('Item2', repeats=10)
         q = np.linspace(0.001, 0.3, 10)
         expected = [
-            9.9995652e-01, 1.7096697e-05, 1.2253047e-04, 2.4026928e-06, 6.7117546e-06,
-            8.3209877e-07, 1.1512901e-06, 4.1468151e-07, 3.4981523e-07, 2.5424356e-07
+            9.9995652e-01,
+            1.7096697e-05,
+            1.2253047e-04,
+            2.4026928e-06,
+            6.7117546e-06,
+            8.3209877e-07,
+            1.1512901e-06,
+            4.1468151e-07,
+            3.4981523e-07,
+            2.5424356e-07,
         ]
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)

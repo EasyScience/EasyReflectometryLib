@@ -4,7 +4,7 @@ import unittest
 
 from numpy.testing import assert_almost_equal
 
-from EasyReflectometry.special.calculations import apm_to_sld
+from EasyReflectometry.special.calculations import area_per_molecule_to_sld
 from EasyReflectometry.special.calculations import molecular_weight
 from EasyReflectometry.special.calculations import neutron_scattering_length
 from EasyReflectometry.special.calculations import weighted_average
@@ -29,6 +29,6 @@ class TestMaterialMixture(unittest.TestCase):
         a = molecular_weight('H2O')
         assert_almost_equal(a, 18.01528)
 
-    def test_apm_to_sld(self) -> None:
-        a = apm_to_sld(2, 1, 0.5)
+    def test_area_per_molecule_to_sld(self) -> None:
+        a = area_per_molecule_to_sld(2, 1, 0.5)
         assert_almost_equal(a, 4e6)
