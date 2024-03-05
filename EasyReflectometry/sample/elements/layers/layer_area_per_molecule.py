@@ -6,14 +6,14 @@ from easyCore import np
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.special.calculations import apm_to_sld
+from EasyReflectometry.special.calculations import area_per_molecule_to_sld
 from EasyReflectometry.special.calculations import neutron_scattering_length
 
 from ..materials.material import Material
 from ..materials.material_solvated import MaterialSolvated
 from .layer import Layer
 
-LAYERAPM_DETAILS = {
+LAYER_AREA_PER_MOLECULE_DETAILS = {
     'thickness': {
         'description': 'The thickness of the layer in angstroms',
         'value': 10.0,
@@ -68,8 +68,8 @@ LAYERAPM_DETAILS = {
 }
 
 
-class LayerApm(Layer):
-    """The :py:class:`LayerApm` class allows a layer to be defined in terms of some
+class LayerAreaPerMolecule(Layer):
+    """The :py:class:`LayerAreaPerMolecule` class allows a layer to be defined in terms of some
     molecular formula an area per molecule, and a solvent.
 
     """
@@ -95,7 +95,7 @@ class LayerApm(Layer):
         solvent_surface_coverage: Parameter,
         area_per_molecule: Parameter,
         roughness: Parameter,
-        name: str = 'EasyLayerApm',
+        name: str = 'EasyLayerAreaPerMolecule',
         interface=None,
     ):
         """Constructor.
@@ -106,37 +106,37 @@ class LayerApm(Layer):
         :param solvent_surface_coverage: Fraction of layer not covered by molecule.
         :param area_per_molecule: Area per molecule in the layer
         :param roughness: Upper roughness on the layer in Angstrom.
-        :param name: Name of the layer, defaults to :py:attr:`EasyLayerApm`
+        :param name: Name of the layer, defaults to :py:attr:`EasyLayerAreaPerMolecule`
         :param interface: Interface object, defaults to :py:attr:`None`
         """
         scattering_length = neutron_scattering_length(molecular_formula)
-        default_options = deepcopy(LAYERAPM_DETAILS)
+        default_options = deepcopy(LAYER_AREA_PER_MOLECULE_DETAILS)
         del default_options['sl']['value']
         del default_options['isl']['value']
         scattering_length_real = Parameter('scattering_length_real', scattering_length.real, **default_options['sl'])
         scattering_length_imag = Parameter('scattering_length_imag', scattering_length.imag, **default_options['isl'])
-        sld = apm_to_sld(scattering_length_real.raw_value, thickness.raw_value, area_per_molecule.raw_value)
-        isld = apm_to_sld(scattering_length_imag.raw_value, thickness.raw_value, area_per_molecule.raw_value)
+        sld_real = area_per_molecule_to_sld(scattering_length_real.raw_value, thickness.raw_value, area_per_molecule.raw_value)
+        sld_imag = area_per_molecule_to_sld(scattering_length_imag.raw_value, thickness.raw_value, area_per_molecule.raw_value)
 
-        material = Material.from_pars(sld, isld, name=molecular_formula, interface=interface)
+        material = Material.from_pars(sld_real, sld_imag, name=molecular_formula, interface=interface)
 
         constraint = FunctionalConstraint(
             dependent_obj=material.sld,
-            func=apm_to_sld,
+            func=area_per_molecule_to_sld,
             independent_objs=[scattering_length_real, thickness, area_per_molecule],
         )
-        thickness.user_constraints['apm'] = constraint
-        area_per_molecule.user_constraints['apm'] = constraint
-        scattering_length_real.user_constraints['apm'] = constraint
+        thickness.user_constraints['area_per_molecule'] = constraint
+        area_per_molecule.user_constraints['area_per_molecule'] = constraint
+        scattering_length_real.user_constraints['area_per_molecule'] = constraint
 
         iconstraint = FunctionalConstraint(
             dependent_obj=material.isld,
-            func=apm_to_sld,
+            func=area_per_molecule_to_sld,
             independent_objs=[scattering_length_imag, thickness, area_per_molecule],
         )
-        thickness.user_constraints['iapm'] = iconstraint
-        area_per_molecule.user_constraints['iapm'] = iconstraint
-        scattering_length_imag.user_constraints['iapm'] = iconstraint
+        thickness.user_constraints['iarea_per_molecule'] = iconstraint
+        area_per_molecule.user_constraints['iarea_per_molecule'] = iconstraint
+        scattering_length_imag.user_constraints['iarea_per_molecule'] = iconstraint
 
         solvated_material = MaterialSolvated(
             material=material,
@@ -159,18 +159,20 @@ class LayerApm(Layer):
 
     # Class methods for instance creation
     @classmethod
-    def default(cls, interface=None) -> LayerApm:
+    def default(cls, interface=None) -> LayerAreaPerMolecule:
         """A default instance for layer defined from molecule formula and area per molecule.
 
         :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
-        area_per_molecule = Parameter('area_per_molecule', **LAYERAPM_DETAILS['area_per_molecule'])
-        thickness = Parameter('thickness', **LAYERAPM_DETAILS['thickness'])
-        roughness = Parameter('roughness', **LAYERAPM_DETAILS['roughness'])
+        area_per_molecule = Parameter('area_per_molecule', **LAYER_AREA_PER_MOLECULE_DETAILS['area_per_molecule'])
+        thickness = Parameter('thickness', **LAYER_AREA_PER_MOLECULE_DETAILS['thickness'])
+        roughness = Parameter('roughness', **LAYER_AREA_PER_MOLECULE_DETAILS['roughness'])
         solvent = Material.from_pars(6.36, 0, 'D2O', interface=interface)
-        solvent_surface_coverage = Parameter('solvent_surface_coverage', **LAYERAPM_DETAILS['solvent_surface_coverage'])
+        solvent_surface_coverage = Parameter(
+            'solvent_surface_coverage', **LAYER_AREA_PER_MOLECULE_DETAILS['solvent_surface_coverage']
+        )
         return cls(
-            LAYERAPM_DETAILS['molecular_formula'],
+            LAYER_AREA_PER_MOLECULE_DETAILS['molecular_formula'],
             thickness,
             solvent,
             solvent_surface_coverage,
@@ -188,9 +190,9 @@ class LayerApm(Layer):
         solvent_surface_coverage: float,
         area_per_molecule: float,
         roughness: float,
-        name: str = 'EasyLayerApm',
+        name: str = 'EasyLayerAreaPerMolecule',
         interface=None,
-    ) -> LayerApm:
+    ) -> LayerAreaPerMolecule:
         """An instance for a layer described with the area per molecule, where the parameters are known.
 
         :param molecular_formula: Formula for the molecule in the layer.
@@ -199,10 +201,10 @@ class LayerApm(Layer):
         :param solvent_surface_coverage: Fraction of layer not covered by molecule.
         :param area_per_molecule: Area per molecule.
         :param roughness: Upper roughness on the layer in Angstrom.
-        :param name: Identifier, defaults to 'EasyLayerApm'.
+        :param name: Identifier, defaults to 'EasyLayerAreaPerMolecule'.
         :param interface: Calculator interface, defaults to :py:attr:`None`.
         """
-        default_options = deepcopy(LAYERAPM_DETAILS)
+        default_options = deepcopy(LAYER_AREA_PER_MOLECULE_DETAILS)
         del default_options['area_per_molecule']['value']
         del default_options['thickness']['value']
         del default_options['roughness']['value']
@@ -277,11 +279,13 @@ class LayerApm(Layer):
 
     @property
     def _dict_repr(self) -> dict[str, str]:
-        """Dictionary representation of the :py:class:`LayerApm` object. Produces a simple dictionary"""
-        layerapm_dict = super()._dict_repr
-        layerapm_dict['molecular_formula'] = self._molecular_formula
-        layerapm_dict['area_per_molecule'] = f'{self._area_per_molecule.raw_value:.1f} ' f'{self._area_per_molecule.unit}'
-        return layerapm_dict
+        """Dictionary representation of the :py:class:`Layerarea_per_molecule` object. Produces a simple dictionary"""
+        layer_area_per_molecule_dict = super()._dict_repr
+        layer_area_per_molecule_dict['molecular_formula'] = self._molecular_formula
+        layer_area_per_molecule_dict['area_per_molecule'] = (
+            f'{self._area_per_molecule.raw_value:.1f} ' f'{self._area_per_molecule.unit}'
+        )
+        return layer_area_per_molecule_dict
 
     def as_dict(self, skip: list = None) -> dict[str, str]:
         """Produces a cleaned  using a austom as_dict method to skip necessary things.

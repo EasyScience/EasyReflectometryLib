@@ -1,8 +1,9 @@
-__author__ = "github.com/arm61"
-__version__ = "0.0.1"
 """
-Tests for the bornagain class for calculation.
+Tests for the BornAgain wrapper.
 """
+__author__ = 'github.com/arm61'
+__version__ = '0.0.1'
+
 
 # import unittest
 # import numpy as np
@@ -13,7 +14,8 @@ Tests for the bornagain class for calculation.
 # class TestBornAgain(unittest.TestCase):
 #     def test_init(self):
 #         p = BornAgain()
-#         assert_equal(list(p.storage.keys()), ['material', 'layer', 'layer_material', 'roughness', 'item', 'item_repeats', 'model', 'model_items', 'model_parameters'])
+#         assert_equal(list(p.storage.keys()), ['material', 'layer', 'layer_material', 'roughness', 'item', 'item_repeats',
+#                                               'model', 'model_items', 'model_parameters'])
 #         assert_equal(issubclass(p.storage['material'].__class__, dict), True)
 
 #     def test_create_material(self):

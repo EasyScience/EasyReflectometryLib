@@ -77,9 +77,6 @@ repo = 'EasyReflectometryLib'
 [tool.ruff]
 line-length = 127
 exclude = [
-    "tests/calculators",
-    "tests/experiment",
-    "tests/interfaces",
     "docs",
 ]
 
