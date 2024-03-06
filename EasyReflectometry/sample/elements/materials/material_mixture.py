@@ -170,24 +170,6 @@ class MaterialMixture(BaseElement):
         self._fraction = fraction
 
     @property
-    def fraction(self) -> Parameter:
-        """
-        :return: the fraction of material a.
-        """
-        return self._fraction
-
-    @fraction.setter
-    def fraction(self, fraction: float) -> None:
-        """
-        Setter for fraction of material a.
-
-        :param fraction: double
-        """
-        if not isinstance(fraction, float):
-            raise ValueError('fraction must be a float')
-        self._fraction = fraction
-
-    @property
     def material_a(self) -> Material:
         """Getter for material_a."""
         return self._material_a

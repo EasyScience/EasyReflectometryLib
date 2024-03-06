@@ -47,6 +47,14 @@ LAYER_AREA_PER_MOLECULE_DETAILS = {
         'max': 1,
         'fixed': True,
     },
+    'coverage': {
+        'description': 'Fraction of layer covered by molecules',
+        'value': 0.8,
+        'units': 'dimensionless',
+        'min': 0,
+        'max': 1,
+        'fixed': True,
+    },
     'sl': {
         'description': 'The real scattering length for a molecule formula in angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
@@ -77,12 +85,14 @@ class LayerAreaPerMolecule(Layer):
     #: Solvation as a fraction.
     solvation: Parameter
     # Added in __init__
-    #: Area per molecule in the layer in Anstrom^2.
-    _area_per_molecule: Parameter
     #: Real part of the scattering length.
     _scattering_length_real: Parameter
     #: Imaginary part of the scattering length.
     _scattering_length_imag: Parameter
+    #: Area per molecule in the layer in Anstrom^2.
+    _area_per_molecule: Parameter
+    #: Fraction of layer covered by molecules.
+    _coverage: Parameter
 
     # Other typer than in __init__.super()
     material: MaterialSolvated
@@ -95,6 +105,7 @@ class LayerAreaPerMolecule(Layer):
         solvation: Parameter,
         area_per_molecule: Parameter,
         roughness: Parameter,
+        coverage: Parameter,
         name: str = 'EasyLayerAreaPerMolecule',
         interface=None,
     ):
@@ -103,9 +114,10 @@ class LayerAreaPerMolecule(Layer):
         :param molecular_formula: Formula for the molecule in the layer.
         :param thickness: Layer thickness in Angstrom.
         :param solvent: Solvent containing the molecule.
-        :param solvation: Fraction of layer not covered by molecule.
+        :param solvation: NOT QIUTE Fraction of layer not covered by molecule.
         :param area_per_molecule: Area per molecule in the layer
         :param roughness: Upper roughness on the layer in Angstrom.
+        :param coverage: Fraction of layer covered by molecule.
         :param name: Name of the layer, defaults to :py:attr:`EasyLayerAreaPerMolecule`
         :param interface: Interface object, defaults to :py:attr:`None`
         """
@@ -154,6 +166,7 @@ class LayerAreaPerMolecule(Layer):
         self._add_component('_scattering_length_real', scattering_length_real)
         self._add_component('_scattering_length_imag', scattering_length_imag)
         self._add_component('_area_per_molecule', area_per_molecule)
+        self._add_component('_coverage', coverage)
         self._molecular_formula = molecular_formula
         self.interface = interface
 
@@ -169,13 +182,15 @@ class LayerAreaPerMolecule(Layer):
         roughness = Parameter('roughness', **LAYER_AREA_PER_MOLECULE_DETAILS['roughness'])
         solvent = Material.from_pars(6.36, 0, 'D2O', interface=interface)
         solvation = Parameter('solvation', **LAYER_AREA_PER_MOLECULE_DETAILS['solvation'])
+        coverage = Parameter('coverage', **LAYER_AREA_PER_MOLECULE_DETAILS['coverage'])
         return cls(
-            LAYER_AREA_PER_MOLECULE_DETAILS['molecular_formula'],
-            thickness,
-            solvent,
-            solvation,
-            area_per_molecule,
-            roughness,
+            molecular_formula=LAYER_AREA_PER_MOLECULE_DETAILS['molecular_formula'],
+            thickness=thickness,
+            solvent=solvent,
+            solvation=solvation,
+            area_per_molecule=area_per_molecule,
+            roughness=roughness,
+            coverage=coverage,
             interface=interface,
         )
 
@@ -188,6 +203,7 @@ class LayerAreaPerMolecule(Layer):
         solvation: float,
         area_per_molecule: float,
         roughness: float,
+        coverage: float,
         name: str = 'EasyLayerAreaPerMolecule',
         interface=None,
     ) -> LayerAreaPerMolecule:
@@ -204,23 +220,26 @@ class LayerAreaPerMolecule(Layer):
         """
         default_options = deepcopy(LAYER_AREA_PER_MOLECULE_DETAILS)
         del default_options['area_per_molecule']['value']
-        del default_options['thickness']['value']
-        del default_options['roughness']['value']
-        del default_options['solvation']['value']
-        del default_options['molecular_formula']
+        #        del default_options['molecular_formula']
 
         area_per_molecule = Parameter('area_per_molecule', area_per_molecule, **default_options['area_per_molecule'])
+        del default_options['thickness']['value']
         thickness = Parameter('thickness', thickness, **default_options['thickness'])
+        del default_options['roughness']['value']
         roughness = Parameter('roughness', roughness, **default_options['roughness'])
+        del default_options['solvation']['value']
         solvation = Parameter('solvation', solvation, **default_options['solvation'])
+        del default_options['coverage']['value']
+        coverage = Parameter('coverage', coverage, **default_options['coverage'])
 
         return cls(
-            molecular_formula,
-            thickness,
-            solvent,
-            solvation,
-            area_per_molecule,
-            roughness,
+            molecular_formula=molecular_formula,
+            thickness=thickness,
+            solvent=solvent,
+            solvation=solvation,
+            area_per_molecule=area_per_molecule,
+            roughness=roughness,
+            coverage=coverage,
             name=name,
             interface=interface,
         )
@@ -274,14 +293,26 @@ class LayerAreaPerMolecule(Layer):
         self.material.name = formula_string + '/' + self.material._material_b.name
 
     @property
+    def coverage(self) -> Parameter:
+        """Get the fraction of layer covered by molecules."""
+        return self._coverage
+
+    @coverage.setter
+    def coverage(self, coverage: float) -> None:
+        """Set the fraction of layer covered by molecules.
+
+        :param coverage: Fraction of solvent.
+        """
+        self._coverage = coverage
+
+    @property
     def _dict_repr(self) -> dict[str, str]:
         """Dictionary representation of the :py:class:`Layerarea_per_molecule` object. Produces a simple dictionary"""
-        layer_area_per_molecule_dict = super()._dict_repr
-        layer_area_per_molecule_dict['molecular_formula'] = self._molecular_formula
-        layer_area_per_molecule_dict['area_per_molecule'] = (
-            f'{self._area_per_molecule.raw_value:.1f} ' f'{self._area_per_molecule.unit}'
-        )
-        return layer_area_per_molecule_dict
+        dict_repr = super()._dict_repr
+        dict_repr['molecular_formula'] = self._molecular_formula
+        dict_repr['area_per_molecule'] = f'{self._area_per_molecule.raw_value:.1f} ' f'{self._area_per_molecule.unit}'
+        dict_repr['coverage'] = self._coverage.raw_value
+        return dict_repr
 
     def as_dict(self, skip: list = None) -> dict[str, str]:
         """Produces a cleaned  using a austom as_dict method to skip necessary things.

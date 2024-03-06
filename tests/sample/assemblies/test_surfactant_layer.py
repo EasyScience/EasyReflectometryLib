@@ -31,7 +31,21 @@ class TestSurfactantLayer(unittest.TestCase):
     def test_from_pars(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
         noth2o = Material.from_pars(0.561, 0, 'nH2O')
-        p = SurfactantLayer.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, 'C10H24', 10, noth2o, 0.2, 40, 3, name='A Test')
+        p = SurfactantLayer.from_pars(
+            coverage=0.5,
+            area_per_molecule=50,
+            tail_layer_molecular_formula='C8O10H12P',
+            tail_layer_thickness=12,
+            tail_layer_solvent=h2o,
+            tail_layer_solvation=0.5,
+            tail_layer_roughness=2,
+            head_layer_molecular_formula='C10H24',
+            head_layer_thickness=10,
+            head_layer_solvent=noth2o,
+            head_layer_solvation=0.2,
+            head_layer_roughness=3,
+            name='A Test',
+        )
         assert p.layers[0].name == 'A Test Tail Layer'
         assert p.tail_layer.name == 'A Test Tail Layer'
         assert p.tail_layer.molecular_formula == 'C8O10H12P'
@@ -40,28 +54,48 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.tail_layer.solvation.raw_value == 0.5
         assert p.tail_layer.area_per_molecule.raw_value == 50
         assert p.tail_layer.roughness.raw_value == 2
+        assert p.tail_layer.coverage.raw_value == 0.5
         assert p.layers[1].name == 'A Test Head Layer'
         assert p.head_layer.name == 'A Test Head Layer'
         assert p.head_layer.molecular_formula == 'C10H24'
         assert p.head_layer.thickness.raw_value == 10
         assert p.head_layer.solvent.as_data_dict() == noth2o.as_data_dict()
         assert p.head_layer.solvation.raw_value == 0.2
-        assert p.head_layer.area_per_molecule.raw_value == 40
+        assert p.head_layer.area_per_molecule.raw_value == 50
+        assert p.head_layer.coverage.raw_value == 0.5
         assert p.name == 'A Test'
 
     def test_constraint_area_per_molecule(self):
+        # When
         p = SurfactantLayer.default()
+        assert p.tail_layer.area_per_molecule.raw_value == 48.2
+        assert p.head_layer.area_per_molecule.raw_value == 48.2
+
+        # Then Expect, independent layer set
         p.tail_layer.area_per_molecule.value = 30
         assert p.tail_layer.area_per_molecule.raw_value == 30.0
-        assert p.head_layer.area_per_molecule.raw_value == 48.2
-        assert p.constrain_area_per_molecule is False
-        p.constrain_area_per_molecule = True
-        assert p.tail_layer.area_per_molecule.raw_value == 30
-        assert p.head_layer.area_per_molecule.raw_value == 30
-        assert p.constrain_area_per_molecule is True
-        p.tail_layer.area_per_molecule.value = 40
-        assert p.tail_layer.area_per_molecule.raw_value == 40
-        assert p.head_layer.area_per_molecule.raw_value == 40
+        assert p.head_layer.area_per_molecule.raw_value == 30.0
+
+        # Then Expect, dependent layer set
+        p.head_layer.area_per_molecule.value = 20
+        assert p.tail_layer.area_per_molecule.raw_value == 30.0
+        assert p.head_layer.area_per_molecule.raw_value == 30.0
+
+    # def test_constraint_solvation(self):
+    #     # When
+    #     p = SurfactantLayer.default()
+    #     assert p.tail_layer.solvation.raw_value == 0.2
+    #     assert p.head_layer.solvation.raw_value == 0.2
+
+    #     # Then Expect, independent layer set
+    #     p.tail_layer.solvation.value = 30
+    #     assert p.tail_layer.solvation.raw_value == 30.0
+    #     assert p.head_layer.solvation.raw_value == 30.0
+
+    #     # Then Expect, dependent layer set
+    #     p.head_layer.solvation.value = 20
+    #     assert p.tail_layer.solvation.raw_value == 30.0
+    #     assert p.head_layer.solvation.raw_value == 30.0
 
     def test_conformal_roughness(self):
         p = SurfactantLayer.default()
@@ -115,6 +149,7 @@ class TestSurfactantLayer(unittest.TestCase):
                 },
                 'molecular_formula': 'C10H18NO8P',
                 'area_per_molecule': '48.2 angstrom ** 2',
+                'coverage': 0.9,
             },
             'tail_layer': {
                 'DPPC Tail': {
@@ -134,8 +169,8 @@ class TestSurfactantLayer(unittest.TestCase):
                 },
                 'molecular_formula': 'C32D64',
                 'area_per_molecule': '48.2 angstrom ** 2',
+                'coverage': 0.9,
             },
-            'area per molecule constrained': False,
             'conformal roughness': False,
         }
 
@@ -194,7 +229,6 @@ class TestSurfactantLayer(unittest.TestCase):
 
     def test_dict_round_trip_area_per_molecule_constraint_disabled(self):
         p = SurfactantLayer.default()
-        p.constrain_area_per_molecule = True
         p.constrain_area_per_molecule = False
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
@@ -207,7 +241,6 @@ class TestSurfactantLayer(unittest.TestCase):
 
     def test_dict_round_trip_roughness_constraint_disabled(self):
         p = SurfactantLayer.default()
-        p.conformal_roughness = True
         p.conformal_roughness = False
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()

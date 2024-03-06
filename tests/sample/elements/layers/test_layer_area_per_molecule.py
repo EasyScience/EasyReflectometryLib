@@ -31,10 +31,20 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
         assert p.solvation.raw_value == 0.2
         assert str(p.solvation.unit) == 'dimensionless'
         assert p.solvation.fixed is True
+        assert p.coverage.raw_value == 0.8
 
     def test_from_pars(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
-        p = LayerAreaPerMolecule.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
+        p = LayerAreaPerMolecule.from_pars(
+            molecular_formula='C8O10H12P',
+            thickness=12,
+            solvent=h2o,
+            solvation=0.5,
+            area_per_molecule=50,
+            roughness=2,
+            coverage=0.5,
+            name='PG/H2O',
+        )
         assert p.molecular_formula == 'C8O10H12P'
         assert p._area_per_molecule.raw_value == 50
         assert p.thickness.raw_value == 12
@@ -45,7 +55,16 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
 
     def test_from_pars_constraint(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
-        p = LayerAreaPerMolecule.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
+        p = LayerAreaPerMolecule.from_pars(
+            molecular_formula='C8O10H12P',
+            thickness=12,
+            solvent=h2o,
+            solvation=0.5,
+            area_per_molecule=50,
+            roughness=2,
+            coverage=0.5,
+            name='PG/H2O',
+        )
         assert p.molecular_formula == 'C8O10H12P'
         assert p._area_per_molecule.raw_value == 50
         assert_almost_equal(p.material.sld.raw_value, 0.31513666667)
@@ -60,10 +79,20 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
         p.thickness.value = 10
         assert p.thickness.raw_value == 10
         assert_almost_equal(p.material.sld.raw_value, 0.910773333)
+        assert p.coverage.raw_value == 0.5
 
     def test_solvent_change(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
-        p = LayerAreaPerMolecule.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, name='PG/H2O')
+        p = LayerAreaPerMolecule.from_pars(
+            molecular_formula='C8O10H12P',
+            thickness=12,
+            solvent=h2o,
+            solvation=0.5,
+            area_per_molecule=50,
+            roughness=2,
+            coverage=0.5,
+            name='PG/H2O',
+        )
         assert p.molecular_formula == 'C8O10H12P'
         assert p._area_per_molecule.raw_value == 50
         print(p.material)
@@ -86,7 +115,16 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
 
     def test_molecular_formula_change(self):
         h2o = Material.from_pars(-0.561, 0, 'H2O')
-        p = LayerAreaPerMolecule.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2)
+        p = LayerAreaPerMolecule.from_pars(
+            molecular_formula='C8O10H12P',
+            thickness=12,
+            solvent=h2o,
+            solvation=0.5,
+            area_per_molecule=50,
+            roughness=2,
+            coverage=0.5,
+            name='PG/H2O',
+        )
         assert p.molecular_formula == 'C8O10H12P'
         assert p._area_per_molecule.raw_value == 50
         assert_almost_equal(p.material.sld.raw_value, 0.31513666667)
@@ -128,6 +166,7 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
             },
             'molecular_formula': 'C10H18NO8P',
             'area_per_molecule': '48.2 angstrom ** 2',
+            'coverage': 0.8,
         }
 
     def test_dict_round_trip(self):
