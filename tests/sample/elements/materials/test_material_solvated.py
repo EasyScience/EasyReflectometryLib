@@ -7,14 +7,15 @@ import EasyReflectometry.sample.elements.materials.material_solvated
 from EasyReflectometry.sample.elements.materials.material_solvated import MaterialSolvated
 
 
-class TestMaterialMixture:
+class TestMaterialSolvated:
     @pytest.fixture
     def material_solvated(self, monkeypatch) -> MaterialSolvated:
         self.mock_material = MagicMock()
         self.mock_material.name = 'material'
         self.mock_solvent = MagicMock()
         self.mock_solvent.name = 'solvent'
-        self.mock_solvent_surface_coverage = MagicMock()
+        self.mock_solvent_fraction = MagicMock()
+        self.mock_solvent_fraction.raw_value = 0.1
         self.mock_interface = MagicMock()
         self.mock_Parameter = MagicMock()
         self.mock_FunctionalConstraint = MagicMock()
@@ -25,9 +26,9 @@ class TestMaterialMixture:
             self.mock_FunctionalConstraint,
         )
         return MaterialSolvated(
-            self.mock_material,
-            self.mock_solvent,
-            self.mock_solvent_surface_coverage,
+            material=self.mock_material,
+            solvent=self.mock_solvent,
+            solvent_fraction=self.mock_solvent_fraction,
             name='name',
             interface=self.mock_interface,
         )
@@ -36,7 +37,7 @@ class TestMaterialMixture:
         # When Then Expect
         assert material_solvated.material_a == self.mock_material
         assert material_solvated.material_b == self.mock_solvent
-        assert material_solvated.fraction == self.mock_solvent_surface_coverage
+        assert material_solvated.fraction == self.mock_solvent_fraction
         assert material_solvated.name == 'name'
         assert material_solvated.interface == self.mock_interface
         self.mock_interface.generate_bindings.call_count == 2
@@ -73,21 +74,33 @@ class TestMaterialMixture:
         assert material_solvated.solvent == new_solvent
         assert material_solvated.name == 'material in new_solvent'
 
-    def test_solvent_surface_coverage(self, material_solvated: MaterialSolvated) -> None:
+    def test_solvent_fraction(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
-        assert material_solvated.solvent_surface_coverage == self.mock_solvent_surface_coverage
+        assert material_solvated.solvent_fraction == self.mock_solvent_fraction
 
-    def test_set_solvent_surface_coverage(self, material_solvated: MaterialSolvated) -> None:
+    def test_set_solvent_fraction(self, material_solvated: MaterialSolvated) -> None:
         # When Then
-        material_solvated.solvent_surface_coverage = 1.0
+        material_solvated.solvent_fraction = 1.0
 
         # Expect
-        assert material_solvated.solvent_surface_coverage == 1.0
+        assert material_solvated.solvent_fraction == 1.0
 
-    def test_set_solvent_surface_coverage_exception(self, material_solvated: MaterialSolvated) -> None:
+    def test_set_solvent_fraction_exception(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
         with pytest.raises(ValueError):
-            material_solvated.solvent_surface_coverage = 'not float'
+            material_solvated.solvent_fraction = 'not float'
+
+        with pytest.raises(ValueError):
+            material_solvated.solvent_fraction = 1.1
+
+        with pytest.raises(ValueError):
+            material_solvated.solvent_fraction = -0.1
+
+        # When Then Expect (no exception)
+        material_solvated.solvent_fraction = 0.0
+
+        # When Then Expect (no exception)
+        material_solvated.solvent_fraction = 1.0
 
     def test_dict_repr(self, material_solvated: MaterialSolvated) -> None:
         # When Then
@@ -99,12 +112,12 @@ class TestMaterialMixture:
         material_solvated._isld.unit = 'isld_unit'
         material_solvated.material._dict_repr = 'material_dict_repr'
         material_solvated.solvent._dict_repr = 'solvent_dict_repr'
-        material_solvated.solvent_surface_coverage.raw_value = 'solvent_surface_coverage_value'
+        material_solvated.solvent_fraction.raw_value = 'solvent_fraction_value'
 
         # Expect
         assert material_solvated._dict_repr == {
             'name': {
-                'solvent_surface_coverage': 'solvent_surface_coverage_value',
+                'solvent_fraction': 'solvent_fraction_value',
                 'sld': '1.000e-6 sld_unit',
                 'isld': '2.000e-6 isld_unit',
                 'material': 'material_dict_repr',
