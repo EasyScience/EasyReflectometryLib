@@ -72,8 +72,24 @@ class SurfactantLayer(BaseAssembly):
         """
         d2o = Material.from_pars(6.36, 0, 'D2O')
         air = Material.from_pars(0, 0, 'Air')
-        tail = LayerAreaPerMolecule.from_pars('C32D64', 16, air, 0.0, 48.2, 3, 'DPPC Tail')
-        head = LayerAreaPerMolecule.from_pars('C10H18NO8P', 10.0, d2o, 0.2, 48.2, 3.0, 'DPPC Head')
+        tail = LayerAreaPerMolecule.from_pars(
+            molecular_formula='C32D64',
+            thickness=16,
+            solvent=air,
+            solvent_fraction=0.0,
+            area_per_molecule=48.2,
+            roughness=3,
+            name='DPPC Tail',
+        )
+        head = LayerAreaPerMolecule.from_pars(
+            molecular_formula='C10H18NO8P',
+            thickness=10.0,
+            solvent=d2o,
+            solvent_fraction=0.2,
+            area_per_molecule=48.2,
+            roughness=3.0,
+            name='DPPC Head',
+        )
         return cls([tail, head], name='DPPC', interface=interface)
 
     @classmethod
