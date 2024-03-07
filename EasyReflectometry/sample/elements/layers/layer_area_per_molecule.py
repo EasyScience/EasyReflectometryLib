@@ -56,11 +56,11 @@ class LayerAreaPerMolecule(Layer):
 
     # Added in __init__
     #: Real part of the scattering length.
-    scattering_length_real: Parameter
+    _scattering_length_real: Parameter
     #: Imaginary part of the scattering length.
-    scattering_length_imag: Parameter
+    _scattering_length_imag: Parameter
     #: Area per molecule in the layer in Anstrom^2.
-    area_per_molecule: Parameter
+    _area_per_molecule: Parameter
 
     # Other typer than in __init__.super()
     material: MaterialSolvated
@@ -129,9 +129,9 @@ class LayerAreaPerMolecule(Layer):
             name=name,
             interface=interface,
         )
-        self._add_component('scattering_length_real', scattering_length_real)
-        self._add_component('scattering_length_imag', scattering_length_imag)
-        self._add_component('area_per_molecule', area_per_molecule)
+        self._add_component('_scattering_length_real', scattering_length_real)
+        self._add_component('_scattering_length_imag', scattering_length_imag)
+        self._add_component('_area_per_molecule', area_per_molecule)
         self._molecular_formula = molecular_formula
         self.interface = interface
 
@@ -252,8 +252,8 @@ class LayerAreaPerMolecule(Layer):
         """
         self._molecular_formula = formula_string
         scattering_length = neutron_scattering_length(formula_string)
-        self.scattering_length_real.value = scattering_length.real
-        self.scattering_length_imag.value = scattering_length.imag
+        self._scattering_length_real.value = scattering_length.real
+        self._scattering_length_imag.value = scattering_length.imag
         self.material.material.name = formula_string
         self.material._update_name()
 
@@ -274,6 +274,6 @@ class LayerAreaPerMolecule(Layer):
             skip = []
         this_dict = super().as_dict(skip=skip)
         del this_dict['material']
-        del this_dict['scattering_length_real']
-        del this_dict['scattering_length_imag']
+        del this_dict['_scattering_length_real']
+        del this_dict['_scattering_length_imag']
         return this_dict
