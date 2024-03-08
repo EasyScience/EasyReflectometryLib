@@ -221,21 +221,17 @@ class LayerAreaPerMolecule(Layer):
 
     @property
     def solvent_fraction(self) -> Parameter:
-        """Get the fraction of layer described by the solvent.
-        This might be fraction of:
-        Solvation where solvent is within the layer
-        Patches of solvent in the layer where no material is present.
+        """Get the fraction of the layer occupied by the solvent.
+        This could be a result of either water solvating the molecule, or incomplete surface coverage of the molecules.
         """
         return self.material.solvent_fraction
 
     @solvent_fraction.setter
     def solvent_fraction(self, solvent_fraction: float) -> None:
-        """Set the fraction of layer covered by the material.
-        This might be fraction of:
-        Solvation where solvent is within the layer
-        Patches of solvent in the layer where no material is present.
+        """Set the fraction of the layer occupied by the solvent.
+        This could be a result of either water solvating the molecule, or incomplete surface coverage of the molecules.
 
-        :param coverage : Fraction of layer described by the solvent.
+        :param solvent_fraction: Fraction of layer described by the solvent.
         """
         self.material.solvent_fraction = solvent_fraction
 
@@ -262,7 +258,7 @@ class LayerAreaPerMolecule(Layer):
         """Dictionary representation of the :py:class:`Layerarea_per_molecule` object. Produces a simple dictionary"""
         dict_repr = super()._dict_repr
         dict_repr['molecular_formula'] = self._molecular_formula
-        dict_repr['area_per_molecule'] = f'{self.area_per_molecule.raw_value:.1f} ' f'{self.area_per_molecule.unit}'
+        dict_repr['area_per_molecule'] = f'{self.area_per_molecule.raw_value:.2f} ' f'{self.area_per_molecule.unit}'
         return dict_repr
 
     def as_dict(self, skip: list = None) -> dict[str, str]:

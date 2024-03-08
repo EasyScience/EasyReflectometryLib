@@ -114,7 +114,7 @@ class TestSurfactantLayer(unittest.TestCase):
                     'roughness': '3.000 angstrom',
                 },
                 'molecular_formula': 'C10H18NO8P',
-                'area_per_molecule': '48.2 angstrom ** 2',
+                'area_per_molecule': '48.20 angstrom ** 2',
             },
             'tail_layer': {
                 'DPPC Tail': {
@@ -133,7 +133,7 @@ class TestSurfactantLayer(unittest.TestCase):
                     'roughness': '3.000 angstrom',
                 },
                 'molecular_formula': 'C32D64',
-                'area_per_molecule': '48.2 angstrom ** 2',
+                'area_per_molecule': '48.20 angstrom ** 2',
             },
             'area per molecule constrained': False,
             'conformal roughness': False,

@@ -32,7 +32,7 @@ class MaterialSolvated(MaterialMixture):
 
         :param material: The material being solvated.
         :param solvent: The solvent material.
-        :param solvent_fraction: Fraction of solvent in layer. Fx solvation or surface coverage.
+        :param solvent_fraction: Fraction of solvent in layer. E.g. solvation or surface coverage.
         :param name: Name of the material, defaults to None that causes the name to be constructed.
         :param interface: Calculator interface, defaults to `None`.
         """
@@ -135,7 +135,7 @@ class MaterialSolvated(MaterialMixture):
         Solvation where solvent is within the layer
         Patches of solvent in the layer where no material is present.
 
-        :param coverage : Fraction of layer described by the solvent.
+        :param solvent_fraction : Fraction of layer described by the solvent.
         """
         try:
             self.fraction = solvent_fraction
