@@ -12,7 +12,7 @@ from ..elements.layers.layer import Layer
 
 class BaseAssembly(BaseObj):
     """Assembly of layers.
-    The front layer faces the neutron beam. The front layer has index 0
+    The front layer faces the neutron beam and has index 0.
     """
 
     # Added in super().__init__
