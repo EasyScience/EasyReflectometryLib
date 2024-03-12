@@ -150,22 +150,22 @@ class SurfactantLayer(BaseAssembly):
     @property
     def tail_layer(self) -> Optional[LayerAreaPerMolecule]:
         """Get the tail layer of the surfactant surface."""
-        return self.bottom_layer
+        return self.front_layer
 
     @tail_layer.setter
     def tail_layer(self, layer: LayerAreaPerMolecule) -> None:
         """Set the tail layer of the surfactant surface."""
-        self.bottom_layer = layer
+        self.front_layer = layer
 
     @property
     def head_layer(self) -> Optional[LayerAreaPerMolecule]:
         """Get the head layer of the surfactant surface."""
-        return self.top_layer
+        return self.back_layer
 
     @head_layer.setter
     def head_layer(self, layer: LayerAreaPerMolecule) -> None:
         """Set the head layer of the surfactant surface."""
-        self.top_layer = layer
+        self.back_layer = layer
 
     @property
     def constrain_area_per_molecule(self) -> bool:
