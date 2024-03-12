@@ -9,7 +9,7 @@
 #         start_date: 2015-05-20
 #         title: A single contrast of DSPC
 #         instrument: surf
-#         probe: neutrons
+#         probe: neutron
 #     sample:
 #         name: DSPC monolayer
 #         category: air / liquid

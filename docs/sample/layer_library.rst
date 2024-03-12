@@ -29,7 +29,7 @@ So we construct a :py:class:`Layer` as follows for a 100 Å thick layer of boron
 This type of layer is used extensively in the `tutorials`_
 
 :py:class:`LayerAreaPerMolecule`
---------------------
+--------------------------------
 
 The :py:class:`LayerAreaPerMolecule` layer type is the fundation of the :py:class:`SurfactantLayer` assemblies type (further information on this can be found in the `assemblies library`_).
 The purpose of the :py:class:`LayerAreaPerMolecule` is to allow a layer to be defined in terms of the chemical formula of the material and the area per molecule of the layer. 

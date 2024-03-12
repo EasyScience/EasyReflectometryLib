@@ -36,9 +36,9 @@ class SurfactantLayer(BaseAssembly):
 
         :param layers: List with the tail (index 0) and head (index 1) layer.
         :param name: Name for surfactant layer, defaults to 'EasySurfactantLayer'.
-        :param constrain_area_per_molecule: Constrain the area per molecule, defaults to :py:attr:`False`.
-        :param conformal_roughness: Constrain the roughness to be the same for both layers, defaults to :py:attr:`False`.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param constrain_area_per_molecule: Constrain the area per molecule, defaults to `False`.
+        :param conformal_roughness: Constrain the roughness to be the same for both layers, defaults to `False`.
+        :param interface: Calculator interface, defaults to `None`.
         """
         surfactant = LayerCollection(layers[0], layers[1], name=name)
         super().__init__(
@@ -65,15 +65,31 @@ class SurfactantLayer(BaseAssembly):
     # Class methods for instance creation
     @classmethod
     def default(cls, interface=None) -> SurfactantLayer:
-        """Default instance of a surfactant layer object. The default lipid
-        type is DPPC.
+        """Default instance of a surfactant layer object.
+        The default lipid type is DPPC.
 
         :return: Surfactant layer object.
         """
         d2o = Material.from_pars(6.36, 0, 'D2O')
         air = Material.from_pars(0, 0, 'Air')
-        tail = LayerAreaPerMolecule.from_pars('C32D64', 16, air, 0.0, 48.2, 3, 'DPPC Tail')
-        head = LayerAreaPerMolecule.from_pars('C10H18NO8P', 10.0, d2o, 0.2, 48.2, 3.0, 'DPPC Head')
+        tail = LayerAreaPerMolecule.from_pars(
+            molecular_formula='C32D64',
+            thickness=16,
+            solvent=air,
+            solvent_fraction=0.0,
+            area_per_molecule=48.2,
+            roughness=3,
+            name='DPPC Tail',
+        )
+        head = LayerAreaPerMolecule.from_pars(
+            molecular_formula='C10H18NO8P',
+            thickness=10.0,
+            solvent=d2o,
+            solvent_fraction=0.2,
+            area_per_molecule=48.2,
+            roughness=3.0,
+            name='DPPC Head',
+        )
         return cls([tail, head], name='DPPC', interface=interface)
 
     @classmethod
@@ -82,31 +98,31 @@ class SurfactantLayer(BaseAssembly):
         tail_layer_molecular_formula: str,
         tail_layer_thickness: float,
         tail_layer_solvent: Material,
-        tail_layer_solvent_surface_coverage: float,
+        tail_layer_solvent_fraction: float,
         tail_layer_area_per_molecule: float,
         tail_layer_roughness: float,
         head_layer_molecular_formula: str,
         head_layer_thickness: float,
         head_layer_solvent: Material,
-        head_layer_solvent_surface_coverage: float,
+        head_layer_solvent_fraction: float,
         head_layer_area_per_molecule: float,
         head_layer_roughness: float,
         name: str = 'EasySurfactantLayer',
         interface=None,
     ) -> SurfactantLayer:
         """Instance of a surfactant layer where the parameters are known,
-        :py:attr:`head_layer` is that which the neutrons interact with first.
+        `head_layer` is the hydrophilic part.
 
         :param tail_layer_molecular_formula: Molecular formula of species constituting the tail layer.
         :param tail_layer_thickness: Thickness of tail layer.
         :param tail_layer_solvent: Solvent in tail layer.
-        :param tail_layer_solvent_surface_coverage: Fraction of tail layer not covered by molecules.
+        :param tail_layer_solvent_fraction: Fraction of solvent in tail layer. Fx solvation or surface coverage.
         :param tail_layer_area_per_molecule: Area per molecule of tail layer.
         :param tail_layer_roughness: Roughness of tail layer.
         :param head_layer_molecular_formula: Molecular formula of species constituting the head layer.
         :param head_layer_thickness: Thickness of head layer.
         :param head_layer_solvent: Solvent in head layer.
-        :param head_layer_solvent_surface_coverage: Fraction of head layer not covered by molecules.
+        :param head_layer_solvent_fraction: Fraction of solvent in head layer. Fx solvation or surface coverage.
         :param head_layer_area_per_molecule: Area per molecule of head layer.
         :param head_layer_roughness: Roughness of head layer.
         :param name: Name for surfactant layer.
@@ -115,7 +131,7 @@ class SurfactantLayer(BaseAssembly):
             molecular_formula=head_layer_molecular_formula,
             thickness=head_layer_thickness,
             solvent=head_layer_solvent,
-            solvent_surface_coverage=head_layer_solvent_surface_coverage,
+            solvent_fraction=head_layer_solvent_fraction,
             area_per_molecule=head_layer_area_per_molecule,
             roughness=head_layer_roughness,
             name=name + ' Head Layer',
@@ -124,7 +140,7 @@ class SurfactantLayer(BaseAssembly):
             molecular_formula=tail_layer_molecular_formula,
             thickness=tail_layer_thickness,
             solvent=tail_layer_solvent,
-            solvent_surface_coverage=tail_layer_solvent_surface_coverage,
+            solvent_fraction=tail_layer_solvent_fraction,
             area_per_molecule=tail_layer_area_per_molecule,
             roughness=tail_layer_roughness,
             name=name + ' Tail Layer',
