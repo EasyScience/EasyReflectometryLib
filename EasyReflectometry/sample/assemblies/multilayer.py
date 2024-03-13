@@ -7,7 +7,7 @@ from .base_assembly import BaseAssembly
 
 class Multilayer(BaseAssembly):
     """A multi layer is build from a single or a list of :py:class:`Layer` or :py:class:`LayerCollection`.
-    The multi layer will arrange the layers as slabs. The one a index 0 is the front towards the beam.
+    The multi layer will arrange the layers as slabs. The one at index 0 is the front towards the beam.
     allowing the reflectometry to be determined from them.
 
     More information about the usage of this assembly is available in the
