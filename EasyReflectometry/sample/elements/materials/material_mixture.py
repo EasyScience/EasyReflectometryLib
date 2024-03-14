@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from typing import Optional
 
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import Parameter
@@ -34,7 +35,7 @@ class MaterialMixture(BaseElement):
         material_a: Material,
         material_b: Material,
         fraction: Parameter,
-        name: str = None,
+        name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -83,9 +84,9 @@ class MaterialMixture(BaseElement):
         material_b = Material.default()
         fraction = Parameter('fraction', **MATERIALMIXTURE_DEFAULTS['fraction'])
         return cls(
-            material_a,
-            material_b,
-            fraction,
+            material_a=material_a,
+            material_b=material_b,
+            fraction=fraction,
             interface=interface,
         )
 
@@ -95,7 +96,7 @@ class MaterialMixture(BaseElement):
         material_a: Material,
         material_b: Material,
         fraction: float,
-        name=None,
+        name: Optional[str] = None,
         interface=None,
     ) -> MaterialMixture:
         """Instance of mixture of two materials where the parameters are known.
@@ -111,9 +112,9 @@ class MaterialMixture(BaseElement):
         fraction = Parameter('fraction', fraction, **default_options['fraction'])
 
         return cls(
-            material_a,
-            material_b,
-            fraction,
+            material_a=material_a,
+            material_b=material_b,
+            fraction=fraction,
             name=name,
             interface=interface,
         )

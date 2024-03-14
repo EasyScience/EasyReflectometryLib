@@ -6,7 +6,7 @@ from easyCore import np
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.special.calculations import area_per_molecule_to_sld
+from EasyReflectometry.special.calculations import area_per_molecule_to_scattering_length_density
 from EasyReflectometry.special.calculations import neutron_scattering_length
 
 from ..materials.material import Material
@@ -87,43 +87,44 @@ class LayerAreaPerMolecule(Layer):
         :param name: Name of the layer, defaults to "EasyLayerAreaPerMolecule"
         :param interface: Interface object, defaults to `None`
         """
-        scattering_length = neutron_scattering_length(molecular_formula)
+
+        # Create the solvated molecule and corresponding constraints
+        molecule = Material.from_pars(0.0, 0.0, name=molecular_formula, interface=interface)
+
         default_options = deepcopy(LAYER_AREA_PER_MOLECULE_DETAILS)
         del default_options['sl']['value']
         del default_options['isl']['value']
-        scattering_length_real = Parameter('scattering_length_real', scattering_length.real, **default_options['sl'])
-        scattering_length_imag = Parameter('scattering_length_imag', scattering_length.imag, **default_options['isl'])
-        sld_real = area_per_molecule_to_sld(scattering_length_real.raw_value, thickness.raw_value, area_per_molecule.raw_value)
-        sld_imag = area_per_molecule_to_sld(scattering_length_imag.raw_value, thickness.raw_value, area_per_molecule.raw_value)
+        scattering_length_real = Parameter('scattering_length_real', 0.0, **default_options['sl'])
+        scattering_length_imag = Parameter('scattering_length_imag', 0.0, **default_options['isl'])
 
-        material = Material.from_pars(sld_real, sld_imag, name=molecular_formula, interface=interface)
-
-        constraint = FunctionalConstraint(
-            dependent_obj=material.sld,
-            func=area_per_molecule_to_sld,
+        # Constrain the real part of the sld value for the molecule
+        constraint_sld_real = FunctionalConstraint(
+            dependent_obj=molecule.sld,
+            func=area_per_molecule_to_scattering_length_density,
             independent_objs=[scattering_length_real, thickness, area_per_molecule],
         )
-        thickness.user_constraints['area_per_molecule'] = constraint
-        area_per_molecule.user_constraints['area_per_molecule'] = constraint
-        scattering_length_real.user_constraints['area_per_molecule'] = constraint
+        thickness.user_constraints['area_per_molecule'] = constraint_sld_real
+        area_per_molecule.user_constraints['area_per_molecule'] = constraint_sld_real
+        scattering_length_real.user_constraints['area_per_molecule'] = constraint_sld_real
 
-        iconstraint = FunctionalConstraint(
-            dependent_obj=material.isld,
-            func=area_per_molecule_to_sld,
+        # Constrain the imaginary part of the sld value for the molecule
+        constraint_sld_imag = FunctionalConstraint(
+            dependent_obj=molecule.isld,
+            func=area_per_molecule_to_scattering_length_density,
             independent_objs=[scattering_length_imag, thickness, area_per_molecule],
         )
-        thickness.user_constraints['iarea_per_molecule'] = iconstraint
-        area_per_molecule.user_constraints['iarea_per_molecule'] = iconstraint
-        scattering_length_imag.user_constraints['iarea_per_molecule'] = iconstraint
+        thickness.user_constraints['iarea_per_molecule'] = constraint_sld_imag
+        area_per_molecule.user_constraints['iarea_per_molecule'] = constraint_sld_imag
+        scattering_length_imag.user_constraints['iarea_per_molecule'] = constraint_sld_imag
 
-        solvated_material = MaterialSolvated(
-            material=material,
+        solvated_molecule = MaterialSolvated(
+            material=molecule,
             solvent=solvent,
             solvent_fraction=solvent_fraction,
             interface=interface,
         )
         super().__init__(
-            material=solvated_material,
+            material=solvated_molecule,
             thickness=thickness,
             roughness=roughness,
             name=name,
@@ -132,6 +133,10 @@ class LayerAreaPerMolecule(Layer):
         self._add_component('_scattering_length_real', scattering_length_real)
         self._add_component('_scattering_length_imag', scattering_length_imag)
         self._add_component('_area_per_molecule', area_per_molecule)
+
+        scattering_length = neutron_scattering_length(molecular_formula)
+        self._scattering_length_real.value = scattering_length.real
+        self._scattering_length_imag.value = scattering_length.imag
         self._molecular_formula = molecular_formula
         self.interface = interface
 
@@ -207,6 +212,11 @@ class LayerAreaPerMolecule(Layer):
         return self._area_per_molecule
 
     @property
+    def molecule(self) -> Material:
+        """Get the molecule material."""
+        return self.material.material
+
+    @property
     def solvent(self) -> Material:
         """Get the solvent material."""
         return self.material.solvent
@@ -248,9 +258,11 @@ class LayerAreaPerMolecule(Layer):
         """
         self._molecular_formula = formula_string
         scattering_length = neutron_scattering_length(formula_string)
+        # The molecule is also being updated through the constraints
         self._scattering_length_real.value = scattering_length.real
         self._scattering_length_imag.value = scattering_length.imag
-        self.material.material.name = formula_string
+
+        self.molecule.name = formula_string
         self.material._update_name()
 
     @property
