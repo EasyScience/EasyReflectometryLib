@@ -4,7 +4,7 @@ import unittest
 
 from numpy.testing import assert_almost_equal
 
-from EasyReflectometry.special.calculations import area_per_molecule_to_sld
+from EasyReflectometry.special.calculations import area_per_molecule_to_scattering_length_density
 from EasyReflectometry.special.calculations import molecular_weight
 from EasyReflectometry.special.calculations import neutron_scattering_length
 from EasyReflectometry.special.calculations import weighted_average
@@ -30,5 +30,5 @@ class TestMaterialMixture(unittest.TestCase):
         assert_almost_equal(a, 18.01528)
 
     def test_area_per_molecule_to_sld(self) -> None:
-        a = area_per_molecule_to_sld(2, 1, 0.5)
+        a = area_per_molecule_to_scattering_length_density(2, 1, 0.5)
         assert_almost_equal(a, 4e6)
