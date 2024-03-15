@@ -55,6 +55,7 @@ docs = [
     "nbsphinx",
     "sphinx_book_theme",
     "sphinx_autodoc_typehints",
+    "toml"
 ]
 
 [project.urls]
