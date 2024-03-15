@@ -9,7 +9,10 @@ from .base_assembly import BaseAssembly
 
 
 class GradientLayer(BaseAssembly):
-    """A set of discrete gradient layers changing from the front to the back material."""
+    """A set of discrete gradient layers changing from the front to the back material.
+    The front layer is where the neutron beam starts in, it has an index of 0.
+
+    """
 
     def __init__(
         self,

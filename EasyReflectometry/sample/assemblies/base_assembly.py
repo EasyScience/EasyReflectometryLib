@@ -12,7 +12,9 @@ from ..elements.layers.layer import Layer
 
 class BaseAssembly(BaseObj):
     """Assembly of layers.
-    The front layer faces the neutron beam and has index 0.
+    The front layer (front_layer) is the layer the neutron beam starts in, it has an index of 0.
+    The back layer (back_layer) is the final layer from which the unreflected neutron beam is transmitted,
+    its index number depends on the number of finite layers in the system, but it might be accessed at index -1.
     """
 
     # Added in super().__init__

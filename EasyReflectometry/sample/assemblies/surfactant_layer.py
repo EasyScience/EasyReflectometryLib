@@ -13,8 +13,9 @@ from .base_assembly import BaseAssembly
 
 class SurfactantLayer(BaseAssembly):
     """A surfactant layer constructs a series of layers representing the
-    head and tail groups of a surfactant. This assembly allows the definition of a
-    surfactant or lipid using the chemistry of the head and tail regions, additionally
+    head and tail groups of a surfactant. 
+    This assembly allows the definition of a surfactant or lipid using the chemistry 
+    of the head (head_layer) and tail (tail_layer) regions, additionally
     this approach will make the application of constraints such as conformal roughness
     or area per molecule more straight forward.
 

@@ -21,11 +21,11 @@ REPEATINGMULTILAYER_DETAILS = {
 
 class RepeatingMultilayer(Multilayer):
     """
-    A repeating multi layer is build from a :py:class:`Multilayer` and which it repeats
+    A repeating multi layer is build from a `Multilayer` and which it repeats
     for a given number of times. This enables a computational efficiency in many
     reflectometry engines as the operation can be performed for a single
-    :py:class:`Multilayer` and cheaply combined for the appropriate number of
-    :py:attr:`repetitions`.
+    `Multilayer` and cheaply combined for the appropriate number of
+    `repetitions`.
 
     More information about the usage of this assembly is available in the
     `repeating multilayer documentation`_
