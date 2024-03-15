@@ -13,8 +13,9 @@ from .base_assembly import BaseAssembly
 
 class SurfactantLayer(BaseAssembly):
     """A surfactant layer constructs a series of layers representing the
-    head and tail groups of a surfactant. This assembly allows the definition of a
-    surfactant or lipid using the chemistry of the head and tail regions, additionally
+    head and tail groups of a surfactant. 
+    This assembly allows the definition of a surfactant or lipid using the chemistry 
+    of the head (head_layer) and tail (tail_layer) regions, additionally
     this approach will make the application of constraints such as conformal roughness
     or area per molecule more straight forward.
 
@@ -150,22 +151,22 @@ class SurfactantLayer(BaseAssembly):
     @property
     def tail_layer(self) -> Optional[LayerAreaPerMolecule]:
         """Get the tail layer of the surfactant surface."""
-        return self.bottom_layer
+        return self.front_layer
 
     @tail_layer.setter
     def tail_layer(self, layer: LayerAreaPerMolecule) -> None:
         """Set the tail layer of the surfactant surface."""
-        self.bottom_layer = layer
+        self.front_layer = layer
 
     @property
     def head_layer(self) -> Optional[LayerAreaPerMolecule]:
         """Get the head layer of the surfactant surface."""
-        return self.top_layer
+        return self.back_layer
 
     @head_layer.setter
     def head_layer(self, layer: LayerAreaPerMolecule) -> None:
         """Set the head layer of the surfactant surface."""
-        self.top_layer = layer
+        self.back_layer = layer
 
     @property
     def constrain_area_per_molecule(self) -> bool:

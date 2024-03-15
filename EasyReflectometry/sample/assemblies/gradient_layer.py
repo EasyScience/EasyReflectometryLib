@@ -9,12 +9,15 @@ from .base_assembly import BaseAssembly
 
 
 class GradientLayer(BaseAssembly):
-    """A set of discrete gradient layers changing from the initial to the final material."""
+    """A set of discrete gradient layers changing from the front to the back material.
+    The front layer is where the neutron beam starts in, it has an index of 0.
+
+    """
 
     def __init__(
         self,
-        initial_material: Material,
-        final_material: Material,
+        front_material: Material,
+        back_material: Material,
         thickness: float,
         roughness: float,
         discretisation_elements: int = 10,
@@ -23,23 +26,23 @@ class GradientLayer(BaseAssembly):
     ) -> GradientLayer:
         """Constructor.
 
-        :param initial_material: Material of initial "part" of the layer
-        :param final_material: Material of final "part" of the layer
+        :param front_material: Material of front of the layer
+        :param back_material: Material of back of the layer
         :param thickness: Thicknkess of the layer
         :param roughness: Roughness of the layer
         :param discretisation_elements: Number of discrete layers
         :param name: Name for gradient layer, defaults to 'EasyGradienLayer'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
-        self._initial_material = initial_material
-        self._final_material = final_material
+        self._front_material = front_material
+        self._back_material = back_material
         if discretisation_elements < 2:
             raise ValueError('Discretisation elements must be greater than 2.')
         self._discretisation_elements = discretisation_elements
 
         gradient_layers = _prepare_gradient_layers(
-            initial_material=initial_material,
-            final_material=final_material,
+            front_material=front_material,
+            back_material=back_material,
             discretisation_elements=discretisation_elements,
             interface=interface,
         )
@@ -66,14 +69,14 @@ class GradientLayer(BaseAssembly):
         """Default instance  for a gradient layer object. The default is air to deuterium.
 
         :param name: Name for gradient layer, defaults to 'EasyGradienLayer'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
-        initial_material = Material.from_pars(0.0, 0.0, 'Air')
-        final_material = Material.from_pars(6.36, 0.0, 'D2O')
+        front_material = Material.from_pars(0.0, 0.0, 'Air')
+        back_material = Material.from_pars(6.36, 0.0, 'D2O')
 
         return cls(
-            initial_material=initial_material,
-            final_material=final_material,
+            front_material=front_material,
+            back_material=back_material,
             thickness=2.0,
             roughness=0.2,
             discretisation_elements=10,
@@ -84,8 +87,8 @@ class GradientLayer(BaseAssembly):
     @classmethod
     def from_pars(
         cls,
-        initial_material: Material,
-        final_material: Material,
+        front_material: Material,
+        back_material: Material,
         thickness: float,
         roughness: float,
         discretisation_elements: int,
@@ -93,10 +96,10 @@ class GradientLayer(BaseAssembly):
         interface=None,
     ) -> GradientLayer:
         """Instance for the gradient layer where the parameters are known,
-        :py:attr:`initial` is facing the neutron beam.
+        `front` is facing the neutron beam.
 
-        :param initial_material: Material of initial "part" of the layer
-        :param final_material: Material of final "part" of the layer
+        :param front_material: Material of front of the layer
+        :param back_material: Material of back of the layer
         :param thickness: Thicknkess of the layer
         :param roughness: Roughness of the layer
         :param discretisation_elements: Number of dicrete layers
@@ -104,8 +107,8 @@ class GradientLayer(BaseAssembly):
         """
 
         return cls(
-            initial_material=initial_material,
-            final_material=final_material,
+            front_material=front_material,
+            back_material=back_material,
             thickness=thickness,
             roughness=roughness,
             discretisation_elements=discretisation_elements,
@@ -116,7 +119,7 @@ class GradientLayer(BaseAssembly):
     @property
     def thickness(self) -> float:
         """Get the thickness of the gradient layer in Angstrom."""
-        return self.bottom_layer.thickness.raw_value * self._discretisation_elements
+        return self.front_layer.thickness.raw_value * self._discretisation_elements
 
     @thickness.setter
     def thickness(self, thickness: float) -> None:
@@ -124,12 +127,12 @@ class GradientLayer(BaseAssembly):
 
         :param thickness: Thickness of the gradient layer in Angstroms.
         """
-        self.bottom_layer.thickness.value = thickness / self._discretisation_elements
+        self.front_layer.thickness.value = thickness / self._discretisation_elements
 
     @property
     def roughness(self) -> float:
         """Get the Roughness of the gradient layer in Angstrom."""
-        return self.bottom_layer.roughness.raw_value
+        return self.front_layer.roughness.raw_value
 
     @roughness.setter
     def roughness(self, roughness: float) -> None:
@@ -137,7 +140,7 @@ class GradientLayer(BaseAssembly):
 
         :param roughness: Roughness of the gradient layer in Angstroms.
         """
-        self.bottom_layer.roughness.value = roughness
+        self.front_layer.roughness.value = roughness
 
     @property
     def _dict_repr(self) -> dict[str, str]:
@@ -145,8 +148,8 @@ class GradientLayer(BaseAssembly):
         return {
             'thickness': self.thickness,
             'discretisation_elements': self._discretisation_elements,
-            'top_layer': self.top_layer._dict_repr,
-            'bottom_layer': self.bottom_layer._dict_repr,
+            'back_layer': self.back_layer._dict_repr,
+            'front_layer': self.front_layer._dict_repr,
         }
 
     def as_dict(self, skip: list = None) -> dict:
@@ -161,33 +164,33 @@ class GradientLayer(BaseAssembly):
 
 
 def _linear_gradient(
-    init_value: float,
-    final_value: float,
+    front_value: float,
+    back_value: float,
     discretisation_elements: int,
 ) -> list[float]:
-    discrete_step = (final_value - init_value) / discretisation_elements
+    discrete_step = (back_value - front_value) / discretisation_elements
     if discrete_step != 0:
-        # Both initial and final values are included
-        gradient = arange(init_value, final_value + discrete_step, discrete_step)
+        # Both front and back values are included
+        gradient = arange(front_value, back_value + discrete_step, discrete_step)
     else:
-        gradient = [init_value] * discretisation_elements
+        gradient = [front_value] * discretisation_elements
     return gradient
 
 
 def _prepare_gradient_layers(
-    initial_material: Material,
-    final_material: Material,
+    front_material: Material,
+    back_material: Material,
     discretisation_elements: int,
     interface=None,
 ) -> LayerCollection:
     gradient_sld = _linear_gradient(
-        init_value=initial_material.sld.raw_value,
-        final_value=final_material.sld.raw_value,
+        front_value=front_material.sld.raw_value,
+        back_value=back_material.sld.raw_value,
         discretisation_elements=discretisation_elements,
     )
     gradient_isld = _linear_gradient(
-        init_value=initial_material.isld.raw_value,
-        final_value=final_material.isld.raw_value,
+        front_value=front_material.isld.raw_value,
+        back_value=back_material.isld.raw_value,
         discretisation_elements=discretisation_elements,
     )
     gradient_layers = []

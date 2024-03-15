@@ -19,12 +19,12 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p._type == 'Surfactant Layer'
 
         assert p.layers[0].name == 'DPPC Tail'
-        assert p.bottom_layer.name == 'DPPC Tail'
+        assert p.front_layer.name == 'DPPC Tail'
         assert p.tail_layer.name == 'DPPC Tail'
         assert p.tail_layer.molecular_formula == 'C32D64'
 
         assert p.layers[1].name == 'DPPC Head'
-        assert p.top_layer.name == 'DPPC Head'
+        assert p.back_layer.name == 'DPPC Head'
         assert p.head_layer.name == 'DPPC Head'
         assert p.head_layer.molecular_formula == 'C10H18NO8P'
 
@@ -144,7 +144,7 @@ class TestSurfactantLayer(unittest.TestCase):
         p = SurfactantLayer.default()
 
         # Then Expect
-        assert p.head_layer == p.top_layer
+        assert p.head_layer == p.back_layer
         assert p.head_layer == p.layers[1]
 
     def test_set_head_layer(self):
@@ -157,7 +157,7 @@ class TestSurfactantLayer(unittest.TestCase):
 
         # Expect
         assert p.head_layer == new_layer
-        assert p.top_layer == new_layer
+        assert p.back_layer == new_layer
         assert p.layers[1] == new_layer
 
     def test_get_tail_layer(self):
@@ -165,7 +165,7 @@ class TestSurfactantLayer(unittest.TestCase):
         p = SurfactantLayer.default()
 
         # Then Expect
-        assert p.tail_layer == p.bottom_layer
+        assert p.tail_layer == p.front_layer
         assert p.tail_layer == p.layers[0]
 
     def test_set_tail_layer(self):
@@ -178,7 +178,7 @@ class TestSurfactantLayer(unittest.TestCase):
 
         # Expect
         assert p.tail_layer == new_layer
-        assert p.bottom_layer == new_layer
+        assert p.front_layer == new_layer
         assert p.layers[0] == new_layer
 
     def test_dict_round_trip(self):

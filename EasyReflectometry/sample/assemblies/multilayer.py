@@ -6,9 +6,9 @@ from .base_assembly import BaseAssembly
 
 
 class Multilayer(BaseAssembly):
-    """A multi layer is build from a single or a list of :py:class:`Layer` or :py:class:`LayerCollection`.
-    The multi layer will arrange the layers as slabs, one on top of another,
-    allowing the reflectometry to be determined from them.
+    """A multi layer is build from a single or a list of `Layer` or `LayerCollection`.
+    The multi layer will arrange the layers as slabs, allowing the reflectometry to be determined from them.
+    The front layer is where the neutron beam starts in, it has an index of 0.
 
     More information about the usage of this assembly is available in the
     `multilayer documentation`_
@@ -27,7 +27,7 @@ class Multilayer(BaseAssembly):
 
         :param layers: The layers that make up the multi-layer.
         :param name: Name for multi layer, defaults to 'EasyMultilayer'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         :param type: Type of the constructed instance, defaults to 'Multi-layer'
         """
         if isinstance(layers, Layer):
@@ -41,7 +41,7 @@ class Multilayer(BaseAssembly):
     def default(cls, interface=None) -> Multilayer:
         """Default instance of a multi-layer.
 
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
         layers = LayerCollection.default()
         return cls(layers, interface=interface)
@@ -57,7 +57,7 @@ class Multilayer(BaseAssembly):
 
         :param layers: The layers in the multi-layer.
         :param name: Name of the layer, defaults to 'EasyMultilayer'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
         return cls(
             layers=layers,
@@ -105,5 +105,5 @@ class Multilayer(BaseAssembly):
     def _dict_repr(self) -> dict:
         """A simplified dict representation."""
         if len(self.layers) == 1:
-            return self.bottom_layer._dict_repr
+            return self.front_layer._dict_repr
         return {self.name: self.layers._dict_repr}

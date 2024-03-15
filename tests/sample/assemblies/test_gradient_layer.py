@@ -16,12 +16,12 @@ from EasyReflectometry.sample.elements.materials.material import Material
 class TestGradientLayer:
     @pytest.fixture
     def gradient_layer(self) -> GradientLayer:
-        self.init = Material.from_pars(10.0, -10.0, 'Material_1')
-        self.final = Material.from_pars(0.0, 0.0, 'Material_2')
+        self.front = Material.from_pars(10.0, -10.0, 'Material_1')
+        self.back = Material.from_pars(0.0, 0.0, 'Material_2')
 
         return GradientLayer(
-            initial_material=self.init,
-            final_material=self.final,
+            front_material=self.front,
+            back_material=self.back,
             thickness=1.0,
             roughness=2.0,
             discretisation_elements=10,
@@ -36,14 +36,14 @@ class TestGradientLayer:
         assert gradient_layer._type, 'Gradient-layer'
         assert gradient_layer.interface is None
         assert gradient_layer.thickness == 1.0
-        assert gradient_layer.top_layer.thickness.raw_value == 0.1
+        assert gradient_layer.back_layer.thickness.raw_value == 0.1
 
-        assert gradient_layer.bottom_layer.material.sld.raw_value == 10.0
+        assert gradient_layer.front_layer.material.sld.raw_value == 10.0
         assert gradient_layer.layers[5].material.sld.raw_value == 5.0
-        assert gradient_layer.top_layer.material.sld.raw_value == 1.0
-        assert gradient_layer.bottom_layer.material.isld.raw_value == -10.0
+        assert gradient_layer.back_layer.material.sld.raw_value == 1.0
+        assert gradient_layer.front_layer.material.isld.raw_value == -10.0
         assert gradient_layer.layers[5].material.isld.raw_value == -5.0
-        assert gradient_layer.top_layer.material.isld.raw_value == -1.0
+        assert gradient_layer.back_layer.material.isld.raw_value == -1.0
 
     def test_default(self) -> None:
         # When Then
@@ -57,13 +57,13 @@ class TestGradientLayer:
 
     def test_from_pars(self) -> None:
         # When
-        init = Material.from_pars(6.908, -0.278, 'Boron')
-        final = Material.from_pars(0.487, 0.000, 'Potassium')
+        front = Material.from_pars(6.908, -0.278, 'Boron')
+        back = Material.from_pars(0.487, 0.000, 'Potassium')
 
         # Then
         result = GradientLayer.from_pars(
-            initial_material=init,
-            final_material=final,
+            front_material=front,
+            back_material=back,
             thickness=10.0,
             roughness=1.0,
             discretisation_elements=5,
@@ -78,7 +78,7 @@ class TestGradientLayer:
 
     def test_repr(self, gradient_layer: GradientLayer) -> None:
         # When Then Expect
-        expected_str = "thickness: 1.0\ndiscretisation_elements: 10\ntop_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nbottom_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"  # noqa: E501
+        expected_str = "thickness: 1.0\ndiscretisation_elements: 10\nback_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nfront_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"  # noqa: E501
         assert gradient_layer.__repr__() == expected_str
 
     def test_dict_round_trip(self, gradient_layer: GradientLayer) -> None:
@@ -97,13 +97,13 @@ class TestGradientLayer:
 
         # Then
         assert gradient_layer.thickness == 10.0
-        assert gradient_layer.bottom_layer.thickness.raw_value == 1.0
-        assert gradient_layer.top_layer.thickness.raw_value == 1.0
+        assert gradient_layer.front_layer.thickness.raw_value == 1.0
+        assert gradient_layer.back_layer.thickness.raw_value == 1.0
 
     def test_thickness_getter(self, gradient_layer: GradientLayer) -> None:
         # When
         gradient_layer.layers = [MagicMock(), MagicMock()]
-        gradient_layer.bottom_layer.thickness.raw_value = 10.0
+        gradient_layer.front_layer.thickness.raw_value = 10.0
 
         # Then
         # discretisation_elements * discrete_layer_thickness
@@ -115,13 +115,13 @@ class TestGradientLayer:
 
         # Then
         assert gradient_layer.roughness == 10.0
-        assert gradient_layer.bottom_layer.roughness.raw_value == 10.0
-        assert gradient_layer.top_layer.roughness.raw_value == 10.0
+        assert gradient_layer.front_layer.roughness.raw_value == 10.0
+        assert gradient_layer.back_layer.roughness.raw_value == 10.0
 
     def test_roughness_getter(self, gradient_layer: GradientLayer) -> None:
         # When
         gradient_layer.layers = [MagicMock(), MagicMock()]
-        gradient_layer.bottom_layer.roughness.raw_value = 10.0
+        gradient_layer.front_layer.roughness.raw_value = 10.0
 
         # Then
         assert gradient_layer.roughness == 10.0
@@ -129,7 +129,7 @@ class TestGradientLayer:
 
 def test_linear_gradient_increasing():
     # When Then
-    result = _linear_gradient(init_value=1.5, final_value=2.5, discretisation_elements=10)
+    result = _linear_gradient(front_value=1.5, back_value=2.5, discretisation_elements=10)
 
     # Expect
     assert_almost_equal([1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5], result)
@@ -137,7 +137,7 @@ def test_linear_gradient_increasing():
 
 def test_linear_gradient_decreasing():
     # When Then
-    result = _linear_gradient(init_value=2.5, final_value=1.5, discretisation_elements=10)
+    result = _linear_gradient(front_value=2.5, back_value=1.5, discretisation_elements=10)
 
     # Expect
     assert_almost_equal([2.5, 2.4, 2.3, 2.2, 2.1, 2.0, 1.9, 1.8, 1.7, 1.6, 1.5], result)
@@ -145,7 +145,7 @@ def test_linear_gradient_decreasing():
 
 def test_linear_gradient_same():
     # When Then
-    result = _linear_gradient(init_value=2.5, final_value=2.5, discretisation_elements=10)
+    result = _linear_gradient(front_value=2.5, back_value=2.5, discretisation_elements=10)
 
     # Expect
     assert_almost_equal([2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5], result)
