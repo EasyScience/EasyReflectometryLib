@@ -1,6 +1,7 @@
 """
 Tests for RepeatingMultiLayer module
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -26,7 +27,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(len(p.layers), 2)
         assert_equal(p.repetitions.display_name, 'repetitions')
         assert_equal(str(p.repetitions.unit), 'dimensionless')
-        assert_equal(p.repetitions.value.n, 1.0)
+        assert_equal(p.repetitions.value.value.magnitude, 1.0)
         assert_equal(p.repetitions.min, 1)
         assert_equal(p.repetitions.max, 9999)
         assert_equal(p.repetitions.fixed, True)
@@ -44,7 +45,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(o.interface, None)
         assert_equal(o.repetitions.display_name, 'repetitions')
         assert_equal(str(o.repetitions.unit), 'dimensionless')
-        assert_equal(o.repetitions.value.n, 2.0)
+        assert_equal(o.repetitions.value.value.magnitude, 2.0)
         assert_equal(o.repetitions.min, 1)
         assert_equal(o.repetitions.max, 9999)
         assert_equal(o.repetitions.fixed, True)
@@ -58,7 +59,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(o.interface, None)
         assert_equal(o.repetitions.display_name, 'repetitions')
         assert_equal(str(o.repetitions.unit), 'dimensionless')
-        assert_equal(o.repetitions.value.n, 2.0)
+        assert_equal(o.repetitions.value.value.magnitude, 2.0)
         assert_equal(o.repetitions.min, 1)
         assert_equal(o.repetitions.max, 9999)
         assert_equal(o.repetitions.fixed, True)
@@ -73,7 +74,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(o.name, 'twoLayerItem')
         assert_equal(o.interface, None)
         assert_equal(o.layers.name, 'thinBoron/layerPotassium')
-        assert_equal(o.repetitions.value.n, 10.0)
+        assert_equal(o.repetitions.value.value.magnitude, 10.0)
         assert_equal(o.repetitions.min, 1)
         assert_equal(o.repetitions.max, 9999)
 

@@ -1,4 +1,6 @@
-MAJOR = 0
-MINOR = 0
-MICRO = 3
-__version__ = f'{MAJOR:d}.{MINOR:d}.{MICRO:d}'
+from importlib import metadata
+
+try:
+    __version__ = metadata.version(__package__ or __name__)
+except metadata.PackageNotFoundError:
+    __version__ = '0.0.0'
