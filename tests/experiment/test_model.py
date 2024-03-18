@@ -1,6 +1,7 @@
 """
 Tests for Model class.
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -8,7 +9,6 @@ __version__ = '0.0.1'
 import unittest
 
 import numpy as np
-from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
 from EasyReflectometry.calculators import CalculatorFactory
@@ -28,19 +28,19 @@ class TestModel(unittest.TestCase):
         assert_equal(p.sample.name, 'EasySample')
         assert_equal(p.scale.display_name, 'scale')
         assert_equal(str(p.scale.unit), 'dimensionless')
-        assert_equal(p.scale.value.n, 1.0)
+        assert_equal(p.scale.value.value.magnitude, 1.0)
         assert_equal(p.scale.min, 0.0)
         assert_equal(p.scale.max, np.Inf)
         assert_equal(p.scale.fixed, True)
         assert_equal(p.background.display_name, 'background')
         assert_equal(str(p.background.unit), 'dimensionless')
-        assert_almost_equal(p.background.value.n, 1.0e-7)
+        assert_equal(p.background.value.value.magnitude, 1.0e-8)
         assert_equal(p.background.min, 0.0)
         assert_equal(p.background.max, np.Inf)
         assert_equal(p.background.fixed, True)
         assert_equal(p.resolution.display_name, 'resolution')
         assert_equal(str(p.resolution.unit), 'dimensionless')
-        assert_almost_equal(p.resolution.value.n, 5.0)
+        assert_equal(p.resolution.value.value.magnitude, 5.0)
         assert_equal(p.resolution.min, 0.0)
         assert_equal(p.resolution.max, 100.0)
         assert_equal(p.resolution.fixed, True)
@@ -61,19 +61,19 @@ class TestModel(unittest.TestCase):
         assert_equal(mod.sample.name, 'myModel')
         assert_equal(mod.scale.display_name, 'scale')
         assert_equal(str(mod.scale.unit), 'dimensionless')
-        assert_equal(mod.scale.value.n, 2.0)
+        assert_equal(mod.scale.value.value.magnitude, 2.0)
         assert_equal(mod.scale.min, 0.0)
         assert_equal(mod.scale.max, np.Inf)
         assert_equal(mod.scale.fixed, True)
         assert_equal(mod.background.display_name, 'background')
         assert_equal(str(mod.background.unit), 'dimensionless')
-        assert_almost_equal(mod.background.value.n, 1.0e-5)
+        assert_equal(mod.background.value.value.magnitude, 1.0e-5)
         assert_equal(mod.background.min, 0.0)
         assert_equal(mod.background.max, np.Inf)
         assert_equal(mod.background.fixed, True)
         assert_equal(mod.resolution.display_name, 'resolution')
         assert_equal(str(mod.resolution.unit), 'dimensionless')
-        assert_almost_equal(mod.resolution.value.n, 2.0)
+        assert_equal(mod.resolution.value.value.magnitude, 2.0)
         assert_equal(mod.resolution.min, 0.0)
         assert_equal(mod.resolution.max, 100.0)
         assert_equal(mod.resolution.fixed, True)

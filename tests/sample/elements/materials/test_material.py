@@ -1,6 +1,7 @@
 """
 Tests for Material class.
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -19,13 +20,13 @@ class TestMaterial(unittest.TestCase):
         assert p.interface is None
         assert p.sld.display_name == 'sld'
         assert str(p.sld.unit) == '1 / angstrom ** 2'
-        assert p.sld.value.n == 4.186
+        assert p.sld.value.value.magnitude == 4.186
         assert p.sld.min == -np.Inf
         assert p.sld.max == np.Inf
         assert p.sld.fixed is True
         assert p.isld.display_name == 'isld'
         assert str(p.isld.unit) == '1 / angstrom ** 2'
-        assert p.isld.value.n == 0.0
+        assert p.isld.value.value.magnitude == 0.0
         assert p.isld.min == -np.Inf
         assert p.isld.max == np.Inf
         assert p.isld.fixed is True
@@ -36,13 +37,13 @@ class TestMaterial(unittest.TestCase):
         assert p.interface is None
         assert p.sld.display_name == 'sld'
         assert str(p.sld.unit) == '1 / angstrom ** 2'
-        assert p.sld.value.n == 6.908
+        assert p.sld.value.value.magnitude == 6.908
         assert p.sld.min == -np.Inf
         assert p.sld.max == np.Inf
         assert p.sld.fixed is True
         assert p.isld.display_name == 'isld'
         assert str(p.isld.unit) == '1 / angstrom ** 2'
-        assert p.isld.value.n == -0.278
+        assert p.isld.value.value.magnitude == -0.278
         assert p.isld.min == -np.Inf
         assert p.isld.max == np.Inf
         assert p.isld.fixed is True

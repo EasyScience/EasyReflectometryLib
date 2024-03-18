@@ -1,6 +1,7 @@
 """
 Tests for Layer class.
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -23,13 +24,13 @@ class TestLayer(unittest.TestCase):
         assert_equal(p.material.name, 'EasyMaterial')
         assert_equal(p.thickness.display_name, 'thickness')
         assert_equal(str(p.thickness.unit), 'angstrom')
-        assert_equal(p.thickness.value.n, 10.0)
+        assert_equal(p.thickness.value.value.magnitude, 10.0)
         assert_equal(p.thickness.min, 0.0)
         assert_equal(p.thickness.max, np.Inf)
         assert_equal(p.thickness.fixed, True)
         assert_equal(p.roughness.display_name, 'roughness')
         assert_equal(str(p.roughness.unit), 'angstrom')
-        assert_equal(p.roughness.value.n, 3.3)
+        assert_equal(p.roughness.value.value.magnitude, 3.3)
         assert_equal(p.roughness.min, 0.0)
         assert_equal(p.roughness.max, np.Inf)
         assert_equal(p.roughness.fixed, True)
@@ -42,13 +43,13 @@ class TestLayer(unittest.TestCase):
         assert_equal(p.material.name, 'Boron')
         assert_equal(p.thickness.display_name, 'thickness')
         assert_equal(str(p.thickness.unit), 'angstrom')
-        assert_equal(p.thickness.value.n, 5.0)
+        assert_equal(p.thickness.value.value.magnitude, 5.0)
         assert_equal(p.thickness.min, 0.0)
         assert_equal(p.thickness.max, np.Inf)
         assert_equal(p.thickness.fixed, True)
         assert_equal(p.roughness.display_name, 'roughness')
         assert_equal(str(p.roughness.unit), 'angstrom')
-        assert_equal(p.roughness.value.n, 2.0)
+        assert_equal(p.roughness.value.value.magnitude, 2.0)
         assert_equal(p.roughness.min, 0.0)
         assert_equal(p.roughness.max, np.Inf)
         assert_equal(p.roughness.fixed, True)
