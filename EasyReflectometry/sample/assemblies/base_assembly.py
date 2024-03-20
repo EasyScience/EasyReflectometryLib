@@ -50,6 +50,13 @@ class BaseAssembly(BaseObj):
         ...
 
     @property
+    def type(self) -> str:
+        """Get type of the assembly.
+        Needed by the GUI.
+        """
+        return self._type
+
+    @property
     def uid(self) -> int:
         """Get UID from the borg map"""
         return self._borg.map.convert_id_to_key(self)

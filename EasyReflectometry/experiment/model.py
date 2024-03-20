@@ -9,10 +9,9 @@ from easyCore import np
 from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
+from EasyReflectometry.sample import BaseAssembly
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
-from EasyReflectometry.sample import Multilayer
-from EasyReflectometry.sample import RepeatingMultilayer
 from EasyReflectometry.sample import Sample
 
 LAYER_DETAILS = {
@@ -47,6 +46,13 @@ class Model(BaseObj):
     """Model is the class that represents the experiment.
     It is used to store the information about the experiment and to perform the calculations.
     """
+
+    # Added in super().__init__
+    name: str
+    sample: Sample
+    scale: Parameter
+    background: Parameter
+    resolution: Parameter
 
     def __init__(
         self,
@@ -126,16 +132,18 @@ class Model(BaseObj):
             interface=interface,
         )
 
-    def add_item(self, *items: Layer | RepeatingMultilayer) -> None:
+    def add_item(self, *assemblies: list[BaseAssembly]) -> None:
         """Add a layer or item to the model sample.
 
-        :param items: Layers or items to add to model sample.
+        :param assemblies: Assemblies to add to model sample.
         """
-        for arg in items:
-            if issubclass(arg.__class__, Multilayer):
+        for arg in assemblies:
+            if issubclass(arg.__class__, BaseAssembly):
                 self.sample.append(arg)
                 if self.interface is not None:
                     self.interface().add_item_to_model(arg.uid, self.uid)
+            else:
+                raise ValueError(f'Object {arg} is not a valid type, must be a child of BaseAssembly.')
 
     def duplicate_item(self, idx: int) -> None:
         """Duplicate a given item or layer in a sample.
