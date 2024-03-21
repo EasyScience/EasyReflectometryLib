@@ -265,6 +265,12 @@ class LayerAreaPerMolecule(Layer):
         self.molecule.name = formula_string
         self.material._update_name()
 
+    # def _convert_to_dict(self, org_dict, _, **dont_care) -> dict:
+    #     del org_dict['_scattering_length_real']
+    #     del org_dict['_scattering_length_imag']
+    #     del org_dict['_area_per_molecule']
+    #     del org_dict['material']
+
     @property
     def _dict_repr(self) -> dict[str, str]:
         """Dictionary representation of the :py:class:`Layerarea_per_molecule` object. Produces a simple dictionary"""

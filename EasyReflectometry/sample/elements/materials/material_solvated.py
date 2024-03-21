@@ -147,6 +147,14 @@ class MaterialSolvated(MaterialMixture):
     def _update_name(self) -> None:
         self.name = self._material_a.name + ' in ' + self._material_b.name
 
+    # def _convert_to_dict(self, org_dict, _, **dont_care) -> dict:
+    #     org_dict['material'] = org_dict['_material_a']
+    #     del org_dict['_material_a']
+    #     org_dict['solvent'] = org_dict['_material_b']
+    #     del org_dict['_material_b']
+    #     org_dict['fraction'] = org_dict['_fraction']
+    #     del org_dict['_fraction']
+
     # Representation
     @property
     def _dict_repr(self) -> dict[str, str]:
@@ -160,3 +168,14 @@ class MaterialSolvated(MaterialMixture):
                 'solvent': self.solvent._dict_repr,
             }
         }
+
+    def as_dict(self, skip: list = None) -> dict[str, str]:
+        """Custom as_dict method to skip necessary things."""
+        if skip is None:
+            skip = []
+        this_dict = super().as_dict(skip=skip)
+        this_dict['material'] = self._material_a
+        del this_dict['material_a']
+        this_dict['solvent'] = self._material_b
+        del this_dict['material_b']
+        return this_dict

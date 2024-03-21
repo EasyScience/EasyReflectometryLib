@@ -225,6 +225,14 @@ class MaterialMixture(BaseElement):
     def _update_name(self) -> None:
         self.name = self._material_a.name + '/' + self._material_b.name
 
+    # def _convert_to_dict(self, org_dict, _, **dont_care) -> dict:
+    #     org_dict['material_a'] = org_dict['_material_a']
+    #     del org_dict['_material_a']
+    #     org_dict['solvent_b'] = org_dict['_material_b']
+    #     del org_dict['_material_b']
+    #     org_dict['fraction'] = org_dict['_fraction']
+    #     del org_dict['_fraction']
+
     # Representation
     @property
     def _dict_repr(self) -> dict[str, str]:
@@ -245,5 +253,9 @@ class MaterialMixture(BaseElement):
             skip = []
         this_dict = super().as_dict(skip=skip)
         this_dict['material_a'] = self._material_a
+        del this_dict['_material_a']
         this_dict['material_b'] = self._material_b
+        del this_dict['_material_b']
+        this_dict['fraction'] = self._fraction
+        del this_dict['_fraction']
         return this_dict

@@ -8,7 +8,6 @@ from EasyReflectometry.sample.elements.materials.material_mixture import Materia
 
 
 class TestMaterialMixture(unittest.TestCase):
-
     def test_default(self):
         p = MaterialMixture.default()
         assert p._fraction.raw_value == 0.5
@@ -30,7 +29,7 @@ class TestMaterialMixture(unittest.TestCase):
         assert_almost_equal(p.isld.raw_value, -0.5)
         assert str(p.sld.unit) == '1 / angstrom ** 2'
         assert str(p.isld.unit) == '1 / angstrom ** 2'
-    
+
     def test_fraction_constraint(self):
         p = Material.default()
         q = Material.from_pars(6.908, -0.278, 'Boron')
@@ -108,18 +107,8 @@ class TestMaterialMixture(unittest.TestCase):
                 'fraction': 0.5,
                 'sld': '4.186e-6 1 / angstrom ** 2',
                 'isld': '0.000e-6 1 / angstrom ** 2',
-                'material_a': {
-                    'EasyMaterial': {
-                        'sld': '4.186e-6 1 / angstrom ** 2',
-                        'isld': '0.000e-6 1 / angstrom ** 2'
-                    }
-                },
-                'material_b': {
-                    'EasyMaterial': {
-                        'sld': '4.186e-6 1 / angstrom ** 2',
-                        'isld': '0.000e-6 1 / angstrom ** 2'
-                    }
-                }
+                'material_a': {'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}},
+                'material_b': {'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}},
             }
         }
 
@@ -127,7 +116,7 @@ class TestMaterialMixture(unittest.TestCase):
         p = MaterialMixture.default()
         q = MaterialMixture.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
-    
+
     def test_update_name(self):
         # When
         p = MaterialMixture.default()
