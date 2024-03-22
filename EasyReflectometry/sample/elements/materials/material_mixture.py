@@ -44,7 +44,7 @@ class MaterialMixture(BaseElement):
         :param material_b: The second material.
         :param fraction: The fraction of material_b in material_a.
         :param name: Name of the material, defaults to None that causes the name to be constructed.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
         super().__init__(
             name,
@@ -105,7 +105,7 @@ class MaterialMixture(BaseElement):
         :param material_b: The second material.
         :param fraction: The fraction of material_b in material_a.
         :param name: Name of the material, defaults to 'EasyMaterialMixture'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
         default_options = deepcopy(MATERIALMIXTURE_DEFAULTS)
         del default_options['fraction']['value']
@@ -123,12 +123,12 @@ class MaterialMixture(BaseElement):
         return [self._sld, self._isld]
 
     @property
-    def sld(self):
-        return self._sld
+    def sld(self) -> float:
+        return self._sld.raw_value
 
     @property
-    def isld(self):
-        return self._isld
+    def isld(self) -> float:
+        return self._isld.raw_value
 
     def _materials_constraints(self):
         self._sld.enabled = True
@@ -153,40 +153,19 @@ class MaterialMixture(BaseElement):
         iconstraint()
 
     @property
-    def fraction(self) -> Parameter:
-        """
-        :return: the fraction of material a.
-        """
-        return self._fraction
+    def fraction(self) -> float:
+        """Get the fraction of material_b."""
+        return self._fraction.raw_value
 
     @fraction.setter
     def fraction(self, fraction: float) -> None:
-        """
-        Setter for fraction of material a.
+        """Setter for fraction of material_b.
 
-        :param fraction: double
+        :param fraction: The fraction of material_b in material_a.
         """
         if not isinstance(fraction, float):
             raise ValueError('fraction must be a float')
-        self._fraction = fraction
-
-    @property
-    def fraction(self) -> Parameter:
-        """
-        :return: the fraction of material a.
-        """
-        return self._fraction
-
-    @fraction.setter
-    def fraction(self, fraction: float) -> None:
-        """
-        Setter for fraction of material a.
-
-        :param fraction: double
-        """
-        if not isinstance(fraction, float):
-            raise ValueError('fraction must be a float')
-        self._fraction = fraction
+        self._fraction.raw_value = fraction
 
     @property
     def material_a(self) -> Material:
@@ -225,21 +204,13 @@ class MaterialMixture(BaseElement):
     def _update_name(self) -> None:
         self.name = self._material_a.name + '/' + self._material_b.name
 
-    # def _convert_to_dict(self, org_dict, _, **dont_care) -> dict:
-    #     org_dict['material_a'] = org_dict['_material_a']
-    #     del org_dict['_material_a']
-    #     org_dict['solvent_b'] = org_dict['_material_b']
-    #     del org_dict['_material_b']
-    #     org_dict['fraction'] = org_dict['_fraction']
-    #     del org_dict['_fraction']
-
     # Representation
     @property
     def _dict_repr(self) -> dict[str, str]:
         """A simplified dict representation."""
         return {
             self.name: {
-                'fraction': self._fraction.raw_value,
+                'fraction': f'{self._fraction.raw_value:.3f} {self._fraction.unit}',
                 'sld': f'{self._sld.raw_value:.3f}e-6 {self._sld.unit}',
                 'isld': f'{self._isld.raw_value:.3f}e-6 {self._isld.unit}',
                 'material_a': self._material_a._dict_repr,
@@ -248,14 +219,15 @@ class MaterialMixture(BaseElement):
         }
 
     def as_dict(self, skip: list = None) -> dict[str, str]:
-        """Custom as_dict method to skip necessary things."""
+        """Produces a cleaned dict using a custom as_dict method to skip necessary things.
+        The resulting dict matches the paramters in __init__
+
+        :param skip: List of keys to skip, defaults to `None`.
+        """
         if skip is None:
             skip = []
         this_dict = super().as_dict(skip=skip)
         this_dict['material_a'] = self._material_a
-        del this_dict['_material_a']
         this_dict['material_b'] = self._material_b
-        del this_dict['_material_b']
         this_dict['fraction'] = self._fraction
-        del this_dict['_fraction']
         return this_dict

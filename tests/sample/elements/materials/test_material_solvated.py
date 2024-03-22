@@ -37,7 +37,7 @@ class TestMaterialSolvated:
         # When Then Expect
         assert material_solvated.material_a == self.mock_material
         assert material_solvated.material_b == self.mock_solvent
-        assert material_solvated.fraction == self.mock_solvent_fraction
+        assert material_solvated.fraction == 0.1
         assert material_solvated.name == 'name'
         assert material_solvated.interface == self.mock_interface
         self.mock_interface.generate_bindings.call_count == 2
@@ -76,7 +76,7 @@ class TestMaterialSolvated:
 
     def test_solvent_fraction(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
-        assert material_solvated.solvent_fraction == self.mock_solvent_fraction
+        assert material_solvated.solvent_fraction == 0.1
 
     def test_set_solvent_fraction(self, material_solvated: MaterialSolvated) -> None:
         # When Then
@@ -102,28 +102,25 @@ class TestMaterialSolvated:
         # When Then Expect (no exception)
         material_solvated.solvent_fraction = 1.0
 
-    def test_dict_repr(self, material_solvated: MaterialSolvated) -> None:
+    def test_dict_repr(self) -> None:
         # When Then
-        material_solvated._sld = MagicMock()
-        material_solvated._sld.raw_value = 1.0
-        material_solvated._sld.unit = 'sld_unit'
-        material_solvated._isld = MagicMock()
-        material_solvated._isld.raw_value = 2.0
-        material_solvated._isld.unit = 'isld_unit'
-        material_solvated.material._dict_repr = 'material_dict_repr'
-        material_solvated.solvent._dict_repr = 'solvent_dict_repr'
-        material_solvated.solvent_fraction.raw_value = 'solvent_fraction_value'
+        p = MaterialSolvated.default()
 
         # Expect
-        assert material_solvated._dict_repr == {
-            'name': {
-                'solvent_fraction': 'solvent_fraction_value',
-                'sld': '1.000e-6 sld_unit',
-                'isld': '2.000e-6 isld_unit',
-                'material': 'material_dict_repr',
-                'solvent': 'solvent_dict_repr',
+        assert p._dict_repr == {
+            'D2O in H2O': {
+                'solvent_fraction': '0.200 dimensionless',
+                'sld': '4.976e-6 1 / angstrom ** 2',
+                'isld': '0.000e-6 1 / angstrom ** 2',
+                'material': {'D2O': {'sld': '6.360e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}},
+                'solvent': {'H2O': {'sld': '-0.561e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}},
             }
         }
+
+    def test_dict_round_trip(self):
+        p = MaterialSolvated.default()
+        q = MaterialSolvated.from_dict(p.as_dict())
+        assert p.as_data_dict() == q.as_data_dict()
 
     def test_update_name(self, material_solvated: MaterialSolvated) -> None:
         # When

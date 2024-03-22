@@ -120,7 +120,7 @@ class MaterialSolvated(MaterialMixture):
         self.material_b = new_solvent
 
     @property
-    def solvent_fraction(self) -> Parameter:
+    def solvent_fraction(self) -> float:
         """Get the fraction of layer described by the solvent.
         This might be fraction of:
         Solvation where solvent is within the layer
@@ -147,21 +147,13 @@ class MaterialSolvated(MaterialMixture):
     def _update_name(self) -> None:
         self.name = self._material_a.name + ' in ' + self._material_b.name
 
-    # def _convert_to_dict(self, org_dict, _, **dont_care) -> dict:
-    #     org_dict['material'] = org_dict['_material_a']
-    #     del org_dict['_material_a']
-    #     org_dict['solvent'] = org_dict['_material_b']
-    #     del org_dict['_material_b']
-    #     org_dict['fraction'] = org_dict['_fraction']
-    #     del org_dict['_fraction']
-
     # Representation
     @property
     def _dict_repr(self) -> dict[str, str]:
         """A simplified dict representation."""
         return {
             self.name: {
-                'solvent_fraction': self.solvent_fraction.raw_value,
+                'solvent_fraction': f'{self._fraction.raw_value:.3f} {self._fraction.unit}',
                 'sld': f'{self._sld.raw_value:.3f}e-6 {self._sld.unit}',
                 'isld': f'{self._isld.raw_value:.3f}e-6 {self._isld.unit}',
                 'material': self.material._dict_repr,
@@ -170,12 +162,21 @@ class MaterialSolvated(MaterialMixture):
         }
 
     def as_dict(self, skip: list = None) -> dict[str, str]:
-        """Custom as_dict method to skip necessary things."""
+        """Produces a cleaned dict using a custom as_dict method to skip necessary things.
+        The resulting dict matches the paramters in __init__
+
+        :param skip: List of keys to skip, defaults to `None`.
+        """
         if skip is None:
             skip = []
         this_dict = super().as_dict(skip=skip)
-        this_dict['material'] = self._material_a
+        this_dict['material'] = self.material
         del this_dict['material_a']
-        this_dict['solvent'] = self._material_b
+        del this_dict['_material_a']
+        this_dict['solvent'] = self.solvent
         del this_dict['material_b']
+        del this_dict['_material_b']
+        this_dict['solvent_fraction'] = self._fraction
+        del this_dict['fraction']
+        del this_dict['_fraction']
         return this_dict

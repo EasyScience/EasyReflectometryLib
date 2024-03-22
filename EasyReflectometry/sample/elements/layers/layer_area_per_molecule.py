@@ -71,7 +71,7 @@ class LayerAreaPerMolecule(Layer):
         thickness: Parameter,
         solvent: Material,
         solvent_fraction: Parameter,
-        area_per_molecule: Parameter,
+        area_per_molecule: float,
         roughness: Parameter,
         name: str = 'EasyLayerAreaPerMolecule',
         interface=None,
@@ -94,28 +94,30 @@ class LayerAreaPerMolecule(Layer):
         default_options = deepcopy(LAYER_AREA_PER_MOLECULE_DETAILS)
         del default_options['sl']['value']
         del default_options['isl']['value']
-        scattering_length_real = Parameter('scattering_length_real', 0.0, **default_options['sl'])
-        scattering_length_imag = Parameter('scattering_length_imag', 0.0, **default_options['isl'])
+        del default_options['area_per_molecule']['value']
+        _scattering_length_real = Parameter('scattering_length_real', 0.0, **default_options['sl'])
+        _scattering_length_imag = Parameter('scattering_length_imag', 0.0, **default_options['isl'])
+        _area_per_molecule = Parameter('area_per_molecule', area_per_molecule, **default_options['area_per_molecule'])
 
         # Constrain the real part of the sld value for the molecule
         constraint_sld_real = FunctionalConstraint(
             dependent_obj=molecule.sld,
             func=area_per_molecule_to_scattering_length_density,
-            independent_objs=[scattering_length_real, thickness, area_per_molecule],
+            independent_objs=[_scattering_length_real, thickness, _area_per_molecule],
         )
         thickness.user_constraints['area_per_molecule'] = constraint_sld_real
-        area_per_molecule.user_constraints['area_per_molecule'] = constraint_sld_real
-        scattering_length_real.user_constraints['area_per_molecule'] = constraint_sld_real
+        _area_per_molecule.user_constraints['area_per_molecule'] = constraint_sld_real
+        _scattering_length_real.user_constraints['area_per_molecule'] = constraint_sld_real
 
         # Constrain the imaginary part of the sld value for the molecule
         constraint_sld_imag = FunctionalConstraint(
             dependent_obj=molecule.isld,
             func=area_per_molecule_to_scattering_length_density,
-            independent_objs=[scattering_length_imag, thickness, area_per_molecule],
+            independent_objs=[_scattering_length_imag, thickness, _area_per_molecule],
         )
         thickness.user_constraints['iarea_per_molecule'] = constraint_sld_imag
-        area_per_molecule.user_constraints['iarea_per_molecule'] = constraint_sld_imag
-        scattering_length_imag.user_constraints['iarea_per_molecule'] = constraint_sld_imag
+        _area_per_molecule.user_constraints['iarea_per_molecule'] = constraint_sld_imag
+        _scattering_length_imag.user_constraints['iarea_per_molecule'] = constraint_sld_imag
 
         solvated_molecule = MaterialSolvated(
             material=molecule,
@@ -130,9 +132,9 @@ class LayerAreaPerMolecule(Layer):
             name=name,
             interface=interface,
         )
-        self._add_component('_scattering_length_real', scattering_length_real)
-        self._add_component('_scattering_length_imag', scattering_length_imag)
-        self._add_component('_area_per_molecule', area_per_molecule)
+        self._add_component('_scattering_length_real', _scattering_length_real)
+        self._add_component('_scattering_length_imag', _scattering_length_imag)
+        self._add_component('_area_per_molecule', _area_per_molecule)
 
         scattering_length = neutron_scattering_length(molecular_formula)
         self._scattering_length_real.value = scattering_length.real
@@ -147,7 +149,7 @@ class LayerAreaPerMolecule(Layer):
 
         :param interface: Calculator interface, defaults to `None`.
         """
-        area_per_molecule = Parameter('area_per_molecule', **LAYER_AREA_PER_MOLECULE_DETAILS['area_per_molecule'])
+        area_per_molecule = LAYER_AREA_PER_MOLECULE_DETAILS['area_per_molecule']['value']
         thickness = Parameter('thickness', **LAYER_AREA_PER_MOLECULE_DETAILS['thickness'])
         roughness = Parameter('roughness', **LAYER_AREA_PER_MOLECULE_DETAILS['roughness'])
         solvent_fraction = Parameter('solvent_fraction', **LAYER_AREA_PER_MOLECULE_DETAILS['solvent_fraction'])
@@ -186,8 +188,6 @@ class LayerAreaPerMolecule(Layer):
         :param interface: Calculator interface, defaults to `None`.
         """
         default_options = deepcopy(LAYER_AREA_PER_MOLECULE_DETAILS)
-        del default_options['area_per_molecule']['value']
-        area_per_molecule = Parameter('area_per_molecule', area_per_molecule, **default_options['area_per_molecule'])
         del default_options['thickness']['value']
         thickness = Parameter('thickness', thickness, **default_options['thickness'])
         del default_options['roughness']['value']
@@ -207,9 +207,19 @@ class LayerAreaPerMolecule(Layer):
         )
 
     @property
-    def area_per_molecule(self) -> Parameter:
+    def area_per_molecule(self) -> float:
         """Get the area per molecule."""
-        return self._area_per_molecule
+        return self._area_per_molecule.raw_value
+
+    @area_per_molecule.setter
+    def area_per_molecule(self, new_area_per_molecule: float) -> None:
+        """Set the area per molecule.
+
+        :param new_area_per_molecule: New area per molecule.
+        """
+        if new_area_per_molecule < 0:
+            raise ValueError('new_area_per_molecule must be greater than 0.0.')
+        self._area_per_molecule.value = new_area_per_molecule
 
     @property
     def molecule(self) -> Material:
@@ -230,7 +240,7 @@ class LayerAreaPerMolecule(Layer):
         self.material.solvent = new_solvent
 
     @property
-    def solvent_fraction(self) -> Parameter:
+    def solvent_fraction(self) -> float:
         """Get the fraction of the layer occupied by the solvent.
         This could be a result of either water solvating the molecule, or incomplete surface coverage of the molecules.
         """
@@ -265,28 +275,24 @@ class LayerAreaPerMolecule(Layer):
         self.molecule.name = formula_string
         self.material._update_name()
 
-    # def _convert_to_dict(self, org_dict, _, **dont_care) -> dict:
-    #     del org_dict['_scattering_length_real']
-    #     del org_dict['_scattering_length_imag']
-    #     del org_dict['_area_per_molecule']
-    #     del org_dict['material']
-
     @property
     def _dict_repr(self) -> dict[str, str]:
-        """Dictionary representation of the :py:class:`Layerarea_per_molecule` object. Produces a simple dictionary"""
+        """Dictionary representation of the `area_per_molecule` object. Produces a simple dictionary"""
         dict_repr = super()._dict_repr
         dict_repr['molecular_formula'] = self._molecular_formula
-        dict_repr['area_per_molecule'] = f'{self.area_per_molecule.raw_value:.2f} ' f'{self.area_per_molecule.unit}'
+        dict_repr['area_per_molecule'] = f'{self.area_per_molecule:.2f} ' f'{self._area_per_molecule.unit}'
         return dict_repr
 
     def as_dict(self, skip: list = None) -> dict[str, str]:
-        """Produces a cleaned  using a austom as_dict method to skip necessary things.
+        """Produces a cleaned dict using a custom as_dict method to skip necessary things.
+        The resulting dict matches the paramters in __init__
 
-        :param skip: List of keys to skip, defaults to :py:attr:`None`.
+        :param skip: List of keys to skip, defaults to `None`.
         """
         if skip is None:
             skip = []
         this_dict = super().as_dict(skip=skip)
+        this_dict['solvent_fraction'] = self.material._fraction
         del this_dict['material']
         del this_dict['_scattering_length_real']
         del this_dict['_scattering_length_imag']

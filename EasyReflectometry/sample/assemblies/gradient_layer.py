@@ -153,8 +153,10 @@ class GradientLayer(BaseAssembly):
         }
 
     def as_dict(self, skip: list = None) -> dict:
-        """
-        Cleaned dictionary. Custom as_dict method to skip generated layers.
+        """Produces a cleaned dict using a custom as_dict method to skip necessary things.
+        The resulting dict matches the paramters in __init__
+
+        :param skip: List of keys to skip, defaults to `None`.
         """
         if skip is None:
             skip = []
