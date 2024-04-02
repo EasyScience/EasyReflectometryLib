@@ -169,12 +169,15 @@ class MaterialSolvated(MaterialMixture):
         """
         this_dict = super().as_dict(skip=skip)
         this_dict['material'] = self.material
+        this_dict['solvent'] = self.solvent
+        this_dict['solvent_fraction'] = self._fraction
+        # Property and protected varible from material_mixture
         del this_dict['material_a']
         del this_dict['_material_a']
-        this_dict['solvent'] = self.solvent
+        # Property and protected varible from material_mixture
         del this_dict['material_b']
         del this_dict['_material_b']
-        this_dict['solvent_fraction'] = self._fraction
+        # Property and protected varible from material_mixture
         del this_dict['fraction']
         del this_dict['_fraction']
         return this_dict

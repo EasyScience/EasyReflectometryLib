@@ -82,7 +82,7 @@ class BaseAssembly(BaseObj):
             self.layers[0] = layer
 
     @property
-    def back_layer(self) -> Optional[None]:
+    def back_layer(self) -> Optional[Layer]:
         """Get the back layer in the assembly."""
 
         if len(self.layers) < 2:
