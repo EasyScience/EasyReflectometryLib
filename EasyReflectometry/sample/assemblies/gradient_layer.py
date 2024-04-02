@@ -159,6 +159,7 @@ class GradientLayer(BaseAssembly):
         :param skip: List of keys to skip, defaults to `None`.
         """
         this_dict = super().as_dict(skip=skip)
+        # Determined in __init__
         del this_dict['layers']
         return this_dict
 
