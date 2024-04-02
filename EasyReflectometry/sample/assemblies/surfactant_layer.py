@@ -224,42 +224,52 @@ class SurfactantLayer(BaseAssembly):
         """
         if head_layer_thickness:
             head_layer_thickness_constraint = ObjConstraint(
-                self.head_layer.thickness, '', another_contrast.head_layer.thickness
+                dependent_obj=self.head_layer.thickness,
+                operator='',
+                independent_obj=another_contrast.head_layer.thickness,
             )
             another_contrast.head_layer.thickness.user_constraints[f'{another_contrast.name}'] = (
                 head_layer_thickness_constraint
             )
         if tail_layer_thickness:
             tail_layer_thickness_constraint = ObjConstraint(
-                self.tail_layer.thickness, '', another_contrast.tail_layer.thickness
+                dependent_obj=self.tail_layer.thickness, operator='', independent_obj=another_contrast.tail_layer.thickness
             )
             another_contrast.tail_layer.thickness.user_constraints[f'{another_contrast.name}'] = (
                 tail_layer_thickness_constraint
             )
         if head_layer_area_per_molecule:
             head_layer_area_per_molecule_constraint = ObjConstraint(
-                self.head_layer._area_per_molecule, '', another_contrast.head_layer._area_per_molecule
+                dependent_obj=self.head_layer._area_per_molecule,
+                operator='',
+                independent_obj=another_contrast.head_layer._area_per_molecule,
             )
             another_contrast.head_layer._area_per_molecule.user_constraints[f'{another_contrast.name}'] = (
                 head_layer_area_per_molecule_constraint
             )
         if tail_layer_area_per_molecule:
             tail_layer_area_per_molecule_constraint = ObjConstraint(
-                self.tail_layer._area_per_molecule, '', another_contrast.tail_layer._area_per_molecule
+                dependent_obj=self.tail_layer._area_per_molecule,
+                operator='',
+                independent_obj=another_contrast.tail_layer._area_per_molecule,
             )
             another_contrast.tail_layer._area_per_molecule.user_constraints[f'{another_contrast.name}'] = (
                 tail_layer_area_per_molecule_constraint
             )
         if head_layer_fraction:
             head_layer_fraction_constraint = ObjConstraint(
-                self.head_layer.material._fraction, '', another_contrast.head_layer.material._fraction
+                dependent_obj=self.head_layer.material._fraction,
+                operator='',
+                independent_obj=another_contrast.head_layer.material._fraction,
             )
             another_contrast.head_layer.material._fraction.user_constraints[f'{another_contrast.name}'] = (
                 head_layer_fraction_constraint
             )
         if tail_layer_fraction:
             tail_layer_fraction_constraint = ObjConstraint(
-                self.tail_layer.material._fraction, '', another_contrast.tail_layer.material._fraction
+                dependent_obj=self.tail_layer.material._fraction,
+                operator='',
+                independent_obj=another_contrast.tail_layer.material._fraction,
             )
             another_contrast.tail_layer.material._fraction.user_constraints[f'{another_contrast.name}'] = (
                 tail_layer_fraction_constraint
