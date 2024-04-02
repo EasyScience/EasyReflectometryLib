@@ -16,7 +16,7 @@ from EasyReflectometry.sample.elements.materials.material import Material
 class TestSurfactantLayer(unittest.TestCase):
     def test_default(self):
         p = SurfactantLayer.default()
-        assert p.name == 'DPPC'
+        assert p.name == 'EasySurfactantLayer'
         assert p._type == 'Surfactant Layer'
 
         assert p.layers[0].name == 'DPPC Tail'
@@ -98,46 +98,52 @@ class TestSurfactantLayer(unittest.TestCase):
     def test_dict_repr(self):
         p = SurfactantLayer.default()
         assert p._dict_repr == {
-            'head_layer': {
-                'DPPC Head': {
-                    'material': {
-                        'C10H18NO8P in D2O': {
-                            'solvent_fraction': '0.200 dimensionless',
-                            'sld': '2.269e-6 1 / angstrom ** 2',
-                            'isld': '0.000e-6 1 / angstrom ** 2',
-                            'material': {
-                                'C10H18NO8P': {'sld': '1.246e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
-                            },
-                            'solvent': {'D2O': {'sld': '6.360e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}},
-                        }
+            'EasySurfactantLayer': {
+                'head_layer': {
+                    'DPPC Head': {
+                        'material': {
+                            'C10H18NO8P in D2O': {
+                                'solvent_fraction': '0.200 dimensionless',
+                                'sld': '2.269e-6 1 / angstrom ** 2',
+                                'isld': '0.000e-6 1 / angstrom ** 2',
+                                'material': {
+                                    'C10H18NO8P': {'sld': '1.246e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
+                                },
+                                'solvent': {
+                                    'D2O': {'sld': '6.360e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
+                                },
+                            }
+                        },
+                        'thickness': '10.000 angstrom',
+                        'roughness': '3.000 angstrom',
                     },
-                    'thickness': '10.000 angstrom',
-                    'roughness': '3.000 angstrom',
+                    'molecular_formula': 'C10H18NO8P',
+                    'area_per_molecule': '48.20 angstrom ** 2',
                 },
-                'molecular_formula': 'C10H18NO8P',
-                'area_per_molecule': '48.20 angstrom ** 2',
-            },
-            'tail_layer': {
-                'DPPC Tail': {
-                    'material': {
-                        'C32D64 in Air': {
-                            'solvent_fraction': '0.000 dimensionless',
-                            'sld': '8.297e-6 1 / angstrom ** 2',
-                            'isld': '0.000e-6 1 / angstrom ** 2',
-                            'material': {
-                                'C32D64': {'sld': '8.297e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
-                            },
-                            'solvent': {'Air': {'sld': '0.000e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}},
-                        }
+                'tail_layer': {
+                    'DPPC Tail': {
+                        'material': {
+                            'C32D64 in Air': {
+                                'solvent_fraction': '0.000 dimensionless',
+                                'sld': '8.297e-6 1 / angstrom ** 2',
+                                'isld': '0.000e-6 1 / angstrom ** 2',
+                                'material': {
+                                    'C32D64': {'sld': '8.297e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
+                                },
+                                'solvent': {
+                                    'Air': {'sld': '0.000e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
+                                },
+                            }
+                        },
+                        'thickness': '16.000 angstrom',
+                        'roughness': '3.000 angstrom',
                     },
-                    'thickness': '16.000 angstrom',
-                    'roughness': '3.000 angstrom',
+                    'molecular_formula': 'C32D64',
+                    'area_per_molecule': '48.20 angstrom ** 2',
                 },
-                'molecular_formula': 'C32D64',
-                'area_per_molecule': '48.20 angstrom ** 2',
-            },
-            'area per molecule constrained': False,
-            'conformal roughness': False,
+                'area per molecule constrained': False,
+                'conformal roughness': False,
+            }
         }
 
     def test_get_head_layer(self):

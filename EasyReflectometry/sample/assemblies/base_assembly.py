@@ -42,12 +42,10 @@ class BaseAssembly(BaseObj):
         self._thickness_constraints_setup = False
 
     @abstractmethod
-    def default(cls, interface=None) -> Any:
-        ...
+    def default(cls, interface=None) -> Any: ...
 
     @abstractmethod
-    def _dict_repr(self) -> dict[str, str]:
-        ...
+    def _dict_repr(self) -> dict[str, str]: ...
 
     @property
     def type(self) -> str:
@@ -182,3 +180,14 @@ class BaseAssembly(BaseObj):
                 self.front_layer.roughness.user_constraints[f'roughness_{i}'].enabled = False
         else:
             raise Exception('Roughness constraints not setup')
+
+    def as_dict(self, skip: list = None) -> dict:
+        """Produces a cleaned dict using a custom as_dict method to skip necessary things.
+        The resulting dict matches the paramters in __init__
+
+        :param skip: List of keys to skip, defaults to `None`.
+        """
+        if skip is None:
+            skip = []
+        this_dict = super().as_dict(skip=skip)
+        return this_dict

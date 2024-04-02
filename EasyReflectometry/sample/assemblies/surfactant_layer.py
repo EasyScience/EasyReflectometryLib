@@ -91,7 +91,7 @@ class SurfactantLayer(BaseAssembly):
             roughness=3.0,
             name='DPPC Head',
         )
-        return cls([tail, head], name='DPPC', interface=interface)
+        return cls([tail, head], interface=interface)
 
     @classmethod
     def from_pars(
@@ -269,10 +269,12 @@ class SurfactantLayer(BaseAssembly):
     def _dict_repr(self) -> dict:
         """A simplified dict representation."""
         return {
-            'head_layer': self.head_layer._dict_repr,
-            'tail_layer': self.tail_layer._dict_repr,
-            'area per molecule constrained': self.constrain_area_per_molecule,
-            'conformal roughness': self.conformal_roughness,
+            self.name: {
+                'head_layer': self.head_layer._dict_repr,
+                'tail_layer': self.tail_layer._dict_repr,
+                'area per molecule constrained': self.constrain_area_per_molecule,
+                'conformal roughness': self.conformal_roughness,
+            }
         }
 
     def as_dict(self, skip: list = None) -> dict:
