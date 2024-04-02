@@ -167,8 +167,6 @@ class MaterialSolvated(MaterialMixture):
 
         :param skip: List of keys to skip, defaults to `None`.
         """
-        if skip is None:
-            skip = []
         this_dict = super().as_dict(skip=skip)
         this_dict['material'] = self.material
         del this_dict['material_a']

@@ -95,6 +95,8 @@ class LayerAreaPerMolecule(Layer):
         del default_options['sl']['value']
         del default_options['isl']['value']
         del default_options['area_per_molecule']['value']
+
+        # Will be added as components later in the init
         _scattering_length_real = Parameter('scattering_length_real', 0.0, **default_options['sl'])
         _scattering_length_imag = Parameter('scattering_length_imag', 0.0, **default_options['isl'])
         _area_per_molecule = Parameter('area_per_molecule', area_per_molecule, **default_options['area_per_molecule'])
@@ -289,8 +291,6 @@ class LayerAreaPerMolecule(Layer):
 
         :param skip: List of keys to skip, defaults to `None`.
         """
-        if skip is None:
-            skip = []
         this_dict = super().as_dict(skip=skip)
         this_dict['solvent_fraction'] = self.material._fraction
         del this_dict['material']

@@ -293,8 +293,6 @@ class SurfactantLayer(BaseAssembly):
 
         :param skip: List of keys to skip, defaults to `None`.
         """
-        if skip is None:
-            skip = []
         this_dict = super().as_dict(skip=skip)
         this_dict['layers']['data'][0] = self.tail_layer
         this_dict['layers']['data'][1] = self.head_layer

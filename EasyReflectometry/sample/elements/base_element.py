@@ -16,12 +16,10 @@ class BaseElement(BaseObj):
         self.interface = interface
 
     @abstractmethod
-    def default(cls, interface=None) -> Any:
-        ...
+    def default(cls, interface=None) -> Any: ...
 
     @abstractmethod
-    def _dict_repr(self) -> dict[str, str]:
-        ...
+    def _dict_repr(self) -> dict[str, str]: ...
 
     @property
     def uid(self) -> int:
@@ -38,3 +36,13 @@ class BaseElement(BaseObj):
         :rtype: str
         """
         return yaml.dump(self._dict_repr, sort_keys=False)
+
+    def as_dict(self, skip: list = None) -> dict:
+        """Should produce a cleaned dict that matches the paramters in __init__
+
+        :param skip: List of keys to skip, defaults to `None`.
+        """
+        if skip is None:
+            skip = []
+        this_dict = super().as_dict(skip=skip)
+        return this_dict
