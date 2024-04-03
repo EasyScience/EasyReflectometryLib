@@ -174,8 +174,17 @@ class MaterialDensity(Material):
         return mat_dict
 
     def as_dict(self, skip: list = []) -> dict[str, str]:
-        """Custom as_dict method to skip necessary things."""
+        """Produces a cleaned dict using a custom as_dict method to skip necessary things.
+        The resulting dict matches the paramters in __init__
+
+        :param skip: List of keys to skip, defaults to `None`.
+        """
         this_dict = super().as_dict(skip=skip)
-        del this_dict['sld'], this_dict['isld'], this_dict['scattering_length_real']
-        del this_dict['scattering_length_imag'], this_dict['molecular_weight']
+        # From Material
+        del this_dict['sld']
+        del this_dict['isld']
+        # Determined in __init__
+        del this_dict['scattering_length_real']
+        del this_dict['scattering_length_imag']
+        del this_dict['molecular_weight']
         return this_dict

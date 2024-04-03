@@ -1,6 +1,7 @@
 """
 Tests for Sample class.
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -8,11 +9,13 @@ import unittest
 
 from numpy.testing import assert_equal
 
-from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
-from EasyReflectometry.sample.elements.layer_collection import LayerCollection
-from EasyReflectometry.sample.elements.layers.layer import Layer
-from EasyReflectometry.sample.elements.materials.material import Material
-from EasyReflectometry.sample.sample import Sample
+from EasyReflectometry.sample import Layer
+from EasyReflectometry.sample import LayerCollection
+from EasyReflectometry.sample import Material
+from EasyReflectometry.sample import Multilayer
+from EasyReflectometry.sample import RepeatingMultilayer
+from EasyReflectometry.sample import Sample
+from EasyReflectometry.sample import SurfactantLayer
 
 
 class TestSample(unittest.TestCase):
@@ -63,5 +66,12 @@ class TestSample(unittest.TestCase):
 
     def test_dict_round_trip(self):
         p = Sample.default()
+        surfactant = SurfactantLayer.default()
+        p.append(surfactant)
+        multilayer = Multilayer.default()
+        p.append(multilayer)
+        repeating = RepeatingMultilayer.default()
+        p.append(repeating)
+
         q = Sample.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from numpy import arange
 
-from ..elements.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
+from ..elements.layers.layer_collection import LayerCollection
 from ..elements.materials.material import Material
 from .base_assembly import BaseAssembly
 
@@ -153,12 +153,13 @@ class GradientLayer(BaseAssembly):
         }
 
     def as_dict(self, skip: list = None) -> dict:
+        """Produces a cleaned dict using a custom as_dict method to skip necessary things.
+        The resulting dict matches the paramters in __init__
+
+        :param skip: List of keys to skip, defaults to `None`.
         """
-        Cleaned dictionary. Custom as_dict method to skip generated layers.
-        """
-        if skip is None:
-            skip = []
         this_dict = super().as_dict(skip=skip)
+        # Determined in __init__
         del this_dict['layers']
         return this_dict
 

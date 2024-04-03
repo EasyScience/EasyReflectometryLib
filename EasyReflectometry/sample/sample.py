@@ -76,5 +76,18 @@ class Sample(BaseCollection):
         return {self.name: [i._dict_repr for i in self]}
 
     def __repr__(self) -> str:
-        """String representation of the layer."""
+        """String representation of the sample."""
         return yaml.dump(self._dict_repr, sort_keys=False)
+
+    def as_dict(self, skip: list = None) -> dict:
+        """Produces a cleaned dict using a custom as_dict method to skip necessary things.
+        The resulting dict matches the paramters in __init__
+
+        :param skip: List of keys to skip, defaults to `None`.
+        """
+        if skip is None:
+            skip = []
+        this_dict = super().as_dict(skip=skip)
+        for i, layer in enumerate(self.data):
+            this_dict['data'][i] = layer.as_dict()
+        return this_dict

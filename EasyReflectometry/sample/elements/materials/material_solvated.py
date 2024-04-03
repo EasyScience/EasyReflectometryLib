@@ -120,7 +120,7 @@ class MaterialSolvated(MaterialMixture):
         self.material_b = new_solvent
 
     @property
-    def solvent_fraction(self) -> Parameter:
+    def solvent_fraction(self) -> float:
         """Get the fraction of layer described by the solvent.
         This might be fraction of:
         Solvation where solvent is within the layer
@@ -153,10 +153,31 @@ class MaterialSolvated(MaterialMixture):
         """A simplified dict representation."""
         return {
             self.name: {
-                'solvent_fraction': self.solvent_fraction.raw_value,
+                'solvent_fraction': f'{self._fraction.raw_value:.3f} {self._fraction.unit}',
                 'sld': f'{self._sld.raw_value:.3f}e-6 {self._sld.unit}',
                 'isld': f'{self._isld.raw_value:.3f}e-6 {self._isld.unit}',
                 'material': self.material._dict_repr,
                 'solvent': self.solvent._dict_repr,
             }
         }
+
+    def as_dict(self, skip: list = None) -> dict[str, str]:
+        """Produces a cleaned dict using a custom as_dict method to skip necessary things.
+        The resulting dict matches the paramters in __init__
+
+        :param skip: List of keys to skip, defaults to `None`.
+        """
+        this_dict = super().as_dict(skip=skip)
+        this_dict['material'] = self.material.as_dict()
+        this_dict['solvent'] = self.solvent.as_dict()
+        this_dict['solvent_fraction'] = self._fraction.as_dict()
+        # Property and protected varible from material_mixture
+        del this_dict['material_a']
+        del this_dict['_material_a']
+        # Property and protected varible from material_mixture
+        del this_dict['material_b']
+        del this_dict['_material_b']
+        # Property and protected varible from material_mixture
+        del this_dict['fraction']
+        del this_dict['_fraction']
+        return this_dict

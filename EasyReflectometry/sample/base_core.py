@@ -5,7 +5,7 @@ import yaml
 from easyCore.Objects.ObjectClasses import BaseObj
 
 
-class BaseElement(BaseObj):
+class BaseCore(BaseObj):
     def __init__(
         self,
         name: str,
@@ -13,15 +13,15 @@ class BaseElement(BaseObj):
         **kwargs,
     ):
         super().__init__(name=name, **kwargs)
+
+        # Updates interface using property in base object
         self.interface = interface
 
     @abstractmethod
-    def default(cls, interface=None) -> Any:
-        ...
+    def default(cls, interface=None) -> Any: ...
 
     @abstractmethod
-    def _dict_repr(self) -> dict[str, str]:
-        ...
+    def _dict_repr(self) -> dict[str, str]: ...
 
     @property
     def uid(self) -> int:
@@ -38,3 +38,17 @@ class BaseElement(BaseObj):
         :rtype: str
         """
         return yaml.dump(self._dict_repr, sort_keys=False)
+
+    # For classes with special serialization needs one must adopt the dict produced by super
+    # def as_dict(self, skip: list = None) -> dict:
+    #    """Should produce a cleaned dict that matches the paramters in __init__
+    #
+    #    :param skip: List of keys to skip, defaults to `None`.
+    #    """
+    #    if skip is None:
+    #        skip = []
+    #    this_dict = super().as_dict(skip=skip)
+    #    ...
+    #    Correct the dict here
+    #    ...
+    #    return this_dict

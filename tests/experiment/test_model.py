@@ -9,6 +9,7 @@ __version__ = '0.0.1'
 import unittest
 
 import numpy as np
+import pytest
 from numpy.testing import assert_equal
 
 from EasyReflectometry.calculators import CalculatorFactory
@@ -16,8 +17,10 @@ from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
 from EasyReflectometry.sample import Material
+from EasyReflectometry.sample import Multilayer
 from EasyReflectometry.sample import RepeatingMultilayer
 from EasyReflectometry.sample import Sample
+from EasyReflectometry.sample import SurfactantLayer
 
 
 class TestModel(unittest.TestCase):
@@ -87,6 +90,8 @@ class TestModel(unittest.TestCase):
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
+        surfactant = SurfactantLayer.default()
+        multilayer = Multilayer.default()
         d = Sample.from_pars(o1, name='myModel')
         mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
         assert_equal(len(mod.sample), 1)
@@ -94,6 +99,18 @@ class TestModel(unittest.TestCase):
         assert_equal(len(mod.sample), 2)
         assert_equal(mod.sample[1].name, 'oneLayerItem2')
         assert_equal(issubclass(mod.sample[1].__class__, RepeatingMultilayer), True)
+        mod.add_item(surfactant)
+        assert_equal(len(mod.sample), 3)
+        mod.add_item(multilayer)
+        assert_equal(len(mod.sample), 4)
+
+    def test_add_item_exception(self):
+        # When
+        mod = Model.default()
+
+        # Then Expect
+        with pytest.raises(ValueError):
+            mod.add_item('not an assembly')
 
     def test_add_item_with_interface_refnx(self):
         interface = CalculatorFactory()
@@ -320,6 +337,14 @@ class TestModel(unittest.TestCase):
         )
 
     def test_dict_round_trip(self):
-        p = Model.default()
-        q = Model.from_dict(p.as_dict())
+        interface = CalculatorFactory()
+        p = Model.default(interface)
+        surfactant = SurfactantLayer.default()
+        p.add_item(surfactant)
+        multilayer = Multilayer.default()
+        p.add_item(multilayer)
+        repeating = RepeatingMultilayer.default()
+        p.add_item(repeating)
+        src_dict = p.as_dict()
+        q = Model.from_dict(src_dict)
         assert p.as_data_dict() == q.as_data_dict()
