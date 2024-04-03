@@ -8,7 +8,7 @@ from easyCore.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.special.calculations import weighted_average
 
-from ..base_element import BaseElement
+from ...base_core import BaseCore
 from .material import MATERIAL_DEFAULTS
 from .material import Material
 
@@ -24,7 +24,7 @@ MATERIALMIXTURE_DEFAULTS = {
 }
 
 
-class MaterialMixture(BaseElement):
+class MaterialMixture(BaseCore):
     # Added in super().__init__
     _material_a: Material
     _material_b: Material

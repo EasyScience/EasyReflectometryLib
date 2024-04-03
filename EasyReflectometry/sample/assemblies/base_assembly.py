@@ -1,16 +1,14 @@
-from abc import abstractmethod
 from typing import Any
 from typing import Optional
 
-import yaml
 from easyCore.Fitting.Constraints import ObjConstraint
-from easyCore.Objects.ObjectClasses import BaseObj
 
+from ..base_core import BaseCore
 from ..elements.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
 
 
-class BaseAssembly(BaseObj):
+class BaseAssembly(BaseCore):
     """Assembly of layers.
     The front layer (front_layer) is the layer the neutron beam starts in, it has an index of 0.
     The back layer (back_layer) is the final layer from which the unreflected neutron beam is transmitted,
@@ -32,20 +30,12 @@ class BaseAssembly(BaseObj):
         interface,
         **layers: LayerCollection,
     ):
-        super().__init__(name=name, **layers)
+        super().__init__(name=name, interface=interface, **layers)
 
-        # Updates interface using property in base object
-        self.interface = interface
         # Type is needed when fitting in EasyCore
         self._type = type
         self._roughness_constraints_setup = False
         self._thickness_constraints_setup = False
-
-    @abstractmethod
-    def default(cls, interface=None) -> Any: ...
-
-    @abstractmethod
-    def _dict_repr(self) -> dict[str, str]: ...
 
     @property
     def type(self) -> str:
@@ -53,15 +43,6 @@ class BaseAssembly(BaseObj):
         Needed by the GUI.
         """
         return self._type
-
-    @property
-    def uid(self) -> int:
-        """Get UID from the borg map"""
-        return self._borg.map.convert_id_to_key(self)
-
-    def __repr__(self) -> str:
-        """String representation of the object."""
-        return yaml.dump(self._dict_repr, sort_keys=False)
 
     @property
     def front_layer(self) -> Optional[Layer]:
@@ -180,13 +161,3 @@ class BaseAssembly(BaseObj):
                 self.front_layer.roughness.user_constraints[f'roughness_{i}'].enabled = False
         else:
             raise Exception('Roughness constraints not setup')
-
-    def as_dict(self, skip: list = None) -> dict:
-        """Should produce a cleaned dict that matches the paramters in __init__
-
-        :param skip: List of keys to skip, defaults to `None`.
-        """
-        if skip is None:
-            skip = []
-        this_dict = super().as_dict(skip=skip)
-        return this_dict
