@@ -1,6 +1,7 @@
 """
 Tests for GradientLayer class module
 """
+
 from unittest.mock import MagicMock
 
 import pytest
@@ -178,3 +179,9 @@ def test_prepare_gradient_layers(monkeypatch):
     assert mock_Layer.from_pars.call_args_list[0][1]['thickness'] == 0.0
     assert mock_Layer.from_pars.call_args_list[0][1]['name'] == '0'
     assert mock_Layer.from_pars.call_args_list[0][1]['interface'] is None
+
+
+def test_dict_round_trip():
+    p = GradientLayer.default()
+    q = GradientLayer.from_dict(p.as_dict())
+    assert p.as_data_dict() == q.as_data_dict()

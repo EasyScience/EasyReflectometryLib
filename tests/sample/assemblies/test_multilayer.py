@@ -1,6 +1,7 @@
 """
 Tests for MultiLayer class module
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -11,8 +12,8 @@ from numpy.testing import assert_raises
 
 from EasyReflectometry.calculators.factory import CalculatorFactory
 from EasyReflectometry.sample.assemblies.multilayer import Multilayer
-from EasyReflectometry.sample.elements.layer_collection import LayerCollection
 from EasyReflectometry.sample.elements.layers.layer import Layer
+from EasyReflectometry.sample.elements.layers.layer_collection import LayerCollection
 from EasyReflectometry.sample.elements.materials.material import Material
 
 

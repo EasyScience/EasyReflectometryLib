@@ -1,6 +1,7 @@
 """
 Tests for LayerCollection class.
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -9,8 +10,8 @@ import unittest
 from numpy.testing import assert_equal
 
 from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
-from EasyReflectometry.sample.elements.layer_collection import LayerCollection
 from EasyReflectometry.sample.elements.layers.layer import Layer
+from EasyReflectometry.sample.elements.layers.layer_collection import LayerCollection
 from EasyReflectometry.sample.elements.materials.material import Material
 
 

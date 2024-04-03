@@ -7,7 +7,7 @@ from copy import deepcopy
 from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter
 
-from ..base_element import BaseElement
+from ...base_core import BaseCore
 from ..materials.material import Material
 
 LAYER_DETAILS = {
@@ -32,7 +32,7 @@ LAYER_DETAILS = {
 }
 
 
-class Layer(BaseElement):
+class Layer(BaseCore):
     # Added in super().__init__
     #: Material that makes up the layer.
     material: Material

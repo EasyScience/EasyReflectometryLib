@@ -1,16 +1,14 @@
-from abc import abstractmethod
 from typing import Any
 from typing import Optional
 
-import yaml
 from easyCore.Fitting.Constraints import ObjConstraint
-from easyCore.Objects.ObjectClasses import BaseObj
 
-from ..elements.layer_collection import LayerCollection
+from ..base_core import BaseCore
 from ..elements.layers.layer import Layer
+from ..elements.layers.layer_collection import LayerCollection
 
 
-class BaseAssembly(BaseObj):
+class BaseAssembly(BaseCore):
     """Assembly of layers.
     The front layer (front_layer) is the layer the neutron beam starts in, it has an index of 0.
     The back layer (back_layer) is the final layer from which the unreflected neutron beam is transmitted,
@@ -32,31 +30,19 @@ class BaseAssembly(BaseObj):
         interface,
         **layers: LayerCollection,
     ):
-        super().__init__(name=name, **layers)
+        super().__init__(name=name, interface=interface, **layers)
 
-        # Updates interface using property in base object
-        self.interface = interface
         # Type is needed when fitting in EasyCore
         self._type = type
         self._roughness_constraints_setup = False
         self._thickness_constraints_setup = False
 
-    @abstractmethod
-    def default(cls, interface=None) -> Any:
-        ...
-
-    @abstractmethod
-    def _dict_repr(self) -> dict[str, str]:
-        ...
-
     @property
-    def uid(self) -> int:
-        """Get UID from the borg map"""
-        return self._borg.map.convert_id_to_key(self)
-
-    def __repr__(self) -> str:
-        """String representation of the object."""
-        return yaml.dump(self._dict_repr, sort_keys=False)
+    def type(self) -> str:
+        """Get type of the assembly.
+        Needed by the GUI.
+        """
+        return self._type
 
     @property
     def front_layer(self) -> Optional[Layer]:
@@ -77,7 +63,7 @@ class BaseAssembly(BaseObj):
             self.layers[0] = layer
 
     @property
-    def back_layer(self) -> Optional[None]:
+    def back_layer(self) -> Optional[Layer]:
         """Get the back layer in the assembly."""
 
         if len(self.layers) < 2:

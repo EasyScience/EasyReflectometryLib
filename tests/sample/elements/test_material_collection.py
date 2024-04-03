@@ -1,13 +1,14 @@
 """
 Tests for LayerCollection class.
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
 import unittest
 
-from EasyReflectometry.sample.elements.material_collection import MaterialCollection
 from EasyReflectometry.sample.elements.materials.material import Material
+from EasyReflectometry.sample.elements.materials.material_collection import MaterialCollection
 
 
 class TestLayerCollection(unittest.TestCase):

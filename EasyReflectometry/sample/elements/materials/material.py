@@ -8,7 +8,7 @@ from typing import ClassVar
 from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter
 
-from ..base_element import BaseElement
+from ...base_core import BaseCore
 
 MATERIAL_DEFAULTS = {
     'sld': {
@@ -32,7 +32,7 @@ MATERIAL_DEFAULTS = {
 }
 
 
-class Material(BaseElement):
+class Material(BaseCore):
     # Added in super().__init__
     sld: ClassVar[Parameter]
     isld: ClassVar[Parameter]
