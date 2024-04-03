@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from numpy import arange
 
-from ..elements.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
+from ..elements.layers.layer_collection import LayerCollection
 from ..elements.materials.material import Material
 from .base_assembly import BaseAssembly
 

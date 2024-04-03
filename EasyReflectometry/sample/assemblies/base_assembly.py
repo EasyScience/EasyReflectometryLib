@@ -4,8 +4,8 @@ from typing import Optional
 from easyCore.Fitting.Constraints import ObjConstraint
 
 from ..base_core import BaseCore
-from ..elements.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
+from ..elements.layers.layer_collection import LayerCollection
 
 
 class BaseAssembly(BaseCore):
