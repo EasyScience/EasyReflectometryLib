@@ -292,7 +292,7 @@ class LayerAreaPerMolecule(Layer):
         :param skip: List of keys to skip, defaults to `None`.
         """
         this_dict = super().as_dict(skip=skip)
-        this_dict['solvent_fraction'] = self.material._fraction
+        this_dict['solvent_fraction'] = self.material._fraction.as_dict()
         del this_dict['material']
         del this_dict['_scattering_length_real']
         del this_dict['_scattering_length_imag']

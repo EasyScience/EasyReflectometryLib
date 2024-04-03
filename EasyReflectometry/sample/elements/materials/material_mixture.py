@@ -46,6 +46,25 @@ class MaterialMixture(BaseElement):
         :param name: Name of the material, defaults to None that causes the name to be constructed.
         :param interface: Calculator interface, defaults to `None`.
         """
+        sld = weighted_average(
+            a=material_a.sld.raw_value,
+            b=material_b.sld.raw_value,
+            p=fraction.raw_value,
+        )
+        isld = weighted_average(
+            a=material_a.isld.raw_value,
+            b=material_b.isld.raw_value,
+            p=fraction.raw_value,
+        )
+        default_options = deepcopy(MATERIAL_DEFAULTS)
+        del default_options['sld']['value']
+        del default_options['isld']['value']
+
+        self._sld = Parameter('sld', sld, **default_options['sld'])
+        self._isld = Parameter('isld', isld, **default_options['isld'])
+
+        # To avoid problems when setting the interface
+        # self._sld and self._isld need to be declared before calling the super constructor
         super().__init__(
             name,
             _material_a=material_a,
@@ -55,23 +74,6 @@ class MaterialMixture(BaseElement):
         )
         if name is None:
             self._update_name()
-
-        sld = weighted_average(
-            a=self._material_a.sld.raw_value,
-            b=self._material_b.sld.raw_value,
-            p=self._fraction.raw_value,
-        )
-        isld = weighted_average(
-            a=self._material_a.isld.raw_value,
-            b=self._material_b.isld.raw_value,
-            p=self._fraction.raw_value,
-        )
-        default_options = deepcopy(MATERIAL_DEFAULTS)
-        del default_options['sld']['value']
-        del default_options['isld']['value']
-
-        self._sld = Parameter('sld', sld, **default_options['sld'])
-        self._isld = Parameter('isld', isld, **default_options['isld'])
 
         self._materials_constraints()
         self.interface = interface
@@ -225,7 +227,7 @@ class MaterialMixture(BaseElement):
         :param skip: List of keys to skip, defaults to `None`.
         """
         this_dict = super().as_dict(skip=skip)
-        this_dict['material_a'] = self._material_a
-        this_dict['material_b'] = self._material_b
-        this_dict['fraction'] = self._fraction
+        this_dict['material_a'] = self._material_a.as_dict()
+        this_dict['material_b'] = self._material_b.as_dict()
+        this_dict['fraction'] = self._fraction.as_dict()
         return this_dict

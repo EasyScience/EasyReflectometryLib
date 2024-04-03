@@ -337,12 +337,14 @@ class TestModel(unittest.TestCase):
         )
 
     def test_dict_round_trip(self):
-        p = Model.default()
+        interface = CalculatorFactory()
+        p = Model.default(interface)
         surfactant = SurfactantLayer.default()
         p.add_item(surfactant)
         multilayer = Multilayer.default()
         p.add_item(multilayer)
         repeating = RepeatingMultilayer.default()
         p.add_item(repeating)
-        q = Model.from_dict(p.as_dict())
+        src_dict = p.as_dict()
+        q = Model.from_dict(src_dict)
         assert p.as_data_dict() == q.as_data_dict()

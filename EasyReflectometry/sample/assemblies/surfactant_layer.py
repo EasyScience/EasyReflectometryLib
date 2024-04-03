@@ -294,8 +294,8 @@ class SurfactantLayer(BaseAssembly):
         :param skip: List of keys to skip, defaults to `None`.
         """
         this_dict = super().as_dict(skip=skip)
-        this_dict['layers']['data'][0] = self.tail_layer
-        this_dict['layers']['data'][1] = self.head_layer
+        this_dict['layers']['data'][0] = self.tail_layer.as_dict()
+        this_dict['layers']['data'][1] = self.head_layer.as_dict()
         this_dict['constrain_area_per_molecule'] = self.constrain_area_per_molecule
         this_dict['conformal_roughness'] = self.conformal_roughness
         return this_dict

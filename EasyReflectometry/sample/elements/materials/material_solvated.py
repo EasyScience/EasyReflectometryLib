@@ -168,9 +168,9 @@ class MaterialSolvated(MaterialMixture):
         :param skip: List of keys to skip, defaults to `None`.
         """
         this_dict = super().as_dict(skip=skip)
-        this_dict['material'] = self.material
-        this_dict['solvent'] = self.solvent
-        this_dict['solvent_fraction'] = self._fraction
+        this_dict['material'] = self.material.as_dict()
+        this_dict['solvent'] = self.solvent.as_dict()
+        this_dict['solvent_fraction'] = self._fraction.as_dict()
         # Property and protected varible from material_mixture
         del this_dict['material_a']
         del this_dict['_material_a']
