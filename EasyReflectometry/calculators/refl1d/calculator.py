@@ -28,7 +28,6 @@ class Refl1d(CalculatorBase):
     _model_link = {
         'scale': 'scale',
         'background': 'bkg',
-        'resolution': 'dq',
     }
 
     def __init__(self):

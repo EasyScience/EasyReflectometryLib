@@ -3,12 +3,14 @@ from __future__ import annotations
 __author__ = 'github.com/arm61'
 
 from copy import deepcopy
+from typing import Callable
 
 import yaml
 from easyCore import np
 from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
+from EasyReflectometry.calculators.wrapper_base import constant_resolution_function
 from EasyReflectometry.sample import BaseAssembly
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
@@ -32,12 +34,7 @@ LAYER_DETAILS = {
         'fixed': True,
     },
     'resolution': {
-        'description': 'Percentage constant dQ/Q resolution smearing.',
-        'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
         'value': 5.0,
-        'min': 0.0,
-        'max': 100.0,
-        'fixed': True,
     },
 }
 
@@ -52,14 +49,13 @@ class Model(BaseObj):
     sample: Sample
     scale: Parameter
     background: Parameter
-    resolution: Parameter
 
     def __init__(
         self,
         sample: Sample,
         scale: Parameter,
         background: Parameter,
-        resolution: Parameter,
+        resolution_function: Callable[[np.array], float],
         name: str = 'EasyModel',
         interface=None,
     ):
@@ -78,9 +74,10 @@ class Model(BaseObj):
             sample=sample,
             scale=scale,
             background=background,
-            resolution=resolution,
+            #            resolution=resolution,
         )
         self.interface = interface
+        self._resolution_function = resolution_function
 
     # Class methods for instance creation
     @classmethod
@@ -92,8 +89,14 @@ class Model(BaseObj):
         sample = Sample.default()
         scale = Parameter('scale', **LAYER_DETAILS['scale'])
         background = Parameter('background', **LAYER_DETAILS['background'])
-        resolution = Parameter('resolution', **LAYER_DETAILS['resolution'])
-        return cls(sample, scale, background, resolution, interface=interface)
+
+        return cls(
+            sample,
+            scale,
+            background,
+            resolution_function=constant_resolution_function(LAYER_DETAILS['resolution']['value']),
+            interface=interface,
+        )
 
     @classmethod
     def from_pars(
@@ -101,7 +104,7 @@ class Model(BaseObj):
         sample: Sample,
         scale: Parameter,
         background: Parameter,
-        resolution: Parameter,
+        # resolution: Parameter,
         name: str = 'EasyModel',
         interface=None,
     ) -> Model:
@@ -117,17 +120,17 @@ class Model(BaseObj):
         default_options = deepcopy(LAYER_DETAILS)
         del default_options['scale']['value']
         del default_options['background']['value']
-        del default_options['resolution']['value']
+        #        del default_options['resolution']['value']
 
         scale = Parameter('scale', scale, **default_options['scale'])
         background = Parameter('background', background, **default_options['background'])
-        resolution = Parameter('resolution', resolution, **default_options['resolution'])
+        #        resolution = Parameter('resolution', resolution, **default_options['resolution'])
 
         return cls(
             sample=sample,
             scale=scale,
             background=background,
-            resolution=resolution,
+            resolution_function=constant_resolution_function(LAYER_DETAILS['resolution']['value']),
             name=name,
             interface=interface,
         )

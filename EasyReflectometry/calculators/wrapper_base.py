@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import Callable
 
 import numpy as np
 
@@ -12,6 +13,8 @@ class WrapperBase:
             'item': {},
             'model': {},
         }
+        #        self._resolution_function = constant_resolution_function(5)
+        self._resolution_function = linear_spline_resolution_function([0, 100], [5, 5])
 
     def reset_storage(self):
         """Reset the storage area to blank."""
@@ -119,11 +122,12 @@ class WrapperBase:
         ...
 
     @abstractmethod
-    def calculate(self, x_array: np.ndarray, model_name: str) -> np.ndarray:
-        """For a given x calculate the corresponding y.
+    def calculate(self, q_array: np.ndarray, model_name: str) -> np.ndarray:
+        """For a given q array calculate the corresponding reflectivity.
 
-        :param x_array: array of data points to be calculated
-        :param model_name: Name for the model
+        :param q_array: array of data points to be calculated
+        :param model_name: the model name
+        :return: reflectivity calculated at q
         """
         ...
 
@@ -198,3 +202,24 @@ class WrapperBase:
         item = self.storage['item'][name]
         item = getattr(item, key)
         return getattr(item, 'value')
+
+    def set_resolution_function(self, resolution_function: Callable[[np.array], float]) -> None:
+        """Set the resolution function for the calculator.
+
+        :param resolution_function: The resolution function
+        """
+        self._resolution_function = resolution_function
+
+
+def constant_resolution_function(constant: float) -> Callable[[np.array], float]:
+    def resolution_function(q: np.array) -> np.array:
+        return np.ones_like(q) * constant
+
+    return resolution_function
+
+
+def linear_spline_resolution_function(q_data_points: np.array, resolution_points: np.array) -> Callable[[np.array], float]:
+    def resolution_function(q: np.array) -> np.array:
+        return np.interp(q, q_data_points, resolution_points)
+
+    return resolution_function

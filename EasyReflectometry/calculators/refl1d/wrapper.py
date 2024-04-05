@@ -66,7 +66,7 @@ class Refl1dWrapper(WrapperBase):
 
         :param name: Name for the model
         """
-        self.storage['model'][name] = {'scale': 1, 'bkg': 0, 'dq': 0, 'items': []}
+        self.storage['model'][name] = {'scale': 1, 'bkg': 0, 'items': []}
 
     def update_model(self, name: str, **kwargs):
         """
@@ -138,13 +138,12 @@ class Refl1dWrapper(WrapperBase):
         del self.storage['model'][model_name]['items'][item_idx]
         del self.storage['item'][item_name]
 
-    def calculate(self, x_array: np.ndarray, model_name: str) -> np.ndarray:
-        """
-        For a given x calculate the corresponding y.
+    def calculate(self, q_array: np.ndarray, model_name: str) -> np.ndarray:
+        """For a given q array calculate the corresponding reflectivity.
 
-        :param x_array: array of data points to be calculated
+        :param q_array: array of data points to be calculated
         :param model_name: the model name
-        :return: points calculated at `x`
+        :return: reflectivity calculated at q
         """
         structure = model.Stack()
         for i in self.storage['model'][model_name]['items'][::-1]:
@@ -157,20 +156,21 @@ class Refl1dWrapper(WrapperBase):
                     stack |= i.stack[j]
                 structure |= model.Repeat(stack, repeat=i.repeat.value)
 
-        argmin = np.argmin(x_array)
-        argmax = np.argmax(x_array)
-        dq_vector = x_array * self.storage['model'][model_name]['dq'] / 100 / (2 * np.sqrt(2 * np.log(2)))
+        argmin = np.argmin(q_array)
+        argmax = np.argmax(q_array)
+        dq_vector = self._resolution_function(q_array)
+        dq_vector_normalized_to_refnx = dq_vector * q_array / 100 / (2 * np.sqrt(2 * np.log(2)))
 
         q = names.QProbe(
-            x_array,
-            dq_vector,
+            q_array,
+            dq_vector_normalized_to_refnx,
             intensity=self.storage['model'][model_name]['scale'],
             background=self.storage['model'][model_name]['bkg'],
         )
         q.calc_Qo = np.linspace(
-            x_array[argmin] - 3.5 * dq_vector[argmin],
-            x_array[argmax] + 3.5 * dq_vector[argmax],
-            21 * len(x_array),
+            q_array[argmin] - 3.5 * dq_vector_normalized_to_refnx[argmin],
+            q_array[argmax] + 3.5 * dq_vector_normalized_to_refnx[argmax],
+            21 * len(q_array),
         )
         R = names.Experiment(probe=q, sample=structure).reflectivity()[1]
         return R

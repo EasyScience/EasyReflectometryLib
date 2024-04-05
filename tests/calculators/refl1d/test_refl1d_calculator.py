@@ -1,6 +1,7 @@
 """
 Tests for Refnx calculator.
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -24,7 +25,7 @@ class TestRefl1d(unittest.TestCase):
         assert_equal(p._item_link['repetitions'], 'repeat')
         assert_equal(p._model_link['scale'], 'scale')
         assert_equal(p._model_link['background'], 'bkg')
-        assert_equal(p._model_link['resolution'], 'dq')
+        #        assert_equal(p._model_link['resolution'], 'dq')
         assert_equal(p.name, 'refl1d')
 
     def test_fit_func(self):
@@ -36,7 +37,8 @@ class TestRefl1d(unittest.TestCase):
         p._wrapper.create_material('Material3')
         p._wrapper.update_material('Material3', rho=4.000, irho=0.000)
         p._wrapper.create_model('MyModel')
-        p._wrapper.update_model('MyModel', bkg=1e-7, dq=5.0)
+        p._wrapper.update_model('MyModel', bkg=1e-7)
+        #        p._wrapper.update_model('MyModel', bkg=1e-7, dq=5.0)
         p._wrapper.create_layer('Layer1')
         p._wrapper.assign_material_to_layer('Material1', 'Layer1')
         p._wrapper.create_layer('Layer2')
@@ -74,7 +76,8 @@ class TestRefl1d(unittest.TestCase):
         p._wrapper.create_material('Material3')
         p._wrapper.update_material('Material3', rho=4.000, irho=0.000)
         p._wrapper.create_model('MyModel')
-        p._wrapper.update_model('MyModel', bkg=1e-7, dq=5.0)
+        #        p._wrapper.update_model('MyModel', bkg=1e-7, dq=5.0)
+        p._wrapper.update_model('MyModel', bkg=1e-7)
         p._wrapper.create_layer('Layer1')
         p._wrapper.assign_material_to_layer('Material1', 'Layer1')
         p._wrapper.create_layer('Layer2')
