@@ -14,9 +14,9 @@ import pytest
 from numpy.testing import assert_equal
 
 from EasyReflectometry.calculators import CalculatorFactory
-from EasyReflectometry.calculators.wrapper_base import constant_resolution_function
-from EasyReflectometry.calculators.wrapper_base import linear_spline_resolution_function
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.experiment import Model
+from EasyReflectometry.experiment import constant_resolution_function
+from EasyReflectometry.experiment import linear_spline_resolution_function
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
 from EasyReflectometry.sample import Material
@@ -44,8 +44,8 @@ class TestModel(unittest.TestCase):
         assert_equal(p.background.min, 0.0)
         assert_equal(p.background.max, np.Inf)
         assert_equal(p.background.fixed, True)
-        assert p._resolution_function(1) == 5.0
-        assert p._resolution_function(100) == 5.0
+        assert p._resolution_function([1]) == 5.0
+        assert p._resolution_function([100]) == 5.0
 
     def test_from_pars(self):
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
@@ -74,8 +74,8 @@ class TestModel(unittest.TestCase):
         assert_equal(mod.background.min, 0.0)
         assert_equal(mod.background.max, np.Inf)
         assert_equal(mod.background.fixed, True)
-        assert mod._resolution_function(1) == 2.0
-        assert mod._resolution_function(100) == 2.0
+        assert mod._resolution_function([1]) == 2.0
+        assert mod._resolution_function([100]) == 2.0
 
     def test_add_item(self):
         m1 = Material.from_pars(6.908, -0.278, 'Boron')

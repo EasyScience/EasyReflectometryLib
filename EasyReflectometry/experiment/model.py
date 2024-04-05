@@ -10,11 +10,12 @@ from easyCore import np
 from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.calculators.wrapper_base import constant_resolution_function
 from EasyReflectometry.sample import BaseAssembly
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
 from EasyReflectometry.sample import Sample
+
+from .resolution_functions import constant_resolution_function
 
 MODEL_DETAILS = {
     'scale': {
@@ -191,9 +192,8 @@ class Model(BaseObj):
     @property
     def _dict_repr(self) -> dict[str, dict[str, str]]:
         """A simplified dict representation."""
-        resolution_values = self._resolution_function([0.1, 0.2])
-        if resolution_values[0] == resolution_values[1]:
-            resolution = f'{resolution_values[0]} %'
+        if self._resolution_function.__qualname__.split('.')[0] == 'constant_resolution_function':
+            resolution = f'{self._resolution_function([0])[0]} %'
         else:
             resolution = 'function of Q'
 

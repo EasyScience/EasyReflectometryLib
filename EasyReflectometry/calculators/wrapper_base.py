@@ -1,8 +1,9 @@
-import sys
 from abc import abstractmethod
 from typing import Callable
 
 import numpy as np
+
+from EasyReflectometry.experiment import constant_resolution_function
 
 
 class WrapperBase:
@@ -209,14 +210,3 @@ class WrapperBase:
         :param resolution_function: The resolution function
         """
         self._resolution_function = resolution_function
-
-
-def constant_resolution_function(constant: float) -> Callable[[np.array], float]:
-    return linear_spline_resolution_function([sys.float_info.min, sys.float_info.max], [constant, constant])
-
-
-def linear_spline_resolution_function(q_data_points: np.array, resolution_points: np.array) -> Callable[[np.array], float]:
-    def resolution_function(q: np.array) -> np.array:
-        return np.interp(q, q_data_points, resolution_points)
-
-    return resolution_function

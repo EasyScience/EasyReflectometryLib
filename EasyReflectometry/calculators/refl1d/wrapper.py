@@ -8,6 +8,9 @@ from refl1d import names
 
 from ..wrapper_base import WrapperBase
 
+PADDING_RANGE = 3.5
+UPSCALE_FACTOR = 21
+
 
 class Refl1dWrapper(WrapperBase):
     def create_material(self, name: str):
@@ -168,9 +171,9 @@ class Refl1dWrapper(WrapperBase):
             background=self.storage['model'][model_name]['bkg'],
         )
         q.calc_Qo = np.linspace(
-            q_array[argmin] - 3.5 * dq_vector_normalized_to_refnx[argmin],
-            q_array[argmax] + 3.5 * dq_vector_normalized_to_refnx[argmax],
-            21 * len(q_array),
+            q_array[argmin] - PADDING_RANGE * dq_vector_normalized_to_refnx[argmin],
+            q_array[argmax] + PADDING_RANGE * dq_vector_normalized_to_refnx[argmax],
+            UPSCALE_FACTOR * len(q_array),
         )
         R = names.Experiment(probe=q, sample=structure).reflectivity()[1]
         return R

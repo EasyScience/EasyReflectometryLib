@@ -4,7 +4,7 @@ import numpy as np
 import scipp as sc
 from easyCore.Fitting.Fitting import MultiFitter as easyFitter
 
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.experiment import Model
 
 
 class Fitter:
