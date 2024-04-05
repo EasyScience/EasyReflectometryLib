@@ -193,7 +193,8 @@ class Model(BaseObj):
     def _dict_repr(self) -> dict[str, dict[str, str]]:
         """A simplified dict representation."""
         if self._resolution_function.__qualname__.split('.')[0] == 'constant_resolution_function':
-            resolution = f'{self._resolution_function([0])[0]} %'
+            resolution_value = self._resolution_function([0])[0]
+            resolution = f'{resolution_value} %'
         else:
             resolution = 'function of Q'
 
