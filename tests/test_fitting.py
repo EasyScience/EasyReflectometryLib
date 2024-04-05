@@ -6,7 +6,7 @@ import unittest
 import EasyReflectometry
 from EasyReflectometry.calculators import CalculatorFactory
 from EasyReflectometry.data import load
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.experiment import Model
 from EasyReflectometry.fitting import Fitter
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import Material

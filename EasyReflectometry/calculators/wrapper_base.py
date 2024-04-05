@@ -1,6 +1,9 @@
 from abc import abstractmethod
+from typing import Callable
 
 import numpy as np
+
+from EasyReflectometry.experiment import constant_resolution_function
 
 
 class WrapperBase:
@@ -12,6 +15,7 @@ class WrapperBase:
             'item': {},
             'model': {},
         }
+        self._resolution_function = constant_resolution_function(5)
 
     def reset_storage(self):
         """Reset the storage area to blank."""
@@ -119,11 +123,12 @@ class WrapperBase:
         ...
 
     @abstractmethod
-    def calculate(self, x_array: np.ndarray, model_name: str) -> np.ndarray:
-        """For a given x calculate the corresponding y.
+    def calculate(self, q_array: np.ndarray, model_name: str) -> np.ndarray:
+        """For a given q array calculate the corresponding reflectivity.
 
-        :param x_array: array of data points to be calculated
-        :param model_name: Name for the model
+        :param q_array: array of data points to be calculated
+        :param model_name: the model name
+        :return: reflectivity calculated at q
         """
         ...
 
@@ -198,3 +203,10 @@ class WrapperBase:
         item = self.storage['item'][name]
         item = getattr(item, key)
         return getattr(item, 'value')
+
+    def set_resolution_function(self, resolution_function: Callable[[np.array], float]) -> None:
+        """Set the resolution function for the calculator.
+
+        :param resolution_function: The resolution function
+        """
+        self._resolution_function = resolution_function

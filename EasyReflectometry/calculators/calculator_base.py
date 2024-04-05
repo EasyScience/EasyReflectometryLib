@@ -6,7 +6,7 @@ import numpy as np
 from easyCore.Objects.core import ComponentSerializer
 from easyCore.Objects.Inferface import ItemContainer
 
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.experiment import Model
 from EasyReflectometry.sample import BaseAssembly
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import Material

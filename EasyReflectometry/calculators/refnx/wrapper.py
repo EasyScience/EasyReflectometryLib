@@ -113,13 +113,12 @@ class RefnxWrapper(WrapperBase):
         del self.storage['model'][model_name].structure.components[item_idx]
         del self.storage['item'][item_name]
 
-    def calculate(self, x_array: np.ndarray, model_name: str) -> np.ndarray:
-        """
-        For a given x calculate the corresponding y.
+    def calculate(self, q_array: np.ndarray, model_name: str) -> np.ndarray:
+        """For a given q array calculate the corresponding reflectivity.
 
-        :param x_array: array of data points to be calculated
-        :param model_name: Name for the model
-        :return: points calculated at `x`
+        :param q_array: array of data points to be calculated
+        :param model_name: the model name
+        :return: reflectivity calculated at q
         """
         structure = _remove_unecessary_stacks(self.storage['model'][model_name].structure)
         model = reflect.ReflectModel(
@@ -128,7 +127,7 @@ class RefnxWrapper(WrapperBase):
             bkg=self.storage['model'][model_name].bkg.value,
             dq=self.storage['model'][model_name].dq.value,
         )
-        return model(x_array)
+        return model(q_array)
 
     def sld_profile(self, model_name: str) -> Tuple[np.ndarray, np.ndarray]:
         """

@@ -7,13 +7,16 @@ __version__ = '0.0.1'
 
 
 import unittest
+from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
 from numpy.testing import assert_equal
 
 from EasyReflectometry.calculators import CalculatorFactory
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.experiment import Model
+from EasyReflectometry.experiment import constant_resolution_function
+from EasyReflectometry.experiment import linear_spline_resolution_function
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
 from EasyReflectometry.sample import Material
@@ -41,12 +44,8 @@ class TestModel(unittest.TestCase):
         assert_equal(p.background.min, 0.0)
         assert_equal(p.background.max, np.Inf)
         assert_equal(p.background.fixed, True)
-        assert_equal(p.resolution.display_name, 'resolution')
-        assert_equal(str(p.resolution.unit), 'dimensionless')
-        assert_equal(p.resolution.value.value.magnitude, 5.0)
-        assert_equal(p.resolution.min, 0.0)
-        assert_equal(p.resolution.max, 100.0)
-        assert_equal(p.resolution.fixed, True)
+        assert p._resolution_function([1]) == 5.0
+        assert p._resolution_function([100]) == 5.0
 
     def test_from_pars(self):
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
@@ -58,7 +57,8 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, o2, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
+        resolution_function = constant_resolution_function(2.0)
+        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel')
         assert_equal(mod.name, 'newModel')
         assert_equal(mod.interface, None)
         assert_equal(mod.sample.name, 'myModel')
@@ -74,12 +74,8 @@ class TestModel(unittest.TestCase):
         assert_equal(mod.background.min, 0.0)
         assert_equal(mod.background.max, np.Inf)
         assert_equal(mod.background.fixed, True)
-        assert_equal(mod.resolution.display_name, 'resolution')
-        assert_equal(str(mod.resolution.unit), 'dimensionless')
-        assert_equal(mod.resolution.value.value.magnitude, 2.0)
-        assert_equal(mod.resolution.min, 0.0)
-        assert_equal(mod.resolution.max, 100.0)
-        assert_equal(mod.resolution.fixed, True)
+        assert mod._resolution_function([1]) == 2.0
+        assert mod._resolution_function([100]) == 2.0
 
     def test_add_item(self):
         m1 = Material.from_pars(6.908, -0.278, 'Boron')
@@ -93,7 +89,8 @@ class TestModel(unittest.TestCase):
         surfactant = SurfactantLayer.default()
         multilayer = Multilayer.default()
         d = Sample.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
+        resolution_function = constant_resolution_function(2.0)
+        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel')
         assert_equal(len(mod.sample), 1)
         mod.add_item(o2)
         assert_equal(len(mod.sample), 2)
@@ -123,7 +120,8 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+        resolution_function = constant_resolution_function(2.0)
+        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
         mod.add_item(o2)
@@ -142,7 +140,8 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+        resolution_function = constant_resolution_function(2.0)
+        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
         mod.add_item(o2)
@@ -178,7 +177,8 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
+        resolution_function = constant_resolution_function(2.0)
+        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel')
         assert_equal(len(mod.sample), 1)
         mod.add_item(o2)
         assert_equal(len(mod.sample), 2)
@@ -198,7 +198,8 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+        resolution_function = constant_resolution_function(2.0)
+        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         mod.add_item(o2)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
@@ -217,7 +218,8 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+        resolution_function = constant_resolution_function(2.0)
+        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         mod.add_item(o2)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
@@ -253,7 +255,8 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel')
+        resolution_function = constant_resolution_function(2.0)
+        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel')
         assert_equal(len(mod.sample), 1)
         mod.add_item(o2)
         assert_equal(len(mod.sample), 2)
@@ -271,7 +274,8 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+        resolution_function = constant_resolution_function(2.0)
+        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
         mod.add_item(o2)
@@ -293,7 +297,8 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, name='myModel')
-        mod = Model.from_pars(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
+        resolution_function = constant_resolution_function(2.0)
+        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
         mod.add_item(o2)
@@ -329,22 +334,41 @@ class TestModel(unittest.TestCase):
         p = Model.default()
         assert_equal(p.uid, p._borg.map.convert_id_to_key(p))
 
+    def test_set_resolution_function(self):
+        mock_resolution_function = MagicMock()
+        model = Model.default()
+        model.set_resolution_function(mock_resolution_function)
+        assert model._resolution_function == mock_resolution_function
+
     def test_repr(self):
-        p = Model.default()
+        model = Model.default()
+
         assert (
-            p.__repr__()
+            model.__repr__()
             == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n'  # noqa: E501
         )
 
+    def test_repr_resolution_function(self):
+        resolution_function = linear_spline_resolution_function([0, 10], [0, 10])
+        model = Model.default()
+        model.set_resolution_function(resolution_function)
+        assert (
+            model.__repr__()
+            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: function of Q\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n'  # noqa: E501
+        )
+
     def test_dict_round_trip(self):
+        resolution_function = linear_spline_resolution_function([0, 10], [0, 10])
         interface = CalculatorFactory()
-        p = Model.default(interface)
+        model = Model.default(interface)
+        model.set_resolution_function(resolution_function)
         surfactant = SurfactantLayer.default()
-        p.add_item(surfactant)
+        model.add_item(surfactant)
         multilayer = Multilayer.default()
-        p.add_item(multilayer)
+        model.add_item(multilayer)
         repeating = RepeatingMultilayer.default()
-        p.add_item(repeating)
-        src_dict = p.as_dict()
-        q = Model.from_dict(src_dict)
-        assert p.as_data_dict() == q.as_data_dict()
+        model.add_item(repeating)
+        src_dict = model.as_dict()
+        model_from_dict = Model.from_dict(src_dict)
+        assert model.as_data_dict() == model_from_dict.as_data_dict()
+        assert model._resolution_function(5.5) == model_from_dict._resolution_function(5.5)
