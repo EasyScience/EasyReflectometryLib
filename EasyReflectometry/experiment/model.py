@@ -16,7 +16,7 @@ from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
 from EasyReflectometry.sample import Sample
 
-LAYER_DETAILS = {
+MODEL_DETAILS = {
     'scale': {
         'description': 'Scaling of the reflectomety profile',
         'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
@@ -64,7 +64,6 @@ class Model(BaseObj):
         :param sample: The sample being modelled.
         :param scale: Scaling factor of profile.
         :param background: Linear background magnitude.
-        :param resolution: Constant resolution smearing percentage.
         :param name: Name of the model, defaults to 'EasyModel'.
         :param interface: Calculator interface, defaults to :py:attr:`None`.
 
@@ -74,7 +73,6 @@ class Model(BaseObj):
             sample=sample,
             scale=scale,
             background=background,
-            #            resolution=resolution,
         )
         self.interface = interface
         self._resolution_function = resolution_function
@@ -84,17 +82,18 @@ class Model(BaseObj):
     def default(cls, interface=None) -> Model:
         """Default instance of the reflectometry experiment model.
 
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
         sample = Sample.default()
-        scale = Parameter('scale', **LAYER_DETAILS['scale'])
-        background = Parameter('background', **LAYER_DETAILS['background'])
+        scale = Parameter('scale', **MODEL_DETAILS['scale'])
+        background = Parameter('background', **MODEL_DETAILS['background'])
+        resolution_function = constant_resolution_function(MODEL_DETAILS['resolution']['value'])
 
         return cls(
-            sample,
-            scale,
-            background,
-            resolution_function=constant_resolution_function(LAYER_DETAILS['resolution']['value']),
+            sample=sample,
+            scale=scale,
+            background=background,
+            resolution_function=resolution_function,
             interface=interface,
         )
 
@@ -102,9 +101,9 @@ class Model(BaseObj):
     def from_pars(
         cls,
         sample: Sample,
-        scale: Parameter,
-        background: Parameter,
-        # resolution: Parameter,
+        scale: float,
+        background: float,
+        resolution_function: Callable[[np.array], float],
         name: str = 'EasyModel',
         interface=None,
     ) -> Model:
@@ -113,24 +112,21 @@ class Model(BaseObj):
         :param sample: The sample being modelled.
         :param scale: Scaling factor of profile.
         :param background: Linear background magnitude.
-        :param resolution: Constant resolution smearing percentage.
         :param name: Name of the layer, defaults to 'EasyModel'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
-        default_options = deepcopy(LAYER_DETAILS)
+        default_options = deepcopy(MODEL_DETAILS)
         del default_options['scale']['value']
         del default_options['background']['value']
-        #        del default_options['resolution']['value']
 
         scale = Parameter('scale', scale, **default_options['scale'])
         background = Parameter('background', background, **default_options['background'])
-        #        resolution = Parameter('resolution', resolution, **default_options['resolution'])
 
         return cls(
             sample=sample,
             scale=scale,
             background=background,
-            resolution_function=constant_resolution_function(LAYER_DETAILS['resolution']['value']),
+            resolution_function=resolution_function,
             name=name,
             interface=interface,
         )
@@ -179,6 +175,13 @@ class Model(BaseObj):
             self.interface().remove_item_from_model(self.sample[idx].uid, self.uid)
         del self.sample[idx]
 
+    def set_resolution_function(self, resolution_function: Callable[[np.array], float]) -> None:
+        """Set the resolution function for the model.
+
+        :param resolution_function: Resolution function to set.
+        """
+        self._resolution_function = resolution_function
+
     @property
     def uid(self) -> int:
         """Return a UID from the borg map."""
@@ -188,11 +191,17 @@ class Model(BaseObj):
     @property
     def _dict_repr(self) -> dict[str, dict[str, str]]:
         """A simplified dict representation."""
+        resolution_values = self._resolution_function([0.1, 0.2])
+        if resolution_values[0] == resolution_values[1]:
+            resolution = f'{resolution_values[0]} %'
+        else:
+            resolution = 'function of Q'
+
         return {
             self.name: {
                 'scale': self.scale.raw_value,
                 'background': self.background.raw_value,
-                'resolution': f'{self.resolution.raw_value} %',
+                'resolution': resolution,
                 'sample': self.sample._dict_repr,
             }
         }

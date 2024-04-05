@@ -1,3 +1,4 @@
+import sys
 from abc import abstractmethod
 from typing import Callable
 
@@ -13,8 +14,7 @@ class WrapperBase:
             'item': {},
             'model': {},
         }
-        #        self._resolution_function = constant_resolution_function(5)
-        self._resolution_function = linear_spline_resolution_function([0, 100], [5, 5])
+        self._resolution_function = constant_resolution_function(5)
 
     def reset_storage(self):
         """Reset the storage area to blank."""
@@ -212,10 +212,7 @@ class WrapperBase:
 
 
 def constant_resolution_function(constant: float) -> Callable[[np.array], float]:
-    def resolution_function(q: np.array) -> np.array:
-        return np.ones_like(q) * constant
-
-    return resolution_function
+    return linear_spline_resolution_function([sys.float_info.min, sys.float_info.max], [constant, constant])
 
 
 def linear_spline_resolution_function(q_data_points: np.array, resolution_points: np.array) -> Callable[[np.array], float]:
