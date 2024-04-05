@@ -57,8 +57,6 @@ class TestRefl1d(unittest.TestCase):
         assert_equal(list(p.storage['layer'].keys()), ['Si'])
         assert_almost_equal(p.storage['layer']['Si'].thickness.value, 0)
         assert_almost_equal(p.storage['layer']['Si'].interface.value, 0)
-        # assert_almost_equal(p.storage['layer']['Si'].material.rho.value, 0)
-        # assert_almost_equal(p.storage['layer']['Si'].material.irho.value, 0)
 
     def test_update_layer(self):
         p = Refl1dWrapper()
@@ -101,21 +99,15 @@ class TestRefl1d(unittest.TestCase):
         p = Refl1dWrapper()
         p.create_model('MyModel')
         p.update_model('MyModel', scale=2, bkg=1e-3)
-        #        p.update_model('MyModel', scale=2, bkg=1e-3, dq=2.0)
         assert_almost_equal(p.storage['model']['MyModel']['scale'], 2)
         assert_almost_equal(p.storage['model']['MyModel']['bkg'], 1e-3)
-
-    #        assert_almost_equal(p.storage['model']['MyModel']['dq'], 2.0)
 
     def test_get_model_value(self):
         p = Refl1dWrapper()
         p.create_model('MyModel')
-        #        p.update_model('MyModel', scale=2, bkg=1e-3, dq=2.0)
         p.update_model('MyModel', scale=2, bkg=1e-3)
         assert_almost_equal(p.get_model_value('MyModel', 'scale'), 2)
         assert_almost_equal(p.get_model_value('MyModel', 'bkg'), 1e-3)
-
-    #        assert_almost_equal(p.get_model_value('MyModel', 'dq'), 2.0)
 
     def test_assign_material_to_layer(self):
         p = Refl1dWrapper()
@@ -189,7 +181,6 @@ class TestRefl1d(unittest.TestCase):
         p.create_model('MyModel')
         p.update_model('MyModel', bkg=1e-7)
         p.update_model('MyModel', bkg=1e-7, dq=5.0)
-        #        p.update_model('MyModel', bkg=1e-7, dq=5.0)
         p.create_layer('Layer1')
         p.assign_material_to_layer('Material1', 'Layer1')
         p.create_layer('Layer2')
@@ -228,7 +219,6 @@ class TestRefl1d(unittest.TestCase):
         p.update_material('Material3', rho=4.000, irho=0.000)
         p.create_model('MyModel')
         p.update_model('MyModel', bkg=1e-7)
-        #        p.update_model('MyModel', bkg=1e-7, dq=5.0)
         p.create_layer('Layer1')
         p.assign_material_to_layer('Material1', 'Layer1')
         p.create_layer('Layer2')
