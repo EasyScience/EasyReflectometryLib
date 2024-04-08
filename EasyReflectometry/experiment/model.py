@@ -2,6 +2,7 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
+import numbers
 from copy import deepcopy
 from typing import Callable
 
@@ -76,6 +77,8 @@ class Model(BaseObj):
             background=background,
         )
         self.interface = interface
+        if not callable(resolution_function):
+            raise ValueError('Resolution function must be a callable.')
         self._resolution_function = resolution_function
 
     # Class methods for instance creation
@@ -104,7 +107,7 @@ class Model(BaseObj):
         sample: Sample,
         scale: float,
         background: float,
-        resolution_function: Callable[[np.array], float],
+        resolution_function: float | Callable[[np.array], float],
         name: str = 'EasyModel',
         interface=None,
     ) -> Model:
@@ -122,6 +125,9 @@ class Model(BaseObj):
 
         scale = Parameter('scale', scale, **default_options['scale'])
         background = Parameter('background', background, **default_options['background'])
+
+        if isinstance(resolution_function, numbers.Number):
+            resolution_function = constant_resolution_function(resolution_function)
 
         return cls(
             sample=sample,

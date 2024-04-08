@@ -9,7 +9,7 @@
 #         start_date: 2022-02-01
 #         title: Ni-Ti Multilayer
 #         instrument: Simulation
-#         probe: x-rays
+#         probe: x-ray
 #     sample:
 #         name: Ni-Ti Multilayer on Si
 #         category: gas / lsolidiquid

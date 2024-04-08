@@ -9,12 +9,12 @@ def constant_resolution_function(constant: float) -> Callable[[np.array], np.arr
     :param constant: The constant resolution value.
     """
 
-    def _constant(q: np.array) -> np.array:
+    def _constant(q: np.array | float) -> np.array:
         """Function that calculates the resolution at a given q value.
 
         The function uses the data points from the encapsulating function and produces a linearly interpolated between them.
         """
-        return np.ones(len(q)) * constant
+        return np.ones(np.array(q).size) * constant
 
     return _constant
 
