@@ -35,7 +35,7 @@ class TestFitting(unittest.TestCase):
             superphase,
             name='Film Structure',
         )
-        model = Model.from_pars(sample, 1, 1e-6, 0.02, 'Film Model')
+        model = Model(sample, 1, 1e-6, 0.02, 'Film Model')
         # Thicknesses
         sio2_layer.thickness.bounds = (15, 50)
         film_layer.thickness.bounds = (200, 300)
