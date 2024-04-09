@@ -58,7 +58,7 @@ class Model(BaseObj):
         sample: Union[Sample, None] = None,
         scale: Union[Parameter, Number, None] = None,
         background: Union[Parameter, Number, None] = None,
-        resolution_function: Callable[[np.array], float],
+        resolution_function: Union[Callable[[np.array], float], None] = None,
         name: str = 'EasyModel',
         interface=None,
     ):
@@ -77,10 +77,9 @@ class Model(BaseObj):
         if resolution_function is None:
             resolution_function = constant_resolution_function(MODEL_DETAILS['resolution']['value'])
 
-
         scale = get_as_parameter(scale, 'scale', MODEL_DETAILS)
         background = get_as_parameter(background, 'background', MODEL_DETAILS)
-#        resolution = get_as_parameter(resolution, 'resolution', LAYER_DETAILS)
+        #        resolution = get_as_parameter(resolution, 'resolution', LAYER_DETAILS)
 
         # #        default_options = deepcopy(LAYER_DETAILS)
 

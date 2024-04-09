@@ -298,7 +298,7 @@ class TestModel(unittest.TestCase):
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample(o1, name='myModel')
         resolution_function = constant_resolution_function(2.0)
-        mod = Model.from_pars(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
+        mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
         mod.add_item(o2)
@@ -336,7 +336,7 @@ class TestModel(unittest.TestCase):
 
     def test_set_resolution_function(self):
         mock_resolution_function = MagicMock()
-        model = Model.default()
+        model = Model()
         model.set_resolution_function(mock_resolution_function)
         assert model._resolution_function == mock_resolution_function
 
@@ -360,7 +360,7 @@ class TestModel(unittest.TestCase):
     def test_dict_round_trip(self):
         resolution_function = linear_spline_resolution_function([0, 10], [0, 10])
         interface = CalculatorFactory()
-        model = Model(interface)
+        model = Model(interface=interface)
         model.set_resolution_function(resolution_function)
         surfactant = SurfactantLayer.default()
         model.add_item(surfactant)
