@@ -6,6 +6,8 @@ from easyCore import np
 from refl1d import model
 from refl1d import names
 
+from EasyReflectometry.experiment.resolution_functions import is_constant_resolution_function
+
 from ..wrapper_base import WrapperBase
 
 PADDING_RANGE = 3.5
@@ -162,17 +164,20 @@ class Refl1dWrapper(WrapperBase):
         argmin = np.argmin(q_array)
         argmax = np.argmax(q_array)
         dq_vector = self._resolution_function(q_array)
-        dq_vector_normalized_to_refnx = dq_vector * q_array / 100 / (2 * np.sqrt(2 * np.log(2)))
+
+        if is_constant_resolution_function(self._resolution_function):
+            # Compute percentage of Q and normalize
+            dq_vector = dq_vector * q_array / 100 / (2 * np.sqrt(2 * np.log(2)))
 
         q = names.QProbe(
-            q_array,
-            dq_vector_normalized_to_refnx,
+            Q=q_array,
+            dQ=dq_vector,
             intensity=self.storage['model'][model_name]['scale'],
             background=self.storage['model'][model_name]['bkg'],
         )
         q.calc_Qo = np.linspace(
-            q_array[argmin] - PADDING_RANGE * dq_vector_normalized_to_refnx[argmin],
-            q_array[argmax] + PADDING_RANGE * dq_vector_normalized_to_refnx[argmax],
+            q_array[argmin] - PADDING_RANGE * dq_vector[argmin],
+            q_array[argmax] + PADDING_RANGE * dq_vector[argmax],
             UPSCALE_FACTOR * len(q_array),
         )
         R = names.Experiment(probe=q, sample=structure).reflectivity()[1]

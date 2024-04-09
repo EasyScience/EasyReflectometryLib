@@ -5,6 +5,8 @@ from typing import Tuple
 from easyCore import np
 from refnx import reflect
 
+from EasyReflectometry.experiment.resolution_functions import is_constant_resolution_function
+
 from ..wrapper_base import WrapperBase
 
 
@@ -125,9 +127,15 @@ class RefnxWrapper(WrapperBase):
             structure,
             scale=self.storage['model'][model_name].scale.value,
             bkg=self.storage['model'][model_name].bkg.value,
-            dq=self.storage['model'][model_name].dq.value,
+            dq_type='pointwise',
         )
-        return model(q_array)
+
+        dq_vector = self._resolution_function(q_array)
+        if is_constant_resolution_function(self._resolution_function):
+            # For a constant resolution percentage refnx supports just to pass a float
+            dq_vector = dq_vector[0]
+
+        return model(x=q_array, x_err=dq_vector)
 
     def sld_profile(self, model_name: str) -> Tuple[np.ndarray, np.ndarray]:
         """

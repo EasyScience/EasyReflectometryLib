@@ -11,6 +11,7 @@ from easyCore import np
 from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
+from EasyReflectometry.experiment.resolution_functions import is_constant_resolution_function
 from EasyReflectometry.sample import BaseAssembly
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
@@ -198,7 +199,7 @@ class Model(BaseObj):
     @property
     def _dict_repr(self) -> dict[str, dict[str, str]]:
         """A simplified dict representation."""
-        if self._resolution_function.__qualname__.split('.')[0] == 'constant_resolution_function':
+        if is_constant_resolution_function(self._resolution_function):
             resolution_value = self._resolution_function([0])[0]
             resolution = f'{resolution_value} %'
         else:

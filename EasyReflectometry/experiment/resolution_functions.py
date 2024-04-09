@@ -1,4 +1,5 @@
 from typing import Callable
+from typing import Union
 
 import numpy as np
 
@@ -9,7 +10,7 @@ def constant_resolution_function(constant: float) -> Callable[[np.array], np.arr
     :param constant: The constant resolution value.
     """
 
-    def _constant(q: np.array | float) -> np.array:
+    def _constant(q: Union[np.array, float]) -> np.array:
         """Function that calculates the resolution at a given q value.
 
         The function uses the data points from the encapsulating function and produces a linearly interpolated between them.
@@ -34,3 +35,11 @@ def linear_spline_resolution_function(q_data_points: np.array, resolution_points
         return np.interp(q, q_data_points, resolution_points)
 
     return _linear
+
+
+def is_constant_resolution_function(resolution_function: Callable[[np.array], np.array]) -> bool:
+    """Check if the resolution function is a constant."""
+    if resolution_function.__qualname__.split('.')[0] == 'constant_resolution_function':
+        return True
+    else:
+        return False
