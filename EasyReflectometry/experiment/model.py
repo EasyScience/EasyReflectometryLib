@@ -3,8 +3,8 @@ from __future__ import annotations
 __author__ = 'github.com/arm61'
 
 from copy import deepcopy
-from typing import Callable
 from numbers import Number
+from typing import Callable
 from typing import Union
 
 import yaml
@@ -79,33 +79,6 @@ class Model(BaseObj):
 
         scale = get_as_parameter(scale, 'scale', MODEL_DETAILS)
         background = get_as_parameter(background, 'background', MODEL_DETAILS)
-        #        resolution = get_as_parameter(resolution, 'resolution', LAYER_DETAILS)
-
-        # #        default_options = deepcopy(LAYER_DETAILS)
-
-        #         if scale is None:
-        #             scale = Parameter('scale', **default_options['scale'])
-        #         elif isinstance(scale, Number):
-        #             del default_options['scale']['value']
-        #             scale = Parameter('scale', scale, **default_options['scale'])
-        #         elif not isinstance(scale, Parameter):
-        #             raise ValueError('scale must be a Parameter or a number.')
-
-        #         if background is None:
-        #             background = Parameter('background', **default_options['background'])
-        #         elif isinstance(background, Number):
-        #             del default_options['background']['value']
-        #             background = Parameter('background', background, **default_options['background'])
-        #         elif not isinstance(background, Parameter):
-        #             raise ValueError('background must be a Parameter or a number.')
-
-        #         if resolution is None:
-        #             resolution = Parameter('resolution', **default_options['resolution'])
-        #         elif isinstance(resolution, Number):
-        #             del default_options['resolution']['value']
-        #             resolution = Parameter('resolution', resolution, **default_options['resolution'])
-        #         elif not isinstance(resolution, Parameter):
-        #             raise ValueError('resolution must be a Parameter or a number.')
 
         super().__init__(
             name=name,
@@ -115,56 +88,6 @@ class Model(BaseObj):
         )
         self.interface = interface
         self._resolution_function = resolution_function
-
-    # # Class methods for instance creation
-    # @classmethod
-    # def default(cls, interface=None) -> Model:
-    #     """Default instance of the reflectometry experiment model.
-
-    #     :param interface: Calculator interface, defaults to :py:attr:`None`.
-    #     """
-    #     sample = Sample.default()
-    #     scale = Parameter('scale', **LAYER_DETAILS['scale'])
-    #     background = Parameter('background', **LAYER_DETAILS['background'])
-    #     resolution = Parameter('resolution', **LAYER_DETAILS['resolution'])
-    #     return cls(sample, scale, background, resolution, interface=interface)
-
-    # @classmethod
-    # def from_pars(
-    #     cls,
-    #     sample: Sample,
-    #     scale: Parameter,
-    #     background: Parameter,
-    #     resolution: Parameter,
-    #     name: str = 'EasyModel',
-    #     interface=None,
-    # ) -> Model:
-    #     """Instance of a reflectometry experiment model where the parameters are known.
-
-    #     :param sample: The sample being modelled.
-    #     :param scale: Scaling factor of profile.
-    #     :param background: Linear background magnitude.
-    #     :param resolution: Constant resolution smearing percentage.
-    #     :param name: Name of the layer, defaults to 'EasyModel'.
-    #     :param interface: Calculator interface, defaults to :py:attr:`None`.
-    #     """
-    #     default_options = deepcopy(LAYER_DETAILS)
-    #     del default_options['scale']['value']
-    #     del default_options['background']['value']
-    #     del default_options['resolution']['value']
-
-    #     scale = Parameter('scale', scale, **default_options['scale'])
-    #     background = Parameter('background', background, **default_options['background'])
-    #     resolution = Parameter('resolution', resolution, **default_options['resolution'])
-
-    #     return cls(
-    #         sample=sample,
-    #         scale=scale,
-    #         background=background,
-    #         resolution=resolution,
-    #         name=name,
-    #         interface=interface,
-    #     )
 
     def add_item(self, *assemblies: list[BaseAssembly]) -> None:
         """Add a layer or item to the model sample.
