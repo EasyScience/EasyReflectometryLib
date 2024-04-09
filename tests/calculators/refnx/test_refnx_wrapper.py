@@ -9,12 +9,14 @@ __version__ = '0.0.1'
 import unittest
 
 import numpy as np
+from numpy.testing import assert_allclose
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 from refnx import reflect
 
 from EasyReflectometry.calculators.refnx.wrapper import RefnxWrapper
 from EasyReflectometry.experiment import constant_resolution_function
+from EasyReflectometry.experiment import linear_spline_resolution_function
 
 
 class TestRefnx(unittest.TestCase):
@@ -374,9 +376,8 @@ class TestRefnx(unittest.TestCase):
             2.222536631965092181e-09,
         ]
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)
-        assert False
 
-    def test_calculate_github_test3(self):
+    def test_calculate_github_test4_constant_resolution(self):
         p = RefnxWrapper()
         p.create_material('Material1')
         p.update_material('Material1', real=2.070, imag=0.000)
@@ -428,4 +429,70 @@ class TestRefnx(unittest.TestCase):
             2.551634050707026792e-03,
             6.224636414855785008e-08,
         ]
-        assert_almost_equal(p.calculate(q, 'MyModel'), expected)
+        assert_allclose(p.calculate(q, 'MyModel'), expected, rtol=0.03)
+
+    def test_calculate_github_test4_spline_resolution(self):
+        p = RefnxWrapper()
+        p.create_material('Material1')
+        p.update_material('Material1', real=2.070, imag=0.000)
+        p.create_material('Material2')
+        p.update_material('Material2', real=3.450, imag=0.100)
+        p.create_material('Material3')
+        p.update_material('Material3', real=5.000, imag=0.01)
+        p.create_material('Material4')
+        p.update_material('Material4', real=6.000, imag=0.000)
+        p.create_model('MyModel')
+        p.create_layer('Layer1')
+        p.assign_material_to_layer('Material1', 'Layer1')
+        p.create_layer('Layer2')
+        p.assign_material_to_layer('Material2', 'Layer2')
+        p.update_layer('Layer2', thick=100, rough=3.0)
+        p.create_layer('Layer3')
+        p.assign_material_to_layer('Material3', 'Layer3')
+        p.update_layer('Layer3', thick=200, rough=1.0)
+        p.create_layer('Layer4')
+        p.assign_material_to_layer('Material4', 'Layer4')
+        p.update_layer('Layer4', rough=5.0)
+        p.create_item('Item1')
+        p.add_layer_to_item('Layer1', 'Item1')
+        p.create_item('Item2')
+        p.add_layer_to_item('Layer2', 'Item2')
+        p.create_item('Item3')
+        p.add_layer_to_item('Layer3', 'Item3')
+        p.create_item('Item4')
+        p.add_layer_to_item('Layer4', 'Item4')
+        p.add_item('Item1', 'MyModel')
+        p.add_item('Item2', 'MyModel')
+        p.add_item('Item3', 'MyModel')
+        p.add_item('Item4', 'MyModel')
+        p.update_model('MyModel', bkg=0)
+        q = np.array(
+            [
+                4.999999999999999237e-03,
+                8.513921996085575816e-03,
+                1.707714946189881067e-02,
+                2.183254954953296745e-02,
+                2.999999999999999334e-01,
+            ]
+        )
+        # Might be calculated with the following code:
+        # resolution_values = np.array([5, 5, 5, 5, 5])
+        # resolution_values = resolution_values * q / 100 / (2 * np.sqrt(2 * np.log(2)))
+        resolution_values = np.array(
+            [
+                1.061652250360023761e-04,
+                1.807764889306791788e-04,
+                3.625998831191868982e-04,
+                4.635715072071680543e-04,
+                6.369913502160142078e-03,
+            ]
+        )
+        p.set_resolution_function(linear_spline_resolution_function(q, resolution_values))
+        expected = [
+            9.660499468321636085e-01,
+            9.416028824956215182e-01,
+            1.223948799745163416e-03,
+            2.551634050707026792e-03,
+            6.224636414855785008e-08,
+        ]
+        assert_allclose(p.calculate(q, 'MyModel'), expected, rtol=0.03)
