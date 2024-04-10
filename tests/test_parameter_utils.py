@@ -87,3 +87,24 @@ def test_get_as_parameter_not_number():
     # Then Expected
     with pytest.raises(ValueError):
         test_parameter = get_as_parameter(test_parameter, 'test_parameter', PARAMETER_DETAILS)
+
+
+def test_dict_remains_unchanged():
+    expected_parameter_details = {
+        'test_parameter': {
+            'description': 'Test parameter',
+            'url': 'https://veryrealwebsite.com',
+            'value': 1.0,
+            'min': 0,
+            'max': np.Inf,
+            'fixed': True,
+        }
+    }
+    # When
+    test_parameter = 2.0
+
+    # Then
+    test_parameter = get_as_parameter(int(test_parameter), 'test_parameter', PARAMETER_DETAILS)
+
+    # Expected
+    assert_equal(expected_parameter_details['test_parameter'], PARAMETER_DETAILS['test_parameter'])
