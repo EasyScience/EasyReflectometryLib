@@ -1,3 +1,10 @@
+"""Resolution functions for the resolution of the experiment.
+When a percentage is provided we assume that the resolution is a
+Gaussian distribution with a FWHM of the percentage of the q value.
+To convert from a sigma value to a FWHM value we use the formula
+FWHM = 2.35 * sigma [2 * np.sqrt(2 * np.log(2)) * sigma].
+"""
+
 from typing import Callable
 from typing import Union
 
