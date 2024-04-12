@@ -20,14 +20,14 @@ class TestFitting(unittest.TestCase):
             'tests/_static/example.ort',
         )
         data = load(fpath)
-        si = Material.from_pars(2.07, 0, 'Si')
-        sio2 = Material.from_pars(3.47, 0, 'SiO2')
-        film = Material.from_pars(2.0, 0, 'Film')
-        d2o = Material.from_pars(6.36, 0, 'D2O')
-        si_layer = Layer.from_pars(si, 0, 0, 'Si layer')
-        sio2_layer = Layer.from_pars(sio2, 30, 3, 'SiO2 layer')
-        film_layer = Layer.from_pars(film, 250, 3, 'Film Layer')
-        superphase = Layer.from_pars(d2o, 0, 3, 'D2O Subphase')
+        si = Material(2.07, 0, 'Si')
+        sio2 = Material(3.47, 0, 'SiO2')
+        film = Material(2.0, 0, 'Film')
+        d2o = Material(6.36, 0, 'D2O')
+        si_layer = Layer(si, 0, 0, 'Si layer')
+        sio2_layer = Layer(sio2, 30, 3, 'SiO2 layer')
+        film_layer = Layer(film, 250, 3, 'Film Layer')
+        superphase = Layer(d2o, 0, 3, 'D2O Subphase')
         sample = Sample.from_pars(
             si_layer,
             sio2_layer,

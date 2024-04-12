@@ -15,7 +15,7 @@ from EasyReflectometry.sample.elements.materials.material import Material
 
 class TestMaterial(unittest.TestCase):
     def test_default(self):
-        p = Material.default()
+        p = Material()
         assert p.name == 'EasyMaterial'
         assert p.interface is None
         assert p.sld.display_name == 'sld'
@@ -32,7 +32,7 @@ class TestMaterial(unittest.TestCase):
         assert p.isld.fixed is True
 
     def test_from_pars(self):
-        p = Material.from_pars(6.908, -0.278, 'Boron')
+        p = Material(6.908, -0.278, 'Boron')
         assert p.name == 'Boron'
         assert p.interface is None
         assert p.sld.display_name == 'sld'
@@ -49,14 +49,14 @@ class TestMaterial(unittest.TestCase):
         assert p.isld.fixed is True
 
     def test_dict_repr(self):
-        p = Material.default()
+        p = Material()
         assert p._dict_repr == {'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}}
 
     def test_repr(self):
-        p = Material.default()
+        p = Material()
         assert p.__repr__() == 'EasyMaterial:\n  sld: 4.186e-6 1 / angstrom ** 2\n  isld: 0.000e-6 1 / angstrom ** 2\n'
 
     def test_dict_round_trip(self):
-        p = Material.default()
+        p = Material()
         q = Material.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()

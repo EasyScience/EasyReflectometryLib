@@ -21,8 +21,8 @@ class TestLayerCollection(unittest.TestCase):
         assert p[1].name == 'EasyMaterial'
 
     def test_from_pars(self):
-        m = Material.from_pars(6.908, -0.278, 'Boron')
-        k = Material.from_pars(0.487, 0.000, 'Potassium')
+        m = Material(6.908, -0.278, 'Boron')
+        k = Material(0.487, 0.000, 'Potassium')
         p = MaterialCollection.from_pars(m, k, name='thinBoron')
         assert p.name == 'thinBoron'
         assert p.interface is None

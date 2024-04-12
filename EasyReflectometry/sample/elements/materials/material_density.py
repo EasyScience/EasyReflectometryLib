@@ -1,20 +1,22 @@
 from __future__ import annotations
 
-from copy import deepcopy
-from typing import ClassVar
+from numbers import Number
+from typing import Optional
+from typing import Union
 
 import numpy as np
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
+from EasyReflectometry.parameter_utils import get_as_parameter
 from EasyReflectometry.special.calculations import density_to_sld
 from EasyReflectometry.special.calculations import molecular_weight
 from EasyReflectometry.special.calculations import neutron_scattering_length
 
-from .material import MATERIAL_DEFAULTS
+from .material import DEFAULTS as MATERIAL_DEFAULTS
 from .material import Material
 
-MATERIALDENSITY_DEFAULTS = {
+DEFAULTS = {
     'chemical_structure': 'Si',
     'sl': {
         'description': 'The real scattering length for a chemical formula in angstrom.',
@@ -53,19 +55,20 @@ MATERIALDENSITY_DEFAULTS = {
         'fixed': True,
     },
 }
+DEFAULTS.update(MATERIAL_DEFAULTS)
 
 
 class MaterialDensity(Material):
     # Added in __init__
-    scattering_length_real: ClassVar[Parameter]
-    scattering_length_imag: ClassVar[Parameter]
-    molecular_weight: ClassVar[Parameter]
-    density: ClassVar[Parameter]
+    scattering_length_real: Parameter
+    scattering_length_imag: Parameter
+    molecular_weight: Parameter
+    density: Parameter
 
     def __init__(
         self,
-        chemical_structure: str,
-        density: Parameter,
+        chemical_structure: Optional[str] = None,
+        density: Union[Parameter, Number, None] = None,
         name: str = 'EasyMaterialDensity',
         interface=None,
     ) -> MaterialDensity:
@@ -73,30 +76,60 @@ class MaterialDensity(Material):
 
         :param chemical_structure: Chemical formula for the material.
         :param density: Mass density for the material.
-        :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`.
-        :param interface: Interface object, defaults to :py:attr:`None`.
+        :param name: Identifier, defaults to `EasyMaterialDensity`.
+        :param interface: Interface object, defaults to `None`.
         """
+        if chemical_structure is None:
+            chemical_structure = DEFAULTS['chemical_structure']
+
+        density = get_as_parameter(density, 'density', DEFAULTS)
+
         scattering_length = neutron_scattering_length(chemical_structure)
-        default_options = deepcopy(MATERIALDENSITY_DEFAULTS)
-        del default_options['molecular_weight']['value']
-        del default_options['sl']['value']
-        del default_options['isl']['value']
-        mw = Parameter('molecular_weight', molecular_weight(chemical_structure), **default_options['molecular_weight'])
-        scattering_length_real = Parameter('scattering_length_real', scattering_length.real, **default_options['sl'])
-        scattering_length_imag = Parameter('scattering_length_imag', scattering_length.imag, **default_options['isl'])
-        default_options = deepcopy(MATERIAL_DEFAULTS)
-        del default_options['sld']['value']
-        del default_options['isld']['value']
-        sld = Parameter(
-            'sld',
+        # default_options = deepcopy(DEFAULTS)
+
+        mw = get_as_parameter(molecular_weight(chemical_structure), 'molecular_weight', DEFAULTS)
+        scattering_length_real = get_as_parameter(
+            value=scattering_length.real,
+            name='scattering_length_real',
+            default_dict=DEFAULTS['sld'],
+        )
+        scattering_length_imag = get_as_parameter(
+            value=scattering_length.imag,
+            name='scattering_length_imag',
+            default_dict=DEFAULTS['isld'],
+        )
+
+        # del default_options['molecular_weight']['value']
+        # del default_options['sl']['value']
+        # del default_options['isl']['value']
+        # mw = Parameter('molecular_weight', molecular_weight(chemical_structure), **default_options['molecular_weight'])
+        # scattering_length_real = Parameter('scattering_length_real', scattering_length.real, **default_options['sl'])
+        # scattering_length_imag = Parameter('scattering_length_imag', scattering_length.imag, **default_options['isl'])
+
+        sld = get_as_parameter(
             density_to_sld(scattering_length_real.raw_value, mw.raw_value, density.raw_value),
-            **default_options['sld'],
+            'sld',
+            DEFAULTS,
         )
-        isld = Parameter(
-            'isld',
+        isld = get_as_parameter(
             density_to_sld(scattering_length_imag.raw_value, mw.raw_value, density.raw_value),
-            **default_options['isld'],
+            'isld',
+            DEFAULTS,
         )
+
+        # default_options = deepcopy(DEFAULTS)
+        # del default_options['sld']['value']
+        # del default_options['isld']['value']
+        # sld = Parameter(
+        #     'sld',
+        #     density_to_sld(scattering_length_real.raw_value, mw.raw_value, density.raw_value),
+        #     **default_options['sld'],
+        # )
+        # isld = Parameter(
+        #     'isld',
+        #     density_to_sld(scattering_length_imag.raw_value, mw.raw_value, density.raw_value),
+        #     **default_options['isld'],
+        # )
 
         constraint = FunctionalConstraint(sld, density_to_sld, [scattering_length_real, mw, density])
         scattering_length_real.user_constraints['sld'] = constraint
@@ -116,38 +149,38 @@ class MaterialDensity(Material):
         self._chemical_structure = chemical_structure
         self.interface = interface
 
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> MaterialDensity:
-        """Default instance of material defined by density and chemical structure.
+    # # Class methods for instance creation
+    # @classmethod
+    # def default(cls, interface=None) -> MaterialDensity:
+    #     """Default instance of material defined by density and chemical structure.
 
-        :param interface: Interface object, defaults to :py:attr:`None`
-        """
-        density = Parameter('density', **MATERIALDENSITY_DEFAULTS['density'])
-        return cls(MATERIALDENSITY_DEFAULTS['chemical_structure'], density, interface=interface)
+    #     :param interface: Interface object, defaults to :py:attr:`None`
+    #     """
+    #     density = Parameter('density', **DEFAULTS['density'])
+    #     return cls(DEFAULTS['chemical_structure'], density, interface=interface)
 
-    @classmethod
-    def from_pars(
-        cls,
-        chemical_structure: str,
-        density: float,
-        name: str = 'EasyMaterialDensity',
-        interface=None,
-    ) -> MaterialDensity:
-        """Instance of a material from mass density and chemical structure,
-        where these are known.
-        :param chemical_structure: Chemical formula for the material
-        :param density: Mass density for the material
-        :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`
-        :param interface: Interface object, defaults to :py:attr:`None`
-        :return: Material container
-        """
-        default_options = deepcopy(MATERIALDENSITY_DEFAULTS)
-        del default_options['density']['value']
+    # @classmethod
+    # def from_pars(
+    #     cls,
+    #     chemical_structure: str,
+    #     density: float,
+    #     name: str = 'EasyMaterialDensity',
+    #     interface=None,
+    # ) -> MaterialDensity:
+    #     """Instance of a material from mass density and chemical structure,
+    #     where these are known.
+    #     :param chemical_structure: Chemical formula for the material
+    #     :param density: Mass density for the material
+    #     :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`
+    #     :param interface: Interface object, defaults to :py:attr:`None`
+    #     :return: Material container
+    #     """
+    #     default_options = deepcopy(DEFAULTS)
+    #     del default_options['density']['value']
 
-        density = Parameter('density', density, **default_options['density'])
+    #     density = Parameter('density', density, **default_options['density'])
 
-        return cls(chemical_structure, density, name=name, interface=interface)
+    #     return cls(chemical_structure, density, name=name, interface=interface)
 
     @property
     def chemical_structure(self) -> str:

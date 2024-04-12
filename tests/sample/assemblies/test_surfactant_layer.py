@@ -30,8 +30,8 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.head_layer.molecular_formula == 'C10H18NO8P'
 
     def test_from_pars(self):
-        h2o = Material.from_pars(-0.561, 0, 'H2O')
-        noth2o = Material.from_pars(0.561, 0, 'nH2O')
+        h2o = Material(-0.561, 0, 'H2O')
+        noth2o = Material(0.561, 0, 'nH2O')
         p = SurfactantLayer.from_pars('C8O10H12P', 12, h2o, 0.5, 50, 2, 'C10H24', 10, noth2o, 0.2, 40, 3, name='A Test')
         assert p.layers[0].name == 'A Test Tail Layer'
         assert p.tail_layer.name == 'A Test Tail Layer'
@@ -79,7 +79,7 @@ class TestSurfactantLayer(unittest.TestCase):
 
     def test_constain_solvent_roughness(self):
         p = SurfactantLayer.default()
-        layer = Layer.default()
+        layer = Layer()
         p.tail_layer.roughness.value = 2
         assert p.tail_layer.roughness.raw_value == 2
         assert p.head_layer.roughness.raw_value == 3
@@ -157,7 +157,7 @@ class TestSurfactantLayer(unittest.TestCase):
     def test_set_head_layer(self):
         # When
         p = SurfactantLayer.default()
-        new_layer = Layer.default()
+        new_layer = Layer()
 
         # Then
         p.head_layer = new_layer
@@ -178,7 +178,7 @@ class TestSurfactantLayer(unittest.TestCase):
     def test_set_tail_layer(self):
         # When
         p = SurfactantLayer.default()
-        new_layer = Layer.default()
+        new_layer = Layer()
 
         # Then
         p.tail_layer = new_layer

@@ -18,9 +18,6 @@ class BaseCore(BaseObj):
         self.interface = interface
 
     @abstractmethod
-    def default(cls, interface=None) -> Any: ...
-
-    @abstractmethod
     def _dict_repr(self) -> dict[str, str]: ...
 
     @property

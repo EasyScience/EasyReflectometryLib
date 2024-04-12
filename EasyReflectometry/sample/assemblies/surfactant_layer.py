@@ -71,9 +71,9 @@ class SurfactantLayer(BaseAssembly):
 
         :return: Surfactant layer object.
         """
-        d2o = Material.from_pars(6.36, 0, 'D2O')
-        air = Material.from_pars(0, 0, 'Air')
-        tail = LayerAreaPerMolecule.from_pars(
+        d2o = Material(6.36, 0, 'D2O')
+        air = Material(0, 0, 'Air')
+        tail = LayerAreaPerMolecule(
             molecular_formula='C32D64',
             thickness=16,
             solvent=air,
@@ -82,7 +82,7 @@ class SurfactantLayer(BaseAssembly):
             roughness=3,
             name='DPPC Tail',
         )
-        head = LayerAreaPerMolecule.from_pars(
+        head = LayerAreaPerMolecule(
             molecular_formula='C10H18NO8P',
             thickness=10.0,
             solvent=d2o,
@@ -128,7 +128,7 @@ class SurfactantLayer(BaseAssembly):
         :param head_layer_roughness: Roughness of head layer.
         :param name: Name for surfactant layer.
         """
-        head_layer = LayerAreaPerMolecule.from_pars(
+        head_layer = LayerAreaPerMolecule(
             molecular_formula=head_layer_molecular_formula,
             thickness=head_layer_thickness,
             solvent=head_layer_solvent,
@@ -137,7 +137,7 @@ class SurfactantLayer(BaseAssembly):
             roughness=head_layer_roughness,
             name=name + ' Head Layer',
         )
-        tail_layer = LayerAreaPerMolecule.from_pars(
+        tail_layer = LayerAreaPerMolecule(
             molecular_formula=tail_layer_molecular_formula,
             thickness=tail_layer_thickness,
             solvent=tail_layer_solvent,

@@ -27,10 +27,10 @@ class TestSample(unittest.TestCase):
         assert_equal(p[1].name, 'EasyMultilayer')
 
     def test_from_pars(self):
-        m1 = Material.from_pars(6.908, -0.278, 'Boron')
-        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
-        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
-        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+        m1 = Material(6.908, -0.278, 'Boron')
+        m2 = Material(0.487, 0.000, 'Potassium')
+        l1 = Layer(m1, 5.0, 2.0, 'thinBoron')
+        l2 = Layer(m2, 50.0, 1.0, 'thickPotassium')
         ls1 = LayerCollection.from_pars(l1, l2, name='twoLayer1')
         ls2 = LayerCollection.from_pars(l2, l1, name='twoLayer2')
         o1 = RepeatingMultilayer.from_pars(ls1, 2.0, 'twoLayerItem1')
@@ -42,10 +42,10 @@ class TestSample(unittest.TestCase):
         assert_equal(d[1].name, 'oneLayerItem2')
 
     def test_from_pars_layers(self):
-        m1 = Material.from_pars(6.908, -0.278, 'Boron')
-        m2 = Material.from_pars(0.487, 0.000, 'Potassium')
-        l1 = Layer.from_pars(m1, 5.0, 2.0, 'thinBoron')
-        l2 = Layer.from_pars(m2, 50.0, 1.0, 'thickPotassium')
+        m1 = Material(6.908, -0.278, 'Boron')
+        m2 = Material(0.487, 0.000, 'Potassium')
+        l1 = Layer(m1, 5.0, 2.0, 'thinBoron')
+        l2 = Layer(m2, 50.0, 1.0, 'thickPotassium')
         d = Sample.from_pars(l1, l2, name='myModel')
         assert_equal(d.name, 'myModel')
         assert_equal(d.interface, None)
@@ -53,7 +53,7 @@ class TestSample(unittest.TestCase):
         assert_equal(d[1].name, 'thickPotassium')
 
     def test_from_pars_error(self):
-        m1 = Material.from_pars(6.908, -0.278, 'Boron')
+        m1 = Material(6.908, -0.278, 'Boron')
         with self.assertRaises(ValueError):
             _ = Sample.from_pars(m1, name='myModel')
 

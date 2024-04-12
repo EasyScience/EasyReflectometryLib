@@ -17,8 +17,8 @@ from EasyReflectometry.sample.elements.materials.material import Material
 class TestGradientLayer:
     @pytest.fixture
     def gradient_layer(self) -> GradientLayer:
-        self.front = Material.from_pars(10.0, -10.0, 'Material_1')
-        self.back = Material.from_pars(0.0, 0.0, 'Material_2')
+        self.front = Material(10.0, -10.0, 'Material_1')
+        self.back = Material(0.0, 0.0, 'Material_2')
 
         return GradientLayer(
             front_material=self.front,
@@ -58,8 +58,8 @@ class TestGradientLayer:
 
     def test_from_pars(self) -> None:
         # When
-        front = Material.from_pars(6.908, -0.278, 'Boron')
-        back = Material.from_pars(0.487, 0.000, 'Potassium')
+        front = Material(6.908, -0.278, 'Boron')
+        back = Material(0.487, 0.000, 'Potassium')
 
         # Then
         result = GradientLayer.from_pars(
@@ -158,8 +158,7 @@ def test_prepare_gradient_layers(monkeypatch):
     mock_material_2 = MagicMock()
     mock_Layer = MagicMock()
     mock_LayerCollection = MagicMock()
-    mock_Material = MagicMock()
-    mock_Material.from_pars = MagicMock(return_value='Material_from_pars')
+    mock_Material = MagicMock(return_value='Material_from_mock')
     mock_linear_gradient = MagicMock(return_value=[1.0, 2.0, 3.0])
     monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, '_linear_gradient', mock_linear_gradient)
     monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'Layer', mock_Layer)
@@ -170,15 +169,15 @@ def test_prepare_gradient_layers(monkeypatch):
     _prepare_gradient_layers(mock_material_1, mock_material_2, 3, None)
 
     # When
-    assert mock_Material.from_pars.call_count == 3
-    assert mock_Material.from_pars.call_args_list[0][0] == (1.0, 1.0)
-    assert mock_Material.from_pars.call_args_list[1][0] == (2.0, 2.0)
-    assert mock_Material.from_pars.call_args_list[2][0] == (3.0, 3.0)
-    assert mock_Layer.from_pars.call_count == 3
-    assert mock_Layer.from_pars.call_args_list[0][1]['material'] == 'Material_from_pars'
-    assert mock_Layer.from_pars.call_args_list[0][1]['thickness'] == 0.0
-    assert mock_Layer.from_pars.call_args_list[0][1]['name'] == '0'
-    assert mock_Layer.from_pars.call_args_list[0][1]['interface'] is None
+    assert mock_Material.call_count == 3
+    assert mock_Material.call_args_list[0][0] == (1.0, 1.0)
+    assert mock_Material.call_args_list[1][0] == (2.0, 2.0)
+    assert mock_Material.call_args_list[2][0] == (3.0, 3.0)
+    assert mock_Layer.call_count == 3
+    assert mock_Layer.call_args_list[0][1]['material'] == 'Material_from_mock'
+    assert mock_Layer.call_args_list[0][1]['thickness'] == 0.0
+    assert mock_Layer.call_args_list[0][1]['name'] == '0'
+    assert mock_Layer.call_args_list[0][1]['interface'] is None
 
 
 def test_dict_round_trip():

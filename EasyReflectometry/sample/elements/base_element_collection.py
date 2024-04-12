@@ -17,12 +17,7 @@ class BaseElementCollection(BaseCollection):
         self.interface = interface
 
     @abstractmethod
-    def default(cls, interface=None) -> Any:
-        ...
-
-    @abstractmethod
-    def _dict_repr(self) -> dict[str, str]:
-        ...
+    def _dict_repr(self) -> dict[str, str]: ...
 
     @property
     def uid(self) -> int:

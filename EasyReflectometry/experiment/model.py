@@ -4,6 +4,7 @@ __author__ = 'github.com/arm61'
 
 from numbers import Number
 from typing import Callable
+from typing import Optional
 from typing import Union
 
 import yaml
@@ -19,7 +20,7 @@ from EasyReflectometry.sample import Sample
 
 from .resolution_functions import constant_resolution_function
 
-MODEL_DETAILS = {
+DEFAULTS = {
     'scale': {
         'description': 'Scaling of the reflectomety profile',
         'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
@@ -55,7 +56,7 @@ class Model(BaseObj):
 
     def __init__(
         self,
-        sample: Union[Sample, None] = None,
+        sample: Optional[Sample] = None,
         scale: Union[Parameter, Number, None] = None,
         background: Union[Parameter, Number, None] = None,
         resolution_function: Union[Callable[[np.array], float], None] = None,
@@ -75,10 +76,10 @@ class Model(BaseObj):
         if sample is None:
             sample = Sample.default()
         if resolution_function is None:
-            resolution_function = constant_resolution_function(MODEL_DETAILS['resolution']['value'])
+            resolution_function = constant_resolution_function(DEFAULTS['resolution']['value'])
 
-        scale = get_as_parameter(scale, 'scale', MODEL_DETAILS)
-        background = get_as_parameter(background, 'background', MODEL_DETAILS)
+        scale = get_as_parameter(scale, 'scale', DEFAULTS)
+        background = get_as_parameter(background, 'background', DEFAULTS)
 
         super().__init__(
             name=name,
@@ -111,7 +112,7 @@ class Model(BaseObj):
         duplicate_layers = []
         for i in to_duplicate.layers:
             duplicate_layers.append(
-                Layer.from_pars(
+                Layer(
                     material=i.material,
                     thickness=i.thickness.raw_value,
                     roughness=i.roughness.raw_value,

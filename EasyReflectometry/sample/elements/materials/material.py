@@ -2,15 +2,17 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
-from copy import deepcopy
-from typing import ClassVar
+from numbers import Number
+from typing import Union
 
 from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter
 
+from EasyReflectometry.parameter_utils import get_as_parameter
+
 from ...base_core import BaseCore
 
-MATERIAL_DEFAULTS = {
+DEFAULTS = {
     'sld': {
         'description': 'The real scattering length density for a material in e-6 per squared angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
@@ -34,13 +36,13 @@ MATERIAL_DEFAULTS = {
 
 class Material(BaseCore):
     # Added in super().__init__
-    sld: ClassVar[Parameter]
-    isld: ClassVar[Parameter]
+    sld: Parameter
+    isld: Parameter
 
     def __init__(
         self,
-        sld: Parameter,
-        isld: Parameter,
+        sld: Union[Parameter, Number, None] = None,
+        isld: Union[Parameter, Number, None] = None,
         name: str = 'EasyMaterial',
         interface=None,
     ):
@@ -49,41 +51,44 @@ class Material(BaseCore):
         :param sld: Real scattering length density.
         :param isld: Imaginary scattering length density.
         :param name: Name of the material, defaults to 'EasyMaterial'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
-        super().__init__(name=name, interface=interface, sld=sld, isld=isld)
+        sld = get_as_parameter(sld, 'sld', DEFAULTS)
+        isld = get_as_parameter(isld, 'isld', DEFAULTS)
+
+        super().__init__(name=name, sld=sld, isld=isld, interface=interface)
 
     # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> Material:
-        """Default instance of a material."""
-        sld = Parameter('sld', **MATERIAL_DEFAULTS['sld'])
-        isld = Parameter('isld', **MATERIAL_DEFAULTS['isld'])
-        return cls(sld, isld, interface=interface)
+    # @classmethod
+    # def default(cls, interface=None) -> Material:
+    #     """Default instance of a material."""
+    #     sld = Parameter('sld', **DEFAULTS['sld'])
+    #     isld = Parameter('isld', **DEFAULTS['isld'])
+    #     return cls(sld, isld, interface=interface)
 
-    @classmethod
-    def from_pars(
-        cls,
-        sld: float,
-        isld: float,
-        name: str = 'EasyMaterial',
-        interface=None,
-    ) -> Material:
-        """Instance of a  material where the parameters are known.
+    # @classmethod
+    # def from_pars(
+    #     cls,
+    #     sld: float,
+    #     isld: float,
+    #     name: str = 'EasyMaterial',
+    #     interface=None,
+    # ) -> Material:
+    #     """Instance of a  material where the parameters are known.
 
-        :param sld: Real scattering length density.
-        :param isld: Imaginary scattering length density.
-        :param name: Name of the material, defaults to 'EasyMaterial'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
-        """
-        default_options = deepcopy(MATERIAL_DEFAULTS)
-        del default_options['sld']['value']
-        del default_options['isld']['value']
+    #     :param sld: Real scattering length density.
+    #     :param isld: Imaginary scattering length density.
+    #     :param name: Name of the material, defaults to 'EasyMaterial'.
+    #     :param interface: Calculator interface, defaults to :py:attr:`None`.
+    #     """
+    #     default_options = deepcopy(DEFAULTS)
+    #     del default_options['sld']['value']
+    #     del default_options['isld']['value']
 
-        sld = Parameter('sld', sld, **default_options['sld'])
-        isld = Parameter('isld', isld, **default_options['isld'])
+    #     sld = Parameter('sld', sld, **default_options['sld'])
+    #     isld = Parameter('isld', isld, **default_options['isld'])
 
-        return cls(sld=sld, isld=isld, name=name, interface=interface)
+    #     return cls(sld=sld, isld=isld, name=name, interface=interface)
 
     # Representation
     @property

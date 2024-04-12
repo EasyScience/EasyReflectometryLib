@@ -1,13 +1,17 @@
 from __future__ import annotations
 
-from copy import deepcopy
+from numbers import Number
+from typing import Optional
+from typing import Union
 
 from easyCore.Objects.ObjectClasses import Parameter
+
+from EasyReflectometry.parameter_utils import get_as_parameter
 
 from .material import Material
 from .material_mixture import MaterialMixture
 
-MATERIAL_SOLVATED_DETAILS = {
+DEFAULTS = {
     'solvent_fraction': {
         'description': 'Fraction of solvent in layer.',
         'value': 0.2,
@@ -22,9 +26,9 @@ MATERIAL_SOLVATED_DETAILS = {
 class MaterialSolvated(MaterialMixture):
     def __init__(
         self,
-        material: Material,
-        solvent: Material,
-        solvent_fraction: Parameter,
+        material: Optional[Material] = None,
+        solvent: Optional[Material] = None,
+        solvent_fraction: Union[Parameter, Number, None] = None,
         name=None,
         interface=None,
     ):
@@ -36,6 +40,13 @@ class MaterialSolvated(MaterialMixture):
         :param name: Name of the material, defaults to None that causes the name to be constructed.
         :param interface: Calculator interface, defaults to `None`.
         """
+        if material is None:
+            material = Material(sld=6.36, isld=0, name='D2O', interface=interface)
+        if solvent is None:
+            solvent = Material(sld=-0.561, isld=0, name='H2O', interface=interface)
+
+        solvent_fraction = get_as_parameter(solvent_fraction, 'solvent_fraction', DEFAULTS)
+
         # In super class, the fraction is the fraction of material b in material a
         super().__init__(
             material_a=material,
@@ -47,51 +58,51 @@ class MaterialSolvated(MaterialMixture):
         if name is None:
             self._update_name()
 
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> MaterialSolvated:
-        """A default instance for layer defined from molecule formula and area per molecule.
+    # # Class methods for instance creation
+    # @classmethod
+    # def default(cls, interface=None) -> MaterialSolvated:
+    #     """A default instance for layer defined from molecule formula and area per molecule.
 
-        :param interface: Calculator interface, defaults to `None`.
-        """
-        solvent_fraction = Parameter('solvent_fraction', **MATERIAL_SOLVATED_DETAILS['solvent_fraction'])
-        material = Material.from_pars(6.36, 0, 'D2O', interface=interface)
-        solvent = Material.from_pars(-0.561, 0, 'H2O', interface=interface)
-        return cls(
-            material=material,
-            solvent=solvent,
-            solvent_fraction=solvent_fraction,
-            interface=interface,
-        )
+    #     :param interface: Calculator interface, defaults to `None`.
+    #     """
+    #     solvent_fraction = Parameter('solvent_fraction', **DEFAULTS['solvent_fraction'])
+    #     material = Material.from_pars(6.36, 0, 'D2O', interface=interface)
+    #     solvent = Material.from_pars(-0.561, 0, 'H2O', interface=interface)
+    #     return cls(
+    #         material=material,
+    #         solvent=solvent,
+    #         solvent_fraction=solvent_fraction,
+    #         interface=interface,
+    #     )
 
-    @classmethod
-    def from_pars(
-        cls,
-        material: Material,
-        solvent: Material,
-        solvent_fraction: float,
-        name: str = 'EasyMaterialSolvated',
-        interface=None,
-    ) -> MaterialSolvated:
-        """An instance for a layer described with the area per molecule, where the parameters are known.
+    # @classmethod
+    # def from_pars(
+    #     cls,
+    #     material: Material,
+    #     solvent: Material,
+    #     solvent_fraction: float,
+    #     name: str = 'EasyMaterialSolvated',
+    #     interface=None,
+    # ) -> MaterialSolvated:
+    #     """An instance for a layer described with the area per molecule, where the parameters are known.
 
-        :param material: Material in the layer.
-        :param solvent: Solvent in the layer.
-        :param solvent_fraction: Fraction of solvent in layer. Fx solvation or surface coverage.
-        :param name: Identifier, defaults to 'EasyMaterialSolvated'.
-        :param interface: Calculator interface, defaults to `None`.
-        """
-        default_options = deepcopy(MATERIAL_SOLVATED_DETAILS)
-        del default_options['solvent_fraction']['value']
-        solvent_fraction = Parameter('coverage', solvent_fraction, **default_options['solvent_fraction'])
+    #     :param material: Material in the layer.
+    #     :param solvent: Solvent in the layer.
+    #     :param solvent_fraction: Fraction of solvent in layer. Fx solvation or surface coverage.
+    #     :param name: Identifier, defaults to 'EasyMaterialSolvated'.
+    #     :param interface: Calculator interface, defaults to `None`.
+    #     """
+    #     default_options = deepcopy(DEFAULTS)
+    #     del default_options['solvent_fraction']['value']
+    #     solvent_fraction = Parameter('coverage', solvent_fraction, **default_options['solvent_fraction'])
 
-        return cls(
-            material=material,
-            solvent=solvent,
-            solvent_fraction=solvent_fraction,
-            name=name,
-            interface=interface,
-        )
+    #     return cls(
+    #         material=material,
+    #         solvent=solvent,
+    #         solvent_fraction=solvent_fraction,
+    #         name=name,
+    #         interface=interface,
+    #     )
 
     @property
     def material(self) -> Material:

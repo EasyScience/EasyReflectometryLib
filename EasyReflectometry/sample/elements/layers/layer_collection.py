@@ -27,8 +27,8 @@ class LayerCollection(BaseElementCollection):
 
         :return: Default layers container
         """
-        layer1 = Layer.default()
-        layer2 = Layer.default()
+        layer1 = Layer()
+        layer2 = Layer()
         return cls(layer1, layer2, interface=interface)
 
     @classmethod

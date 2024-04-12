@@ -1,16 +1,19 @@
 from __future__ import annotations
 
 __author__ = 'github.com/arm61'
-
-from copy import deepcopy
+from numbers import Number
+from typing import Optional
+from typing import Union
 
 from easyCore import np
 from easyCore.Objects.ObjectClasses import Parameter
 
+from EasyReflectometry.parameter_utils import get_as_parameter
+
 from ...base_core import BaseCore
 from ..materials.material import Material
 
-LAYER_DETAILS = {
+DEFAULTS = {
     'thickness': {
         'description': 'The thickness of the layer in angstroms',
         'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
@@ -43,9 +46,9 @@ class Layer(BaseCore):
 
     def __init__(
         self,
-        material: Material,
-        thickness: Parameter,
-        roughness: Parameter,
+        material: Optional[Material] = None,
+        thickness: Union[Parameter, Number, None] = None,
+        roughness: Union[Parameter, Number, None] = None,
         name: str = 'EasyLayer',
         interface=None,
     ):
@@ -57,6 +60,12 @@ class Layer(BaseCore):
         :param name: Name of the layer, defaults to 'EasyLayer'
         :param interface: Interface object, defaults to :py:attr:`None`
         """
+        if material is None:
+            material = Material(interface=interface)
+
+        thickness = get_as_parameter(thickness, 'thickness', DEFAULTS)
+        roughness = get_as_parameter(roughness, 'roughness', DEFAULTS)
+
         super().__init__(
             name=name,
             interface=interface,
@@ -65,54 +74,54 @@ class Layer(BaseCore):
             roughness=roughness,
         )
 
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> Layer:
-        """Default instance of the reflectometry layer.
+    # # Class methods for instance creation
+    # @classmethod
+    # def default(cls, interface=None) -> Layer:
+    #     """Default instance of the reflectometry layer.
 
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
-        """
-        material = Material.default()
-        thickness = Parameter('thickness', **LAYER_DETAILS['thickness'])
-        roughness = Parameter('roughness', **LAYER_DETAILS['roughness'])
-        return cls(
-            material,
-            thickness,
-            roughness,
-            interface=interface,
-        )
+    #     :param interface: Calculator interface, defaults to :py:attr:`None`.
+    #     """
+    #     material = Material.default()
+    #     thickness = Parameter('thickness', **DEFAULTS['thickness'])
+    #     roughness = Parameter('roughness', **DEFAULTS['roughness'])
+    #     return cls(
+    #         material,
+    #         thickness,
+    #         roughness,
+    #         interface=interface,
+    #     )
 
-    @classmethod
-    def from_pars(
-        cls,
-        material: Material,
-        thickness: float,
-        roughness: float,
-        name: str = 'EasyLayer',
-        interface=None,
-    ) -> Layer:
-        """Instance of a reflectometry layer where the parameters are known.
+    # @classmethod
+    # def from_pars(
+    #     cls,
+    #     material: Material,
+    #     thickness: float,
+    #     roughness: float,
+    #     name: str = 'EasyLayer',
+    #     interface=None,
+    # ) -> Layer:
+    #     """Instance of a reflectometry layer where the parameters are known.
 
-        :param material: The material that makes up the layer.
-        :param thickness: Layer thickness in angstrom.
-        :param roughness: Layer roughness in angstrom.
-        :param name: Name of the layer, defaults to 'EasyLayer'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
-        """
-        default_options = deepcopy(LAYER_DETAILS)
-        del default_options['thickness']['value']
-        del default_options['roughness']['value']
+    #     :param material: The material that makes up the layer.
+    #     :param thickness: Layer thickness in angstrom.
+    #     :param roughness: Layer roughness in angstrom.
+    #     :param name: Name of the layer, defaults to 'EasyLayer'.
+    #     :param interface: Calculator interface, defaults to :py:attr:`None`.
+    #     """
+    #     default_options = deepcopy(DEFAULTS)
+    #     del default_options['thickness']['value']
+    #     del default_options['roughness']['value']
 
-        thickness = Parameter('thickness', thickness, **default_options['thickness'])
-        roughness = Parameter('roughness', roughness, **default_options['roughness'])
+    #     thickness = Parameter('thickness', thickness, **default_options['thickness'])
+    #     roughness = Parameter('roughness', roughness, **default_options['roughness'])
 
-        return cls(
-            material=material,
-            thickness=thickness,
-            roughness=roughness,
-            name=name,
-            interface=interface,
-        )
+    #     return cls(
+    #         material=material,
+    #         thickness=thickness,
+    #         roughness=roughness,
+    #         name=name,
+    #         interface=interface,
+    #     )
 
     def assign_material(self, material: Material) -> None:
         """Assign a material to the layer interface.

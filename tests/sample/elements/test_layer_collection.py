@@ -25,10 +25,10 @@ class TestLayerCollection(unittest.TestCase):
         assert_equal(p[1].name, 'EasyLayer')
 
     def test_from_pars(self):
-        m = Material.from_pars(6.908, -0.278, 'Boron')
-        k = Material.from_pars(0.487, 0.000, 'Potassium')
-        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
-        q = Layer.from_pars(k, 50.0, 1.0, 'thickPotassium')
+        m = Material(6.908, -0.278, 'Boron')
+        k = Material(0.487, 0.000, 'Potassium')
+        p = Layer(m, 5.0, 2.0, 'thinBoron')
+        q = Layer(k, 50.0, 1.0, 'thickPotassium')
         layers = LayerCollection.from_pars(p, q, name='twoLayer')
         assert_equal(layers.name, 'twoLayer')
         assert_equal(layers.interface, None)
@@ -37,8 +37,8 @@ class TestLayerCollection(unittest.TestCase):
         assert_equal(layers[1].name, 'thickPotassium')
 
     def test_from_pars_item(self):
-        m = Material.from_pars(6.908, -0.278, 'Boron')
-        p = Layer.from_pars(m, 5.0, 2.0, 'thinBoron')
+        m = Material(6.908, -0.278, 'Boron')
+        p = Layer(m, 5.0, 2.0, 'thinBoron')
         i = RepeatingMultilayer.from_pars(LayerCollection.default(), 2)
         layers = LayerCollection.from_pars(p, i, name='twoLayer')
         assert_equal(layers.name, 'twoLayer')

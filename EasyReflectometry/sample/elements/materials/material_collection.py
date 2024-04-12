@@ -31,8 +31,8 @@ class MaterialCollection(BaseElementCollection):
         :return: Default materials container
         :rtype: Materials
         """
-        material1 = Material.default()
-        material2 = Material.default()
+        material1 = Material()
+        material2 = Material()
         return cls(material1, material2, interface=interface)
 
     @classmethod

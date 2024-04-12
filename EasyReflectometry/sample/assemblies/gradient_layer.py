@@ -71,8 +71,8 @@ class GradientLayer(BaseAssembly):
         :param name: Name for gradient layer, defaults to 'EasyGradienLayer'.
         :param interface: Calculator interface, defaults to `None`.
         """
-        front_material = Material.from_pars(0.0, 0.0, 'Air')
-        back_material = Material.from_pars(6.36, 0.0, 'D2O')
+        front_material = Material(0.0, 0.0, 'Air')
+        back_material = Material(6.36, 0.0, 'D2O')
 
         return cls(
             front_material=front_material,
@@ -196,8 +196,8 @@ def _prepare_gradient_layers(
     )
     gradient_layers = []
     for i in range(discretisation_elements):
-        layer = Layer.from_pars(
-            material=Material.from_pars(gradient_sld[i], gradient_isld[i]),
+        layer = Layer(
+            material=Material(gradient_sld[i], gradient_isld[i]),
             thickness=0.0,
             roughness=0.0,
             name=str(i),

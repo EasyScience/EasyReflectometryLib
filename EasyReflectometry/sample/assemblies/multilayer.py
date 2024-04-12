@@ -83,7 +83,7 @@ class Multilayer(BaseAssembly):
         :type idx: int
         """
         to_duplicate = self.layers[idx]
-        duplicate_layer = Layer.from_pars(
+        duplicate_layer = Layer(
             material=to_duplicate.material,
             thickness=to_duplicate.thickness.raw_value,
             roughness=to_duplicate.roughness.raw_value,

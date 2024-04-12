@@ -1,6 +1,6 @@
 __author__ = 'github.com/arm61'
 
-from typing import List
+from typing import Union
 
 import yaml
 from easyCore.Objects.Groups import BaseCollection
@@ -9,31 +9,11 @@ from .model import Model
 
 
 class Models(BaseCollection):
-    def __init__(self, *args: List[Model], name: str = 'EasyModels', interface=None, **kwargs):
-        super().__init__(name, *args, **kwargs)
+    def __init__(self, *models: Union[list[Model], None], name: str = 'EasyModels', interface=None, **kwargs):
+        if models is None:
+            models = [Model(), Model()]
+        super().__init__(name, *models, **kwargs)
         self.interface = interface
-
-    # Class constructors
-    @classmethod
-    def default(cls, interface=None) -> 'Models':
-        """
-        Default constructor for the models
-
-        :return: Default models container
-        """
-        model1 = Model.default()
-        model2 = Model.default()
-        return cls(model1, model2, interface=interface)
-
-    @classmethod
-    def from_pars(cls, *args: List[Model], name: str = 'EasyModels', interface=None) -> 'Models':
-        """
-        Constructor for the models where models are being given.
-
-        :param args: The series of models
-        :return: Models container
-        """
-        return cls(*args, name=name, interface=interface)
 
     def add_model(self, new_model: Model):
         """
