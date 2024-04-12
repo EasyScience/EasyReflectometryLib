@@ -166,7 +166,7 @@ class Refl1dWrapper(WrapperBase):
         dq_vector = self._resolution_function(q_array)
 
         if is_constant_resolution_function(self._resolution_function):
-            # Compute percentage of Q and normalize
+            # Get percentage of Q and change from sigma to FWHM
             dq_vector = dq_vector * q_array / 100 / (2 * np.sqrt(2 * np.log(2)))
 
         q = names.QProbe(

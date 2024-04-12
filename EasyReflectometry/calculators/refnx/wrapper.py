@@ -132,7 +132,8 @@ class RefnxWrapper(WrapperBase):
 
         dq_vector = self._resolution_function(q_array)
         if is_constant_resolution_function(self._resolution_function):
-            # For a constant resolution percentage refnx supports just to pass a float
+            # FWHM Percentage resolution is constant given as
+            # For a constant resolution percentage refnx supports to pass a scalar value rather than a vector
             dq_vector = dq_vector[0]
 
         return model(x=q_array, x_err=dq_vector)
