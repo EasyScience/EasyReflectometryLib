@@ -2,14 +2,16 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
-from copy import deepcopy
+from numbers import Number
 from typing import Callable
+from typing import Union
 
 import yaml
 from easyCore import np
 from easyCore.Objects.ObjectClasses import BaseObj
 from easyCore.Objects.ObjectClasses import Parameter
 
+from EasyReflectometry.parameter_utils import get_as_parameter
 from EasyReflectometry.sample import BaseAssembly
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
@@ -53,10 +55,10 @@ class Model(BaseObj):
 
     def __init__(
         self,
-        sample: Sample,
-        scale: Parameter,
-        background: Parameter,
-        resolution_function: Callable[[np.array], float],
+        sample: Union[Sample, None] = None,
+        scale: Union[Parameter, Number, None] = None,
+        background: Union[Parameter, Number, None] = None,
+        resolution_function: Union[Callable[[np.array], float], None] = None,
         name: str = 'EasyModel',
         interface=None,
     ):
@@ -69,6 +71,15 @@ class Model(BaseObj):
         :param interface: Calculator interface, defaults to `None`.
 
         """
+
+        if sample is None:
+            sample = Sample.default()
+        if resolution_function is None:
+            resolution_function = constant_resolution_function(MODEL_DETAILS['resolution']['value'])
+
+        scale = get_as_parameter(scale, 'scale', MODEL_DETAILS)
+        background = get_as_parameter(background, 'background', MODEL_DETAILS)
+
         super().__init__(
             name=name,
             sample=sample,
@@ -77,60 +88,6 @@ class Model(BaseObj):
         )
         self.interface = interface
         self._resolution_function = resolution_function
-
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> Model:
-        """Default instance of the reflectometry experiment model.
-
-        :param interface: Calculator interface, defaults to `None`.
-        """
-        sample = Sample.default()
-        scale = Parameter('scale', **MODEL_DETAILS['scale'])
-        background = Parameter('background', **MODEL_DETAILS['background'])
-        resolution_function = constant_resolution_function(MODEL_DETAILS['resolution']['value'])
-
-        return cls(
-            sample=sample,
-            scale=scale,
-            background=background,
-            resolution_function=resolution_function,
-            interface=interface,
-        )
-
-    @classmethod
-    def from_pars(
-        cls,
-        sample: Sample,
-        scale: float,
-        background: float,
-        resolution_function: Callable[[np.array], float],
-        name: str = 'EasyModel',
-        interface=None,
-    ) -> Model:
-        """Instance of a reflectometry experiment model where the parameters are known.
-
-        :param sample: The sample being modelled.
-        :param scale: Scaling factor of profile.
-        :param background: Linear background magnitude.
-        :param name: Name of the layer, defaults to 'EasyModel'.
-        :param interface: Calculator interface, defaults to `None`.
-        """
-        default_options = deepcopy(MODEL_DETAILS)
-        del default_options['scale']['value']
-        del default_options['background']['value']
-
-        scale = Parameter('scale', scale, **default_options['scale'])
-        background = Parameter('background', background, **default_options['background'])
-
-        return cls(
-            sample=sample,
-            scale=scale,
-            background=background,
-            resolution_function=resolution_function,
-            name=name,
-            interface=interface,
-        )
 
     def add_item(self, *assemblies: list[BaseAssembly]) -> None:
         """Add a layer or item to the model sample.
