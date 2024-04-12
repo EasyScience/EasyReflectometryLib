@@ -58,7 +58,13 @@ class TestModel(unittest.TestCase):
         o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
         d = Sample.from_pars(o1, o2, name='myModel')
         resolution_function = constant_resolution_function(2.0)
-        mod = Model(d, 2, 1e-5, resolution_function, 'newModel')
+        mod = Model(
+            sample=d,
+            scale=2,
+            background=1e-5,
+            resolution_function=resolution_function,
+            name='newModel',
+        )
         assert_equal(mod.name, 'newModel')
         assert_equal(mod.interface, None)
         assert_equal(mod.sample.name, 'myModel')
