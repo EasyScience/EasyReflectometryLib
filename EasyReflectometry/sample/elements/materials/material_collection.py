@@ -1,58 +1,30 @@
 from __future__ import annotations
 
 __author__ = 'github.com/arm61'
+from typing import Optional
 
-from ..base_element_collection import BaseElementCollection
+from ...base_element_collection import SIZE_DEFAULT_COLLECTION
+from ...base_element_collection import BaseElementCollection
 from .material import Material
 from .material_mixture import MaterialMixture
 
-DEFAULT_MATERIALS = (Material(), Material())
-
 
 class MaterialCollection(BaseElementCollection):
+    # Added in super().__init__
+    matertials: list[Material | MaterialMixture]
+
     def __init__(
         self,
-        *materials: tuple[Material | MaterialMixture],
+        *materials: Optional[list[Material | MaterialMixture]],
         name: str = 'EasyMaterials',
         interface=None,
         **kwargs,
     ):
         if not materials:
-            materials = DEFAULT_MATERIALS
+            materials = [Material(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
         super().__init__(
             name,
             interface,
             *materials,
             **kwargs,
         )
-
-    @property
-    def names(self) -> list:
-        """
-        :returns: list of names for the materials.
-        """
-        return [i.name for i in self]
-
-    # Representation
-    @property
-    def _dict_repr(self) -> dict:
-        """
-        A simplified dict representation.
-
-        :return: Simple dictionary
-        """
-        return {self.name: [i._dict_repr for i in self]}
-
-    @classmethod
-    def from_dict(cls, data: dict) -> MaterialCollection:
-        """
-        Create a MaterialCollection from a dictionary.
-
-        :param data: dictionary of the MaterialCollection
-        :return: MaterialCollection
-        """
-        material_collection = super().from_dict(data)
-        # Remove the default materials
-        for i in range(len(DEFAULT_MATERIALS)):
-            del material_collection[0]
-        return material_collection

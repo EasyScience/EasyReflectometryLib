@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from ..elements.layers.layer import Layer
-from ..elements.layers.layer_collection import NR_DEFAULT_LAYERS
+from ..elements.layers.layer_collection import SIZE_DEFAULT_COLLECTION
 from ..elements.layers.layer_collection import LayerCollection
 from .base_assembly import BaseAssembly
 
@@ -92,6 +92,6 @@ class Multilayer(BaseAssembly):
         """
         multilayer = super().from_dict(data)
         # Remove the default materials
-        for i in range(NR_DEFAULT_LAYERS):
+        for i in range(SIZE_DEFAULT_COLLECTION):
             del multilayer.layers[0]
         return multilayer
