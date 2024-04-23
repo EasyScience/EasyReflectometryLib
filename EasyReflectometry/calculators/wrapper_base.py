@@ -5,6 +5,8 @@ import numpy as np
 
 from EasyReflectometry.experiment import constant_resolution_function
 
+DEFAULT_RESOLUTION_FWHM_PERCENTAGE = 5.0
+
 
 class WrapperBase:
     def __init__(self):
@@ -15,7 +17,7 @@ class WrapperBase:
             'item': {},
             'model': {},
         }
-        self._resolution_function = constant_resolution_function(5)
+        self._resolution_function = constant_resolution_function(DEFAULT_RESOLUTION_FWHM_PERCENTAGE)
 
     def reset_storage(self):
         """Reset the storage area to blank."""
@@ -204,7 +206,7 @@ class WrapperBase:
         item = getattr(item, key)
         return getattr(item, 'value')
 
-    def set_resolution_function(self, resolution_function: Callable[[np.array], float]) -> None:
+    def set_resolution_function(self, resolution_function: Callable[[np.array], np.array]) -> None:
         """Set the resolution function for the calculator.
 
         :param resolution_function: The resolution function
