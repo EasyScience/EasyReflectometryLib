@@ -46,7 +46,4 @@ def linear_spline_resolution_function(q_data_points: np.array, resolution_points
 
 def is_constant_resolution_function(resolution_function: Callable[[np.array], np.array]) -> bool:
     """Check if the resolution function is a constant."""
-    if resolution_function.__qualname__.split('.')[0] == 'constant_resolution_function':
-        return True
-    else:
-        return False
+    return 'constant' in resolution_function.__name__
