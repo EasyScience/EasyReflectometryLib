@@ -180,7 +180,6 @@ class TestRefl1d(unittest.TestCase):
         p.update_material('Material3', rho=4.000, irho=0.000)
         p.create_model('MyModel')
         p.update_model('MyModel', bkg=1e-7)
-        p.update_model('MyModel', bkg=1e-7, dq=5.0)
         p.create_layer('Layer1')
         p.assign_material_to_layer('Material1', 'Layer1')
         p.create_layer('Layer2')
@@ -209,7 +208,7 @@ class TestRefl1d(unittest.TestCase):
         ]
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)
 
-    def test_calculate2(self):
+    def test_calculate_three_items(self):
         p = Refl1dWrapper()
         p.create_material('Material1')
         p.update_material('Material1', rho=0.000, irho=0.000)
@@ -251,7 +250,6 @@ class TestRefl1d(unittest.TestCase):
             3.5132221e-07,
             2.5347996e-07,
         ]
-        assert_almost_equal(p.calculate(q, 'MyModel'), expected)
         assert_almost_equal(p.calculate(q, 'MyModel'), expected)
 
     def test_sld_profile(self):
