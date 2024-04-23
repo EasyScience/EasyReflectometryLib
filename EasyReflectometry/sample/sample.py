@@ -42,33 +42,6 @@ class Sample(BaseCollection):
         super().__init__(name, *new_items, **kwargs)
         self.interface = interface
 
-    # # Class methods for instance creation
-    # @classmethod
-    # def default(cls, interface=None) -> Sample:
-    #     """
-    #     Default instance of the reflectometry sample.
-
-    #     :param interface: Calculator interface, defaults to :py:attr:`None`.
-    #     """
-    #     item1 = Multilayer()
-    #     item2 = Multilayer()
-    #     return cls(item1, item2, interface=interface)
-
-    # @classmethod
-    # def from_pars(
-    #     cls,
-    #     *args: list[Layer | BaseAssembly],
-    #     name: str = 'EasyStructure',
-    #     interface=None,
-    # ) -> Sample:
-    #     """Constructor of a reflectometry sample where the parameters are known.
-
-    #     :param args: The assemblies in the sample
-    #     :param name: Name of the sample, defaults to 'EasySample'.
-    #     :param interface: Calculator interface, defaults to :py:attr:`None`.
-    #     """
-    #     return cls(*args, name=name, interface=interface)
-
     @property
     def uid(self) -> int:
         """The UID from the borg map."""

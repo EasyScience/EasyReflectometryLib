@@ -58,52 +58,6 @@ class MaterialSolvated(MaterialMixture):
         if name is None:
             self._update_name()
 
-    # # Class methods for instance creation
-    # @classmethod
-    # def default(cls, interface=None) -> MaterialSolvated:
-    #     """A default instance for layer defined from molecule formula and area per molecule.
-
-    #     :param interface: Calculator interface, defaults to `None`.
-    #     """
-    #     solvent_fraction = Parameter('solvent_fraction', **DEFAULTS['solvent_fraction'])
-    #     material = Material.from_pars(6.36, 0, 'D2O', interface=interface)
-    #     solvent = Material.from_pars(-0.561, 0, 'H2O', interface=interface)
-    #     return cls(
-    #         material=material,
-    #         solvent=solvent,
-    #         solvent_fraction=solvent_fraction,
-    #         interface=interface,
-    #     )
-
-    # @classmethod
-    # def from_pars(
-    #     cls,
-    #     material: Material,
-    #     solvent: Material,
-    #     solvent_fraction: float,
-    #     name: str = 'EasyMaterialSolvated',
-    #     interface=None,
-    # ) -> MaterialSolvated:
-    #     """An instance for a layer described with the area per molecule, where the parameters are known.
-
-    #     :param material: Material in the layer.
-    #     :param solvent: Solvent in the layer.
-    #     :param solvent_fraction: Fraction of solvent in layer. Fx solvation or surface coverage.
-    #     :param name: Identifier, defaults to 'EasyMaterialSolvated'.
-    #     :param interface: Calculator interface, defaults to `None`.
-    #     """
-    #     default_options = deepcopy(DEFAULTS)
-    #     del default_options['solvent_fraction']['value']
-    #     solvent_fraction = Parameter('coverage', solvent_fraction, **default_options['solvent_fraction'])
-
-    #     return cls(
-    #         material=material,
-    #         solvent=solvent,
-    #         solvent_fraction=solvent_fraction,
-    #         name=name,
-    #         interface=interface,
-    #     )
-
     @property
     def material(self) -> Material:
         """Get material."""

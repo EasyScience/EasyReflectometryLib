@@ -39,35 +39,6 @@ class Multilayer(BaseAssembly):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
         super().__init__(name, layers=layers, type=type, interface=interface)
 
-    # # Class methods for instance creation
-    # @classmethod
-    # def default(cls, interface=None) -> Multilayer:
-    #     """Default instance of a multi-layer.
-
-    #     :param interface: Calculator interface, defaults to `None`.
-    #     """
-    #     layers = LayerCollection()
-    #     return cls(layers, interface=interface)
-
-    # @classmethod
-    # def from_pars(
-    #     cls,
-    #     layers: LayerCollection,
-    #     name: str = 'EasyMultilayer',
-    #     interface=None,
-    # ) -> Multilayer:
-    #     """Instance of a multi-layer where the parameters are known.
-
-    #     :param layers: The layers in the multi-layer.
-    #     :param name: Name of the layer, defaults to 'EasyMultilayer'.
-    #     :param interface: Calculator interface, defaults to `None`.
-    #     """
-    #     return cls(
-    #         layers=layers,
-    #         name=name,
-    #         interface=interface,
-    #     )
-
     def add_layer(self, *layers: tuple[Layer]) -> None:
         """Add a layer to the multi layer.
 

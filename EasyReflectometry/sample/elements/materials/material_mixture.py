@@ -67,9 +67,6 @@ class MaterialMixture(BaseCore):
             b=material_b.isld.raw_value,
             p=fraction.raw_value,
         )
-        # default_options = deepcopy(DEFAULTS)
-        # del default_options['sld']['value']
-        # del default_options['isld']['value']
 
         self._sld = get_as_parameter(sld, 'sld', DEFAULTS)
         self._isld = get_as_parameter(isld, 'isld', DEFAULTS)
@@ -88,49 +85,6 @@ class MaterialMixture(BaseCore):
 
         self._materials_constraints()
         self.interface = interface
-
-    # # Class constructors
-    # @classmethod
-    # def default(cls, interface=None) -> MaterialMixture:
-    #     """Default instance for a mixture of two materials."""
-    #     material_a = Material.default()
-    #     material_b = Material.default()
-    #     fraction = Parameter('fraction', **DEFAULTS['fraction'])
-    #     return cls(
-    #         material_a=material_a,
-    #         material_b=material_b,
-    #         fraction=fraction,
-    #         interface=interface,
-    #     )
-
-    # @classmethod
-    # def from_pars(
-    #     cls,
-    #     material_a: Material,
-    #     material_b: Material,
-    #     fraction: float,
-    #     name: Optional[str] = None,
-    #     interface=None,
-    # ) -> MaterialMixture:
-    #     """Instance of mixture of two materials where the parameters are known.
-
-    #     :param material_a: The first material.
-    #     :param material_b: The second material.
-    #     :param fraction: The fraction of material_b in material_a.
-    #     :param name: Name of the material, defaults to 'EasyMaterialMixture'.
-    #     :param interface: Calculator interface, defaults to `None`.
-    #     """
-    #     default_options = deepcopy(DEFAULTS)
-    #     del default_options['fraction']['value']
-    #     fraction = Parameter('fraction', fraction, **default_options['fraction'])
-
-    #     return cls(
-    #         material_a=material_a,
-    #         material_b=material_b,
-    #         fraction=fraction,
-    #         name=name,
-    #         interface=interface,
-    #     )
 
     def _get_linkable_attributes(self):
         return [self._sld, self._isld]

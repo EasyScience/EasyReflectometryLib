@@ -26,36 +26,6 @@ class MaterialCollection(BaseElementCollection):
             **kwargs,
         )
 
-    # # Class methods for instance creation
-    # @classmethod
-    # def default(cls, interface=None) -> MaterialCollection:
-    #     """
-    #     Default constructor for materials.
-
-    #     :return: Default materials container
-    #     :rtype: Materials
-    #     """
-    #     material1 = Material()
-    #     material2 = Material()
-    #     return cls(material1, material2, interface=interface)
-
-    # @classmethod
-    # def from_pars(
-    #     cls,
-    #     *materials: tuple[Material | MaterialMixture],
-    #     name: str = 'EasyMaterials',
-    #     interface=None,
-    # ) -> MaterialCollection:
-    #     """
-    #     Constructor of materials where the parameters are known.
-
-    #     :param args: The series of material
-    #     :type args: list[Material | MaterialMixture]
-    #     :return: Materials container
-    #     :rtype: Materials
-    #     """
-    #     return cls(*materials, name=name, interface=interface)
-
     @property
     def names(self) -> list:
         """

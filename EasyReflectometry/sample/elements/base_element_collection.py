@@ -1,6 +1,5 @@
 from abc import abstractmethod
 
-# from typing import Any
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 

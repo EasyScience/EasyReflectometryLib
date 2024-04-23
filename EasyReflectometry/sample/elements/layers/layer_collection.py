@@ -26,33 +26,6 @@ class LayerCollection(BaseElementCollection):
 
         super().__init__(name, interface, *list_layer_like, **kwargs)
 
-    # # Class methods for instance creation
-    # @classmethod
-    # def default(cls, interface=None) -> LayerCollection:
-    #     """
-    #     Default constructor for the reflectometry layers.
-
-    #     :return: Default layers container
-    #     """
-    #     layer1 = Layer()
-    #     layer2 = Layer()
-    #     return cls(layer1, layer2, interface=interface)
-
-    # @classmethod
-    # def from_pars(
-    #     cls,
-    #     *layers: tuple[Layer],
-    #     name: str = 'EasyLayer',
-    #     interface=None,
-    # ) -> LayerCollection:
-    #     """
-    #     Constructor of a reflectometry layers where the parameters are known.
-
-    #     :param args: The series of layers
-    #     :return: Layers container
-    #     """
-    #     return cls(*layers, name=name, interface=interface)
-
     # Representation
     @property
     def _dict_repr(self) -> dict[str, list[dict]]:
