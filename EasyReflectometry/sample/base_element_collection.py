@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from typing import Any
 
 import yaml
@@ -34,9 +33,9 @@ class BaseElementCollection(BaseCollection):
 
     def __repr__(self) -> str:
         """
-        String representation of the layer.
+        String representation of the collection.
 
-        :return: a string representation of the layer
+        :return: a string representation of the collection
         """
         return yaml.dump(self._dict_repr, sort_keys=False)
 
@@ -52,10 +51,10 @@ class BaseElementCollection(BaseCollection):
     @classmethod
     def from_dict(cls, data: dict) -> Any:
         """
-        Create an instance from a dictionary.
+        Create an instance of a collection from a dictionary.
 
-        :param data: dictionary for the instance
-        :return: The instance defined in the dictionary
+        :param data: The dictionary for the collection
+        :return: An instance of the collection
         """
         collection = super().from_dict(data)
         # Remove the default elements
