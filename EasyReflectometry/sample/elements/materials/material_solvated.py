@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from numbers import Number
 from typing import Optional
 from typing import Union

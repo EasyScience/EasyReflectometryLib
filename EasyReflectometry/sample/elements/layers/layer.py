@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 __author__ = 'github.com/arm61'
 from numbers import Number
 from typing import Optional
@@ -58,7 +56,7 @@ class Layer(BaseCore):
         :param thickness: Layer thickness in Angstrom.
         :param roughness: Upper roughness on the layer in Angstrom.
         :param name: Name of the layer, defaults to 'EasyLayer'
-        :param interface: Interface object, defaults to :py:attr:`None`
+        :param interface: Interface object, defaults to `None`
         """
         if material is None:
             material = Material(interface=interface)

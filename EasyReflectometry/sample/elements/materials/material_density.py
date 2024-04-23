@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from numbers import Number
 from typing import Optional
 from typing import Union
@@ -71,7 +69,7 @@ class MaterialDensity(Material):
         density: Union[Parameter, Number, None] = None,
         name: str = 'EasyMaterialDensity',
         interface=None,
-    ) -> MaterialDensity:
+    ):
         """Constructor.
 
         :param chemical_structure: Chemical formula for the material.

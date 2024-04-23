@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-# from copy import deepcopy
 from numbers import Number
 from typing import Union
 

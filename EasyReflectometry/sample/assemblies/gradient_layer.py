@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import Optional
 
 from numpy import arange
@@ -25,7 +23,7 @@ class GradientLayer(BaseAssembly):
         discretisation_elements: int = 10,
         name: str = 'EasyGradienLayer',
         interface=None,
-    ) -> GradientLayer:
+    ):
         """Constructor.
 
         :param front_material: Material of front of the layer

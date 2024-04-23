@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Union
+
 from ..elements.layers.layer import Layer
 from ..elements.layers.layer_collection import SIZE_DEFAULT_COLLECTION
 from ..elements.layers.layer_collection import LayerCollection
@@ -19,7 +21,7 @@ class Multilayer(BaseAssembly):
 
     def __init__(
         self,
-        layers: LayerCollection | Layer | list[Layer] | None = None,
+        layers: Union[LayerCollection | Layer | list[Layer] | None] = None,
         name: str = 'EasyMultilayer',
         interface=None,
         type: str = 'Multi-layer',

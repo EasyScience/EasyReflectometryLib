@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 __author__ = 'github.com/arm61'
 from typing import Optional
 

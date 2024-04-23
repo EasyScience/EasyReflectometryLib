@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from numbers import Number
 from typing import Optional
 from typing import Union
@@ -52,7 +50,7 @@ DEFAULTS.update(LAYER_DEFAULTS)
 
 
 class LayerAreaPerMolecule(Layer):
-    """The :py:class:`LayerAreaPerMolecule` class allows a layer to be defined in terms of some
+    """The `LayerAreaPerMolecule` class allows a layer to be defined in terms of some
     molecular formula an area per molecule, and a solvent.
 
     """
