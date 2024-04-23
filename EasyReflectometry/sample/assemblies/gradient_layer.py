@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Optional
+
 from numpy import arange
 
 from ..elements.layers.layer import Layer
@@ -16,10 +18,10 @@ class GradientLayer(BaseAssembly):
 
     def __init__(
         self,
-        front_material: Material,
-        back_material: Material,
-        thickness: float,
-        roughness: float,
+        front_material: Optional[Material] = None,
+        back_material: Optional[Material] = None,
+        thickness: Optional[float] = 2.0,
+        roughness: Optional[float] = 0.2,
         discretisation_elements: int = 10,
         name: str = 'EasyGradienLayer',
         interface=None,
@@ -34,8 +36,15 @@ class GradientLayer(BaseAssembly):
         :param name: Name for gradient layer, defaults to 'EasyGradienLayer'.
         :param interface: Calculator interface, defaults to `None`.
         """
+
+        if front_material is None:
+            front_material = Material(0.0, 0.0, 'Air')
         self._front_material = front_material
+
+        if back_material is None:
+            back_material = Material(6.36, 0.0, 'D2O')
         self._back_material = back_material
+
         if discretisation_elements < 2:
             raise ValueError('Discretisation elements must be greater than 2.')
         self._discretisation_elements = discretisation_elements
@@ -62,59 +71,6 @@ class GradientLayer(BaseAssembly):
         # Set the thickness and roughness properties
         self.thickness = thickness
         self.roughness = roughness
-
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, name: str = 'EasyGradientLayer', interface=None) -> GradientLayer:
-        """Default instance  for a gradient layer object. The default is air to deuterium.
-
-        :param name: Name for gradient layer, defaults to 'EasyGradienLayer'.
-        :param interface: Calculator interface, defaults to `None`.
-        """
-        front_material = Material(0.0, 0.0, 'Air')
-        back_material = Material(6.36, 0.0, 'D2O')
-
-        return cls(
-            front_material=front_material,
-            back_material=back_material,
-            thickness=2.0,
-            roughness=0.2,
-            discretisation_elements=10,
-            name=name,
-            interface=interface,
-        )
-
-    @classmethod
-    def from_pars(
-        cls,
-        front_material: Material,
-        back_material: Material,
-        thickness: float,
-        roughness: float,
-        discretisation_elements: int,
-        name: str = 'EasyGradientLayer',
-        interface=None,
-    ) -> GradientLayer:
-        """Instance for the gradient layer where the parameters are known,
-        `front` is facing the neutron beam.
-
-        :param front_material: Material of front of the layer
-        :param back_material: Material of back of the layer
-        :param thickness: Thicknkess of the layer
-        :param roughness: Roughness of the layer
-        :param discretisation_elements: Number of dicrete layers
-        :param name: Name for gradient layer
-        """
-
-        return cls(
-            front_material=front_material,
-            back_material=back_material,
-            thickness=thickness,
-            roughness=roughness,
-            discretisation_elements=discretisation_elements,
-            name=name,
-            interface=interface,
-        )
 
     @property
     def thickness(self) -> float:

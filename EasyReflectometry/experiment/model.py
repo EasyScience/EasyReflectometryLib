@@ -191,8 +191,6 @@ class Model(BaseObj):
         :return: Model
         """
         model = super().from_dict(data)
-        # # Remove the default sample
-        # model.sample.__delitem__(0)
 
         # Ensure that the sample is also converted
         # TODO Should probably be handled in EasyCore

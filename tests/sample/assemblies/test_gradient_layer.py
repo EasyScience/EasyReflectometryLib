@@ -48,7 +48,7 @@ class TestGradientLayer:
 
     def test_default(self) -> None:
         # When Then
-        result = GradientLayer.default('default-layer')
+        result = GradientLayer(name='default-layer')
 
         # Expect
         assert result.name == 'default-layer'
@@ -62,7 +62,7 @@ class TestGradientLayer:
         back = Material(0.487, 0.000, 'Potassium')
 
         # Then
-        result = GradientLayer.from_pars(
+        result = GradientLayer(
             front_material=front,
             back_material=back,
             thickness=10.0,
@@ -181,6 +181,6 @@ def test_prepare_gradient_layers(monkeypatch):
 
 
 def test_dict_round_trip():
-    p = GradientLayer.default()
+    p = GradientLayer()
     q = GradientLayer.from_dict(p.as_dict())
     assert p.as_data_dict() == q.as_data_dict()
