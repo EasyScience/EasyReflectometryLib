@@ -85,7 +85,6 @@ class MaterialDensity(Material):
         density = get_as_parameter(density, 'density', DEFAULTS)
 
         scattering_length = neutron_scattering_length(chemical_structure)
-        # default_options = deepcopy(DEFAULTS)
 
         mw = get_as_parameter(molecular_weight(chemical_structure), 'molecular_weight', DEFAULTS)
         scattering_length_real = get_as_parameter(

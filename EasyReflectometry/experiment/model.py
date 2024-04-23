@@ -117,6 +117,7 @@ class Model(BaseObj):
                     thickness=i.thickness.raw_value,
                     roughness=i.roughness.raw_value,
                     name=i.name + ' duplicate',
+                    interface=i.interface,
                 )
             )
         duplicate = to_duplicate.__class__(
@@ -195,8 +196,6 @@ class Model(BaseObj):
 
         # Ensure that the sample is also converted
         # TODO Should probably be handled in EasyCore
-        # for i in range(len(model.sample)):
-        #     model.sample[i] = model.sample[i].__class__.from_dict(data['sample'][i])
         model.sample = model.sample.__class__.from_dict(data['sample'])
 
         return model

@@ -29,7 +29,6 @@ class SurfactantLayer(BaseAssembly):
         self,
         tail_layer: Optional[LayerAreaPerMolecule] = None,
         head_layer: Optional[LayerAreaPerMolecule] = None,
-        #        layers: list[LayerAreaPerMolecule],
         name: str = 'EasySurfactantLayer',
         constrain_area_per_molecule: bool = False,
         conformal_roughness: bool = False,

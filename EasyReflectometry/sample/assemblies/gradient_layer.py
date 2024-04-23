@@ -196,8 +196,9 @@ def _prepare_gradient_layers(
     )
     gradient_layers = []
     for i in range(discretisation_elements):
+        material_i = Material(gradient_sld[i], gradient_isld[i], interface=interface)
         layer = Layer(
-            material=Material(gradient_sld[i], gradient_isld[i]),
+            material=material_i,
             thickness=0.0,
             roughness=0.0,
             name=str(i),

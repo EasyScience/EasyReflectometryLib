@@ -14,10 +14,6 @@ class TestMaterialSolvated:
     def material_solvated(self, monkeypatch) -> MaterialSolvated:
         self.material = Material(sld=1.0, isld=0, name='material')
         self.solvent = Material(sld=2.0, isld=0, name='solvent')
-        #        self.mock_material = MagicMock(spec=Material)
-        #        self.mock_material.name = 'material'
-        #        self.mock_solvent = MagicMock(spec=Material)
-        #        self.mock_solvent.name = 'solvent'
         self.mock_solvent_fraction = MagicMock(spec=Parameter)
         self.mock_solvent_fraction.raw_value = 0.1
         self.mock_interface = MagicMock()
@@ -32,8 +28,6 @@ class TestMaterialSolvated:
         return MaterialSolvated(
             material=self.material,
             solvent=self.solvent,
-            #            material=self.mock_material,
-            #            solvent=self.mock_solvent,
             solvent_fraction=self.mock_solvent_fraction,
             name='name',
             interface=self.mock_interface,

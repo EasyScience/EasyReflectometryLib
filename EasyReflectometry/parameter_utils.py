@@ -16,6 +16,7 @@ def get_as_parameter(value: Union[Parameter, Number, None], name: str, default_d
     param name: The name of the parameter
     param default_dict: Dictionary with entry for `name` containing the default value and metadata for the parameter
     """
+    # Ensure we got the dictionary for the parameter with the given name
     # Should leave the passed dictionary unchanged
     if name not in default_dict:
         parameter_dict = deepcopy(default_dict)

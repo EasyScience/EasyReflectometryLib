@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from typing import Any
 
 import yaml
 from easyCore.Objects.ObjectClasses import BaseObj
