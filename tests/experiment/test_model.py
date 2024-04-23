@@ -334,11 +334,41 @@ class TestModel(unittest.TestCase):
         p = Model.default()
         assert_equal(p.uid, p._borg.map.convert_id_to_key(p))
 
-    def test_set_resolution_function(self):
+    def test_resolution_function(self):
         mock_resolution_function = MagicMock()
-        model = Model.default()
-        model.set_resolution_function(mock_resolution_function)
-        assert model._resolution_function == mock_resolution_function
+        interface = CalculatorFactory()
+        interface.switch('refl1d')
+        model = Model.default(interface=interface)
+
+        # Then
+        model.resolution_function = mock_resolution_function
+
+        # Expect
+        assert model.resolution_function == mock_resolution_function
+
+    def test_resolution_function_interface_refl1d(self):
+        mock_resolution_function = MagicMock()
+        interface = CalculatorFactory()
+        interface.switch('refl1d')
+        model = Model.default(interface=interface)
+
+        # Then
+        model.resolution_function = mock_resolution_function
+
+        # Expect
+        assert model.interface()._wrapper._resolution_function == mock_resolution_function
+
+    def test_set_resolution_function_interface_refnx(self):
+        mock_resolution_function = MagicMock()
+        interface = CalculatorFactory()
+        interface.switch('refnx')
+        model = Model.default(interface=interface)
+
+        # Then
+        model.resolution_function = mock_resolution_function
+
+        # Expect
+        assert model.interface()._wrapper._resolution_function == mock_resolution_function
 
     def test_repr(self):
         model = Model.default()
@@ -351,7 +381,7 @@ class TestModel(unittest.TestCase):
     def test_repr_resolution_function(self):
         resolution_function = linear_spline_resolution_function([0, 10], [0, 10])
         model = Model.default()
-        model.set_resolution_function(resolution_function)
+        model.resolution_function = resolution_function
         assert (
             model.__repr__()
             == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: function of Q\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n'  # noqa: E501
@@ -361,7 +391,7 @@ class TestModel(unittest.TestCase):
         resolution_function = linear_spline_resolution_function([0, 10], [0, 10])
         interface = CalculatorFactory()
         model = Model.default(interface)
-        model.set_resolution_function(resolution_function)
+        model.resolution_function = resolution_function
         surfactant = SurfactantLayer.default()
         model.add_item(surfactant)
         multilayer = Multilayer.default()

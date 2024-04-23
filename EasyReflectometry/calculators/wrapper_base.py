@@ -206,7 +206,7 @@ class WrapperBase:
         item = getattr(item, key)
         return getattr(item, 'value')
 
-    def set_resolution_function(self, resolution_function: Callable[[np.array], float]) -> None:
+    def set_resolution_function(self, resolution_function: Callable[[np.array], np.array]) -> None:
         """Set the resolution function for the calculator.
 
         :param resolution_function: The resolution function
