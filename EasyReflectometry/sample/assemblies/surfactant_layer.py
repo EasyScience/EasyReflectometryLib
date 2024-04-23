@@ -27,7 +27,9 @@ class SurfactantLayer(BaseAssembly):
 
     def __init__(
         self,
-        layers: list[LayerAreaPerMolecule],
+        tail_layer: Optional[LayerAreaPerMolecule] = None,
+        head_layer: Optional[LayerAreaPerMolecule] = None,
+        #        layers: list[LayerAreaPerMolecule],
         name: str = 'EasySurfactantLayer',
         constrain_area_per_molecule: bool = False,
         conformal_roughness: bool = False,
@@ -35,13 +37,36 @@ class SurfactantLayer(BaseAssembly):
     ):
         """Constructor.
 
-        :param layers: List with the tail (index 0) and head (index 1) layer.
+        :param tail_layer: Layer representing the tail part of the surfactant layer.
+        :param head_layer: Layer representing the head part of the surfactant layer.
         :param name: Name for surfactant layer, defaults to 'EasySurfactantLayer'.
         :param constrain_area_per_molecule: Constrain the area per molecule, defaults to `False`.
         :param conformal_roughness: Constrain the roughness to be the same for both layers, defaults to `False`.
         :param interface: Calculator interface, defaults to `None`.
         """
-        surfactant = LayerCollection(layers[0], layers[1], name=name)
+        if tail_layer is None:
+            air = Material(0, 0, 'Air')
+            tail_layer = LayerAreaPerMolecule(
+                molecular_formula='C32D64',
+                thickness=16,
+                solvent=air,
+                solvent_fraction=0.0,
+                area_per_molecule=48.2,
+                roughness=3,
+                name='DPPC Tail',
+            )
+        if head_layer is None:
+            d2o = Material(6.36, 0, 'D2O')
+            head_layer = LayerAreaPerMolecule(
+                molecular_formula='C10H18NO8P',
+                thickness=10.0,
+                solvent=d2o,
+                solvent_fraction=0.2,
+                area_per_molecule=48.2,
+                roughness=3.0,
+                name='DPPC Head',
+            )
+        surfactant = LayerCollection(tail_layer, head_layer, name=name)
         super().__init__(
             name=name,
             type='Surfactant Layer',
@@ -63,90 +88,90 @@ class SurfactantLayer(BaseAssembly):
         if conformal_roughness:
             self._enable_roughness_constraints()
 
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> SurfactantLayer:
-        """Default instance of a surfactant layer object.
-        The default lipid type is DPPC.
+    # # Class methods for instance creation
+    # @classmethod
+    # def default(cls, interface=None) -> SurfactantLayer:
+    #     """Default instance of a surfactant layer object.
+    #     The default lipid type is DPPC.
 
-        :return: Surfactant layer object.
-        """
-        d2o = Material(6.36, 0, 'D2O')
-        air = Material(0, 0, 'Air')
-        tail = LayerAreaPerMolecule(
-            molecular_formula='C32D64',
-            thickness=16,
-            solvent=air,
-            solvent_fraction=0.0,
-            area_per_molecule=48.2,
-            roughness=3,
-            name='DPPC Tail',
-        )
-        head = LayerAreaPerMolecule(
-            molecular_formula='C10H18NO8P',
-            thickness=10.0,
-            solvent=d2o,
-            solvent_fraction=0.2,
-            area_per_molecule=48.2,
-            roughness=3.0,
-            name='DPPC Head',
-        )
-        return cls([tail, head], interface=interface)
+    #     :return: Surfactant layer object.
+    #     """
+    #     d2o = Material(6.36, 0, 'D2O')
+    #     air = Material(0, 0, 'Air')
+    #     tail = LayerAreaPerMolecule(
+    #         molecular_formula='C32D64',
+    #         thickness=16,
+    #         solvent=air,
+    #         solvent_fraction=0.0,
+    #         area_per_molecule=48.2,
+    #         roughness=3,
+    #         name='DPPC Tail',
+    #     )
+    #     head = LayerAreaPerMolecule(
+    #         molecular_formula='C10H18NO8P',
+    #         thickness=10.0,
+    #         solvent=d2o,
+    #         solvent_fraction=0.2,
+    #         area_per_molecule=48.2,
+    #         roughness=3.0,
+    #         name='DPPC Head',
+    #     )
+    #     return cls(tail, head, interface=interface)
 
-    @classmethod
-    def from_pars(
-        cls,
-        tail_layer_molecular_formula: str,
-        tail_layer_thickness: float,
-        tail_layer_solvent: Material,
-        tail_layer_solvent_fraction: float,
-        tail_layer_area_per_molecule: float,
-        tail_layer_roughness: float,
-        head_layer_molecular_formula: str,
-        head_layer_thickness: float,
-        head_layer_solvent: Material,
-        head_layer_solvent_fraction: float,
-        head_layer_area_per_molecule: float,
-        head_layer_roughness: float,
-        name: str = 'EasySurfactantLayer',
-        interface=None,
-    ) -> SurfactantLayer:
-        """Instance of a surfactant layer where the parameters are known,
-        `head_layer` is the hydrophilic part.
+    # @classmethod
+    # def from_pars(
+    #     cls,
+    #     tail_layer_molecular_formula: str,
+    #     tail_layer_thickness: float,
+    #     tail_layer_solvent: Material,
+    #     tail_layer_solvent_fraction: float,
+    #     tail_layer_area_per_molecule: float,
+    #     tail_layer_roughness: float,
+    #     head_layer_molecular_formula: str,
+    #     head_layer_thickness: float,
+    #     head_layer_solvent: Material,
+    #     head_layer_solvent_fraction: float,
+    #     head_layer_area_per_molecule: float,
+    #     head_layer_roughness: float,
+    #     name: str = 'EasySurfactantLayer',
+    #     interface=None,
+    # ) -> SurfactantLayer:
+    #     """Instance of a surfactant layer where the parameters are known,
+    #     `head_layer` is the hydrophilic part.
 
-        :param tail_layer_molecular_formula: Molecular formula of species constituting the tail layer.
-        :param tail_layer_thickness: Thickness of tail layer.
-        :param tail_layer_solvent: Solvent in tail layer.
-        :param tail_layer_solvent_fraction: Fraction of solvent in tail layer. Fx solvation or surface coverage.
-        :param tail_layer_area_per_molecule: Area per molecule of tail layer.
-        :param tail_layer_roughness: Roughness of tail layer.
-        :param head_layer_molecular_formula: Molecular formula of species constituting the head layer.
-        :param head_layer_thickness: Thickness of head layer.
-        :param head_layer_solvent: Solvent in head layer.
-        :param head_layer_solvent_fraction: Fraction of solvent in head layer. Fx solvation or surface coverage.
-        :param head_layer_area_per_molecule: Area per molecule of head layer.
-        :param head_layer_roughness: Roughness of head layer.
-        :param name: Name for surfactant layer.
-        """
-        head_layer = LayerAreaPerMolecule(
-            molecular_formula=head_layer_molecular_formula,
-            thickness=head_layer_thickness,
-            solvent=head_layer_solvent,
-            solvent_fraction=head_layer_solvent_fraction,
-            area_per_molecule=head_layer_area_per_molecule,
-            roughness=head_layer_roughness,
-            name=name + ' Head Layer',
-        )
-        tail_layer = LayerAreaPerMolecule(
-            molecular_formula=tail_layer_molecular_formula,
-            thickness=tail_layer_thickness,
-            solvent=tail_layer_solvent,
-            solvent_fraction=tail_layer_solvent_fraction,
-            area_per_molecule=tail_layer_area_per_molecule,
-            roughness=tail_layer_roughness,
-            name=name + ' Tail Layer',
-        )
-        return cls([tail_layer, head_layer], name, interface)
+    #     :param tail_layer_molecular_formula: Molecular formula of species constituting the tail layer.
+    #     :param tail_layer_thickness: Thickness of tail layer.
+    #     :param tail_layer_solvent: Solvent in tail layer.
+    #     :param tail_layer_solvent_fraction: Fraction of solvent in tail layer. Fx solvation or surface coverage.
+    #     :param tail_layer_area_per_molecule: Area per molecule of tail layer.
+    #     :param tail_layer_roughness: Roughness of tail layer.
+    #     :param head_layer_molecular_formula: Molecular formula of species constituting the head layer.
+    #     :param head_layer_thickness: Thickness of head layer.
+    #     :param head_layer_solvent: Solvent in head layer.
+    #     :param head_layer_solvent_fraction: Fraction of solvent in head layer. Fx solvation or surface coverage.
+    #     :param head_layer_area_per_molecule: Area per molecule of head layer.
+    #     :param head_layer_roughness: Roughness of head layer.
+    #     :param name: Name for surfactant layer.
+    #     """
+    #     head_layer = LayerAreaPerMolecule(
+    #         molecular_formula=head_layer_molecular_formula,
+    #         thickness=head_layer_thickness,
+    #         solvent=head_layer_solvent,
+    #         solvent_fraction=head_layer_solvent_fraction,
+    #         area_per_molecule=head_layer_area_per_molecule,
+    #         roughness=head_layer_roughness,
+    #         name=name + ' Head Layer',
+    #     )
+    #     tail_layer = LayerAreaPerMolecule(
+    #         molecular_formula=tail_layer_molecular_formula,
+    #         thickness=tail_layer_thickness,
+    #         solvent=tail_layer_solvent,
+    #         solvent_fraction=tail_layer_solvent_fraction,
+    #         area_per_molecule=tail_layer_area_per_molecule,
+    #         roughness=tail_layer_roughness,
+    #         name=name + ' Tail Layer',
+    #     )
+    #     return cls([tail_layer, head_layer], name, interface)
 
     @property
     def tail_layer(self) -> Optional[LayerAreaPerMolecule]:
@@ -294,8 +319,23 @@ class SurfactantLayer(BaseAssembly):
         :param skip: List of keys to skip, defaults to `None`.
         """
         this_dict = super().as_dict(skip=skip)
-        this_dict['layers']['data'][0] = self.tail_layer.as_dict()
-        this_dict['layers']['data'][1] = self.head_layer.as_dict()
+        this_dict['tail_layer'] = self.tail_layer.as_dict(skip=skip)
+        this_dict['head_layer'] = self.head_layer.as_dict(skip=skip)
         this_dict['constrain_area_per_molecule'] = self.constrain_area_per_molecule
         this_dict['conformal_roughness'] = self.conformal_roughness
+        del this_dict['layers']
         return this_dict
+
+    # @classmethod
+    # def from_dict(cls, data: dict) -> SurfactantLayer:
+    #     """
+    #     Create a SurfactantLayer from a dictionary.
+
+    #     :param data: dictionary of the SurfactantLayer
+    #     :return: SurfactantLayer
+    #     """
+    #     sufractant_layer = super().from_dict(data)
+    #     # Remove the default layers
+    #     for i in 2:
+    #         del sufractant_layer.layers[0]
+    #     return sufractant_layer

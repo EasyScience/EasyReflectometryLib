@@ -19,7 +19,7 @@ from EasyReflectometry.sample.elements.materials.material import Material
 
 class TestMultilayer(unittest.TestCase):
     def test_default(self):
-        p = Multilayer.default()
+        p = Multilayer()
         assert_equal(p.name, 'EasyMultilayer')
         assert_equal(p._type, 'Multi-layer')
         assert_equal(p.interface, None)
@@ -31,8 +31,8 @@ class TestMultilayer(unittest.TestCase):
         k = Material(0.487, 0.000, 'Potassium')
         p = Layer(m, 5.0, 2.0, 'thinBoron')
         q = Layer(k, 50.0, 1.0, 'thickPotassium')
-        layers = LayerCollection.from_pars(p, q, name='twoLayer')
-        o = Multilayer.from_pars(layers, 'twoLayerItem')
+        layers = LayerCollection(p, q, name='twoLayer')
+        o = Multilayer(layers, 'twoLayerItem')
         assert_equal(o.name, 'twoLayerItem')
         assert_equal(o._type, 'Multi-layer')
         assert_equal(o.interface, None)
@@ -41,7 +41,7 @@ class TestMultilayer(unittest.TestCase):
     def test_from_pars_layer(self):
         m = Material(6.908, -0.278, 'Boron')
         p = Layer(m, 5.0, 2.0, 'thinBoron')
-        o = Multilayer.from_pars(p, 'twoLayerItem')
+        o = Multilayer(p, 'twoLayerItem')
         assert_equal(o.name, 'twoLayerItem')
         assert_equal(o.interface, None)
         assert_equal(o.layers.name, 'thinBoron')
@@ -51,7 +51,7 @@ class TestMultilayer(unittest.TestCase):
         k = Material(0.487, 0.000, 'Potassium')
         p = Layer(m, 5.0, 2.0, 'thinBoron')
         q = Layer(k, 15.0, 2.0, 'layerPotassium')
-        o = Multilayer.from_pars([p, q], 'twoLayerItem')
+        o = Multilayer([p, q], 'twoLayerItem')
         assert_equal(o.name, 'twoLayerItem')
         assert_equal(o.interface, None)
         assert_equal(o.layers.name, 'thinBoron/layerPotassium')
@@ -61,7 +61,7 @@ class TestMultilayer(unittest.TestCase):
         k = Material(0.487, 0.000, 'Potassium')
         p = Layer(m, 5.0, 2.0, 'thinBoron')
         q = Layer(k, 50.0, 1.0, 'thickPotassium')
-        o = Multilayer.from_pars(p, 'twoLayerItem')
+        o = Multilayer(p, 'twoLayerItem')
         assert_equal(len(o.layers), 1)
         o.add_layer(q)
         assert_equal(len(o.layers), 2)
@@ -74,7 +74,7 @@ class TestMultilayer(unittest.TestCase):
         k = Material(0.487, 0.000, 'Potassium', interface=interface)
         p = Layer(m, 5.0, 2.0, 'thinBoron', interface=interface)
         q = Layer(k, 50.0, 1.0, 'thickPotassium', interface=interface)
-        o = Multilayer.from_pars(p, 'twoLayerItem', interface=interface)
+        o = Multilayer(p, 'twoLayerItem', interface=interface)
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
         o.add_layer(q)
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
@@ -85,7 +85,7 @@ class TestMultilayer(unittest.TestCase):
         k = Material(0.487, 0.000, 'Potassium')
         p = Layer(m, 5.0, 2.0, 'thinBoron')
         q = Layer(k, 50.0, 1.0, 'thickPotassium')
-        o = Multilayer.from_pars(p, 'twoLayerItem')
+        o = Multilayer(p, 'twoLayerItem')
         assert_equal(len(o.layers), 1)
         o.add_layer(q)
         assert_equal(len(o.layers), 2)
@@ -101,7 +101,7 @@ class TestMultilayer(unittest.TestCase):
         k = Material(0.487, 0.000, 'Potassium', interface=interface)
         p = Layer(m, 5.0, 2.0, 'thinBoron', interface=interface)
         q = Layer(k, 50.0, 1.0, 'thickPotassium', interface=interface)
-        o = Multilayer.from_pars(p, 'twoLayerItem', interface=interface)
+        o = Multilayer(p, 'twoLayerItem', interface=interface)
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
         o.add_layer(q)
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
@@ -121,7 +121,7 @@ class TestMultilayer(unittest.TestCase):
         k = Material(0.487, 0.000, 'Potassium')
         p = Layer(m, 5.0, 2.0, 'thinBoron')
         q = Layer(k, 50.0, 1.0, 'thickPotassium')
-        o = Multilayer.from_pars(p, 'twoLayerItem')
+        o = Multilayer(p, 'twoLayerItem')
         assert_equal(len(o.layers), 1)
         o.add_layer(q)
         assert_equal(len(o.layers), 2)
@@ -137,7 +137,7 @@ class TestMultilayer(unittest.TestCase):
         k = Material(0.487, 0.000, 'Potassium', interface=interface)
         p = Layer(m, 5.0, 2.0, 'thinBoron', interface=interface)
         q = Layer(k, 50.0, 1.0, 'thickPotassium', interface=interface)
-        o = Multilayer.from_pars(p, name='twoLayerItem', interface=interface)
+        o = Multilayer(p, name='twoLayerItem', interface=interface)
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
         o.add_layer(q)
         assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
@@ -147,13 +147,13 @@ class TestMultilayer(unittest.TestCase):
         assert_equal(o.layers[0].name, 'thinBoron')
 
     def test_repr(self):
-        p = Multilayer.default()
+        p = Multilayer()
         assert (
             p.__repr__()
             == 'EasyMultilayer:\n  EasyLayers:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):
-        p = Multilayer.default()
+        p = Multilayer()
         q = Multilayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()

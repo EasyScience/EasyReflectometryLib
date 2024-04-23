@@ -9,13 +9,15 @@ from .assemblies.base_assembly import BaseAssembly
 from .assemblies.multilayer import Multilayer
 from .elements.layers.layer import Layer
 
+NR_DEFAULT_LAYERS = 2
+
 
 class Sample(BaseCollection):
     """Collection of assemblies that represent the sample for which experimental measurements exist."""
 
     def __init__(
         self,
-        *args: list[Layer | BaseAssembly],
+        *list_layer_like: list[Layer | BaseAssembly],
         name: str = 'EasySample',
         interface=None,
         **kwargs,
@@ -24,12 +26,15 @@ class Sample(BaseCollection):
 
         :param args: The assemblies in the sample.
         :param name: Name of the sample, defaults to 'EasySample'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
         new_items = []
-        for layer_like in args:
+        if not list_layer_like:
+            list_layer_like = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_LAYERS)]
+
+        for layer_like in list_layer_like:
             if issubclass(type(layer_like), Layer):
-                new_items.append(Multilayer.from_pars(layer_like, name=layer_like.name))
+                new_items.append(Multilayer(layer_like, name=layer_like.name))
             elif issubclass(type(layer_like), BaseAssembly):
                 new_items.append(layer_like)
             else:
@@ -37,32 +42,32 @@ class Sample(BaseCollection):
         super().__init__(name, *new_items, **kwargs)
         self.interface = interface
 
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> Sample:
-        """
-        Default instance of the reflectometry sample.
+    # # Class methods for instance creation
+    # @classmethod
+    # def default(cls, interface=None) -> Sample:
+    #     """
+    #     Default instance of the reflectometry sample.
 
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
-        """
-        item1 = Multilayer.default()
-        item2 = Multilayer.default()
-        return cls(item1, item2, interface=interface)
+    #     :param interface: Calculator interface, defaults to :py:attr:`None`.
+    #     """
+    #     item1 = Multilayer()
+    #     item2 = Multilayer()
+    #     return cls(item1, item2, interface=interface)
 
-    @classmethod
-    def from_pars(
-        cls,
-        *args: list[Layer | BaseAssembly],
-        name: str = 'EasyStructure',
-        interface=None,
-    ) -> Sample:
-        """Constructor of a reflectometry sample where the parameters are known.
+    # @classmethod
+    # def from_pars(
+    #     cls,
+    #     *args: list[Layer | BaseAssembly],
+    #     name: str = 'EasyStructure',
+    #     interface=None,
+    # ) -> Sample:
+    #     """Constructor of a reflectometry sample where the parameters are known.
 
-        :param args: The assemblies in the sample
-        :param name: Name of the sample, defaults to 'EasySample'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
-        """
-        return cls(*args, name=name, interface=interface)
+    #     :param args: The assemblies in the sample
+    #     :param name: Name of the sample, defaults to 'EasySample'.
+    #     :param interface: Calculator interface, defaults to :py:attr:`None`.
+    #     """
+    #     return cls(*args, name=name, interface=interface)
 
     @property
     def uid(self) -> int:
@@ -91,3 +96,24 @@ class Sample(BaseCollection):
         for i, layer in enumerate(self.data):
             this_dict['data'][i] = layer.as_dict()
         return this_dict
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Sample:
+        """
+        Create a Sample from a dictionary.
+
+        :param data: dictionary of the Sample
+        :return: Sample
+        """
+        sample = super().from_dict(data)
+
+        # Remove the default multilayers
+        for i in range(NR_DEFAULT_LAYERS):
+            sample.__delitem__(0)
+
+        # Ensure that the data is also converted
+        # TODO Should probably be handled in EasyCore
+        for i in range(len(sample.data)):
+            sample[i] = sample[i].__class__.from_dict(data['data'][i])
+
+        return sample

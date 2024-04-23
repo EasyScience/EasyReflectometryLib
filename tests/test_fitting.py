@@ -28,7 +28,7 @@ class TestFitting(unittest.TestCase):
         sio2_layer = Layer(sio2, 30, 3, 'SiO2 layer')
         film_layer = Layer(film, 250, 3, 'Film Layer')
         superphase = Layer(d2o, 0, 3, 'D2O Subphase')
-        sample = Sample.from_pars(
+        sample = Sample(
             si_layer,
             sio2_layer,
             film_layer,

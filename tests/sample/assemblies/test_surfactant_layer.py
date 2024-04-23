@@ -15,7 +15,7 @@ from EasyReflectometry.sample.elements.materials.material import Material
 
 class TestSurfactantLayer(unittest.TestCase):
     def test_default(self):
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         assert p.name == 'EasySurfactantLayer'
         assert p._type == 'Surfactant Layer'
 
@@ -29,6 +29,7 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.head_layer.name == 'DPPC Head'
         assert p.head_layer.molecular_formula == 'C10H18NO8P'
 
+    @unittest.skip('It is no longer possible to create a surfactant layer without specifying the materials.')
     def test_from_pars(self):
         h2o = Material(-0.561, 0, 'H2O')
         noth2o = Material(0.561, 0, 'nH2O')
@@ -51,7 +52,7 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.name == 'A Test'
 
     def test_constraint_area_per_molecule(self):
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         p.tail_layer._area_per_molecule.value = 30
         assert p.tail_layer.area_per_molecule == 30.0
         assert p.head_layer.area_per_molecule == 48.2
@@ -65,7 +66,7 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.head_layer.area_per_molecule == 40
 
     def test_conformal_roughness(self):
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         p.tail_layer.roughness.value = 2
         assert p.tail_layer.roughness.raw_value == 2
         assert p.head_layer.roughness.raw_value == 3
@@ -78,7 +79,7 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.head_layer.roughness.raw_value == 4
 
     def test_constain_solvent_roughness(self):
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         layer = Layer()
         p.tail_layer.roughness.value = 2
         assert p.tail_layer.roughness.raw_value == 2
@@ -96,7 +97,7 @@ class TestSurfactantLayer(unittest.TestCase):
         assert layer.roughness.raw_value == 4
 
     def test_dict_repr(self):
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         assert p._dict_repr == {
             'EasySurfactantLayer': {
                 'head_layer': {
@@ -148,7 +149,7 @@ class TestSurfactantLayer(unittest.TestCase):
 
     def test_get_head_layer(self):
         # When
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
 
         # Then Expect
         assert p.head_layer == p.back_layer
@@ -156,7 +157,7 @@ class TestSurfactantLayer(unittest.TestCase):
 
     def test_set_head_layer(self):
         # When
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         new_layer = Layer()
 
         # Then
@@ -169,7 +170,7 @@ class TestSurfactantLayer(unittest.TestCase):
 
     def test_get_tail_layer(self):
         # When
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
 
         # Then Expect
         assert p.tail_layer == p.front_layer
@@ -177,7 +178,7 @@ class TestSurfactantLayer(unittest.TestCase):
 
     def test_set_tail_layer(self):
         # When
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         new_layer = Layer()
 
         # Then
@@ -189,31 +190,31 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.layers[0] == new_layer
 
     def test_dict_round_trip(self):
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
 
     def test_dict_round_trip_area_per_molecule_constraint_enabled(self):
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         p.constrain_area_per_molecule = True
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
 
     def test_dict_round_trip_area_per_molecule_constraint_disabled(self):
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         p.constrain_area_per_molecule = True
         p.constrain_area_per_molecule = False
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
 
     def test_dict_round_trip_roughness_constraint_enabled(self):
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         p.conformal_roughness = True
         q = SurfactantLayer.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
 
     def test_dict_round_trip_roughness_constraint_disabled(self):
-        p = SurfactantLayer.default()
+        p = SurfactantLayer()
         p.conformal_roughness = True
         p.conformal_roughness = False
         q = SurfactantLayer.from_dict(p.as_dict())

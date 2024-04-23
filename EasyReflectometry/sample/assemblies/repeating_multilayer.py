@@ -1,14 +1,18 @@
 from __future__ import annotations
 
-from copy import deepcopy
+# from copy import deepcopy
+from numbers import Number
+from typing import Union
 
 from easyCore.Objects.ObjectClasses import Parameter
+
+from EasyReflectometry.parameter_utils import get_as_parameter
 
 from ..elements.layers.layer import Layer
 from ..elements.layers.layer_collection import LayerCollection
 from .multilayer import Multilayer
 
-REPEATINGMULTILAYER_DETAILS = {
+DEFAULTS = {
     'repetitions': {
         'description': 'Number of repetitions of the given series of layers',
         'value': 1,
@@ -35,8 +39,8 @@ class RepeatingMultilayer(Multilayer):
 
     def __init__(
         self,
-        layers: LayerCollection | Layer | list[Layer],
-        repetitions: Parameter,
+        layers: Union[LayerCollection | Layer | list[Layer] | None] = None,
+        repetitions: Union[Parameter, Number, None] = None,
         name: str = 'EasyRepeatingMultilayer',
         interface=None,
     ):
@@ -45,13 +49,18 @@ class RepeatingMultilayer(Multilayer):
         :param layers: The layers that make up the multi-layer that will be repeated.
         :param repetitions: Number of repetitions of the given series of layers
         :param name: Name for the repeating multi layer, defaults to 'EasyRepeatingMultilayer'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
+        :param interface: Calculator interface, defaults to `None`.
         """
 
-        if isinstance(layers, Layer):
+        if layers is None:
+            layers = LayerCollection()
+        elif isinstance(layers, Layer):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
+
+        repetitions = get_as_parameter(repetitions, 'repetitions', DEFAULTS)
+
         super().__init__(
             layers=layers,
             name=name,
@@ -61,48 +70,48 @@ class RepeatingMultilayer(Multilayer):
         self._add_component('repetitions', repetitions)
         self.interface = interface
 
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> RepeatingMultilayer:
-        """Default instance of a repeating multi layer.
+    # # Class methods for instance creation
+    # @classmethod
+    # def default(cls, interface=None) -> RepeatingMultilayer:
+    #     """Default instance of a repeating multi layer.
 
-        :return: Default repeating multi-layer container
-        """
-        layers = LayerCollection.default()
-        repetitions = Parameter('repetitions', **REPEATINGMULTILAYER_DETAILS['repetitions'])
-        return cls(
-            layers,
-            repetitions,
-            interface=interface,
-        )
+    #     :return: Default repeating multi-layer container
+    #     """
+    #     layers = LayerCollection()
+    #     repetitions = Parameter('repetitions', **REPEATINGMULTILAYER_DETAILS['repetitions'])
+    #     return cls(
+    #         layers,
+    #         repetitions,
+    #         interface=interface,
+    #     )
 
-    @classmethod
-    def from_pars(
-        cls,
-        layers: LayerCollection,
-        repetitions: float = 1.0,
-        name: str = 'EasyRepeatingMultilayer',
-        interface=None,
-    ) -> RepeatingMultilayer:
-        """Instance of a repeating multi layer where the
-        parameters are known.
+    # @classmethod
+    # def from_pars(
+    #     cls,
+    #     layers: LayerCollection,
+    #     repetitions: float = 1.0,
+    #     name: str = 'EasyRepeatingMultilayer',
+    #     interface=None,
+    # ) -> RepeatingMultilayer:
+    #     """Instance of a repeating multi layer where the
+    #     parameters are known.
 
-        :param layers: The layers in the repeating multi layer.
-        :param repetitions: Number of repetitions, defaults to :py:attr`1`.
-        :param name: Name of the layer, defaults to 'EasyRepeatingMultilayer'.
-        :param interface: Calculator interface, defaults to :py:attr:`None`.
-        """
-        default_options = deepcopy(REPEATINGMULTILAYER_DETAILS)
-        del default_options['repetitions']['value']
+    #     :param layers: The layers in the repeating multi layer.
+    #     :param repetitions: Number of repetitions, defaults to :py:attr`1`.
+    #     :param name: Name of the layer, defaults to 'EasyRepeatingMultilayer'.
+    #     :param interface: Calculator interface, defaults to :py:attr:`None`.
+    #     """
+    #     default_options = deepcopy(REPEATINGMULTILAYER_DETAILS)
+    #     del default_options['repetitions']['value']
 
-        repetitions = Parameter('repetitions', repetitions, **default_options['repetitions'])
+    #     repetitions = Parameter('repetitions', repetitions, **default_options['repetitions'])
 
-        return cls(
-            layers=layers,
-            repetitions=repetitions,
-            name=name,
-            interface=interface,
-        )
+    #     return cls(
+    #         layers=layers,
+    #         repetitions=repetitions,
+    #         name=name,
+    #         interface=interface,
+    #     )
 
     # Representation
     @property

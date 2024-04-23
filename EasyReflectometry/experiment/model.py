@@ -74,7 +74,7 @@ class Model(BaseObj):
         """
 
         if sample is None:
-            sample = Sample.default()
+            sample = Sample(interface=interface)
         if resolution_function is None:
             resolution_function = constant_resolution_function(DEFAULTS['resolution']['value'])
 
@@ -119,8 +119,8 @@ class Model(BaseObj):
                     name=i.name + ' duplicate',
                 )
             )
-        duplicate = to_duplicate.__class__.from_pars(
-            LayerCollection.from_pars(*duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
+        duplicate = to_duplicate.__class__(
+            LayerCollection(*duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
             name=to_duplicate.name + ' duplicate',
         )
         self.add_item(duplicate)
@@ -180,3 +180,23 @@ class Model(BaseObj):
         this_dict = super().as_dict(skip=skip)
         this_dict['sample'] = self.sample.as_dict()
         return this_dict
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Model:
+        """
+        Create a Model from a dictionary.
+
+        :param data: dictionary of the Model
+        :return: Model
+        """
+        model = super().from_dict(data)
+        # # Remove the default sample
+        # model.sample.__delitem__(0)
+
+        # Ensure that the sample is also converted
+        # TODO Should probably be handled in EasyCore
+        # for i in range(len(model.sample)):
+        #     model.sample[i] = model.sample[i].__class__.from_dict(data['sample'][i])
+        model.sample = model.sample.__class__.from_dict(data['sample'])
+
+        return model
