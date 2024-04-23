@@ -1,5 +1,5 @@
 __author__ = 'github.com/arm61'
-from typing import Optional
+from typing import Union
 
 from ...base_element_collection import SIZE_DEFAULT_COLLECTION
 from ...base_element_collection import BaseElementCollection
@@ -9,11 +9,11 @@ from .material_mixture import MaterialMixture
 
 class MaterialCollection(BaseElementCollection):
     # Added in super().__init__
-    matertials: list[Material | MaterialMixture]
+    matertials: list[Union[Material, MaterialMixture]]
 
     def __init__(
         self,
-        *materials: Optional[list[Material | MaterialMixture]],
+        *materials: Union[list[Union[Material, MaterialMixture]], None],
         name: str = 'EasyMaterials',
         interface=None,
         **kwargs,

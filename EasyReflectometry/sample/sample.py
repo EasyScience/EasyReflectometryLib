@@ -2,6 +2,8 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
+from typing import Union
+
 import yaml
 from easyCore.Objects.Groups import BaseCollection
 
@@ -17,7 +19,7 @@ class Sample(BaseCollection):
 
     def __init__(
         self,
-        *list_layer_like: list[Layer | BaseAssembly],
+        *list_layer_like: list[Union[Layer, BaseAssembly]],
         name: str = 'EasySample',
         interface=None,
         **kwargs,

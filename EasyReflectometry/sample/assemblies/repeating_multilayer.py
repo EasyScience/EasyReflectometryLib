@@ -36,7 +36,7 @@ class RepeatingMultilayer(Multilayer):
 
     def __init__(
         self,
-        layers: Union[LayerCollection | Layer | list[Layer] | None] = None,
+        layers: Union[LayerCollection, Layer, list[Layer], None] = None,
         repetitions: Union[Parameter, Number, None] = None,
         name: str = 'EasyRepeatingMultilayer',
         interface=None,
