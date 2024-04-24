@@ -1,5 +1,4 @@
 from numbers import Number
-from typing import Optional
 from typing import Union
 
 from easyCore.Fitting.Constraints import FunctionalConstraint
@@ -33,10 +32,10 @@ class MaterialMixture(BaseCore):
 
     def __init__(
         self,
-        material_a: Optional[Material] = None,
-        material_b: Optional[Material] = None,
+        material_a: Union[Material, None] = None,
+        material_b: Union[Material, None] = None,
         fraction: Union[Parameter, Number, None] = None,
-        name: Optional[str] = None,
+        name: Union[str, None] = None,
         interface=None,
     ):
         """Constructor.

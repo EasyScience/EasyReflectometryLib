@@ -1,5 +1,4 @@
 from numbers import Number
-from typing import Optional
 from typing import Union
 
 import numpy as np
@@ -65,7 +64,7 @@ class MaterialDensity(Material):
 
     def __init__(
         self,
-        chemical_structure: Optional[str] = None,
+        chemical_structure: Union[str, None] = None,
         density: Union[Parameter, Number, None] = None,
         name: str = 'EasyMaterialDensity',
         interface=None,

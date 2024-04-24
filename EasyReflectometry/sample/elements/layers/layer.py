@@ -1,6 +1,5 @@
 __author__ = 'github.com/arm61'
 from numbers import Number
-from typing import Optional
 from typing import Union
 
 from easyCore import np
@@ -44,7 +43,7 @@ class Layer(BaseCore):
 
     def __init__(
         self,
-        material: Optional[Material] = None,
+        material: Union[Material, None] = None,
         thickness: Union[Parameter, Number, None] = None,
         roughness: Union[Parameter, Number, None] = None,
         name: str = 'EasyLayer',

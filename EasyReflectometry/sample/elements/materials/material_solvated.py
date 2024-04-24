@@ -1,5 +1,4 @@
 from numbers import Number
-from typing import Optional
 from typing import Union
 
 from easyCore.Objects.ObjectClasses import Parameter
@@ -24,8 +23,8 @@ DEFAULTS = {
 class MaterialSolvated(MaterialMixture):
     def __init__(
         self,
-        material: Optional[Material] = None,
-        solvent: Optional[Material] = None,
+        material: Union[Material, None] = None,
+        solvent: Union[Material, None] = None,
         solvent_fraction: Union[Parameter, Number, None] = None,
         name=None,
         interface=None,

@@ -4,7 +4,6 @@ __author__ = 'github.com/arm61'
 
 from numbers import Number
 from typing import Callable
-from typing import Optional
 from typing import Union
 
 import yaml
@@ -57,7 +56,7 @@ class Model(BaseObj):
 
     def __init__(
         self,
-        sample: Optional[Sample] = None,
+        sample: Union[Sample, None] = None,
         scale: Union[Parameter, Number, None] = None,
         background: Union[Parameter, Number, None] = None,
         resolution_function: Union[Callable[[np.array], float], None] = None,
