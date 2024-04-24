@@ -83,6 +83,11 @@ class MaterialSolvated(MaterialMixture):
         self.material_b = new_solvent
 
     @property
+    def solvent_fraction_paramter(self) -> Parameter:
+        """Get the parameter for the fraction of layer described by the solvent."""
+        return self._fraction
+
+    @property
     def solvent_fraction(self) -> float:
         """Get the fraction of layer described by the solvent.
         This might be fraction of:

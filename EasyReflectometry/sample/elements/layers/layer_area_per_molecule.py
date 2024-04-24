@@ -145,6 +145,11 @@ class LayerAreaPerMolecule(Layer):
         self.interface = interface
 
     @property
+    def area_per_molecule_paramter(self) -> Parameter:
+        """Get the paramter for area per molecule."""
+        return self._area_per_molecule
+
+    @property
     def area_per_molecule(self) -> float:
         """Get the area per molecule."""
         return self._area_per_molecule.raw_value
@@ -176,6 +181,11 @@ class LayerAreaPerMolecule(Layer):
         :param new_solvent: New solvent material.
         """
         self.material.solvent = new_solvent
+
+    @property
+    def solvent_fraction_paramter(self) -> float:
+        """Get paramter for the fraction of the layer occupied by the solvent."""
+        return self.material.solvent_fraction_paramter
 
     @property
     def solvent_fraction(self) -> float:
