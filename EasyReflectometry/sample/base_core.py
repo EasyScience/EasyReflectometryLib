@@ -37,7 +37,7 @@ class BaseCore(BaseObj):
 
     # For classes with special serialization needs one must adopt the dict produced by super
     # def as_dict(self, skip: list = None) -> dict:
-    #    """Should produce a cleaned dict that matches the paramters in __init__
+    #    """Should produce a cleaned dict that matches the parameters in __init__
     #
     #    :param skip: List of keys to skip, defaults to `None`.
     #    """
