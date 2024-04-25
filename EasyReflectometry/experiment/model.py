@@ -20,7 +20,7 @@ from EasyReflectometry.sample import Sample
 
 from .resolution_functions import constant_resolution_function
 
-MODEL_DETAILS = {
+DEFAULTS = {
     'scale': {
         'description': 'Scaling of the reflectomety profile',
         'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
@@ -74,12 +74,12 @@ class Model(BaseObj):
         """
 
         if sample is None:
-            sample = Sample.default()
+            sample = Sample(interface=interface)
         if resolution_function is None:
-            resolution_function = constant_resolution_function(MODEL_DETAILS['resolution']['value'])
+            resolution_function = constant_resolution_function(DEFAULTS['resolution']['value'])
 
-        scale = get_as_parameter(scale, 'scale', MODEL_DETAILS)
-        background = get_as_parameter(background, 'background', MODEL_DETAILS)
+        scale = get_as_parameter('scale', scale, DEFAULTS)
+        background = get_as_parameter('background', background, DEFAULTS)
 
         super().__init__(
             name=name,
@@ -115,15 +115,16 @@ class Model(BaseObj):
         duplicate_layers = []
         for i in to_duplicate.layers:
             duplicate_layers.append(
-                Layer.from_pars(
+                Layer(
                     material=i.material,
                     thickness=i.thickness.raw_value,
                     roughness=i.roughness.raw_value,
                     name=i.name + ' duplicate',
+                    interface=i.interface,
                 )
             )
-        duplicate = to_duplicate.__class__.from_pars(
-            LayerCollection.from_pars(*duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
+        duplicate = to_duplicate.__class__(
+            LayerCollection(*duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
             name=to_duplicate.name + ' duplicate',
         )
         self.add_item(duplicate)
@@ -195,7 +196,7 @@ class Model(BaseObj):
 
     def as_dict(self, skip: list = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
-        The resulting dict matches the paramters in __init__
+        The resulting dict matches the parameters in __init__
 
         :param skip: List of keys to skip, defaults to `None`.
         """
@@ -204,3 +205,19 @@ class Model(BaseObj):
         this_dict = super().as_dict(skip=skip)
         this_dict['sample'] = self.sample.as_dict()
         return this_dict
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Model:
+        """
+        Create a Model from a dictionary.
+
+        :param data: dictionary of the Model
+        :return: Model
+        """
+        model = super().from_dict(data)
+
+        # Ensure that the sample is also converted
+        # TODO Should probably be handled in EasyCore
+        model.sample = model.sample.__class__.from_dict(data['sample'])
+
+        return model

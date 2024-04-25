@@ -29,7 +29,7 @@ def test_get_as_parameter():
     test_parameter = None
 
     # Then
-    test_parameter = get_as_parameter(test_parameter, 'test_parameter', PARAMETER_DETAILS)
+    test_parameter = get_as_parameter('test_parameter', test_parameter, PARAMETER_DETAILS)
 
     # Expected
     test_parameter.name == 'test_parameter'
@@ -46,7 +46,7 @@ def test_get_as_parameter_from_float():
     test_parameter = 2.0
 
     # Then
-    test_parameter = get_as_parameter(float(test_parameter), 'test_parameter', PARAMETER_DETAILS)
+    test_parameter = get_as_parameter('test_parameter', float(test_parameter), PARAMETER_DETAILS)
 
     # Expected
     assert_equal(test_parameter.raw_value, 2.0)
@@ -57,7 +57,7 @@ def test_get_as_parameter_from_int():
     test_parameter = 2.0
 
     # Then
-    test_parameter = get_as_parameter(int(test_parameter), 'test_parameter', PARAMETER_DETAILS)
+    test_parameter = get_as_parameter('test_parameter', int(test_parameter), PARAMETER_DETAILS)
 
     # Expected
     assert_equal(test_parameter.raw_value, 2.0)
@@ -65,10 +65,10 @@ def test_get_as_parameter_from_int():
 
 def test_get_as_parameter_from_parameter():
     # When
-    test_parameter_10 = get_as_parameter(None, 'test_parameter_10', PARAMETER_DETAILS)
+    test_parameter_10 = get_as_parameter('test_parameter_10', None, PARAMETER_DETAILS)
 
     # Then
-    test_parameter = get_as_parameter(test_parameter_10, 'test_parameter', PARAMETER_DETAILS)
+    test_parameter = get_as_parameter('test_parameter', test_parameter_10, PARAMETER_DETAILS)
 
     # Expected
     test_parameter.name == 'test_parameter'
@@ -86,7 +86,7 @@ def test_get_as_parameter_not_number():
 
     # Then Expected
     with pytest.raises(ValueError):
-        test_parameter = get_as_parameter(test_parameter, 'test_parameter', PARAMETER_DETAILS)
+        test_parameter = get_as_parameter('test_parameter', test_parameter, PARAMETER_DETAILS)
 
 
 def test_dict_remains_unchanged():
@@ -104,7 +104,7 @@ def test_dict_remains_unchanged():
     test_parameter = 2.0
 
     # Then
-    test_parameter = get_as_parameter(int(test_parameter), 'test_parameter', PARAMETER_DETAILS)
+    test_parameter = get_as_parameter('test_parameter', int(test_parameter), PARAMETER_DETAILS)
 
     # Expected
     assert_equal(expected_parameter_details['test_parameter'], PARAMETER_DETAILS['test_parameter'])

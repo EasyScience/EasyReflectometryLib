@@ -1,20 +1,20 @@
 from unittest.mock import MagicMock
 
 import pytest
+from easyCore.Objects.ObjectClasses import Parameter
 
 import EasyReflectometry.sample.elements.materials.material_mixture
 import EasyReflectometry.sample.elements.materials.material_solvated
+from EasyReflectometry.sample.elements.materials.material import Material
 from EasyReflectometry.sample.elements.materials.material_solvated import MaterialSolvated
 
 
 class TestMaterialSolvated:
     @pytest.fixture
     def material_solvated(self, monkeypatch) -> MaterialSolvated:
-        self.mock_material = MagicMock()
-        self.mock_material.name = 'material'
-        self.mock_solvent = MagicMock()
-        self.mock_solvent.name = 'solvent'
-        self.mock_solvent_fraction = MagicMock()
+        self.material = Material(sld=1.0, isld=0, name='material')
+        self.solvent = Material(sld=2.0, isld=0, name='solvent')
+        self.mock_solvent_fraction = MagicMock(spec=Parameter)
         self.mock_solvent_fraction.raw_value = 0.1
         self.mock_interface = MagicMock()
         self.mock_Parameter = MagicMock()
@@ -26,8 +26,8 @@ class TestMaterialSolvated:
             self.mock_FunctionalConstraint,
         )
         return MaterialSolvated(
-            material=self.mock_material,
-            solvent=self.mock_solvent,
+            material=self.material,
+            solvent=self.solvent,
             solvent_fraction=self.mock_solvent_fraction,
             name='name',
             interface=self.mock_interface,
@@ -35,8 +35,8 @@ class TestMaterialSolvated:
 
     def test_init(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
-        assert material_solvated.material_a == self.mock_material
-        assert material_solvated.material_b == self.mock_solvent
+        assert material_solvated.material_a == self.material
+        assert material_solvated.material_b == self.solvent
         assert material_solvated.fraction == 0.1
         assert material_solvated.name == 'name'
         assert material_solvated.interface == self.mock_interface
@@ -44,7 +44,7 @@ class TestMaterialSolvated:
 
     def test_material(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
-        assert material_solvated.material == self.mock_material
+        assert material_solvated.material == self.material
 
     def test_set_material(self, material_solvated: MaterialSolvated) -> None:
         # When
@@ -60,7 +60,7 @@ class TestMaterialSolvated:
 
     def test_solvent(self, material_solvated: MaterialSolvated) -> None:
         # When Then Expect
-        assert material_solvated.solvent == self.mock_solvent
+        assert material_solvated.solvent == self.solvent
 
     def test_set_solvent(self, material_solvated: MaterialSolvated) -> None:
         # When
@@ -104,7 +104,7 @@ class TestMaterialSolvated:
 
     def test_dict_repr(self) -> None:
         # When Then
-        p = MaterialSolvated.default()
+        p = MaterialSolvated()
 
         # Expect
         assert p._dict_repr == {
@@ -118,7 +118,7 @@ class TestMaterialSolvated:
         }
 
     def test_dict_round_trip(self):
-        p = MaterialSolvated.default()
+        p = MaterialSolvated()
         q = MaterialSolvated.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()
 

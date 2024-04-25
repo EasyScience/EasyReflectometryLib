@@ -1,20 +1,18 @@
-from __future__ import annotations
-
-from copy import deepcopy
-from typing import ClassVar
+from typing import Union
 
 import numpy as np
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
+from EasyReflectometry.parameter_utils import get_as_parameter
 from EasyReflectometry.special.calculations import density_to_sld
 from EasyReflectometry.special.calculations import molecular_weight
 from EasyReflectometry.special.calculations import neutron_scattering_length
 
-from .material import MATERIAL_DEFAULTS
+from .material import DEFAULTS as MATERIAL_DEFAULTS
 from .material import Material
 
-MATERIALDENSITY_DEFAULTS = {
+DEFAULTS = {
     'chemical_structure': 'Si',
     'sl': {
         'description': 'The real scattering length for a chemical formula in angstrom.',
@@ -53,49 +51,50 @@ MATERIALDENSITY_DEFAULTS = {
         'fixed': True,
     },
 }
+DEFAULTS.update(MATERIAL_DEFAULTS)
 
 
 class MaterialDensity(Material):
     # Added in __init__
-    scattering_length_real: ClassVar[Parameter]
-    scattering_length_imag: ClassVar[Parameter]
-    molecular_weight: ClassVar[Parameter]
-    density: ClassVar[Parameter]
+    scattering_length_real: Parameter
+    scattering_length_imag: Parameter
+    molecular_weight: Parameter
+    density: Parameter
 
     def __init__(
         self,
-        chemical_structure: str,
-        density: Parameter,
+        chemical_structure: Union[str, None] = None,
+        density: Union[Parameter, float, None] = None,
         name: str = 'EasyMaterialDensity',
         interface=None,
-    ) -> MaterialDensity:
+    ):
         """Constructor.
 
         :param chemical_structure: Chemical formula for the material.
         :param density: Mass density for the material.
-        :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`.
-        :param interface: Interface object, defaults to :py:attr:`None`.
+        :param name: Identifier, defaults to `EasyMaterialDensity`.
+        :param interface: Interface object, defaults to `None`.
         """
+        if chemical_structure is None:
+            chemical_structure = DEFAULTS['chemical_structure']
+
+        density = get_as_parameter('density', density, DEFAULTS)
+
         scattering_length = neutron_scattering_length(chemical_structure)
-        default_options = deepcopy(MATERIALDENSITY_DEFAULTS)
-        del default_options['molecular_weight']['value']
-        del default_options['sl']['value']
-        del default_options['isl']['value']
-        mw = Parameter('molecular_weight', molecular_weight(chemical_structure), **default_options['molecular_weight'])
-        scattering_length_real = Parameter('scattering_length_real', scattering_length.real, **default_options['sl'])
-        scattering_length_imag = Parameter('scattering_length_imag', scattering_length.imag, **default_options['isl'])
-        default_options = deepcopy(MATERIAL_DEFAULTS)
-        del default_options['sld']['value']
-        del default_options['isld']['value']
-        sld = Parameter(
-            'sld',
-            density_to_sld(scattering_length_real.raw_value, mw.raw_value, density.raw_value),
-            **default_options['sld'],
+
+        mw = get_as_parameter('molecular_weight', molecular_weight(chemical_structure), DEFAULTS)
+        scattering_length_real = get_as_parameter(
+            name='scattering_length_real',
+            value=scattering_length.real,
+            default_dict=DEFAULTS['sld'],
         )
-        isld = Parameter(
-            'isld',
-            density_to_sld(scattering_length_imag.raw_value, mw.raw_value, density.raw_value),
-            **default_options['isld'],
+        scattering_length_imag = get_as_parameter('scattering_length_imag', scattering_length.imag, DEFAULTS['isld'])
+
+        sld = get_as_parameter(
+            'sld', density_to_sld(scattering_length_real.raw_value, mw.raw_value, density.raw_value), DEFAULTS
+        )
+        isld = get_as_parameter(
+            'isld', density_to_sld(scattering_length_imag.raw_value, mw.raw_value, density.raw_value), DEFAULTS
         )
 
         constraint = FunctionalConstraint(sld, density_to_sld, [scattering_length_real, mw, density])
@@ -115,39 +114,6 @@ class MaterialDensity(Material):
         self._add_component('density', density)
         self._chemical_structure = chemical_structure
         self.interface = interface
-
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> MaterialDensity:
-        """Default instance of material defined by density and chemical structure.
-
-        :param interface: Interface object, defaults to :py:attr:`None`
-        """
-        density = Parameter('density', **MATERIALDENSITY_DEFAULTS['density'])
-        return cls(MATERIALDENSITY_DEFAULTS['chemical_structure'], density, interface=interface)
-
-    @classmethod
-    def from_pars(
-        cls,
-        chemical_structure: str,
-        density: float,
-        name: str = 'EasyMaterialDensity',
-        interface=None,
-    ) -> MaterialDensity:
-        """Instance of a material from mass density and chemical structure,
-        where these are known.
-        :param chemical_structure: Chemical formula for the material
-        :param density: Mass density for the material
-        :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`
-        :param interface: Interface object, defaults to :py:attr:`None`
-        :return: Material container
-        """
-        default_options = deepcopy(MATERIALDENSITY_DEFAULTS)
-        del default_options['density']['value']
-
-        density = Parameter('density', density, **default_options['density'])
-
-        return cls(chemical_structure, density, name=name, interface=interface)
 
     @property
     def chemical_structure(self) -> str:
@@ -175,7 +141,7 @@ class MaterialDensity(Material):
 
     def as_dict(self, skip: list = []) -> dict[str, str]:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
-        The resulting dict matches the paramters in __init__
+        The resulting dict matches the parameters in __init__
 
         :param skip: List of keys to skip, defaults to `None`.
         """

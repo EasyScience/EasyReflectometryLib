@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from typing import Union
+
 from ..elements.layers.layer import Layer
+from ..elements.layers.layer_collection import SIZE_DEFAULT_COLLECTION
 from ..elements.layers.layer_collection import LayerCollection
 from .base_assembly import BaseAssembly
 
@@ -18,7 +21,7 @@ class Multilayer(BaseAssembly):
 
     def __init__(
         self,
-        layers: LayerCollection | Layer | list[Layer],
+        layers: Union[Layer, list[Layer], LayerCollection, None] = None,
         name: str = 'EasyMultilayer',
         interface=None,
         type: str = 'Multi-layer',
@@ -30,40 +33,13 @@ class Multilayer(BaseAssembly):
         :param interface: Calculator interface, defaults to `None`.
         :param type: Type of the constructed instance, defaults to 'Multi-layer'
         """
-        if isinstance(layers, Layer):
+        if layers is None:
+            layers = LayerCollection()
+        elif isinstance(layers, Layer):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
         super().__init__(name, layers=layers, type=type, interface=interface)
-
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> Multilayer:
-        """Default instance of a multi-layer.
-
-        :param interface: Calculator interface, defaults to `None`.
-        """
-        layers = LayerCollection.default()
-        return cls(layers, interface=interface)
-
-    @classmethod
-    def from_pars(
-        cls,
-        layers: LayerCollection,
-        name: str = 'EasyMultilayer',
-        interface=None,
-    ) -> Multilayer:
-        """Instance of a multi-layer where the parameters are known.
-
-        :param layers: The layers in the multi-layer.
-        :param name: Name of the layer, defaults to 'EasyMultilayer'.
-        :param interface: Calculator interface, defaults to `None`.
-        """
-        return cls(
-            layers=layers,
-            name=name,
-            interface=interface,
-        )
 
     def add_layer(self, *layers: tuple[Layer]) -> None:
         """Add a layer to the multi layer.
@@ -83,7 +59,7 @@ class Multilayer(BaseAssembly):
         :type idx: int
         """
         to_duplicate = self.layers[idx]
-        duplicate_layer = Layer.from_pars(
+        duplicate_layer = Layer(
             material=to_duplicate.material,
             thickness=to_duplicate.thickness.raw_value,
             roughness=to_duplicate.roughness.raw_value,
@@ -107,3 +83,17 @@ class Multilayer(BaseAssembly):
         if len(self.layers) == 1:
             return self.front_layer._dict_repr
         return {self.name: self.layers._dict_repr}
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Multilayer:
+        """
+        Create a Multilayer from a dictionary.
+
+        :param data: dictionary of the Multilayer
+        :return: Multilayer
+        """
+        multilayer = super().from_dict(data)
+        # Remove the default materials
+        for i in range(SIZE_DEFAULT_COLLECTION):
+            del multilayer.layers[0]
+        return multilayer

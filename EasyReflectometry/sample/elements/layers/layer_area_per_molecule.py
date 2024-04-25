@@ -1,21 +1,20 @@
-from __future__ import annotations
-
-from copy import deepcopy
+from typing import Union
 
 from easyCore import np
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import Parameter
 
+from EasyReflectometry.parameter_utils import get_as_parameter
 from EasyReflectometry.special.calculations import area_per_molecule_to_scattering_length_density
 from EasyReflectometry.special.calculations import neutron_scattering_length
 
 from ..materials.material import Material
-from ..materials.material_solvated import MATERIAL_SOLVATED_DETAILS
+from ..materials.material_solvated import DEFAULTS as MATERIAL_SOLVATED_DEFAULTS
 from ..materials.material_solvated import MaterialSolvated
-from .layer import LAYER_DETAILS
+from .layer import DEFAULTS as LAYER_DEFAULTS
 from .layer import Layer
 
-LAYER_AREA_PER_MOLECULE_DETAILS = {
+DEFAULTS = {
     'molecular_formula': 'C10H18NO8P',
     'area_per_molecule': {
         'description': 'Surface coverage',
@@ -44,12 +43,12 @@ LAYER_AREA_PER_MOLECULE_DETAILS = {
         'fixed': True,
     },
 }
-LAYER_AREA_PER_MOLECULE_DETAILS.update(LAYER_DETAILS)
-LAYER_AREA_PER_MOLECULE_DETAILS.update(MATERIAL_SOLVATED_DETAILS)
+DEFAULTS.update(MATERIAL_SOLVATED_DEFAULTS)
+DEFAULTS.update(LAYER_DEFAULTS)
 
 
 class LayerAreaPerMolecule(Layer):
-    """The :py:class:`LayerAreaPerMolecule` class allows a layer to be defined in terms of some
+    """The `LayerAreaPerMolecule` class allows a layer to be defined in terms of some
     molecular formula an area per molecule, and a solvent.
 
     """
@@ -67,12 +66,12 @@ class LayerAreaPerMolecule(Layer):
 
     def __init__(
         self,
-        molecular_formula: str,
-        thickness: Parameter,
-        solvent: Material,
-        solvent_fraction: Parameter,
-        area_per_molecule: float,
-        roughness: Parameter,
+        molecular_formula: Union[str, None] = None,
+        thickness: Union[Parameter, float, None] = None,
+        solvent: Union[Material, None] = None,
+        solvent_fraction: Union[Parameter, float, None] = None,
+        area_per_molecule: Union[Parameter, float, None] = None,
+        roughness: Union[Parameter, float, None] = None,
         name: str = 'EasyLayerAreaPerMolecule',
         interface=None,
     ):
@@ -87,19 +86,18 @@ class LayerAreaPerMolecule(Layer):
         :param name: Name of the layer, defaults to "EasyLayerAreaPerMolecule"
         :param interface: Interface object, defaults to `None`
         """
+        if solvent is None:
+            solvent = Material(6.36, 0, 'D2O', interface=interface)
 
         # Create the solvated molecule and corresponding constraints
-        molecule = Material.from_pars(0.0, 0.0, name=molecular_formula, interface=interface)
+        if molecular_formula is None:
+            molecular_formula = DEFAULTS['molecular_formula']
+        molecule = Material(sld=0.0, isld=0.0, name=molecular_formula, interface=interface)
 
-        default_options = deepcopy(LAYER_AREA_PER_MOLECULE_DETAILS)
-        del default_options['sl']['value']
-        del default_options['isl']['value']
-        del default_options['area_per_molecule']['value']
-
-        # Will be added as components later in the init
-        _scattering_length_real = Parameter('scattering_length_real', 0.0, **default_options['sl'])
-        _scattering_length_imag = Parameter('scattering_length_imag', 0.0, **default_options['isl'])
-        _area_per_molecule = Parameter('area_per_molecule', area_per_molecule, **default_options['area_per_molecule'])
+        thickness = get_as_parameter('thickness', thickness, DEFAULTS)
+        _area_per_molecule = get_as_parameter('area_per_molecule', area_per_molecule, DEFAULTS)
+        _scattering_length_real = get_as_parameter('scattering_length_real', 0.0, DEFAULTS['sl'])
+        _scattering_length_imag = get_as_parameter('scattering_length_imag', 0.0, DEFAULTS['isl'])
 
         # Constrain the real part of the sld value for the molecule
         constraint_sld_real = FunctionalConstraint(
@@ -144,69 +142,10 @@ class LayerAreaPerMolecule(Layer):
         self._molecular_formula = molecular_formula
         self.interface = interface
 
-    # Class methods for instance creation
-    @classmethod
-    def default(cls, interface=None) -> LayerAreaPerMolecule:
-        """A default instance for layer defined from molecule formula and area per molecule.
-
-        :param interface: Calculator interface, defaults to `None`.
-        """
-        area_per_molecule = LAYER_AREA_PER_MOLECULE_DETAILS['area_per_molecule']['value']
-        thickness = Parameter('thickness', **LAYER_AREA_PER_MOLECULE_DETAILS['thickness'])
-        roughness = Parameter('roughness', **LAYER_AREA_PER_MOLECULE_DETAILS['roughness'])
-        solvent_fraction = Parameter('solvent_fraction', **LAYER_AREA_PER_MOLECULE_DETAILS['solvent_fraction'])
-        solvent = Material.from_pars(6.36, 0, 'D2O', interface=interface)
-        return cls(
-            molecular_formula=LAYER_AREA_PER_MOLECULE_DETAILS['molecular_formula'],
-            thickness=thickness,
-            solvent=solvent,
-            solvent_fraction=solvent_fraction,
-            area_per_molecule=area_per_molecule,
-            roughness=roughness,
-            interface=interface,
-        )
-
-    @classmethod
-    def from_pars(
-        cls,
-        molecular_formula: str,
-        thickness: float,
-        solvent: Material,
-        solvent_fraction: float,
-        area_per_molecule: float,
-        roughness: float,
-        name: str = 'EasyLayerAreaPerMolecule',
-        interface=None,
-    ) -> LayerAreaPerMolecule:
-        """An instance for a layer described with the area per molecule, where the parameters are known.
-
-        :param molecular_formula: Formula for the molecule in the layer.
-        :param thickness: Layer thickness in Angstrom.
-        :param solvent: Solvent in the layer.
-        :param solvent_fraction: Fraction of solvent in layer. Fx solvation or coverage.
-        :param area_per_molecule: Area per molecule.
-        :param roughness: Upper roughness on the layer in Angstrom.
-        :param name: Identifier, defaults to 'EasyLayerAreaPerMolecule'.
-        :param interface: Calculator interface, defaults to `None`.
-        """
-        default_options = deepcopy(LAYER_AREA_PER_MOLECULE_DETAILS)
-        del default_options['thickness']['value']
-        thickness = Parameter('thickness', thickness, **default_options['thickness'])
-        del default_options['roughness']['value']
-        roughness = Parameter('roughness', roughness, **default_options['roughness'])
-        del default_options['solvent_fraction']['value']
-        solvent_fraction = Parameter('solvent_fraction', solvent_fraction, **default_options['solvent_fraction'])
-
-        return cls(
-            molecular_formula=molecular_formula,
-            thickness=thickness,
-            solvent=solvent,
-            solvent_fraction=solvent_fraction,
-            area_per_molecule=area_per_molecule,
-            roughness=roughness,
-            name=name,
-            interface=interface,
-        )
+    @property
+    def area_per_molecule_parameter(self) -> Parameter:
+        """Get the parameter for area per molecule."""
+        return self._area_per_molecule
 
     @property
     def area_per_molecule(self) -> float:
@@ -240,6 +179,11 @@ class LayerAreaPerMolecule(Layer):
         :param new_solvent: New solvent material.
         """
         self.material.solvent = new_solvent
+
+    @property
+    def solvent_fraction_parameter(self) -> float:
+        """Get parameter for the fraction of the layer occupied by the solvent."""
+        return self.material.solvent_fraction_parameter
 
     @property
     def solvent_fraction(self) -> float:
@@ -287,7 +231,7 @@ class LayerAreaPerMolecule(Layer):
 
     def as_dict(self, skip: list = None) -> dict[str, str]:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
-        The resulting dict matches the paramters in __init__
+        The resulting dict matches the parameters in __init__
 
         :param skip: List of keys to skip, defaults to `None`.
         """

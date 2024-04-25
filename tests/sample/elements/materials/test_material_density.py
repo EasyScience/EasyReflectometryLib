@@ -8,7 +8,7 @@ from EasyReflectometry.sample.elements.materials.material_density import Materia
 
 class TestMaterialDensity(unittest.TestCase):
     def test_default(self):
-        p = MaterialDensity.default()
+        p = MaterialDensity()
         assert p.name == 'EasyMaterialDensity'
         assert p.interface is None
         assert p.density.display_name == 'density'
@@ -19,20 +19,20 @@ class TestMaterialDensity(unittest.TestCase):
         assert p.density.fixed is True
 
     def test_default_constraint(self):
-        p = MaterialDensity.default()
+        p = MaterialDensity()
         assert p.density.value.value.magnitude == 2.33
         assert_almost_equal(p.sld.value.value.magnitude, 2.073705382)
         p.density.value = 2
         assert_almost_equal(p.sld.value.value.magnitude, 1.780004619)
 
     def test_from_pars(self):
-        p = MaterialDensity.from_pars('Co', 8.9, 'Cobalt')
+        p = MaterialDensity('Co', 8.9, 'Cobalt')
         assert p.density.value.value.magnitude == 8.9
         assert_almost_equal(p.sld.value.value.magnitude, 2.2645412328256)
         assert p.chemical_structure == 'Co'
 
     def test_chemical_structure_change(self):
-        p = MaterialDensity.from_pars('Co', 8.9, 'Cobolt')
+        p = MaterialDensity('Co', 8.9, 'Cobolt')
         assert p.density.value.value.magnitude == 8.9
         assert_almost_equal(p.sld.value.value.magnitude, 2.2645412328256)
         assert_almost_equal(p.isld.value.value.magnitude, 0.0)
@@ -44,7 +44,7 @@ class TestMaterialDensity(unittest.TestCase):
         assert p.chemical_structure == 'B'
 
     def test_dict_repr(self):
-        p = MaterialDensity.default()
+        p = MaterialDensity()
         print(p._dict_repr)
         assert p._dict_repr == {
             'EasyMaterialDensity': {'sld': '2.074e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'},
@@ -53,6 +53,6 @@ class TestMaterialDensity(unittest.TestCase):
         }
 
     def test_dict_round_trip(self):
-        p = MaterialDensity.default()
+        p = MaterialDensity()
         q = MaterialDensity.from_dict(p.as_dict())
         assert p.as_data_dict() == q.as_data_dict()

@@ -5,7 +5,7 @@ from typing import Union
 from easyCore.Objects.ObjectClasses import Parameter
 
 
-def get_as_parameter(value: Union[Parameter, Number, None], name: str, default_dict: dict[str, str]) -> Parameter:
+def get_as_parameter(name: str, value: Union[Parameter, Number, None], default_dict: dict) -> Parameter:
     """
     This function creates a parameter for the variable `name`.  A parameter has a value and metadata.
     If the value already is a parameter, it is returned.
@@ -16,15 +16,20 @@ def get_as_parameter(value: Union[Parameter, Number, None], name: str, default_d
     param name: The name of the parameter
     param default_dict: Dictionary with entry for `name` containing the default value and metadata for the parameter
     """
+    # Ensure we got the dictionary for the parameter with the given name
     # Should leave the passed dictionary unchanged
-    local_dict = deepcopy(default_dict)
+    if name not in default_dict:
+        parameter_dict = deepcopy(default_dict)
+    else:
+        parameter_dict = deepcopy(default_dict[name])
+
     if value is None:
         # Create a default parameter using both value and metadata from dictionary
-        return Parameter(name, **local_dict[name])
+        return Parameter(name, **parameter_dict)
     elif isinstance(value, Number):
         # Create a parameter using provided value and metadata from dictionary
-        del local_dict[name]['value']
-        return Parameter(name, value, **local_dict[name])
+        del parameter_dict['value']
+        return Parameter(name, value, **parameter_dict)
     elif not isinstance(value, Parameter):
         raise ValueError(f'{name} must be a Parameter, a number, or None.')
     return value

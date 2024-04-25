@@ -12,6 +12,7 @@ from ..wrapper_base import WrapperBase
 
 PADDING_RANGE = 3.5
 UPSCALE_FACTOR = 21
+MAGNETISM = False
 
 
 class Refl1dWrapper(WrapperBase):
@@ -29,7 +30,11 @@ class Refl1dWrapper(WrapperBase):
 
         :param name: The name of the layer
         """
-        self.storage['layer'][name] = model.Slab(name=str(name))
+        if MAGNETISM:
+            magnetism = names.Magnetism(rhoM=0.2, thetaM=270)
+        else:
+            magnetism = None
+        self.storage['layer'][name] = model.Slab(name=str(name), magnetism=magnetism)
 
     def create_item(self, name: str):
         """
@@ -151,12 +156,15 @@ class Refl1dWrapper(WrapperBase):
         :return: reflectivity calculated at q
         """
         structure = model.Stack()
+        # -1 to reverse the order
         for i in self.storage['model'][model_name]['items'][::-1]:
             if i.repeat.value == 1:
+                # -1 to reverse the order
                 for j in range(len(i.stack))[::-1]:
                     structure |= i.stack[j]
             else:
                 stack = model.Stack()
+                # -1 to reverse the order
                 for j in range(len(i.stack))[::-1]:
                     stack |= i.stack[j]
                 structure |= model.Repeat(stack, repeat=i.repeat.value)
@@ -169,18 +177,38 @@ class Refl1dWrapper(WrapperBase):
             # Get percentage of Q and change from sigma to FWHM
             dq_vector = dq_vector * q_array / 100 / (2 * np.sqrt(2 * np.log(2)))
 
-        q = names.QProbe(
-            Q=q_array,
-            dQ=dq_vector,
-            intensity=self.storage['model'][model_name]['scale'],
-            background=self.storage['model'][model_name]['bkg'],
-        )
-        q.calc_Qo = np.linspace(
-            q_array[argmin] - PADDING_RANGE * dq_vector[argmin],
-            q_array[argmax] + PADDING_RANGE * dq_vector[argmax],
-            UPSCALE_FACTOR * len(q_array),
-        )
-        R = names.Experiment(probe=q, sample=structure).reflectivity()[1]
+        if MAGNETISM:
+            xs = []
+            for _ in range(4):
+                q = names.QProbe(
+                    Q=q_array,
+                    dQ=dq_vector,
+                    intensity=self.storage['model'][model_name]['scale'],
+                    background=self.storage['model'][model_name]['bkg'],
+                )
+                q.calc_Qo = np.linspace(
+                    q_array[argmin] - PADDING_RANGE * dq_vector[argmin],
+                    q_array[argmax] + PADDING_RANGE * dq_vector[argmax],
+                    UPSCALE_FACTOR * len(q_array),
+                )
+                xs.append(q)
+            probe = names.PolarizedQProbe(xs=xs, name='polarized')
+
+            R = names.Experiment(probe=probe, sample=structure).reflectivity()[1]
+        else:
+            q = names.QProbe(
+                Q=q_array,
+                dQ=dq_vector,
+                intensity=self.storage['model'][model_name]['scale'],
+                background=self.storage['model'][model_name]['bkg'],
+            )
+            q.calc_Qo = np.linspace(
+                q_array[argmin] - PADDING_RANGE * dq_vector[argmin],
+                q_array[argmax] + PADDING_RANGE * dq_vector[argmax],
+                UPSCALE_FACTOR * len(q_array),
+            )
+            R = names.Experiment(probe=q, sample=structure).reflectivity()[1]
+
         return R
 
     def sld_profile(self, model_name: str) -> Tuple[np.ndarray, np.ndarray]:
@@ -191,12 +219,15 @@ class Refl1dWrapper(WrapperBase):
         :return: z and sld(z)
         """
         structure = model.Stack()
+        # -1 to reverse the order
         for i in self.storage['model'][model_name]['items'][::-1]:
             if i.repeat.value == 1:
+                # -1 to reverse the order
                 for j in range(len(i.stack))[::-1]:
                     structure |= i.stack[j]
             else:
                 stack = model.Stack()
+                # -1 to reverse the order
                 for j in range(len(i.stack))[::-1]:
                     stack |= i.stack[j]
                 structure |= model.Repeat(stack, repeat=i.repeat.value)
@@ -208,4 +239,5 @@ class Refl1dWrapper(WrapperBase):
             background=self.storage['model'][model_name]['bkg'],
         )
         z, sld, _ = names.Experiment(probe=q, sample=structure).smooth_profile()
+        # -1 to reverse the order
         return z, sld[::-1]
