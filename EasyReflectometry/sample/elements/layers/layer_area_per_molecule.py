@@ -143,8 +143,8 @@ class LayerAreaPerMolecule(Layer):
         self.interface = interface
 
     @property
-    def area_per_molecule_paramter(self) -> Parameter:
-        """Get the paramter for area per molecule."""
+    def area_per_molecule_parameter(self) -> Parameter:
+        """Get the parameter for area per molecule."""
         return self._area_per_molecule
 
     @property
@@ -181,9 +181,9 @@ class LayerAreaPerMolecule(Layer):
         self.material.solvent = new_solvent
 
     @property
-    def solvent_fraction_paramter(self) -> float:
-        """Get paramter for the fraction of the layer occupied by the solvent."""
-        return self.material.solvent_fraction_paramter
+    def solvent_fraction_parameter(self) -> float:
+        """Get parameter for the fraction of the layer occupied by the solvent."""
+        return self.material.solvent_fraction_parameter
 
     @property
     def solvent_fraction(self) -> float:
@@ -231,7 +231,7 @@ class LayerAreaPerMolecule(Layer):
 
     def as_dict(self, skip: list = None) -> dict[str, str]:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
-        The resulting dict matches the paramters in __init__
+        The resulting dict matches the parameters in __init__
 
         :param skip: List of keys to skip, defaults to `None`.
         """
