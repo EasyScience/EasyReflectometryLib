@@ -19,7 +19,7 @@ from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestLayer(unittest.TestCase):
-    def test_no_paramters(self):
+    def test_no_arguments(self):
         p = Layer()
         assert_equal(p.name, 'EasyLayer')
         assert_equal(p.interface, None)
@@ -56,7 +56,7 @@ class TestLayer(unittest.TestCase):
         assert_equal(p.roughness.max, np.Inf)
         assert_equal(p.roughness.fixed, True)
 
-    def test_from_roughness_key(self):
+    def test_only_roughness_key(self):
         p = Layer(roughness=10.0)
         assert_equal(p.roughness.display_name, 'roughness')
         assert_equal(str(p.roughness.unit), 'angstrom')
@@ -65,14 +65,14 @@ class TestLayer(unittest.TestCase):
         assert_equal(p.roughness.max, np.Inf)
         assert_equal(p.roughness.fixed, True)
 
-    def test_from_roughness_key_paramter(self):
+    def test_only_roughness_key_paramter(self):
         roughness = get_as_parameter('roughness', 10, DEFAULTS)
         roughness.min = -10.0
         p = Layer(roughness=roughness)
         assert_equal(p.roughness.value.value.magnitude, 10.0)
         assert_equal(p.roughness.min, -10.0)
 
-    def test_from_thickness_key(self):
+    def test_only_thickness_key(self):
         p = Layer(thickness=10.0)
         assert_equal(p.thickness.display_name, 'thickness')
         assert_equal(str(p.thickness.unit), 'angstrom')
@@ -81,7 +81,7 @@ class TestLayer(unittest.TestCase):
         assert_equal(p.thickness.max, np.Inf)
         assert_equal(p.thickness.fixed, True)
 
-    def test_from_thickness_key_paramter(self):
+    def test_only_thickness_key_paramter(self):
         thickness = get_as_parameter('thickness', 10, DEFAULTS)
         thickness.min = -10.0
         p = Layer(thickness=thickness)

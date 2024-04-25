@@ -16,7 +16,7 @@ from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestMaterial(unittest.TestCase):
-    def test_no_paramters(self):
+    def test_no_arguments(self):
         p = Material()
         assert p.name == 'EasyMaterial'
         assert p.interface is None
@@ -50,7 +50,7 @@ class TestMaterial(unittest.TestCase):
         assert p.isld.max == np.Inf
         assert p.isld.fixed is True
 
-    def test_from_sld_key(self):
+    def test_only_sld_key(self):
         p = Material(sld=10)
         assert p.sld.display_name == 'sld'
         assert str(p.sld.unit) == '1 / angstrom ** 2'
@@ -59,14 +59,14 @@ class TestMaterial(unittest.TestCase):
         assert p.sld.max == np.Inf
         assert p.sld.fixed is True
 
-    def test_from_sld_key_parameter(self):
+    def test_only_sld_key_parameter(self):
         sld = get_as_parameter('sld', 10, DEFAULTS)
         sld.min = -10.0
         p = Material(sld=sld)
         assert p.sld.value.value.magnitude == 10
         assert p.sld.min == -10
 
-    def test_from_isld_key(self):
+    def test_only_isld_key(self):
         p = Material(isld=10)
         assert p.isld.display_name == 'isld'
         assert str(p.isld.unit) == '1 / angstrom ** 2'
@@ -75,7 +75,7 @@ class TestMaterial(unittest.TestCase):
         assert p.isld.max == np.Inf
         assert p.isld.fixed is True
 
-    def test_from_isld_key_parameter(self):
+    def test_only_isld_key_parameter(self):
         isld = get_as_parameter('isld', 10, DEFAULTS)
         isld.min = -10.0
         p = Material(isld=isld)
