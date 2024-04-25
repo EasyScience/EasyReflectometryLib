@@ -1,4 +1,3 @@
-from numbers import Number
 from typing import Union
 
 from easyCore import np
@@ -68,11 +67,11 @@ class LayerAreaPerMolecule(Layer):
     def __init__(
         self,
         molecular_formula: Union[str, None] = None,
-        thickness: Union[Parameter, Number, None] = None,
+        thickness: Union[Parameter, float, None] = None,
         solvent: Union[Material, None] = None,
-        solvent_fraction: Union[Parameter, Number, None] = None,
-        area_per_molecule: Union[Parameter, Number, None] = None,
-        roughness: Union[Parameter, Number, None] = None,
+        solvent_fraction: Union[Parameter, float, None] = None,
+        area_per_molecule: Union[Parameter, float, None] = None,
+        roughness: Union[Parameter, float, None] = None,
         name: str = 'EasyLayerAreaPerMolecule',
         interface=None,
     ):

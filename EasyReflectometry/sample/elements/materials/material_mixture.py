@@ -1,4 +1,3 @@
-from numbers import Number
 from typing import Union
 
 from easyCore.Fitting.Constraints import FunctionalConstraint
@@ -34,7 +33,7 @@ class MaterialMixture(BaseCore):
         self,
         material_a: Union[Material, None] = None,
         material_b: Union[Material, None] = None,
-        fraction: Union[Parameter, Number, None] = None,
+        fraction: Union[Parameter, float, None] = None,
         name: Union[str, None] = None,
         interface=None,
     ):

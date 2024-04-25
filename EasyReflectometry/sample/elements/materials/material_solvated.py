@@ -1,4 +1,3 @@
-from numbers import Number
 from typing import Union
 
 from easyCore.Objects.ObjectClasses import Parameter
@@ -25,7 +24,7 @@ class MaterialSolvated(MaterialMixture):
         self,
         material: Union[Material, None] = None,
         solvent: Union[Material, None] = None,
-        solvent_fraction: Union[Parameter, Number, None] = None,
+        solvent_fraction: Union[Parameter, float, None] = None,
         name=None,
         interface=None,
     ):

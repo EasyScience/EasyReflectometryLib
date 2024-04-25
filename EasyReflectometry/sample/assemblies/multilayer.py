@@ -21,7 +21,7 @@ class Multilayer(BaseAssembly):
 
     def __init__(
         self,
-        layers: Union[LayerCollection, Layer, list[Layer], None] = None,
+        layers: Union[Layer, list[Layer], LayerCollection, None] = None,
         name: str = 'EasyMultilayer',
         interface=None,
         type: str = 'Multi-layer',

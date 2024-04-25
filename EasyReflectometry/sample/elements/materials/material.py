@@ -1,6 +1,5 @@
 __author__ = 'github.com/arm61'
 
-from numbers import Number
 from typing import Union
 
 from easyCore import np
@@ -39,8 +38,8 @@ class Material(BaseCore):
 
     def __init__(
         self,
-        sld: Union[Parameter, Number, None] = None,
-        isld: Union[Parameter, Number, None] = None,
+        sld: Union[Parameter, float, None] = None,
+        isld: Union[Parameter, float, None] = None,
         name: str = 'EasyMaterial',
         interface=None,
     ):

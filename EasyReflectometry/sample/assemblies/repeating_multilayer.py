@@ -1,4 +1,3 @@
-from numbers import Number
 from typing import Union
 
 from easyCore.Objects.ObjectClasses import Parameter
@@ -37,7 +36,7 @@ class RepeatingMultilayer(Multilayer):
     def __init__(
         self,
         layers: Union[LayerCollection, Layer, list[Layer], None] = None,
-        repetitions: Union[Parameter, Number, None] = None,
+        repetitions: Union[Parameter, int, None] = None,
         name: str = 'EasyRepeatingMultilayer',
         interface=None,
     ):
