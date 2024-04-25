@@ -19,7 +19,7 @@ from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestLayer(unittest.TestCase):
-    def test_default(self):
+    def test_no_paramters(self):
         p = Layer()
         assert_equal(p.name, 'EasyLayer')
         assert_equal(p.interface, None)
@@ -37,9 +37,9 @@ class TestLayer(unittest.TestCase):
         assert_equal(p.roughness.max, np.Inf)
         assert_equal(p.roughness.fixed, True)
 
-    def test_from_pars(self):
+    def test_shuffled_arguments(self):
         m = Material(6.908, -0.278, 'Boron')
-        p = Layer(m, 5.0, 2.0, 'thinBoron')
+        p = Layer(thickness=5.0, material=m, roughness=2.0, name='thinBoron')
         assert_equal(p.name, 'thinBoron')
         assert_equal(p.interface, None)
         assert_equal(p.material.name, 'Boron')

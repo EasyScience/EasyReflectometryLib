@@ -16,7 +16,7 @@ from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestMaterial(unittest.TestCase):
-    def test_default(self):
+    def test_no_paramters(self):
         p = Material()
         assert p.name == 'EasyMaterial'
         assert p.interface is None
@@ -33,8 +33,8 @@ class TestMaterial(unittest.TestCase):
         assert p.isld.max == np.Inf
         assert p.isld.fixed is True
 
-    def test_from_pars(self):
-        p = Material(6.908, -0.278, 'Boron')
+    def test_shuffled_arguments(self):
+        p = Material(name='Boron', sld=6.908, isld=-0.278)
         assert p.name == 'Boron'
         assert p.interface is None
         assert p.sld.display_name == 'sld'
