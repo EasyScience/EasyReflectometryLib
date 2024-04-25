@@ -59,8 +59,8 @@ class Layer(BaseCore):
         if material is None:
             material = Material(interface=interface)
 
-        thickness = get_as_parameter(thickness, 'thickness', DEFAULTS)
-        roughness = get_as_parameter(roughness, 'roughness', DEFAULTS)
+        thickness = get_as_parameter('thickness', thickness, DEFAULTS)
+        roughness = get_as_parameter('roughness', roughness, DEFAULTS)
 
         super().__init__(
             name=name,

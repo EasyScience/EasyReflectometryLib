@@ -50,7 +50,7 @@ class MaterialMixture(BaseCore):
         if material_b is None:
             material_b = Material(interface=interface)
 
-        fraction = get_as_parameter(fraction, 'fraction', DEFAULTS)
+        fraction = get_as_parameter('fraction', fraction, DEFAULTS)
 
         sld = weighted_average(
             a=material_a.sld.raw_value,
@@ -63,8 +63,8 @@ class MaterialMixture(BaseCore):
             p=fraction.raw_value,
         )
 
-        self._sld = get_as_parameter(sld, 'sld', DEFAULTS)
-        self._isld = get_as_parameter(isld, 'isld', DEFAULTS)
+        self._sld = get_as_parameter('sld', sld, DEFAULTS)
+        self._isld = get_as_parameter('isld', isld, DEFAULTS)
 
         # To avoid problems when setting the interface
         # self._sld and self._isld need to be declared before calling the super constructor

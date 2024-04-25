@@ -5,7 +5,7 @@ from typing import Union
 from easyCore.Objects.ObjectClasses import Parameter
 
 
-def get_as_parameter(value: Union[Parameter, Number, None], name: str, default_dict: dict) -> Parameter:
+def get_as_parameter(name: str, value: Union[Parameter, Number, None], default_dict: dict) -> Parameter:
     """
     This function creates a parameter for the variable `name`.  A parameter has a value and metadata.
     If the value already is a parameter, it is returned.

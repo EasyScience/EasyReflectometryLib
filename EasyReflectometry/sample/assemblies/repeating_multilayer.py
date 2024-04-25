@@ -55,7 +55,7 @@ class RepeatingMultilayer(Multilayer):
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
 
-        repetitions = get_as_parameter(repetitions, 'repetitions', DEFAULTS)
+        repetitions = get_as_parameter('repetitions', repetitions, DEFAULTS)
 
         super().__init__(
             layers=layers,

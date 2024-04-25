@@ -94,10 +94,10 @@ class LayerAreaPerMolecule(Layer):
             molecular_formula = DEFAULTS['molecular_formula']
         molecule = Material(sld=0.0, isld=0.0, name=molecular_formula, interface=interface)
 
-        thickness = get_as_parameter(thickness, 'thickness', DEFAULTS)
-        _area_per_molecule = get_as_parameter(area_per_molecule, 'area_per_molecule', DEFAULTS)
-        _scattering_length_real = get_as_parameter(0.0, 'scattering_length_real', DEFAULTS['sl'])
-        _scattering_length_imag = get_as_parameter(0.0, 'scattering_length_imag', DEFAULTS['isl'])
+        thickness = get_as_parameter('thickness', thickness, DEFAULTS)
+        _area_per_molecule = get_as_parameter('area_per_molecule', area_per_molecule, DEFAULTS)
+        _scattering_length_real = get_as_parameter('scattering_length_real', 0.0, DEFAULTS['sl'])
+        _scattering_length_imag = get_as_parameter('scattering_length_imag', 0.0, DEFAULTS['isl'])
 
         # Constrain the real part of the sld value for the molecule
         constraint_sld_real = FunctionalConstraint(

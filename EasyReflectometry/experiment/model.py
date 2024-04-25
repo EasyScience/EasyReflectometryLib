@@ -78,8 +78,8 @@ class Model(BaseObj):
         if resolution_function is None:
             resolution_function = constant_resolution_function(DEFAULTS['resolution']['value'])
 
-        scale = get_as_parameter(scale, 'scale', DEFAULTS)
-        background = get_as_parameter(background, 'background', DEFAULTS)
+        scale = get_as_parameter('scale', scale, DEFAULTS)
+        background = get_as_parameter('background', background, DEFAULTS)
 
         super().__init__(
             name=name,

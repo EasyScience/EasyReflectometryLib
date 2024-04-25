@@ -78,31 +78,23 @@ class MaterialDensity(Material):
         if chemical_structure is None:
             chemical_structure = DEFAULTS['chemical_structure']
 
-        density = get_as_parameter(density, 'density', DEFAULTS)
+        density = get_as_parameter('density', density, DEFAULTS)
 
         scattering_length = neutron_scattering_length(chemical_structure)
 
-        mw = get_as_parameter(molecular_weight(chemical_structure), 'molecular_weight', DEFAULTS)
+        mw = get_as_parameter('molecular_weight', molecular_weight(chemical_structure), DEFAULTS)
         scattering_length_real = get_as_parameter(
-            value=scattering_length.real,
             name='scattering_length_real',
+            value=scattering_length.real,
             default_dict=DEFAULTS['sld'],
         )
-        scattering_length_imag = get_as_parameter(
-            value=scattering_length.imag,
-            name='scattering_length_imag',
-            default_dict=DEFAULTS['isld'],
-        )
+        scattering_length_imag = get_as_parameter('scattering_length_imag', scattering_length.imag, DEFAULTS['isld'])
 
         sld = get_as_parameter(
-            density_to_sld(scattering_length_real.raw_value, mw.raw_value, density.raw_value),
-            'sld',
-            DEFAULTS,
+            'sld', density_to_sld(scattering_length_real.raw_value, mw.raw_value, density.raw_value), DEFAULTS
         )
         isld = get_as_parameter(
-            density_to_sld(scattering_length_imag.raw_value, mw.raw_value, density.raw_value),
-            'isld',
-            DEFAULTS,
+            'isld', density_to_sld(scattering_length_imag.raw_value, mw.raw_value, density.raw_value), DEFAULTS
         )
 
         constraint = FunctionalConstraint(sld, density_to_sld, [scattering_length_real, mw, density])

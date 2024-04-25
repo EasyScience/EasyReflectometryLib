@@ -41,7 +41,7 @@ class MaterialSolvated(MaterialMixture):
         if solvent is None:
             solvent = Material(sld=-0.561, isld=0, name='H2O', interface=interface)
 
-        solvent_fraction = get_as_parameter(solvent_fraction, 'solvent_fraction', DEFAULTS)
+        solvent_fraction = get_as_parameter('solvent_fraction', solvent_fraction, DEFAULTS)
 
         # In super class, the fraction is the fraction of material b in material a
         super().__init__(

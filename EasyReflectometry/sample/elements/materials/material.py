@@ -50,8 +50,8 @@ class Material(BaseCore):
         :param name: Name of the material, defaults to 'EasyMaterial'.
         :param interface: Calculator interface, defaults to `None`.
         """
-        sld = get_as_parameter(sld, 'sld', DEFAULTS)
-        isld = get_as_parameter(isld, 'isld', DEFAULTS)
+        sld = get_as_parameter('sld', sld, DEFAULTS)
+        isld = get_as_parameter('isld', isld, DEFAULTS)
 
         super().__init__(name=name, sld=sld, isld=isld, interface=interface)
 
