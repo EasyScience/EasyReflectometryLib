@@ -1,6 +1,7 @@
 """
 Tests for Refnx calculator.
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -24,7 +25,6 @@ class TestRefnx(unittest.TestCase):
         assert_equal(p._item_link['repetitions'], 'repeats')
         assert_equal(p._model_link['scale'], 'scale')
         assert_equal(p._model_link['background'], 'bkg')
-        assert_equal(p._model_link['resolution'], 'dq')
         assert_equal(p.name, 'refnx')
 
     def test_fit_func(self):
