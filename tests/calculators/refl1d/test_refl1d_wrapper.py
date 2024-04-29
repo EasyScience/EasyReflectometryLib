@@ -6,12 +6,18 @@ __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
 import unittest
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 import numpy as np
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
 from EasyReflectometry.calculators.refl1d.wrapper import Refl1dWrapper
+from EasyReflectometry.calculators.refl1d.wrapper import _build_sample
+from EasyReflectometry.calculators.refl1d.wrapper import _get_oversampling_q
+from EasyReflectometry.calculators.refl1d.wrapper import _get_polarized_probe
+from EasyReflectometry.calculators.refl1d.wrapper import _get_probe
 
 
 class TestRefl1d(unittest.TestCase):
@@ -276,3 +282,137 @@ class TestRefl1d(unittest.TestCase):
         p.add_item('Item', 'MyModel')
         assert_almost_equal(p.sld_profile('MyModel')[1][0], 0)
         assert_almost_equal(p.sld_profile('MyModel')[1][-1], 4)
+
+
+def test_get_oversampling():
+    # When
+    q = np.linspace(1, 10, 10)
+    dq = np.linspace(0.01, 0.1, 10)
+
+    # Then
+    oversampling = _get_oversampling_q(q_array=q, dq_array=dq, oversampling_factor=5)
+
+    # Expect
+    assert len(oversampling) == 50
+    assert oversampling[0] == 0.965
+    assert oversampling[-1] == 10.35
+
+
+def test_get_probe():
+    # When
+    q = np.linspace(1, 10, 10)
+    dq = np.linspace(0.01, 0.1, 10)
+    model_name = 'model_name'
+
+    storage = {'model': {model_name: {}}}
+    storage['model'][model_name]['scale'] = 10.0
+    storage['model'][model_name]['bkg'] = 20.0
+
+    # Then
+    probe = _get_probe(q_array=q, dq_array=dq, model_name=model_name, storage=storage)
+
+    # Then
+    assert all(probe.Q == q)
+    assert all(probe.calc_Qo == q)
+    assert all(probe.dQ == dq)
+    assert len(probe.calc_Qo) == len(q)
+    assert probe.intensity.value == 10
+    assert probe.background.value == 20
+
+
+def test_get_probe_oversampling():
+    # When
+    q = np.linspace(1, 10, 10)
+    dq = np.linspace(0.01, 0.1, 10)
+    model_name = 'model_name'
+
+    storage = {'model': {model_name: {}}}
+    storage['model'][model_name]['scale'] = 10.0
+    storage['model'][model_name]['bkg'] = 20.0
+
+    # Then
+    probe = _get_probe(q_array=q, dq_array=dq, model_name=model_name, storage=storage, oversampling_factor=2)
+
+    # Then
+    assert len(probe.calc_Qo) == 2 * len(q)
+
+
+def test_get_polarized_probe():
+    # When
+    q = np.linspace(1, 10, 10)
+    dq = np.linspace(0.01, 0.1, 10)
+    model_name = 'model_name'
+
+    storage = {'model': {model_name: {}}}
+    storage['model'][model_name]['scale'] = 10.0
+    storage['model'][model_name]['bkg'] = 20.0
+
+    # Then
+    probe = _get_polarized_probe(q_array=q, dq_array=dq, model_name=model_name, storage=storage)
+
+    # Then
+    assert all(probe.Q == q)
+    assert all(probe.calc_Qo == q)
+    assert all(probe.dQ == dq)
+    assert len(probe.calc_Qo) == len(q)
+    assert len(probe.xs) == 4
+    assert probe.xs[1:4] == [None, None, None]
+    assert probe.xs[0].intensity.value == 10
+    assert probe.xs[0].background.value == 20
+
+
+def test_get_polarized_probe_polarization():
+    # When
+    q = np.linspace(1, 10, 10)
+    dq = np.linspace(0.01, 0.1, 10)
+    model_name = 'model_name'
+
+    storage = {'model': {model_name: {}}}
+    storage['model'][model_name]['scale'] = 10.0
+    storage['model'][model_name]['bkg'] = 20.0
+
+    # Then
+    probe = _get_polarized_probe(
+        q_array=q,
+        dq_array=dq,
+        model_name=model_name,
+        storage=storage,
+        oversampling_factor=2,
+        all_polarizations=True,
+    )
+
+    # Then
+    assert len(probe.xs[0].calc_Qo) == 2 * len(q)
+    assert len(probe.xs[1].calc_Qo) == 2 * len(q)
+    assert len(probe.xs[2].calc_Qo) == 2 * len(q)
+    assert len(probe.xs[3].calc_Qo) == 2 * len(q)
+
+
+@patch('EasyReflectometry.calculators.refl1d.wrapper.model.Stack')
+@patch('EasyReflectometry.calculators.refl1d.wrapper.model.Repeat')
+def test_build_sample(mock_repeat, mock_stack):
+    # When
+    mock_item_1 = MagicMock()
+    mock_item_1.repeat = MagicMock()
+    mock_item_1.repeat.value = 1
+    mock_item_1.stack = ['1a', '1b']
+    mock_item_2 = MagicMock()
+    mock_item_2.repeat = MagicMock()
+    mock_item_2.repeat.value = 2
+    mock_item_2.stack = ['2a', '2b']
+    model_name = 'model_name'
+    mock_stack.__or__ = MagicMock()
+
+    storage = {'model': {model_name: {'items': []}}}
+    storage['model'][model_name]['items'].append(mock_item_1)
+    storage['model'][model_name]['items'].append(mock_item_2)
+
+    # Then
+    sample = _build_sample(model_name=model_name, storage=storage)
+
+    # Expect
+    assert mock_stack.call_count == 2
+    assert mock_repeat.call_count == 1
+    # TODO do asserts on sample
+    # will probably use other build_sample function in future
+    # difficult to test current implementation

@@ -10,9 +10,10 @@ from EasyReflectometry.experiment.resolution_functions import is_constant_resolu
 
 from ..wrapper_base import WrapperBase
 
-PADDING_RANGE = 3.5
-UPSCALE_FACTOR = 21
+RESOLUTION_PADDING = 3.5
+OVERSAMPLING_FACTOR = 21
 MAGNETISM = False
+ALL_POLARIZATIONS = False
 
 
 class Refl1dWrapper(WrapperBase):
@@ -30,7 +31,7 @@ class Refl1dWrapper(WrapperBase):
 
         :param name: The name of the layer
         """
-        if MAGNETISM:
+        if MAGNETISM:  # A test with hardcoded magnetism in all layers
             magnetism = names.Magnetism(rhoM=0.2, thetaM=270)
         else:
             magnetism = None
@@ -46,17 +47,6 @@ class Refl1dWrapper(WrapperBase):
             model.Stack(model.Slab(names.SLD(), thickness=0, interface=0)), name=str(name)
         )
         del self.storage['item'][name].stack[0]
-
-    def update_item(self, name: str, **kwargs):
-        """
-        Update a layer.
-
-        :param name: The item name
-        """
-        item = self.storage['item'][name]
-        for key in kwargs.keys():
-            ii = getattr(item, key)
-            setattr(ii, 'value', kwargs[key])
 
     def get_item_value(self, name: str, key: str) -> float:
         """
@@ -155,61 +145,43 @@ class Refl1dWrapper(WrapperBase):
         :param model_name: the model name
         :return: reflectivity calculated at q
         """
-        structure = model.Stack()
-        # -1 to reverse the order
-        for i in self.storage['model'][model_name]['items'][::-1]:
-            if i.repeat.value == 1:
-                # -1 to reverse the order
-                for j in range(len(i.stack))[::-1]:
-                    structure |= i.stack[j]
-            else:
-                stack = model.Stack()
-                # -1 to reverse the order
-                for j in range(len(i.stack))[::-1]:
-                    stack |= i.stack[j]
-                structure |= model.Repeat(stack, repeat=i.repeat.value)
-
-        argmin = np.argmin(q_array)
-        argmax = np.argmax(q_array)
-        dq_vector = self._resolution_function(q_array)
+        sample = _build_sample(self.storage, model_name)
+        dq_array = self._resolution_function(q_array)
 
         if is_constant_resolution_function(self._resolution_function):
             # Get percentage of Q and change from sigma to FWHM
-            dq_vector = dq_vector * q_array / 100 / (2 * np.sqrt(2 * np.log(2)))
+            dq_array = dq_array * q_array / 100 / (2 * np.sqrt(2 * np.log(2)))
 
-        if MAGNETISM:
-            xs = []
-            for _ in range(4):
-                q = names.QProbe(
-                    Q=q_array,
-                    dQ=dq_vector,
-                    intensity=self.storage['model'][model_name]['scale'],
-                    background=self.storage['model'][model_name]['bkg'],
-                )
-                q.calc_Qo = np.linspace(
-                    q_array[argmin] - PADDING_RANGE * dq_vector[argmin],
-                    q_array[argmax] + PADDING_RANGE * dq_vector[argmax],
-                    UPSCALE_FACTOR * len(q_array),
-                )
-                xs.append(q)
-            probe = names.PolarizedQProbe(xs=xs, name='polarized')
-
-            R = names.Experiment(probe=probe, sample=structure).reflectivity()[1]
+        if not MAGNETISM:
+            probe = _get_probe(
+                q_array=q_array,
+                dq_array=dq_array,
+                model_name=model_name,
+                storage=self.storage,
+                oversampling_factor=OVERSAMPLING_FACTOR,
+            )
+            _, reflectivity = names.Experiment(probe=probe, sample=sample).reflectivity()
         else:
-            q = names.QProbe(
-                Q=q_array,
-                dQ=dq_vector,
-                intensity=self.storage['model'][model_name]['scale'],
-                background=self.storage['model'][model_name]['bkg'],
+            polarized_probe = _get_polarized_probe(
+                q_array=q_array,
+                dq_array=dq_array,
+                model_name=model_name,
+                storage=self.storage,
+                oversampling_factor=OVERSAMPLING_FACTOR,
+                all_polarizations=ALL_POLARIZATIONS,
             )
-            q.calc_Qo = np.linspace(
-                q_array[argmin] - PADDING_RANGE * dq_vector[argmin],
-                q_array[argmax] + PADDING_RANGE * dq_vector[argmax],
-                UPSCALE_FACTOR * len(q_array),
-            )
-            R = names.Experiment(probe=q, sample=structure).reflectivity()[1]
+            polarized_reflectivity = names.Experiment(probe=polarized_probe, sample=sample).reflectivity()
 
-        return R
+            if ALL_POLARIZATIONS:
+                raise NotImplementedError('Polarized reflectivity not yet implemented')
+                _, reflectivity_pp = polarized_reflectivity[0]
+                _, reflectivity_pm = polarized_reflectivity[1]
+                _, reflectivity_mp = polarized_reflectivity[2]
+                _, reflectivity_mm = polarized_reflectivity[3]
+            else:
+                _, reflectivity = polarized_reflectivity[0]
+
+        return reflectivity
 
     def sld_profile(self, model_name: str) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -218,26 +190,82 @@ class Refl1dWrapper(WrapperBase):
         :param model_name: the model name
         :return: z and sld(z)
         """
-        structure = model.Stack()
-        # -1 to reverse the order
-        for i in self.storage['model'][model_name]['items'][::-1]:
-            if i.repeat.value == 1:
-                # -1 to reverse the order
-                for j in range(len(i.stack))[::-1]:
-                    structure |= i.stack[j]
-            else:
-                stack = model.Stack()
-                # -1 to reverse the order
-                for j in range(len(i.stack))[::-1]:
-                    stack |= i.stack[j]
-                structure |= model.Repeat(stack, repeat=i.repeat.value)
-
-        q = names.QProbe(
-            np.linspace(0.001, 0.3, 10),
-            np.linspace(0.001, 0.3, 10),
-            intensity=self.storage['model'][model_name]['scale'],
-            background=self.storage['model'][model_name]['bkg'],
+        sample = _build_sample(self.storage, model_name)
+        probe = _get_probe(
+            q_array=np.linspace(0.001, 0.3, 10),
+            dq_array=np.linspace(0.001, 0.3, 10),  # TODO why would we use a steadily increasing dq (resolution)?
+            model_name=model_name,
+            storage=self.storage,
         )
-        z, sld, _ = names.Experiment(probe=q, sample=structure).smooth_profile()
+        z, sld, _ = names.Experiment(probe=probe, sample=sample).smooth_profile()
         # -1 to reverse the order
         return z, sld[::-1]
+
+
+def _get_oversampling_q(q_array: np.ndarray, dq_array: np.ndarray, oversampling_factor: int) -> np.ndarray:
+    argmin = np.argmin(q_array)
+    argmax = np.argmax(q_array)
+    return np.linspace(
+        q_array[argmin] - RESOLUTION_PADDING * dq_array[argmin],  # get dq (resolution) corresponding to the smallest q
+        q_array[argmax] + RESOLUTION_PADDING * dq_array[argmax],  # get dq (resolution) corresponding to the largest q
+        oversampling_factor * len(q_array),
+    )
+
+
+def _get_probe(
+    q_array: np.ndarray,
+    dq_array: np.ndarray,
+    model_name: str,
+    storage: dict,
+    oversampling_factor: int = 1,
+) -> names.QProbe:
+    probe = names.QProbe(
+        Q=q_array,
+        dQ=dq_array,
+        intensity=storage['model'][model_name]['scale'],
+        background=storage['model'][model_name]['bkg'],
+    )
+    if oversampling_factor > 1:
+        probe.calc_Qo = _get_oversampling_q(q_array, dq_array, oversampling_factor)
+    return probe
+
+
+def _get_polarized_probe(
+    q_array: np.ndarray,
+    dq_array: np.ndarray,
+    model_name: str,
+    storage: dict,
+    oversampling_factor: int = 1,
+    all_polarizations: bool = False,
+) -> names.QProbe:
+    xs = []
+    for i in range(4):
+        if i == 0 or all_polarizations:
+            probe = _get_probe(
+                q_array=q_array,
+                dq_array=dq_array,
+                model_name=model_name,
+                storage=storage,
+                oversampling_factor=oversampling_factor,
+            )
+        else:
+            probe = None
+        xs.append(probe)
+    return names.PolarizedQProbe(xs=xs, name='polarized')
+
+
+def _build_sample(storage: dict, model_name: str) -> model.Stack:
+    sample = model.Stack()
+    # -1 to reverse the order
+    for i in storage['model'][model_name]['items'][::-1]:
+        if i.repeat.value == 1:
+            # -1 to reverse the order
+            for j in range(len(i.stack))[::-1]:
+                sample |= i.stack[j]
+        else:
+            stack = model.Stack()
+            # -1 to reverse the order
+            for j in range(len(i.stack))[::-1]:
+                stack |= i.stack[j]
+            sample |= model.Repeat(stack, repeat=i.repeat.value)
+    return sample
