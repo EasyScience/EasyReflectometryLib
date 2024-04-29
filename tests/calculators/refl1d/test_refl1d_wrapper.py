@@ -408,11 +408,11 @@ def test_build_sample(mock_repeat, mock_stack):
     storage['model'][model_name]['items'].append(mock_item_2)
 
     # Then
-    sample = _build_sample(model_name=model_name, storage=storage)
+    _ = _build_sample(model_name=model_name, storage=storage)
 
     # Expect
     assert mock_stack.call_count == 2
     assert mock_repeat.call_count == 1
-    # TODO do asserts on sample
+    # TODO do asserts on sample returned by _build_sample
     # will probably use other build_sample function in future
     # difficult to test current implementation
