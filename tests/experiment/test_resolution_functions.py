@@ -1,11 +1,11 @@
 import numpy as np
 
-from EasyReflectometry.experiment.resolution_functions import constant_resolution_function
 from EasyReflectometry.experiment.resolution_functions import linear_spline_resolution_function
+from EasyReflectometry.experiment.resolution_functions import percentage_fhwm_resolution_function
 
 
-def test_constant_resolution_function():
-    resolution_function = constant_resolution_function(5)
+def test_percentage_fhwm_resolution_function():
+    resolution_function = percentage_fhwm_resolution_function(5)
     assert np.all(resolution_function([0, 2.5]) == [5, 5])
     assert resolution_function([-100]) == 5
     assert resolution_function([100]) == 5

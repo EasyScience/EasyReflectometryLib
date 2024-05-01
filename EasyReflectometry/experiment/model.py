@@ -18,7 +18,7 @@ from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import LayerCollection
 from EasyReflectometry.sample import Sample
 
-from .resolution_functions import constant_resolution_function
+from .resolution_functions import percentage_fhwm_resolution_function
 
 DEFAULTS = {
     'scale': {
@@ -76,7 +76,7 @@ class Model(BaseObj):
         if sample is None:
             sample = Sample(interface=interface)
         if resolution_function is None:
-            resolution_function = constant_resolution_function(DEFAULTS['resolution']['value'])
+            resolution_function = percentage_fhwm_resolution_function(DEFAULTS['resolution']['value'])
 
         scale = get_as_parameter('scale', scale, DEFAULTS)
         background = get_as_parameter('background', background, DEFAULTS)

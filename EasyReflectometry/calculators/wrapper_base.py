@@ -3,7 +3,7 @@ from typing import Callable
 
 import numpy as np
 
-from EasyReflectometry.experiment import constant_resolution_function
+from EasyReflectometry.experiment import percentage_fhwm_resolution_function
 
 DEFAULT_RESOLUTION_FWHM_PERCENTAGE = 5.0
 
@@ -17,7 +17,7 @@ class WrapperBase:
             'item': {},
             'model': {},
         }
-        self._resolution_function = constant_resolution_function(DEFAULT_RESOLUTION_FWHM_PERCENTAGE)
+        self._resolution_function = percentage_fhwm_resolution_function(DEFAULT_RESOLUTION_FWHM_PERCENTAGE)
 
     def reset_storage(self):
         """Reset the storage area to blank."""
