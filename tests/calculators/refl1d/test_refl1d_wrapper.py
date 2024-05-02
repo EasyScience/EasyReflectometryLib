@@ -315,7 +315,6 @@ def test_get_probe():
     assert all(probe.Q == q)
     assert all(probe.calc_Qo == q)
     assert all(probe.dQ == dq)
-    assert len(probe.calc_Qo) == len(q)
     assert probe.intensity.value == 10
     assert probe.background.value == 20
 
@@ -361,6 +360,23 @@ def test_get_polarized_probe():
     assert probe.xs[0].background.value == 20
 
 
+def test_get_polarized_probe_oversampling():
+    # When
+    q = np.linspace(1, 10, 10)
+    dq = np.linspace(0.01, 0.1, 10)
+    model_name = 'model_name'
+
+    storage = {'model': {model_name: {}}}
+    storage['model'][model_name]['scale'] = 10.0
+    storage['model'][model_name]['bkg'] = 20.0
+
+    # Then
+    probe = _get_polarized_probe(q_array=q, dq_array=dq, model_name=model_name, storage=storage, oversampling_factor=2)
+
+    # Then
+    assert len(probe.xs[0].calc_Qo) == 2 * len(q)
+
+
 def test_get_polarized_probe_polarization():
     # When
     q = np.linspace(1, 10, 10)
@@ -377,15 +393,14 @@ def test_get_polarized_probe_polarization():
         dq_array=dq,
         model_name=model_name,
         storage=storage,
-        oversampling_factor=2,
         all_polarizations=True,
     )
 
-    # Then
-    assert len(probe.xs[0].calc_Qo) == 2 * len(q)
-    assert len(probe.xs[1].calc_Qo) == 2 * len(q)
-    assert len(probe.xs[2].calc_Qo) == 2 * len(q)
-    assert len(probe.xs[3].calc_Qo) == 2 * len(q)
+    # Expect
+    assert len(probe.xs[0].calc_Qo) == len(q)
+    assert len(probe.xs[1].calc_Qo) == len(q)
+    assert len(probe.xs[2].calc_Qo) == len(q)
+    assert len(probe.xs[3].calc_Qo) == len(q)
 
 
 @patch('EasyReflectometry.calculators.refl1d.wrapper.model.Stack')
