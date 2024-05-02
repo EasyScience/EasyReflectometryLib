@@ -203,11 +203,11 @@ class Refl1dWrapper(WrapperBase):
 
 
 def _get_oversampling_q(q_array: np.ndarray, dq_array: np.ndarray, oversampling_factor: int) -> np.ndarray:
-    argmin = np.argmin(q_array)
-    argmax = np.argmax(q_array)
+    argmin = np.argmin(q_array)  # index of the smallest q element
+    argmax = np.argmax(q_array)  # index of the largest q element
     return np.linspace(
-        q_array[argmin] - RESOLUTION_PADDING * dq_array[argmin],  # get dq (resolution) corresponding to the smallest q
-        q_array[argmax] + RESOLUTION_PADDING * dq_array[argmax],  # get dq (resolution) corresponding to the largest q
+        q_array[argmin] - RESOLUTION_PADDING * dq_array[argmin],  # dq element at the smallest q index
+        q_array[argmax] + RESOLUTION_PADDING * dq_array[argmax],  # dq element at the largest q index
         oversampling_factor * len(q_array),
     )
 
