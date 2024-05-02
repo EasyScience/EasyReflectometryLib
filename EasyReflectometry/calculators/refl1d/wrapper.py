@@ -174,10 +174,10 @@ class Refl1dWrapper(WrapperBase):
 
             if ALL_POLARIZATIONS:
                 raise NotImplementedError('Polarized reflectivity not yet implemented')
-                _, reflectivity_pp = polarized_reflectivity[0]
-                _, reflectivity_pm = polarized_reflectivity[1]
-                _, reflectivity_mp = polarized_reflectivity[2]
-                _, reflectivity_mm = polarized_reflectivity[3]
+                # _, reflectivity_pp = polarized_reflectivity[0]
+                # _, reflectivity_pm = polarized_reflectivity[1]
+                # _, reflectivity_mp = polarized_reflectivity[2]
+                # _, reflectivity_mm = polarized_reflectivity[3]
             else:
                 _, reflectivity = polarized_reflectivity[0]
 
@@ -192,8 +192,8 @@ class Refl1dWrapper(WrapperBase):
         """
         sample = _build_sample(self.storage, model_name)
         probe = _get_probe(
-            q_array=np.linspace(0.001, 0.3, 10),
-            dq_array=np.linspace(0.001, 0.3, 10),  # TODO why would we use a steadily increasing dq (resolution)?
+            q_array=np.array([1]),  # dummy value
+            dq_array=np.array([1]),  # dummy value
             model_name=model_name,
             storage=self.storage,
         )
@@ -238,7 +238,7 @@ def _get_polarized_probe(
     oversampling_factor: int = 1,
     all_polarizations: bool = False,
 ) -> names.QProbe:
-    xs = []
+    four_probes = []
     for i in range(4):
         if i == 0 or all_polarizations:
             probe = _get_probe(
@@ -250,8 +250,8 @@ def _get_polarized_probe(
             )
         else:
             probe = None
-        xs.append(probe)
-    return names.PolarizedQProbe(xs=xs, name='polarized')
+        four_probes.append(probe)
+    return names.PolarizedQProbe(xs=four_probes, name='polarized')
 
 
 def _build_sample(storage: dict, model_name: str) -> model.Stack:
