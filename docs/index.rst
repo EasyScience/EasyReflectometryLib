@@ -8,6 +8,7 @@
    usage
    sample/sample
    calculators
+   experiment/experiment
    tutorials/tutorials
    contributing
    authors
