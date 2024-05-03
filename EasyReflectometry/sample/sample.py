@@ -5,7 +5,7 @@ __author__ = 'github.com/arm61'
 from typing import Union
 
 import yaml
-from easyCore.Objects.Groups import BaseCollection
+from easyscience.Objects.Groups import BaseCollection
 
 from .assemblies.base_assembly import BaseAssembly
 from .assemblies.multilayer import Multilayer
@@ -87,7 +87,7 @@ class Sample(BaseCollection):
             sample.__delitem__(0)
 
         # Ensure that the data is also converted
-        # TODO Should probably be handled in EasyCore
+        # TODO Should probably be handled in easyscience
         for i in range(len(sample.data)):
             sample[i] = sample[i].__class__.from_dict(data['data'][i])
 

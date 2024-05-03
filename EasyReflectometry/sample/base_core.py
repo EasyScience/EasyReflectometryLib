@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 import yaml
-from easyCore.Objects.ObjectClasses import BaseObj
+from easyscience.Objects.ObjectClasses import BaseObj
 
 
 class BaseCore(BaseObj):

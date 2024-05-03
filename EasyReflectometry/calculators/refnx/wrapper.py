@@ -2,7 +2,7 @@ __author__ = 'github.com/arm61'
 
 from typing import Tuple
 
-from easyCore import np
+import numpy as np
 from refnx import reflect
 
 from EasyReflectometry.experiment.resolution_functions import is_constant_resolution_function
