@@ -14,9 +14,13 @@ The construction of a :py:class:`Material` is achieved as shown below.
 
 .. code-block:: python 
 
-    from EasyReflectometry.sample.material import Material
+    from EasyReflectometry.sample import Material
 
-    b = Material.from_pars(6.908, -0.278, 'Boron')
+    boron = Material(
+        sld=6.908,
+        isld=-0.278,
+        name='Boron'
+    )
 
 The above object will have the properties of :py:attr:`sld` and :py:attr:`isld`, which will have values of :code:`6.908 1 / angstrom ** 2` and :code:`-0.278 1 / angstrom ** 2` respectively. 
 As is shown in the `tutorials`_, a material can be used to construct a :py:class:`Layer` from which `slab models`_ are created.
@@ -31,9 +35,14 @@ The :py:class:`MaterialDensity` material can be create as follows.
 
 .. code-block:: python 
 
-    from EasyReflectometry.sample.material import MaterialDensity 
+    from EasyReflectometry.sample import MaterialDensity 
 
-    si = MaterialDensity.from_pars('SiO2', 2.65, 'SiO2 Material')
+    chemical_structure = 'SiO2'
+    si = MaterialDensity(
+        chemical_structure=chemical_structure,
+        density=2.65,
+        name='SiO2 Material'
+    )
 
 The density should be in units of grams per cubic centimeter and the scattering length is calculated from :code:`'SiO2'`. 
 
@@ -48,24 +57,24 @@ So to produce a :py:class:`MaterialSolvated` that is 20 % D2O in a polymer, the 
 
 .. code-block:: python
 
-    from EasyReflectometry.sample.material import Material 
-    from EasyReflectometry.sample.material import MaterialSolvated
+    from EasyReflectometry.sample import Material 
+    from EasyReflectometry.sample import MaterialSolvated
 
-    polymer = Material.from_pars(
+    polymer = Material(
         sld=2.,
         isld=0.,
         name='Polymer'
     )
-    d2o = Material.from_pars(
+    d2o = Material(
         sld=6.36,
         isld=0, 
         name='D2O'
     )
 
-    solvated_polymer = MaterialSolvated.from_pars(
+    solvated_polymer = MaterialSolvated(
         material=polymer, 
         solvent=d2o, 
-        solvent_surface_coverage=0.2, 
+        solvent_fraction=0.2, 
         name='Solvated Polymer'
     )
 
