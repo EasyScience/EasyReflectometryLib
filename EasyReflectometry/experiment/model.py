@@ -6,8 +6,8 @@ from numbers import Number
 from typing import Callable
 from typing import Union
 
+import numpy as np
 import yaml
-from easyscience import np
 from easyscience.Objects.ObjectClasses import BaseObj
 from easyscience.Objects.ObjectClasses import Parameter
 

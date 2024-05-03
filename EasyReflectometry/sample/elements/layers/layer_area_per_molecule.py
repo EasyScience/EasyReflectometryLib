@@ -1,6 +1,6 @@
 from typing import Union
 
-from easyscience import np
+import numpy as np
 from easyscience.Fitting.Constraints import FunctionalConstraint
 from easyscience.Objects.ObjectClasses import Parameter
 
