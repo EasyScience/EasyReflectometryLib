@@ -1,7 +1,7 @@
 __author__ = 'github.com/arm61'
 
 import bornagain as ba
-from easyCore import np
+from easyscience import np
 from scipy.stats import norm
 
 from ..wrapper_base import WrapperBase

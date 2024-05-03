@@ -27,7 +27,7 @@ classifiers = [
 ]
 requires-python = ">=3.9,<3.12"
 dependencies = [
-    "easyScienceCore>=0.3.1",
+    "easyScience @ git+https://github.com/easyScience/easyscience.git@master",
     "refnx>=0.1.15",
     "refl1d>=0.8.14",
     "scipp>=23.12.0",

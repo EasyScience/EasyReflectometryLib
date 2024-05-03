@@ -7,9 +7,9 @@ from typing import Callable
 from typing import Union
 
 import yaml
-from easyCore import np
-from easyCore.Objects.ObjectClasses import BaseObj
-from easyCore.Objects.ObjectClasses import Parameter
+from easyscience import np
+from easyscience.Objects.ObjectClasses import BaseObj
+from easyscience.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.experiment.resolution_functions import is_constant_resolution_function
 from EasyReflectometry.parameter_utils import get_as_parameter
@@ -217,7 +217,7 @@ class Model(BaseObj):
         model = super().from_dict(data)
 
         # Ensure that the sample is also converted
-        # TODO Should probably be handled in EasyCore
+        # TODO Should probably be handled in easyscience
         model.sample = model.sample.__class__.from_dict(data['sample'])
 
         return model

@@ -1,8 +1,8 @@
 __author__ = 'github.com/arm61'
 from typing import Union
 
-from easyCore import np
-from easyCore.Objects.ObjectClasses import Parameter
+from easyscience import np
+from easyscience.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.parameter_utils import get_as_parameter
 

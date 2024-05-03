@@ -1,8 +1,8 @@
 from typing import Union
 
-from easyCore import np
-from easyCore.Fitting.Constraints import FunctionalConstraint
-from easyCore.Objects.ObjectClasses import Parameter
+from easyscience import np
+from easyscience.Fitting.Constraints import FunctionalConstraint
+from easyscience.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.parameter_utils import get_as_parameter
 from EasyReflectometry.special.calculations import area_per_molecule_to_scattering_length_density

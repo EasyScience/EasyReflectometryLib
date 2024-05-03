@@ -2,7 +2,7 @@ __author__ = 'github.com/arm61'
 
 from typing import Tuple
 
-from easyCore import np
+from easyscience import np
 from refl1d import model
 from refl1d import names
 
