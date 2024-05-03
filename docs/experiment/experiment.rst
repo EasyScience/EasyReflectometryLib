@@ -30,19 +30,19 @@ To be able to compute reflectivities it is also necessary to have a `calculator`
    model.interface = interface
 
 This will create a :py:class:`Model` instance with the `default_sample` and the environment variables `scale` factor set to 1.0 and a `background` of 1e-6.
-Following the `interface` is set to the default calculator.
+Following the `interface` is set to the default calculator that is `Refnx`.
 
 
 :py:mod:`resolution_functions`
 ------------------------------
-A resolution function enables the `EasyReflectometry` model to account for various non ideal effects that might be present in the experimental setup.
-When determining reflectivity the resolution function defines the smearing to apply.
-For a given Q point such smearing is applied by determining an average of the neighboring Q point weigthed by a normal distribution, 
-which has a Q point dependent Full Width at the Half Maximum (FWHM) that again is defined by the resolution function.
+A resolution function enables the `EasyReflectometry` model to account for various non-ideal effects that might be present in the experimental setup.
+In its essence the resolution function controls the smearing to apply when determing the reflectivtiy at a given Q point.
+For a given Q point the smearing to apply is given as a weigthed average of the neighboring Q point, which weigths are by a normal distribution.
+This normal distribution is then defined by a Q point dependent Full Width at the Half Maximum (FWHM) that is given by the resolution function.
 
 :py:func:`percentage_fhwm_resolution_function`
 Often we rely on a resolution function that has a simple functional dependecy of the Q point.
-By this is understood that the applied smearing in an Q point has a FWHM that is given as a percentage of the value of the Q point.
+By this is understood that the applied smearing in an Q point has a FWHM that is simply a percentage of the value of the Q point.
 
 .. code-block:: python 
 
@@ -55,7 +55,7 @@ By this is understood that the applied smearing in an Q point has a FWHM that is
       resolution_function=resolution_function
    )
 
-This will create a :py:class:`Model` instance where a resolution function is defined that has a FWHM that is 1% of the Q point value.
+This will create a :py:class:`Model` instance where the resolution function is defined as 1% of the Q point value, which again is the FWHM for the smearing.
 
 
 :py:func:`linear_spline_resolution_function`
@@ -77,5 +77,5 @@ and thereby enable a determination of the reflectivity at an arbitrary point wit
 
    m.resolution_function = resolution_function
 
-This will create a :py:class:`Model` instance where a resolution function is defined that has a FWHM that is determined from a linear interpolation.
-In the present case the provided data points are (`[0.01, 0.2, 0.31]`) and the corresponding function values are (`[0.001, 0.043, 0.026]`).
+This will create a :py:class:`Model` instance where the resolution function defining the FWHM is determined from a linear interpolation.
+In the present case the provided data Q points are (`[0.01, 0.2, 0.31]`) and the corresponding FWHM function values are (`[0.001, 0.043, 0.026]`).
