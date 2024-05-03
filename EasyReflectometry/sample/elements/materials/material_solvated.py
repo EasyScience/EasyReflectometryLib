@@ -1,6 +1,6 @@
 from typing import Union
 
-from easyCore.Objects.ObjectClasses import Parameter
+from easyscience.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.parameter_utils import get_as_parameter
 
