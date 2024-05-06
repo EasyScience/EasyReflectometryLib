@@ -15,8 +15,8 @@ from numpy.testing import assert_equal
 from refnx import reflect
 
 from EasyReflectometry.calculators.refnx.wrapper import RefnxWrapper
-from EasyReflectometry.experiment import constant_resolution_function
 from EasyReflectometry.experiment import linear_spline_resolution_function
+from EasyReflectometry.experiment import percentage_fhwm_resolution_function
 
 
 class TestRefnx(unittest.TestCase):
@@ -319,7 +319,7 @@ class TestRefnx(unittest.TestCase):
         p.add_item('Item2', 'MyModel')
         p.add_item('Item3', 'MyModel')
         p.add_item('Item4', 'MyModel')
-        p.set_resolution_function(constant_resolution_function(0))
+        p.set_resolution_function(percentage_fhwm_resolution_function(0))
         p.update_model('MyModel', bkg=0)
         q = np.array(
             [
@@ -357,7 +357,7 @@ class TestRefnx(unittest.TestCase):
         p.add_layer_to_item('Layer2', 'Item2')
         p.add_item('Item1', 'MyModel')
         p.add_item('Item2', 'MyModel')
-        p.set_resolution_function(constant_resolution_function(0))
+        p.set_resolution_function(percentage_fhwm_resolution_function(0))
         p.update_model('MyModel', bkg=0)
         q = np.array(
             [
@@ -411,7 +411,7 @@ class TestRefnx(unittest.TestCase):
         p.add_item('Item2', 'MyModel')
         p.add_item('Item3', 'MyModel')
         p.add_item('Item4', 'MyModel')
-        p.set_resolution_function(constant_resolution_function(5))
+        p.set_resolution_function(percentage_fhwm_resolution_function(5))
         p.update_model('MyModel', bkg=0)
         assert_allclose(p.calculate(test4_dat[:, 0], 'MyModel'), test4_dat[:, 1], rtol=0.03)
 
