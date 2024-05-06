@@ -1,7 +1,7 @@
 __author__ = 'github.com/arm61'
 
 import bornagain as ba
-from easyCore import np
+import numpy as np
 from scipy.stats import norm
 
 from ..wrapper_base import WrapperBase
@@ -245,23 +245,23 @@ class BornAgainWrapper(WrapperBase):
         del self.storage['item_repeats'][item_name]
         del self.storage['item'][item_name]
 
-    def calculate(self, x_array: np.ndarray) -> np.ndarray:
-        """
-        For a given x calculate the corresponding y.
+    # To conform the base class the signature should be
+    # def calculate(self, q_array: np.ndarray, model_name: str) -> np.ndarray:
+    def calculate(self, q_array: np.ndarray) -> np.ndarray:
+        """For a given q array calculate the corresponding reflectivity.
 
-        :param x_array: array of data points to be calculated
-        :type x_array: np.ndarray
-        :return: points calculated at `x`
-        :rtype: np.ndarray
+        :param q_array: array of data points to be calculated
+        :param model_name: the model name
+        :return: reflectivity calculated at q
         """
         # 3.5 sigma to sync with refnx
         n_sig = 3.5
         n_samples = 21
         distr = ba.RangedDistributionGaussian(n_samples, n_sig)
 
-        scan = ba.QSpecScan(x_array / ba.angstrom)
+        scan = ba.QSpecScan(q_array / ba.angstrom)
         scan.setAbsoluteQResolution(
-            distr, x_array / ba.angstrom * (self.storage['model_parameters']['resolution'] * 0.5 / 100)
+            distr, q_array / ba.angstrom * (self.storage['model_parameters']['resolution'] * 0.5 / 100)
         )
 
         simulation = ba.SpecularSimulation()

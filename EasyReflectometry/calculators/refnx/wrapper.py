@@ -2,8 +2,10 @@ __author__ = 'github.com/arm61'
 
 from typing import Tuple
 
-from easyCore import np
+import numpy as np
 from refnx import reflect
+
+from EasyReflectometry.experiment.resolution_functions import is_constant_resolution_function
 
 from ..wrapper_base import WrapperBase
 
@@ -113,22 +115,28 @@ class RefnxWrapper(WrapperBase):
         del self.storage['model'][model_name].structure.components[item_idx]
         del self.storage['item'][item_name]
 
-    def calculate(self, x_array: np.ndarray, model_name: str) -> np.ndarray:
-        """
-        For a given x calculate the corresponding y.
+    def calculate(self, q_array: np.ndarray, model_name: str) -> np.ndarray:
+        """For a given q array calculate the corresponding reflectivity.
 
-        :param x_array: array of data points to be calculated
-        :param model_name: Name for the model
-        :return: points calculated at `x`
+        :param q_array: array of data points to be calculated
+        :param model_name: the model name
+        :return: reflectivity calculated at q
         """
         structure = _remove_unecessary_stacks(self.storage['model'][model_name].structure)
         model = reflect.ReflectModel(
             structure,
             scale=self.storage['model'][model_name].scale.value,
             bkg=self.storage['model'][model_name].bkg.value,
-            dq=self.storage['model'][model_name].dq.value,
+            dq_type='pointwise',
         )
-        return model(x_array)
+
+        dq_vector = self._resolution_function(q_array)
+        if is_constant_resolution_function(self._resolution_function):
+            # FWHM Percentage resolution is constant given as
+            # For a constant resolution percentage refnx supports to pass a scalar value rather than a vector
+            dq_vector = dq_vector[0]
+
+        return model(x=q_array, x_err=dq_vector)
 
     def sld_profile(self, model_name: str) -> Tuple[np.ndarray, np.ndarray]:
         """

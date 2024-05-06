@@ -1,7 +1,7 @@
 from typing import Any
 from typing import Optional
 
-from easyCore.Fitting.Constraints import ObjConstraint
+from easyscience.Fitting.Constraints import ObjConstraint
 
 from ..base_core import BaseCore
 from ..elements.layers.layer import Layer
@@ -32,7 +32,7 @@ class BaseAssembly(BaseCore):
     ):
         super().__init__(name=name, interface=interface, **layers)
 
-        # Type is needed when fitting in EasyCore
+        # Type is needed when fitting in easyscience
         self._type = type
         self._roughness_constraints_setup = False
         self._thickness_constraints_setup = False

@@ -2,14 +2,14 @@ __author__ = 'github.com/arm61'
 
 import numpy as np
 import scipp as sc
-from easyCore.Fitting.Fitting import MultiFitter as easyFitter
+from easyscience.Fitting.Fitting import MultiFitter as easyFitter
 
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.experiment import Model
 
 
 class Fitter:
     def __init__(self, *args: Model):
-        r"""A convinence class for the :py:class:`easyCore.Fitting.Fitting`
+        r"""A convinence class for the :py:class:`easyscience.Fitting.Fitting`
         which will populate the :py:class:`sc.DataGroup` appropriately
         after the fitting is performed.
 

@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from abc import ABCMeta
+from typing import Callable
 
 import numpy as np
-from easyCore.Objects.core import ComponentSerializer
-from easyCore.Objects.Inferface import ItemContainer
+from easyscience.Objects.core import ComponentSerializer
+from easyscience.Objects.Inferface import ItemContainer
 
-from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.experiment import Model
 from EasyReflectometry.sample import BaseAssembly
 from EasyReflectometry.sample import Layer
 from EasyReflectometry.sample import Material
@@ -173,3 +174,6 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         :return: z and sld(z)
         """
         return self._wrapper.sld_profile(model_id)
+
+    def set_resolution_function(self, resolution_function: Callable[[np.array], np.array]) -> None:
+        return self._wrapper.set_resolution_function(resolution_function)

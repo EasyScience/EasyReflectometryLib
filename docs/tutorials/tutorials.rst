@@ -1,7 +1,7 @@
 Tutorials
 =========
 
-The tutorials associated with using :py:mod:`EasyReflectometry` will be collected here. 
+The tutorials associated with using :py:mod:`EasyReflectometry` are collected here. 
 
 .. toctree:: 
    :maxdepth: 1
@@ -11,3 +11,4 @@ The tutorials associated with using :py:mod:`EasyReflectometry` will be collecte
    material_solvated
    monolayer
    multi_contrast
+   resolution_functions
