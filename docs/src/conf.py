@@ -23,7 +23,7 @@ import sys
 import toml
 from pathlib import Path
 
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('..'))
 
 main_root = Path(__file__).parents[2]
 sys.path.append(str(main_root))
