@@ -37,7 +37,7 @@
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -165,12 +165,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../calculators.html">Calculators &amp; Optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../experiment/experiment.html">Experiment</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/simple_fitting.html">Fitting a simple slab model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/repeating.html">A multilayer fitting model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/material_solvated.html">Using the MaterialSolvated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/monolayer.html">Investigation of a surfactant monolayer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/resolution_functions.html">Resolution functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
@@ -362,13 +364,13 @@ So we construct a <code class="xref py py-class docutils literal notranslate"><s
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
 
-<span class="n">b</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span>
+<span class="n">boron</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
     <span class="n">sld</span><span class="o">=</span><span class="mf">6.908</span><span class="p">,</span>
     <span class="n">isld</span><span class="o">=-</span><span class="mf">0.278</span><span class="p">,</span>
-    <span class="s1">&#39;Boron&#39;</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Boron&#39;</span>
 <span class="p">)</span>
-<span class="n">boron_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span>
-    <span class="n">material</span><span class="o">=</span><span class="n">b</span><span class="p">,</span>
+<span class="n">boron_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span>
+    <span class="n">material</span><span class="o">=</span><span class="n">boron</span><span class="p">,</span>
     <span class="n">thickness</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">roughness</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Boron Layer&#39;</span>
@@ -376,6 +378,23 @@ So we construct a <code class="xref py py-class docutils literal notranslate"><s
 </pre></div>
 </div>
 <p>This type of layer is used extensively in the <a class="reference external" href="../tutorials/tutorials.html">tutorials</a></p>
+<p>To create a semi-infinite layer one needs to set the thickness to 0 and the roughness to 0.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
+
+<span class="n">si</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
+    <span class="n">sld</span><span class="o">=</span><span class="mf">2.07</span><span class="p">,</span>
+    <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si&#39;</span>
+<span class="p">)</span>
+<span class="n">semi_infinite_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span>
+    <span class="n">material</span><span class="o">=</span><span class="n">si</span><span class="p">,</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si layer&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="layerareapermolecule">
 <h2><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerAreaPerMolecule</span></code><a class="headerlink" href="#layerareapermolecule" title="Link to this heading">#</a></h2>
@@ -386,14 +405,17 @@ The area per molecule is a common description of surface density in the surfacta
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">LayerAreaPerMolecule</span>
 
-<span class="n">d2o</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">6.36</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;D2O&#39;</span><span class="p">)</span>
-
-<span class="n">pc_formula</span> <span class="o">=</span> <span class="s1">&#39;C10H18NO8P&#39;</span>
-<span class="n">pc</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span>
-    <span class="n">chemical_formula</span><span class="o">=</span><span class="n">pc_formula</span><span class="p">,</span>
+<span class="n">d2o</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
+    <span class="n">sld</span><span class="o">=</span><span class="mf">6.36</span><span class="p">,</span>
+    <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;D2O&#39;</span>
+<span class="p">)</span>
+<span class="n">molecular_formula</span> <span class="o">=</span> <span class="s1">&#39;C10H18NO8P&#39;</span>
+<span class="n">pc</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="p">(</span>
+    <span class="n">molecular_formula</span><span class="o">=</span><span class="n">molecular_formula</span><span class="p">,</span>
     <span class="n">thickness</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">solvent</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span>
-    <span class="n">solvent_surface_coverage</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
+    <span class="n">solvent_fraction</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
     <span class="n">area_per_molecule</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span>
     <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;PC Layer&#39;</span>

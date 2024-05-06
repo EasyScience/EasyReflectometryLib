@@ -37,7 +37,7 @@
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -165,12 +165,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../calculators.html">Calculators &amp; Optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../experiment/experiment.html">Experiment</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/simple_fitting.html">Fitting a simple slab model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/repeating.html">A multilayer fitting model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/material_solvated.html">Using the MaterialSolvated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/monolayer.html">Investigation of a surfactant monolayer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/resolution_functions.html">Resolution functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
@@ -339,14 +341,19 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.sample"><code class="docutils literal notranslate"><span class="pre">Model.sample</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.scale"><code class="docutils literal notranslate"><span class="pre">Model.scale</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.background"><code class="docutils literal notranslate"><span class="pre">Model.background</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.__init__"><code class="docutils literal notranslate"><span class="pre">Model.__init__()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.default"><code class="docutils literal notranslate"><span class="pre">Model.default()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.from_pars"><code class="docutils literal notranslate"><span class="pre">Model.from_pars()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.add_item"><code class="docutils literal notranslate"><span class="pre">Model.add_item()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.duplicate_item"><code class="docutils literal notranslate"><span class="pre">Model.duplicate_item()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.remove_item"><code class="docutils literal notranslate"><span class="pre">Model.remove_item()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.resolution_function"><code class="docutils literal notranslate"><span class="pre">Model.resolution_function</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.interface"><code class="docutils literal notranslate"><span class="pre">Model.interface</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.uid"><code class="docutils literal notranslate"><span class="pre">Model.uid</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.user_data"><code class="docutils literal notranslate"><span class="pre">Model.user_data</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.as_dict"><code class="docutils literal notranslate"><span class="pre">Model.as_dict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.from_dict"><code class="docutils literal notranslate"><span class="pre">Model.from_dict()</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -364,69 +371,48 @@ document.write(`
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseObj</span></code></p>
 <p>Model is the class that represents the experiment.
 It is used to store the information about the experiment and to perform the calculations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="sample.html#EasyReflectometry.sample.sample.Sample" title="EasyReflectometry.sample.sample.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a></em><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.sample" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></em><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.scale" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.background">
+<span class="sig-name descname"><span class="pre">background</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></em><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.background" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyModel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/EasyReflectometry/experiment/model.html#Model.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyModel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/EasyReflectometry/experiment/model.html#Model.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sample</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="sample.html#EasyReflectometry.sample.sample.Sample" title="EasyReflectometry.sample.sample.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a></span>) – The sample being modelled.</p></li>
-<li><p><strong>scale</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></span>) – Scaling factor of profile.</p></li>
-<li><p><strong>background</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></span>) – Linear background magnitude.</p></li>
-<li><p><strong>resolution</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></span>) – Constant resolution smearing percentage.</p></li>
+<li><p><strong>sample</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="sample.html#EasyReflectometry.sample.sample.Sample" title="EasyReflectometry.sample.sample.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a>]</span>) – The sample being modelled.</p></li>
+<li><p><strong>scale</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Number</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – Scaling factor of profile.</p></li>
+<li><p><strong>background</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Number</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – Linear background magnitude.</p></li>
 <li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the model, defaults to ‘EasyModel’.</p></li>
-<li><p><strong>interface</strong> – Calculator interface, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>interface</strong> – Calculator interface, defaults to <cite>None</cite>.</p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.default">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/EasyReflectometry/experiment/model.html#Model.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.default" title="Link to this definition">#</a></dt>
-<dd><p>Default instance of the reflectometry experiment model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>interface</strong> – Calculator interface, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code>.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#EasyReflectometry.experiment.model.Model" title="EasyReflectometry.experiment.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.from_pars">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyModel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/EasyReflectometry/experiment/model.html#Model.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.from_pars" title="Link to this definition">#</a></dt>
-<dd><p>Instance of a reflectometry experiment model where the parameters are known.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sample</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="sample.html#EasyReflectometry.sample.sample.Sample" title="EasyReflectometry.sample.sample.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a></span>) – The sample being modelled.</p></li>
-<li><p><strong>scale</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></span>) – Scaling factor of profile.</p></li>
-<li><p><strong>background</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></span>) – Linear background magnitude.</p></li>
-<li><p><strong>resolution</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></span>) – Constant resolution smearing percentage.</p></li>
-<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the layer, defaults to ‘EasyModel’.</p></li>
-<li><p><strong>interface</strong> – Calculator interface, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#EasyReflectometry.experiment.model.Model" title="EasyReflectometry.experiment.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.add_item">
-<span class="sig-name descname"><span class="pre">add_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/EasyReflectometry/experiment/model.html#Model.add_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.add_item" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">assemblies</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/EasyReflectometry/experiment/model.html#Model.add_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.add_item" title="Link to this definition">#</a></dt>
 <dd><p>Add a layer or item to the model sample.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>items</strong> (<span class="sphinx_autodoc_typehints-type">Layer | RepeatingMultilayer</span>) – Layers or items to add to model sample.</p>
+<dd class="field-odd"><p><strong>assemblies</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAssembly</span></code>]</span>) – Assemblies to add to model sample.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type">None</span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -460,6 +446,18 @@ It is used to store the information about the experiment and to perform the calc
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.resolution_function">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resolution_function</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">array</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">array</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.resolution_function" title="Link to this definition">#</a></dt>
+<dd><p>Return the resolution function.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.interface">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">interface</span></span><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.interface" title="Link to this definition">#</a></dt>
+<dd><p>Get the current interface of the object</p>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.uid">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.uid" title="Link to this definition">#</a></dt>
 <dd><p>Return a UID from the borg map.</p>
@@ -469,6 +467,38 @@ It is used to store the information about the experiment and to perform the calc
 <dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.user_data">
 <span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></em><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.user_data" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.as_dict">
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/EasyReflectometry/experiment/model.html#Model.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.as_dict" title="Link to this definition">#</a></dt>
+<dd><p>Produces a cleaned dict using a custom as_dict method to skip necessary things.
+The resulting dict matches the parameters in __init__</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>skip</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]</span>) – List of keys to skip, defaults to <cite>None</cite>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EasyReflectometry.experiment.model.Model.from_dict">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/EasyReflectometry/experiment/model.html#Model.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.experiment.model.Model.from_dict" title="Link to this definition">#</a></dt>
+<dd><p>Create a Model from a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – dictionary of the Model</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#EasyReflectometry.experiment.model.Model" title="EasyReflectometry.experiment.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -518,14 +548,19 @@ It is used to store the information about the experiment and to perform the calc
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.sample"><code class="docutils literal notranslate"><span class="pre">Model.sample</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.scale"><code class="docutils literal notranslate"><span class="pre">Model.scale</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.background"><code class="docutils literal notranslate"><span class="pre">Model.background</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.__init__"><code class="docutils literal notranslate"><span class="pre">Model.__init__()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.default"><code class="docutils literal notranslate"><span class="pre">Model.default()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.from_pars"><code class="docutils literal notranslate"><span class="pre">Model.from_pars()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.add_item"><code class="docutils literal notranslate"><span class="pre">Model.add_item()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.duplicate_item"><code class="docutils literal notranslate"><span class="pre">Model.duplicate_item()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.remove_item"><code class="docutils literal notranslate"><span class="pre">Model.remove_item()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.resolution_function"><code class="docutils literal notranslate"><span class="pre">Model.resolution_function</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.interface"><code class="docutils literal notranslate"><span class="pre">Model.interface</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.uid"><code class="docutils literal notranslate"><span class="pre">Model.uid</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.user_data"><code class="docutils literal notranslate"><span class="pre">Model.user_data</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.as_dict"><code class="docutils literal notranslate"><span class="pre">Model.as_dict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.experiment.model.Model.from_dict"><code class="docutils literal notranslate"><span class="pre">Model.from_dict()</span></code></a></li>
 </ul>
   </nav></div>
 

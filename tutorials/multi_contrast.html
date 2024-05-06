@@ -38,7 +38,7 @@
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -47,7 +47,7 @@
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contributing" href="../contributing.html" />
+    <link rel="next" title="Resolution functions" href="resolution_functions.html" />
     <link rel="prev" title="Investigation of a surfactant monolayer" href="monolayer.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -166,12 +166,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../calculators.html">Calculators &amp; Optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../experiment/experiment.html">Experiment</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="simple_fitting.html">Fitting a simple slab model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="repeating.html">A multilayer fitting model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="material_solvated.html">Using the MaterialSolvated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="monolayer.html">Investigation of a surfactant monolayer</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resolution_functions.html">Resolution functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
@@ -374,8 +376,10 @@ monolayer</span></a> system, if you haven’t looked at the tutorial for a singl
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">SurfactantLayer</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">LayerAreaPerMolecule</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment.model</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">percentage_fhwm_resolution_function</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.fitting</span> <span class="kn">import</span> <span class="n">Fitter</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;EasyReflectometry: </span><span class="si">{</span><span class="n">EasyReflectometry</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -389,7 +393,7 @@ monolayer</span></a> system, if you haven’t looked at the tutorial for a singl
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 EasyReflectometry: 0.0.0
-refnx: 0.1.43
+refnx: 0.1.45
 </pre></div></div>
 </div>
 <section id="Reading-in-the-experimental-data">
@@ -455,8 +459,8 @@ refnx: 0.1.43
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d2o</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">6.36</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;D2O&#39;</span><span class="p">)</span>
-<span class="n">acmw</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;ACMW&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d2o</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span><span class="n">sld</span><span class="o">=</span><span class="mf">6.36</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;D2O&#39;</span><span class="p">)</span>
+<span class="n">acmw</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span><span class="n">sld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ACMW&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -465,7 +469,7 @@ refnx: 0.1.43
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">air</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Air&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">air</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span><span class="n">sld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Air&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -474,9 +478,9 @@ refnx: 0.1.43
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d2o_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">d2o</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;D2O Subphase&#39;</span><span class="p">)</span>
-<span class="n">acmw_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">acmw</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;D2O Subphase&#39;</span><span class="p">)</span>
-<span class="n">air_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">air</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Air Superphase&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d2o_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;D2O Subphase&#39;</span><span class="p">)</span>
+<span class="n">acmw_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">acmw</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;D2O Subphase&#39;</span><span class="p">)</span>
+<span class="n">air_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">air</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Air Superphase&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -494,57 +498,92 @@ refnx: 0.1.43
 </pre></div>
 </div>
 </div>
+<p>The <code class="docutils literal notranslate"><span class="pre">'d13DSPC-D2O'</span></code> surfactant layer</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o</span> <span class="o">=</span> <span class="n">SurfactantLayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span>
-    <span class="n">tail_layer_molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;h-tail&#39;</span><span class="p">],</span>
-    <span class="n">tail_layer_thickness</span><span class="o">=</span><span class="n">tail_thickness</span><span class="p">,</span>
-    <span class="n">tail_layer_solvent</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span>
-    <span class="n">tail_layer_solvent_fraction</span><span class="o">=</span><span class="n">tail_solvent_fraction</span><span class="p">,</span>
-    <span class="n">tail_layer_area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
-    <span class="n">tail_layer_roughness</span><span class="o">=</span><span class="n">roughness</span><span class="p">,</span>
-    <span class="n">head_layer_molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;d-head&#39;</span><span class="p">],</span>
-    <span class="n">head_layer_thickness</span><span class="o">=</span><span class="n">head_thickness</span><span class="p">,</span>
-    <span class="n">head_layer_solvent</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span>
-    <span class="n">head_layer_solvent_fraction</span><span class="o">=</span><span class="n">head_solvent_fraction</span><span class="p">,</span>
-    <span class="n">head_layer_area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
-    <span class="n">head_layer_roughness</span><span class="o">=</span><span class="n">roughness</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tail_layer_d13d2o</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="p">(</span>
+    <span class="n">molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;h-tail&#39;</span><span class="p">],</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="n">tail_thickness</span><span class="p">,</span>
+    <span class="n">solvent</span><span class="o">=</span><span class="n">air</span><span class="p">,</span>
+    <span class="n">solvent_fraction</span><span class="o">=</span><span class="n">tail_solvent_fraction</span><span class="p">,</span>
+    <span class="n">area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span>
+<span class="p">)</span>
+<span class="n">head_layer_d13d2o</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="p">(</span>
+    <span class="n">molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;d-head&#39;</span><span class="p">],</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="n">head_thickness</span><span class="p">,</span>
+    <span class="n">solvent</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span>
+    <span class="n">solvent_fraction</span><span class="o">=</span><span class="n">head_solvent_fraction</span><span class="p">,</span>
+    <span class="n">area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span>
+<span class="p">)</span>
+<span class="n">d13d2o</span> <span class="o">=</span> <span class="n">SurfactantLayer</span><span class="p">(</span>
+    <span class="n">tail_layer</span><span class="o">=</span><span class="n">tail_layer_d13d2o</span><span class="p">,</span>
+    <span class="n">head_layer</span><span class="o">=</span><span class="n">head_layer_d13d2o</span>
 <span class="p">)</span>
 <span class="n">d13d2o</span><span class="o">.</span><span class="n">constrain_area_per_molecule</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">d13d2o</span><span class="o">.</span><span class="n">conformal_roughness</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">d13d2o</span><span class="o">.</span><span class="n">constrain_solvent_roughness</span><span class="p">(</span><span class="n">d2o_layer</span><span class="p">)</span>
-<span class="n">d70d2o</span> <span class="o">=</span> <span class="n">SurfactantLayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span>
-    <span class="n">tail_layer_molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;d-tail&#39;</span><span class="p">],</span>
-    <span class="n">tail_layer_thickness</span><span class="o">=</span><span class="n">tail_thickness</span><span class="p">,</span>
-    <span class="n">tail_layer_solvent</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span>
-    <span class="n">tail_layer_solvent_fraction</span><span class="o">=</span><span class="n">tail_solvent_fraction</span><span class="p">,</span>
-    <span class="n">tail_layer_area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
-    <span class="n">tail_layer_roughness</span><span class="o">=</span><span class="n">roughness</span><span class="p">,</span>
-    <span class="n">head_layer_molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;h-head&#39;</span><span class="p">],</span>
-    <span class="n">head_layer_thickness</span><span class="o">=</span><span class="n">head_thickness</span><span class="p">,</span>
-    <span class="n">head_layer_solvent</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span>
-    <span class="n">head_layer_solvent_fraction</span><span class="o">=</span><span class="n">head_solvent_fraction</span><span class="p">,</span>
-    <span class="n">head_layer_area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
-    <span class="n">head_layer_roughness</span><span class="o">=</span><span class="n">roughness</span>
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">'d70DSPC-D2O'</span></code> surfactant layer</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tail_layer_d70d2o</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="p">(</span>
+    <span class="n">molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;d-tail&#39;</span><span class="p">],</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="n">tail_thickness</span><span class="p">,</span>
+    <span class="n">solvent</span><span class="o">=</span><span class="n">air</span><span class="p">,</span>
+    <span class="n">solvent_fraction</span><span class="o">=</span><span class="n">tail_solvent_fraction</span><span class="p">,</span>
+    <span class="n">area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span>
+<span class="p">)</span>
+<span class="n">head_layer_d70d2o</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="p">(</span>
+    <span class="n">molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;h-head&#39;</span><span class="p">],</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="n">head_thickness</span><span class="p">,</span>
+    <span class="n">solvent</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span>
+    <span class="n">solvent_fraction</span><span class="o">=</span><span class="n">head_solvent_fraction</span><span class="p">,</span>
+    <span class="n">area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span>
+<span class="p">)</span>
+<span class="n">d70d2o</span> <span class="o">=</span> <span class="n">SurfactantLayer</span><span class="p">(</span>
+    <span class="n">tail_layer</span><span class="o">=</span><span class="n">tail_layer_d70d2o</span><span class="p">,</span>
+    <span class="n">head_layer</span><span class="o">=</span><span class="n">head_layer_d70d2o</span>
 <span class="p">)</span>
 <span class="n">d70d2o</span><span class="o">.</span><span class="n">constrain_area_per_molecule</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">d70d2o</span><span class="o">.</span><span class="n">conformal_roughness</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">d70d2o</span><span class="o">.</span><span class="n">constrain_solvent_roughness</span><span class="p">(</span><span class="n">d2o_layer</span><span class="p">)</span>
-<span class="n">d83acmw</span> <span class="o">=</span> <span class="n">SurfactantLayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span>
-    <span class="n">tail_layer_molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;d-tail&#39;</span><span class="p">],</span>
-    <span class="n">tail_layer_thickness</span><span class="o">=</span><span class="n">tail_thickness</span><span class="p">,</span>
-    <span class="n">tail_layer_solvent</span><span class="o">=</span><span class="n">acmw</span><span class="p">,</span>
-    <span class="n">tail_layer_solvent_fraction</span><span class="o">=</span><span class="n">tail_solvent_fraction</span><span class="p">,</span>
-    <span class="n">tail_layer_area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
-    <span class="n">tail_layer_roughness</span><span class="o">=</span><span class="n">roughness</span><span class="p">,</span>
-    <span class="n">head_layer_molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;d-head&#39;</span><span class="p">],</span>
-    <span class="n">head_layer_thickness</span><span class="o">=</span><span class="n">head_thickness</span><span class="p">,</span>
-    <span class="n">head_layer_solvent</span><span class="o">=</span><span class="n">acmw</span><span class="p">,</span>
-    <span class="n">head_layer_solvent_fraction</span><span class="o">=</span><span class="n">head_solvent_fraction</span><span class="p">,</span>
-    <span class="n">head_layer_area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
-    <span class="n">head_layer_roughness</span><span class="o">=</span><span class="n">roughness</span>
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">'d83DSPC-ACMW'</span></code> surfactant layer</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tail_layer_d83acmw</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="p">(</span>
+    <span class="n">molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;d-tail&#39;</span><span class="p">],</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="n">tail_thickness</span><span class="p">,</span>
+    <span class="n">solvent</span><span class="o">=</span><span class="n">air</span><span class="p">,</span>
+    <span class="n">solvent_fraction</span><span class="o">=</span><span class="n">tail_solvent_fraction</span><span class="p">,</span>
+    <span class="n">area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span>
+<span class="p">)</span>
+<span class="n">head_layer_d83acmw</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="p">(</span>
+    <span class="n">molecular_formula</span><span class="o">=</span><span class="n">dspc</span><span class="p">[</span><span class="s1">&#39;d-head&#39;</span><span class="p">],</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="n">head_thickness</span><span class="p">,</span>
+    <span class="n">solvent</span><span class="o">=</span><span class="n">acmw</span><span class="p">,</span>
+    <span class="n">solvent_fraction</span><span class="o">=</span><span class="n">head_solvent_fraction</span><span class="p">,</span>
+    <span class="n">area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span>
+<span class="p">)</span>
+<span class="n">d83acmw</span> <span class="o">=</span> <span class="n">SurfactantLayer</span><span class="p">(</span>
+    <span class="n">tail_layer</span><span class="o">=</span><span class="n">tail_layer_d83acmw</span><span class="p">,</span>
+    <span class="n">head_layer</span><span class="o">=</span><span class="n">head_layer_d83acmw</span>
 <span class="p">)</span>
 <span class="n">d83acmw</span><span class="o">.</span><span class="n">constrain_area_per_molecule</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">d83acmw</span><span class="o">.</span><span class="n">conformal_roughness</span> <span class="o">=</span> <span class="kc">True</span>
@@ -557,14 +596,14 @@ refnx: 0.1.43
 <h2>Introducing constraints<a class="headerlink" href="#Introducing-constraints" title="Link to this heading">#</a></h2>
 <p>Then to ensure that the structure (thicknesss, area per molecule, etc.) is kept the same between the different contrasts we constain these (<code class="docutils literal notranslate"><span class="pre">layer2</span></code> is the head layer and <code class="docutils literal notranslate"><span class="pre">layer1</span></code>, which the neutron are incident on first are the tail layer). The <code class="docutils literal notranslate"><span class="pre">constrain_multiple_contrast</span></code> method allows this, not that is it important that a chain of constraints is produced, one constraining the next.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># These four lines should be removed in future</span>
-<span class="n">d70d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">d70d2o</span><span class="o">.</span><span class="n">tail_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">d83acmw</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">d83acmw</span><span class="o">.</span><span class="n">tail_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">d70d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule_parameter</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">d70d2o</span><span class="o">.</span><span class="n">tail_layer</span><span class="o">.</span><span class="n">area_per_molecule_parameter</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">d83acmw</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule_parameter</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">d83acmw</span><span class="o">.</span><span class="n">tail_layer</span><span class="o">.</span><span class="n">area_per_molecule_parameter</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="n">d70d2o</span><span class="o">.</span><span class="n">constain_multiple_contrast</span><span class="p">(</span><span class="n">d13d2o</span><span class="p">)</span>
 <span class="n">d83acmw</span><span class="o">.</span><span class="n">constain_multiple_contrast</span><span class="p">(</span><span class="n">d70d2o</span><span class="p">)</span>
@@ -573,7 +612,7 @@ refnx: 0.1.43
 </div>
 <p>We can check this constraint as worked as follows.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">d70d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">d83acmw</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">raw_value</span>
@@ -581,7 +620,7 @@ refnx: 0.1.43
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -590,7 +629,7 @@ refnx: 0.1.43
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">10</span>
@@ -598,7 +637,7 @@ refnx: 0.1.43
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">d70d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">d83acmw</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">raw_value</span>
@@ -606,7 +645,7 @@ refnx: 0.1.43
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -617,15 +656,32 @@ refnx: 0.1.43
 <p>Even through only as single value (that for the d13-DSPC head thickness) was changed, all three values changed.</p>
 <p>Having constructed each of the surfactant layer object and implemented the constraints, we can now build Samples and models.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o_structure</span> <span class="o">=</span> <span class="n">Sample</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">air_layer</span><span class="p">,</span> <span class="n">d13d2o</span><span class="p">,</span> <span class="n">d2o_layer</span><span class="p">)</span>
-<span class="n">d70d2o_structure</span> <span class="o">=</span> <span class="n">Sample</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">air_layer</span><span class="p">,</span> <span class="n">d70d2o</span><span class="p">,</span> <span class="n">d2o_layer</span><span class="p">)</span>
-<span class="n">d83acmw_structure</span> <span class="o">=</span> <span class="n">Sample</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">air_layer</span><span class="p">,</span> <span class="n">d83acmw</span><span class="p">,</span> <span class="n">acmw_layer</span><span class="p">)</span>
-<span class="n">d13d2o_model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">d13d2o_structure</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;R_d13DSPC-D2O&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="mi">5</span><span class="p">)</span>
-<span class="n">d70d2o_model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">d70d2o_structure</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;R_d70DSPC-D2O&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="mi">5</span><span class="p">)</span>
-<span class="n">d83acmw_model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">d83acmw_structure</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;R_d83DSPC-ACMW&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="mi">5</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resolution_function</span> <span class="o">=</span> <span class="n">percentage_fhwm_resolution_function</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">d13d2o_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">air_layer</span><span class="p">,</span> <span class="n">d13d2o</span><span class="p">,</span> <span class="n">d2o_layer</span><span class="p">)</span>
+<span class="n">d70d2o_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">air_layer</span><span class="p">,</span> <span class="n">d70d2o</span><span class="p">,</span> <span class="n">d2o_layer</span><span class="p">)</span>
+<span class="n">d83acmw_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">air_layer</span><span class="p">,</span> <span class="n">d83acmw</span><span class="p">,</span> <span class="n">acmw_layer</span><span class="p">)</span>
+<span class="n">d13d2o_model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
+    <span class="n">sample</span><span class="o">=</span><span class="n">d13d2o_sample</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">background</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;R_d13DSPC-D2O&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+    <span class="n">resolution_function</span><span class="o">=</span><span class="n">resolution_function</span>
+<span class="p">)</span>
+<span class="n">d70d2o_model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
+    <span class="n">sample</span><span class="o">=</span><span class="n">d70d2o_sample</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">background</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;R_d70DSPC-D2O&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+    <span class="n">resolution_function</span><span class="o">=</span><span class="n">resolution_function</span>
+<span class="p">)</span>
+<span class="n">d83acmw_model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
+    <span class="n">sample</span><span class="o">=</span><span class="n">d83acmw_sample</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">background</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;R_d83DSPC-ACMW&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+    <span class="n">resolution_function</span><span class="o">=</span><span class="n">resolution_function</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -634,7 +690,7 @@ refnx: 0.1.43
 <h2>Setting varying parameters<a class="headerlink" href="#Setting-varying-parameters" title="Link to this heading">#</a></h2>
 <p>For this analysis, we want the scale and background for each model to vary and then some of the structural parameters. Since the structural parameters are constrained, we only need to define the bounds once. In the case on the <code class="docutils literal notranslate"><span class="pre">d13d2o</span></code> object, as this is the basis for the constraints.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o_model</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
@@ -644,8 +700,8 @@ refnx: 0.1.43
 <span class="n">d83acmw_model</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
 <span class="n">d83acmw_model</span><span class="o">.</span><span class="n">background</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">4e-8</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
 
-<span class="n">d13d2o</span><span class="o">.</span><span class="n">tail_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-<span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">solvent_fraction</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+<span class="n">d13d2o</span><span class="o">.</span><span class="n">tail_layer</span><span class="o">.</span><span class="n">area_per_molecule_parameter</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">solvent_fraction_parameter</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
 <span class="n">d13d2o</span><span class="o">.</span><span class="n">tail_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
 <span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
 </pre></div>
@@ -656,7 +712,7 @@ refnx: 0.1.43
 <h2>Creating interfaces and performing the fitting<a class="headerlink" href="#Creating-interfaces-and-performing-the-fitting" title="Link to this heading">#</a></h2>
 <p>The model has been created and the parameters defined, so the fitting process can begin. First, we should create a unique interface for each of the models.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o_model</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">CalculatorFactory</span><span class="p">()</span>
@@ -667,7 +723,7 @@ refnx: 0.1.43
 </div>
 <p>The models and the interface fit functions are then passed to the <code class="docutils literal notranslate"><span class="pre">Fitter</span></code> object, which is capable of performed the multiple dataset fitting process.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">Fitter</span><span class="p">(</span><span class="n">d13d2o_model</span><span class="p">,</span> <span class="n">d70d2o_model</span><span class="p">,</span> <span class="n">d83acmw_model</span><span class="p">)</span>
@@ -675,7 +731,7 @@ refnx: 0.1.43
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analysed</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -684,15 +740,15 @@ refnx: 0.1.43
 </div>
 <p>Once the fitting is complete, we can probe a given value to check that the constraints have been respected or plot the results.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">d70d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">d83acmw</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="o">.</span><span class="n">raw_value</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="p">,</span> <span class="n">d70d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="p">,</span> <span class="n">d83acmw</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -701,7 +757,7 @@ refnx: 0.1.43
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">analysed</span><span class="p">)</span>
@@ -712,7 +768,7 @@ refnx: 0.1.43
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tutorials_multi_contrast_36_0.png" src="../_images/tutorials_multi_contrast_36_0.png" />
+<img alt="../_images/tutorials_multi_contrast_41_0.png" src="../_images/tutorials_multi_contrast_41_0.png" />
 </div>
 </div>
 </section>
@@ -739,11 +795,11 @@ refnx: 0.1.43
       </div>
     </a>
     <a class="right-next"
-       href="../contributing.html"
+       href="resolution_functions.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Contributing</p>
+        <p class="prev-next-title">Resolution functions</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

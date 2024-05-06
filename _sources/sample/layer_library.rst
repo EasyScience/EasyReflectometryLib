@@ -14,19 +14,38 @@ So we construct a :py:class:`Layer` as follows for a 100 Å thick layer of boron
     from EasyReflectometry.sample import Material
     from EasyReflectometry.sample import Layer
 
-    b = Material.from_pars(
+    boron = Material(
         sld=6.908,
         isld=-0.278,
-        'Boron'
+        name='Boron'
     )
-    boron_layer = Layer.from_pars(
-        material=b,
+    boron_layer = Layer(
+        material=boron,
         thickness=100, 
         roughness=10,
         name='Boron Layer'
     )
 
 This type of layer is used extensively in the `tutorials`_
+
+To create a semi-infinite layer one needs to set the thickness to 0 and the roughness to 0.
+
+.. code-block:: python
+
+    from EasyReflectometry.sample import Material
+    from EasyReflectometry.sample import Layer
+
+    si = Material(
+        sld=2.07,
+        isld=0,
+        name='Si'
+    )
+    semi_infinite_layer = Layer(
+        material=si,
+        thickness=0,
+        roughness=0,
+        name='Si layer'
+    )
 
 :py:class:`LayerAreaPerMolecule`
 --------------------------------
@@ -42,14 +61,17 @@ We can construct a 10 Å thick :py:class:`LayerAreaPerMolecule` of phosphatidylc
     from EasyReflectometry.sample import Material
     from EasyReflectometry.sample import LayerAreaPerMolecule
 
-    d2o = Material.from_pars(6.36, 0, 'D2O')
-
-    pc_formula = 'C10H18NO8P'
-    pc = LayerAreaPerMolecule.from_pars(
-        chemical_formula=pc_formula, 
+    d2o = Material(
+        sld=6.36,
+        isld=0,
+        name='D2O'
+    )
+    molecular_formula = 'C10H18NO8P'
+    pc = LayerAreaPerMolecule(
+        molecular_formula=molecular_formula, 
         thickness=10, 
         solvent=d2o, 
-        solvent_surface_coverage=.2,
+        solvent_fraction=.2,
         area_per_molecule=48, 
         roughness=3,
         name='PC Layer'

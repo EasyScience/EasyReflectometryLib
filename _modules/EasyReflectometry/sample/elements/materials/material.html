@@ -36,7 +36,7 @@
   <script src="../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../../../../../_static/documentation_options.js?v=c73c0f3e"></script>
-    <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -164,12 +164,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../calculators.html">Calculators &amp; Optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../experiment/experiment.html">Experiment</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../tutorials/tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/simple_fitting.html">Fitting a simple slab model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/repeating.html">A multilayer fitting model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/material_solvated.html">Using the MaterialSolvated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/monolayer.html">Investigation of a surfactant monolayer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/resolution_functions.html">Resolution functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../contributing.html">Contributing</a></li>
@@ -293,19 +295,18 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for EasyReflectometry.sample.elements.materials.material</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;github.com/arm61&#39;</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;github.com/arm61&#39;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">ClassVar</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">easyscience.Objects.ObjectClasses</span> <span class="kn">import</span> <span class="n">Parameter</span>
 
-<span class="kn">from</span> <span class="nn">easyCore</span> <span class="kn">import</span> <span class="n">np</span>
-<span class="kn">from</span> <span class="nn">easyCore.Objects.ObjectClasses</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.parameter_utils</span> <span class="kn">import</span> <span class="n">get_as_parameter</span>
 
-<span class="kn">from</span> <span class="nn">..base_element</span> <span class="kn">import</span> <span class="n">BaseElement</span>
+<span class="kn">from</span> <span class="nn">...base_core</span> <span class="kn">import</span> <span class="n">BaseCore</span>
 
-<span class="n">MATERIAL_DEFAULTS</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">DEFAULTS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;sld&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The real scattering length density for a material in e-6 per squared angstrom.&#39;</span><span class="p">,</span>
         <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.ncnr.nist.gov/resources/activation/&#39;</span><span class="p">,</span>
@@ -329,17 +330,17 @@ document.write(`
 
 <div class="viewcode-block" id="Material">
 <a class="viewcode-back" href="../../../../../api/elements/material.html#EasyReflectometry.sample.elements.materials.material.Material">[docs]</a>
-<span class="k">class</span> <span class="nc">Material</span><span class="p">(</span><span class="n">BaseElement</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Material</span><span class="p">(</span><span class="n">BaseCore</span><span class="p">):</span>
     <span class="c1"># Added in super().__init__</span>
-    <span class="n">sld</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
-    <span class="n">isld</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="n">sld</span><span class="p">:</span> <span class="n">Parameter</span>
+    <span class="n">isld</span><span class="p">:</span> <span class="n">Parameter</span>
 
 <div class="viewcode-block" id="Material.__init__">
 <a class="viewcode-back" href="../../../../../api/elements/material.html#EasyReflectometry.sample.elements.materials.material.Material.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">sld</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
-        <span class="n">isld</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
+        <span class="n">sld</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">isld</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyMaterial&#39;</span><span class="p">,</span>
         <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
@@ -348,47 +349,12 @@ document.write(`
 <span class="sd">        :param sld: Real scattering length density.</span>
 <span class="sd">        :param isld: Imaginary scattering length density.</span>
 <span class="sd">        :param name: Name of the material, defaults to &#39;EasyMaterial&#39;.</span>
-<span class="sd">        :param interface: Calculator interface, defaults to :py:attr:`None`.</span>
+<span class="sd">        :param interface: Calculator interface, defaults to `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">,</span> <span class="n">sld</span><span class="o">=</span><span class="n">sld</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="n">isld</span><span class="p">)</span></div>
+        <span class="n">sld</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span><span class="s1">&#39;sld&#39;</span><span class="p">,</span> <span class="n">sld</span><span class="p">,</span> <span class="n">DEFAULTS</span><span class="p">)</span>
+        <span class="n">isld</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span><span class="s1">&#39;isld&#39;</span><span class="p">,</span> <span class="n">isld</span><span class="p">,</span> <span class="n">DEFAULTS</span><span class="p">)</span>
 
-
-    <span class="c1"># Class methods for instance creation</span>
-<div class="viewcode-block" id="Material.default">
-<a class="viewcode-back" href="../../../../../api/elements/material.html#EasyReflectometry.sample.elements.materials.material.Material.default">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Material</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Default instance of a material.&quot;&quot;&quot;</span>
-        <span class="n">sld</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;sld&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">MATERIAL_DEFAULTS</span><span class="p">[</span><span class="s1">&#39;sld&#39;</span><span class="p">])</span>
-        <span class="n">isld</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;isld&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">MATERIAL_DEFAULTS</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sld</span><span class="p">,</span> <span class="n">isld</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="Material.from_pars">
-<a class="viewcode-back" href="../../../../../api/elements/material.html#EasyReflectometry.sample.elements.materials.material.Material.from_pars">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_pars</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">sld</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">isld</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyMaterial&#39;</span><span class="p">,</span>
-        <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Material</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instance of a  material where the parameters are known.</span>
-
-<span class="sd">        :param sld: Real scattering length density.</span>
-<span class="sd">        :param isld: Imaginary scattering length density.</span>
-<span class="sd">        :param name: Name of the material, defaults to &#39;EasyMaterial&#39;.</span>
-<span class="sd">        :param interface: Calculator interface, defaults to :py:attr:`None`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">default_options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">MATERIAL_DEFAULTS</span><span class="p">)</span>
-        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;sld&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-
-        <span class="n">sld</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;sld&#39;</span><span class="p">,</span> <span class="n">sld</span><span class="p">,</span> <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;sld&#39;</span><span class="p">])</span>
-        <span class="n">isld</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;isld&#39;</span><span class="p">,</span> <span class="n">isld</span><span class="p">,</span> <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">])</span>
-
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sld</span><span class="o">=</span><span class="n">sld</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="n">isld</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">sld</span><span class="o">=</span><span class="n">sld</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="n">isld</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
 
 
     <span class="c1"># Representation</span>

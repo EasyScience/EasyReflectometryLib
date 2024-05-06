@@ -37,7 +37,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../../_static/documentation_options.js?v=c73c0f3e"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -165,12 +165,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../calculators.html">Calculators &amp; Optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/experiment.html">Experiment</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/simple_fitting.html">Fitting a simple slab model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/repeating.html">A multilayer fitting model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/material_solvated.html">Using the MaterialSolvated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/monolayer.html">Investigation of a surfactant monolayer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/resolution_functions.html">Resolution functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
@@ -340,15 +342,12 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.__init__"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.__init__()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.default"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.default()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.from_pars"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.from_pars()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.tail_layer"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.tail_layer</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.head_layer"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.head_layer</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.constrain_area_per_molecule"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.constrain_area_per_molecule</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.conformal_roughness"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.conformal_roughness</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.user_data"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.user_data</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.constrain_solvent_roughness"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.constrain_solvent_roughness()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.layers"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.layers</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.constain_multiple_contrast"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.constain_multiple_contrast()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.as_dict"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.as_dict()</span></code></a></li>
 </ul>
@@ -376,61 +375,18 @@ or area per molecule more straight forward.</p>
 <a class="reference external" href="../sample/assemblies_library.html#surfactantlayer">surfactant documentation</a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasySurfactantLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constrain_area_per_molecule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conformal_roughness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/surfactant_layer.html#SurfactantLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tail_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasySurfactantLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constrain_area_per_molecule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conformal_roughness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/surfactant_layer.html#SurfactantLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>layers</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="../elements/layer_area_per_molecule.html#EasyReflectometry.sample.elements.layers.layer_area_per_molecule.LayerAreaPerMolecule" title="EasyReflectometry.sample.elements.layers.layer_area_per_molecule.LayerAreaPerMolecule"><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerAreaPerMolecule</span></code></a>]</span>) – List with the tail (index 0) and head (index 1) layer.</p></li>
+<li><p><strong>tail_layer</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="../elements/layer_area_per_molecule.html#EasyReflectometry.sample.elements.layers.layer_area_per_molecule.LayerAreaPerMolecule" title="EasyReflectometry.sample.elements.layers.layer_area_per_molecule.LayerAreaPerMolecule"><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerAreaPerMolecule</span></code></a>]</span>) – Layer representing the tail part of the surfactant layer.</p></li>
+<li><p><strong>head_layer</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="../elements/layer_area_per_molecule.html#EasyReflectometry.sample.elements.layers.layer_area_per_molecule.LayerAreaPerMolecule" title="EasyReflectometry.sample.elements.layers.layer_area_per_molecule.LayerAreaPerMolecule"><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerAreaPerMolecule</span></code></a>]</span>) – Layer representing the head part of the surfactant layer.</p></li>
 <li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name for surfactant layer, defaults to ‘EasySurfactantLayer’.</p></li>
 <li><p><strong>constrain_area_per_molecule</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Constrain the area per molecule, defaults to <cite>False</cite>.</p></li>
 <li><p><strong>conformal_roughness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Constrain the roughness to be the same for both layers, defaults to <cite>False</cite>.</p></li>
 <li><p><strong>interface</strong> – Calculator interface, defaults to <cite>None</cite>.</p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.default">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/surfactant_layer.html#SurfactantLayer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.default" title="Link to this definition">#</a></dt>
-<dd><p>Default instance of a surfactant layer object.
-The default lipid type is DPPC.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer" title="EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a></span></p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Surfactant layer object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.from_pars">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tail_layer_molecular_formula</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_layer_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_layer_solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_layer_solvent_fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_layer_area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_layer_roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_layer_molecular_formula</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_layer_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_layer_solvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_layer_solvent_fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_layer_area_per_molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_layer_roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasySurfactantLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/surfactant_layer.html#SurfactantLayer.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.from_pars" title="Link to this definition">#</a></dt>
-<dd><p>Instance of a surfactant layer where the parameters are known,
-<cite>head_layer</cite> is the hydrophilic part.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tail_layer_molecular_formula</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Molecular formula of species constituting the tail layer.</p></li>
-<li><p><strong>tail_layer_thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Thickness of tail layer.</p></li>
-<li><p><strong>tail_layer_solvent</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../elements/material.html#EasyReflectometry.sample.elements.materials.material.Material" title="EasyReflectometry.sample.elements.materials.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a></span>) – Solvent in tail layer.</p></li>
-<li><p><strong>tail_layer_solvent_fraction</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Fraction of solvent in tail layer. Fx solvation or surface coverage.</p></li>
-<li><p><strong>tail_layer_area_per_molecule</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Area per molecule of tail layer.</p></li>
-<li><p><strong>tail_layer_roughness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Roughness of tail layer.</p></li>
-<li><p><strong>head_layer_molecular_formula</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Molecular formula of species constituting the head layer.</p></li>
-<li><p><strong>head_layer_thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Thickness of head layer.</p></li>
-<li><p><strong>head_layer_solvent</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../elements/material.html#EasyReflectometry.sample.elements.materials.material.Material" title="EasyReflectometry.sample.elements.materials.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a></span>) – Solvent in head layer.</p></li>
-<li><p><strong>head_layer_solvent_fraction</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Fraction of solvent in head layer. Fx solvation or surface coverage.</p></li>
-<li><p><strong>head_layer_area_per_molecule</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Area per molecule of head layer.</p></li>
-<li><p><strong>head_layer_roughness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Roughness of head layer.</p></li>
-<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name for surfactant layer.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer" title="EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -461,7 +417,7 @@ The default lipid type is DPPC.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.user_data">
-<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></em><a class="headerlink" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.user_data" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.user_data" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -473,12 +429,6 @@ The default lipid type is DPPC.</p>
 <dd class="field-odd"><p><strong>solvent_roughness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></span>) – The solvent roughness parameter.</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.layers">
-<span class="sig-name descname"><span class="pre">layers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerCollection</span></code></em><a class="headerlink" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.layers" title="Link to this definition">#</a></dt>
-<dd><p>Layers in the assembly.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -495,10 +445,14 @@ The default lipid type is DPPC.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.as_dict">
 <span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/surfactant_layer.html#SurfactantLayer.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.as_dict" title="Link to this definition">#</a></dt>
-<dd><p>Cleaned dictionary. Custom as_dict method to skip necessary things.</p>
+<dd><p>Produces a cleaned dict using a custom as_dict method to skip necessary things.
+The resulting dict matches the parameters in __init__</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>skip</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]</span>) – List of keys to skip, defaults to <cite>None</cite>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -552,15 +506,12 @@ The default lipid type is DPPC.</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.__init__"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.__init__()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.default"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.default()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.from_pars"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.from_pars()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.tail_layer"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.tail_layer</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.head_layer"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.head_layer</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.constrain_area_per_molecule"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.constrain_area_per_molecule</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.conformal_roughness"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.conformal_roughness</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.user_data"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.user_data</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.constrain_solvent_roughness"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.constrain_solvent_roughness()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.layers"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.layers</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.constain_multiple_contrast"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.constain_multiple_contrast()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.surfactant_layer.SurfactantLayer.as_dict"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer.as_dict()</span></code></a></li>
 </ul>

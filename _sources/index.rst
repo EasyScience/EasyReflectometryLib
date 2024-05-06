@@ -1,4 +1,4 @@
-.. include:: ../README.rst
+.. include:: ../../README.rst
 
 .. toctree::
    :hidden:
@@ -8,6 +8,7 @@
    usage
    sample/sample
    calculators
+   experiment/experiment
    tutorials/tutorials
    contributing
    authors

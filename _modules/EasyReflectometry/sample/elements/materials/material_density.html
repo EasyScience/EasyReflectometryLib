@@ -36,7 +36,7 @@
   <script src="../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../../../../../_static/documentation_options.js?v=c73c0f3e"></script>
-    <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -164,12 +164,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../calculators.html">Calculators &amp; Optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../experiment/experiment.html">Experiment</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../tutorials/tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/simple_fitting.html">Fitting a simple slab model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/repeating.html">A multilayer fitting model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/material_solvated.html">Using the MaterialSolvated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/monolayer.html">Investigation of a surfactant monolayer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/resolution_functions.html">Resolution functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../contributing.html">Contributing</a></li>
@@ -293,23 +295,21 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for EasyReflectometry.sample.elements.materials.material_density</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">ClassVar</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">easyCore.Fitting.Constraints</span> <span class="kn">import</span> <span class="n">FunctionalConstraint</span>
-<span class="kn">from</span> <span class="nn">easyCore.Objects.ObjectClasses</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span> <span class="nn">easyscience.Fitting.Constraints</span> <span class="kn">import</span> <span class="n">FunctionalConstraint</span>
+<span class="kn">from</span> <span class="nn">easyscience.Objects.ObjectClasses</span> <span class="kn">import</span> <span class="n">Parameter</span>
 
+<span class="kn">from</span> <span class="nn">EasyReflectometry.parameter_utils</span> <span class="kn">import</span> <span class="n">get_as_parameter</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.special.calculations</span> <span class="kn">import</span> <span class="n">density_to_sld</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.special.calculations</span> <span class="kn">import</span> <span class="n">molecular_weight</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.special.calculations</span> <span class="kn">import</span> <span class="n">neutron_scattering_length</span>
 
-<span class="kn">from</span> <span class="nn">.material</span> <span class="kn">import</span> <span class="n">MATERIAL_DEFAULTS</span>
+<span class="kn">from</span> <span class="nn">.material</span> <span class="kn">import</span> <span class="n">DEFAULTS</span> <span class="k">as</span> <span class="n">MATERIAL_DEFAULTS</span>
 <span class="kn">from</span> <span class="nn">.material</span> <span class="kn">import</span> <span class="n">Material</span>
 
-<span class="n">MATERIALDENSITY_DEFAULTS</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">DEFAULTS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;chemical_structure&#39;</span><span class="p">:</span> <span class="s1">&#39;Si&#39;</span><span class="p">,</span>
     <span class="s1">&#39;sl&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The real scattering length for a chemical formula in angstrom.&#39;</span><span class="p">,</span>
@@ -348,53 +348,54 @@ document.write(`
         <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span>
+<span class="n">DEFAULTS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">MATERIAL_DEFAULTS</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="MaterialDensity">
 <a class="viewcode-back" href="../../../../../api/elements/material_density.html#EasyReflectometry.sample.elements.materials.material_density.MaterialDensity">[docs]</a>
 <span class="k">class</span> <span class="nc">MaterialDensity</span><span class="p">(</span><span class="n">Material</span><span class="p">):</span>
     <span class="c1"># Added in __init__</span>
-    <span class="n">scattering_length_real</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
-    <span class="n">scattering_length_imag</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
-    <span class="n">molecular_weight</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
-    <span class="n">density</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="n">scattering_length_real</span><span class="p">:</span> <span class="n">Parameter</span>
+    <span class="n">scattering_length_imag</span><span class="p">:</span> <span class="n">Parameter</span>
+    <span class="n">molecular_weight</span><span class="p">:</span> <span class="n">Parameter</span>
+    <span class="n">density</span><span class="p">:</span> <span class="n">Parameter</span>
 
 <div class="viewcode-block" id="MaterialDensity.__init__">
 <a class="viewcode-back" href="../../../../../api/elements/material_density.html#EasyReflectometry.sample.elements.materials.material_density.MaterialDensity.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">chemical_structure</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">density</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
+        <span class="n">chemical_structure</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">density</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyMaterialDensity&#39;</span><span class="p">,</span>
         <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MaterialDensity</span><span class="p">:</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        :param chemical_structure: Chemical formula for the material.</span>
 <span class="sd">        :param density: Mass density for the material.</span>
-<span class="sd">        :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`.</span>
-<span class="sd">        :param interface: Interface object, defaults to :py:attr:`None`.</span>
+<span class="sd">        :param name: Identifier, defaults to `EasyMaterialDensity`.</span>
+<span class="sd">        :param interface: Interface object, defaults to `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">chemical_structure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">chemical_structure</span> <span class="o">=</span> <span class="n">DEFAULTS</span><span class="p">[</span><span class="s1">&#39;chemical_structure&#39;</span><span class="p">]</span>
+
+        <span class="n">density</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">DEFAULTS</span><span class="p">)</span>
+
         <span class="n">scattering_length</span> <span class="o">=</span> <span class="n">neutron_scattering_length</span><span class="p">(</span><span class="n">chemical_structure</span><span class="p">)</span>
-        <span class="n">default_options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">MATERIALDENSITY_DEFAULTS</span><span class="p">)</span>
-        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;molecular_weight&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;sl&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;isl&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-        <span class="n">mw</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;molecular_weight&#39;</span><span class="p">,</span> <span class="n">molecular_weight</span><span class="p">(</span><span class="n">chemical_structure</span><span class="p">),</span> <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;molecular_weight&#39;</span><span class="p">])</span>
-        <span class="n">scattering_length_real</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;scattering_length_real&#39;</span><span class="p">,</span> <span class="n">scattering_length</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;sl&#39;</span><span class="p">])</span>
-        <span class="n">scattering_length_imag</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;scattering_length_imag&#39;</span><span class="p">,</span> <span class="n">scattering_length</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;isl&#39;</span><span class="p">])</span>
-        <span class="n">default_options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">MATERIAL_DEFAULTS</span><span class="p">)</span>
-        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;sld&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-        <span class="n">sld</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span>
-            <span class="s1">&#39;sld&#39;</span><span class="p">,</span>
-            <span class="n">density_to_sld</span><span class="p">(</span><span class="n">scattering_length_real</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">mw</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">density</span><span class="o">.</span><span class="n">raw_value</span><span class="p">),</span>
-            <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;sld&#39;</span><span class="p">],</span>
+
+        <span class="n">mw</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span><span class="s1">&#39;molecular_weight&#39;</span><span class="p">,</span> <span class="n">molecular_weight</span><span class="p">(</span><span class="n">chemical_structure</span><span class="p">),</span> <span class="n">DEFAULTS</span><span class="p">)</span>
+        <span class="n">scattering_length_real</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;scattering_length_real&#39;</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">scattering_length</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
+            <span class="n">default_dict</span><span class="o">=</span><span class="n">DEFAULTS</span><span class="p">[</span><span class="s1">&#39;sld&#39;</span><span class="p">],</span>
         <span class="p">)</span>
-        <span class="n">isld</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span>
-            <span class="s1">&#39;isld&#39;</span><span class="p">,</span>
-            <span class="n">density_to_sld</span><span class="p">(</span><span class="n">scattering_length_imag</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">mw</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">density</span><span class="o">.</span><span class="n">raw_value</span><span class="p">),</span>
-            <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">],</span>
+        <span class="n">scattering_length_imag</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span><span class="s1">&#39;scattering_length_imag&#39;</span><span class="p">,</span> <span class="n">scattering_length</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">DEFAULTS</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">])</span>
+
+        <span class="n">sld</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span>
+            <span class="s1">&#39;sld&#39;</span><span class="p">,</span> <span class="n">density_to_sld</span><span class="p">(</span><span class="n">scattering_length_real</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">mw</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">density</span><span class="o">.</span><span class="n">raw_value</span><span class="p">),</span> <span class="n">DEFAULTS</span>
+        <span class="p">)</span>
+        <span class="n">isld</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span>
+            <span class="s1">&#39;isld&#39;</span><span class="p">,</span> <span class="n">density_to_sld</span><span class="p">(</span><span class="n">scattering_length_imag</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">mw</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">density</span><span class="o">.</span><span class="n">raw_value</span><span class="p">),</span> <span class="n">DEFAULTS</span>
         <span class="p">)</span>
 
         <span class="n">constraint</span> <span class="o">=</span> <span class="n">FunctionalConstraint</span><span class="p">(</span><span class="n">sld</span><span class="p">,</span> <span class="n">density_to_sld</span><span class="p">,</span> <span class="p">[</span><span class="n">scattering_length_real</span><span class="p">,</span> <span class="n">mw</span><span class="p">,</span> <span class="n">density</span><span class="p">])</span>
@@ -414,45 +415,6 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">,</span> <span class="n">density</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_chemical_structure</span> <span class="o">=</span> <span class="n">chemical_structure</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span></div>
-
-
-    <span class="c1"># Class methods for instance creation</span>
-<div class="viewcode-block" id="MaterialDensity.default">
-<a class="viewcode-back" href="../../../../../api/elements/material_density.html#EasyReflectometry.sample.elements.materials.material_density.MaterialDensity.default">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MaterialDensity</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Default instance of material defined by density and chemical structure.</span>
-
-<span class="sd">        :param interface: Interface object, defaults to :py:attr:`None`</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">density</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">MATERIALDENSITY_DEFAULTS</span><span class="p">[</span><span class="s1">&#39;density&#39;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">MATERIALDENSITY_DEFAULTS</span><span class="p">[</span><span class="s1">&#39;chemical_structure&#39;</span><span class="p">],</span> <span class="n">density</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="MaterialDensity.from_pars">
-<a class="viewcode-back" href="../../../../../api/elements/material_density.html#EasyReflectometry.sample.elements.materials.material_density.MaterialDensity.from_pars">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_pars</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">chemical_structure</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyMaterialDensity&#39;</span><span class="p">,</span>
-        <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MaterialDensity</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instance of a material from mass density and chemical structure,</span>
-<span class="sd">        where these are known.</span>
-<span class="sd">        :param chemical_structure: Chemical formula for the material</span>
-<span class="sd">        :param density: Mass density for the material</span>
-<span class="sd">        :param name: Identifier, defaults to :py:attr:`EasyMaterialDensity`</span>
-<span class="sd">        :param interface: Interface object, defaults to :py:attr:`None`</span>
-<span class="sd">        :return: Material container</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">default_options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">MATERIALDENSITY_DEFAULTS</span><span class="p">)</span>
-        <span class="k">del</span> <span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;density&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-
-        <span class="n">density</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="o">**</span><span class="n">default_options</span><span class="p">[</span><span class="s1">&#39;density&#39;</span><span class="p">])</span>
-
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">chemical_structure</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
@@ -482,10 +444,19 @@ document.write(`
 <div class="viewcode-block" id="MaterialDensity.as_dict">
 <a class="viewcode-back" href="../../../../../api/elements/material_density.html#EasyReflectometry.sample.elements.materials.material_density.MaterialDensity.as_dict">[docs]</a>
     <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom as_dict method to skip necessary things.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Produces a cleaned dict using a custom as_dict method to skip necessary things.</span>
+<span class="sd">        The resulting dict matches the parameters in __init__</span>
+
+<span class="sd">        :param skip: List of keys to skip, defaults to `None`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">this_dict</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
-        <span class="k">del</span> <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;sld&#39;</span><span class="p">],</span> <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">],</span> <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;scattering_length_real&#39;</span><span class="p">]</span>
-        <span class="k">del</span> <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;scattering_length_imag&#39;</span><span class="p">],</span> <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;molecular_weight&#39;</span><span class="p">]</span>
+        <span class="c1"># From Material</span>
+        <span class="k">del</span> <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;sld&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;isld&#39;</span><span class="p">]</span>
+        <span class="c1"># Determined in __init__</span>
+        <span class="k">del</span> <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;scattering_length_real&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;scattering_length_imag&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;molecular_weight&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">this_dict</span></div>
 </div>
 

@@ -36,7 +36,7 @@
   <script src="../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../../../_static/documentation_options.js?v=c73c0f3e"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -164,12 +164,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../calculators.html">Calculators &amp; Optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../experiment/experiment.html">Experiment</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/simple_fitting.html">Fitting a simple slab model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/repeating.html">A multilayer fitting model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/material_solvated.html">Using the MaterialSolvated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/monolayer.html">Investigation of a surfactant monolayer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/resolution_functions.html">Resolution functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
@@ -297,12 +299,16 @@ document.write(`
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;github.com/arm61&#39;</span>
 
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
 <span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">from</span> <span class="nn">easyCore.Objects.Groups</span> <span class="kn">import</span> <span class="n">BaseCollection</span>
+<span class="kn">from</span> <span class="nn">easyscience.Objects.Groups</span> <span class="kn">import</span> <span class="n">BaseCollection</span>
 
 <span class="kn">from</span> <span class="nn">.assemblies.base_assembly</span> <span class="kn">import</span> <span class="n">BaseAssembly</span>
 <span class="kn">from</span> <span class="nn">.assemblies.multilayer</span> <span class="kn">import</span> <span class="n">Multilayer</span>
 <span class="kn">from</span> <span class="nn">.elements.layers.layer</span> <span class="kn">import</span> <span class="n">Layer</span>
+
+<span class="n">NR_DEFAULT_LAYERS</span> <span class="o">=</span> <span class="mi">2</span>
 
 
 <div class="viewcode-block" id="Sample">
@@ -314,7 +320,7 @@ document.write(`
 <a class="viewcode-back" href="../../../api/sample.html#EasyReflectometry.sample.sample.Sample.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Layer</span> <span class="o">|</span> <span class="n">BaseAssembly</span><span class="p">],</span>
+        <span class="o">*</span><span class="n">list_layer_like</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Layer</span><span class="p">,</span> <span class="n">BaseAssembly</span><span class="p">]],</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasySample&#39;</span><span class="p">,</span>
         <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
@@ -323,51 +329,21 @@ document.write(`
 
 <span class="sd">        :param args: The assemblies in the sample.</span>
 <span class="sd">        :param name: Name of the sample, defaults to &#39;EasySample&#39;.</span>
-<span class="sd">        :param interface: Calculator interface, defaults to :py:attr:`None`.</span>
+<span class="sd">        :param interface: Calculator interface, defaults to `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">new_items</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">layer_like</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">list_layer_like</span><span class="p">:</span>
+            <span class="n">list_layer_like</span> <span class="o">=</span> <span class="p">[</span><span class="n">Multilayer</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NR_DEFAULT_LAYERS</span><span class="p">)]</span>
+
+        <span class="k">for</span> <span class="n">layer_like</span> <span class="ow">in</span> <span class="n">list_layer_like</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">layer_like</span><span class="p">),</span> <span class="n">Layer</span><span class="p">):</span>
-                <span class="n">new_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Multilayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">layer_like</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">layer_like</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="n">new_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Multilayer</span><span class="p">(</span><span class="n">layer_like</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">layer_like</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
             <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">layer_like</span><span class="p">),</span> <span class="n">BaseAssembly</span><span class="p">):</span>
                 <span class="n">new_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer_like</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The items must be either a Layer or an Assembly.&#39;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">new_items</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span></div>
-
-
-    <span class="c1"># Class methods for instance creation</span>
-<div class="viewcode-block" id="Sample.default">
-<a class="viewcode-back" href="../../../api/sample.html#EasyReflectometry.sample.sample.Sample.default">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sample</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Default instance of the reflectometry sample.</span>
-
-<span class="sd">        :param interface: Calculator interface, defaults to :py:attr:`None`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">item1</span> <span class="o">=</span> <span class="n">Multilayer</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
-        <span class="n">item2</span> <span class="o">=</span> <span class="n">Multilayer</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">item1</span><span class="p">,</span> <span class="n">item2</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="Sample.from_pars">
-<a class="viewcode-back" href="../../../api/sample.html#EasyReflectometry.sample.sample.Sample.from_pars">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_pars</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span>
-        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Layer</span> <span class="o">|</span> <span class="n">BaseAssembly</span><span class="p">],</span>
-        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyStructure&#39;</span><span class="p">,</span>
-        <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sample</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor of a reflectometry sample where the parameters are known.</span>
-
-<span class="sd">        :param args: The assemblies in the sample</span>
-<span class="sd">        :param name: Name of the sample, defaults to &#39;EasySample&#39;.</span>
-<span class="sd">        :param interface: Calculator interface, defaults to :py:attr:`None`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
@@ -382,8 +358,48 @@ document.write(`
         <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">_dict_repr</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]}</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;String representation of the layer.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;String representation of the sample.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Sample.as_dict">
+<a class="viewcode-back" href="../../../api/sample.html#EasyReflectometry.sample.sample.Sample.as_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Produces a cleaned dict using a custom as_dict method to skip necessary things.</span>
+<span class="sd">        The resulting dict matches the parameters in __init__</span>
+
+<span class="sd">        :param skip: List of keys to skip, defaults to `None`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">skip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">skip</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this_dict</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">this_dict</span></div>
+
+
+<div class="viewcode-block" id="Sample.from_dict">
+<a class="viewcode-back" href="../../../api/sample.html#EasyReflectometry.sample.sample.Sample.from_dict">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sample</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a Sample from a dictionary.</span>
+
+<span class="sd">        :param data: dictionary of the Sample</span>
+<span class="sd">        :return: Sample</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Remove the default multilayers</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NR_DEFAULT_LAYERS</span><span class="p">):</span>
+            <span class="n">sample</span><span class="o">.</span><span class="fm">__delitem__</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Ensure that the data is also converted</span>
+        <span class="c1"># TODO Should probably be handled in easyscience</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="o">.</span><span class="n">data</span><span class="p">)):</span>
+            <span class="n">sample</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">sample</span></div>
+</div>
 
 </pre></div>
 

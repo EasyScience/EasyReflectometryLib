@@ -37,7 +37,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../../_static/documentation_options.js?v=c73c0f3e"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -165,12 +165,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../calculators.html">Calculators &amp; Optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/experiment.html">Experiment</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/simple_fitting.html">Fitting a simple slab model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/repeating.html">A multilayer fitting model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/material_solvated.html">Using the MaterialSolvated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/monolayer.html">Investigation of a surfactant monolayer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/resolution_functions.html">Resolution functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
@@ -343,8 +345,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.thickness"><code class="docutils literal notranslate"><span class="pre">Layer.thickness</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.roughness"><code class="docutils literal notranslate"><span class="pre">Layer.roughness</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.__init__"><code class="docutils literal notranslate"><span class="pre">Layer.__init__()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.default"><code class="docutils literal notranslate"><span class="pre">Layer.default()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.from_pars"><code class="docutils literal notranslate"><span class="pre">Layer.from_pars()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.assign_material"><code class="docutils literal notranslate"><span class="pre">Layer.assign_material()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.user_data"><code class="docutils literal notranslate"><span class="pre">Layer.user_data</span></code></a></li>
 </ul>
@@ -361,7 +361,7 @@ document.write(`
   <dl class="py class" id="module-EasyReflectometry.sample.elements.layers.layer">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.elements.layers.layer.Layer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.elements.layers.layer.</span></span><span class="sig-name descname"><span class="pre">Layer</span></span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/elements/layers/layer.html#Layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.elements.layers.layer.Layer" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseElement</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCore</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.elements.layers.layer.Layer.material">
 <span class="sig-name descname"><span class="pre">material</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="material.html#EasyReflectometry.sample.elements.materials.material.Material" title="EasyReflectometry.sample.elements.materials.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a></em><a class="headerlink" href="#EasyReflectometry.sample.elements.layers.layer.Layer.material" title="Link to this definition">#</a></dt>
@@ -382,51 +382,17 @@ document.write(`
 
 <dl class="py method">
 <dt class="sig sig-object py" id="EasyReflectometry.sample.elements.layers.layer.Layer.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/elements/layers/layer.html#Layer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.elements.layers.layer.Layer.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/elements/layers/layer.html#Layer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.elements.layers.layer.Layer.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>material</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="material.html#EasyReflectometry.sample.elements.materials.material.Material" title="EasyReflectometry.sample.elements.materials.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a></span>) – The material for the layer.</p></li>
-<li><p><strong>thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></span>) – Layer thickness in Angstrom.</p></li>
-<li><p><strong>roughness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></span>) – Upper roughness on the layer in Angstrom.</p></li>
+<li><p><strong>material</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="material.html#EasyReflectometry.sample.elements.materials.material.Material" title="EasyReflectometry.sample.elements.materials.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a>]</span>) – The material for the layer.</p></li>
+<li><p><strong>thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – Layer thickness in Angstrom.</p></li>
+<li><p><strong>roughness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – Upper roughness on the layer in Angstrom.</p></li>
 <li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the layer, defaults to ‘EasyLayer’</p></li>
-<li><p><strong>interface</strong> – Interface object, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p><strong>interface</strong> – Interface object, defaults to <cite>None</cite></p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.elements.layers.layer.Layer.default">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/elements/layers/layer.html#Layer.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.elements.layers.layer.Layer.default" title="Link to this definition">#</a></dt>
-<dd><p>Default instance of the reflectometry layer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>interface</strong> – Calculator interface, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code>.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#EasyReflectometry.sample.elements.layers.layer.Layer" title="EasyReflectometry.sample.elements.layers.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.elements.layers.layer.Layer.from_pars">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyLayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/elements/layers/layer.html#Layer.from_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.elements.layers.layer.Layer.from_pars" title="Link to this definition">#</a></dt>
-<dd><p>Instance of a reflectometry layer where the parameters are known.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>material</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="material.html#EasyReflectometry.sample.elements.materials.material.Material" title="EasyReflectometry.sample.elements.materials.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code></a></span>) – The material that makes up the layer.</p></li>
-<li><p><strong>thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Layer thickness in angstrom.</p></li>
-<li><p><strong>roughness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Layer roughness in angstrom.</p></li>
-<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the layer, defaults to ‘EasyLayer’.</p></li>
-<li><p><strong>interface</strong> – Calculator interface, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#EasyReflectometry.sample.elements.layers.layer.Layer" title="EasyReflectometry.sample.elements.layers.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -502,8 +468,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.thickness"><code class="docutils literal notranslate"><span class="pre">Layer.thickness</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.roughness"><code class="docutils literal notranslate"><span class="pre">Layer.roughness</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.__init__"><code class="docutils literal notranslate"><span class="pre">Layer.__init__()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.default"><code class="docutils literal notranslate"><span class="pre">Layer.default()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.from_pars"><code class="docutils literal notranslate"><span class="pre">Layer.from_pars()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.assign_material"><code class="docutils literal notranslate"><span class="pre">Layer.assign_material()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.elements.layers.layer.Layer.user_data"><code class="docutils literal notranslate"><span class="pre">Layer.user_data</span></code></a></li>
 </ul>

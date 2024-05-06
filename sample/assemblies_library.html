@@ -37,7 +37,7 @@
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -165,12 +165,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../calculators.html">Calculators &amp; Optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../experiment/experiment.html">Experiment</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/simple_fitting.html">Fitting a simple slab model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/repeating.html">A multilayer fitting model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/material_solvated.html">Using the MaterialSolvated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/monolayer.html">Investigation of a surfactant monolayer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/resolution_functions.html">Resolution functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
@@ -369,12 +371,30 @@ All of the separate layers in these objects will be fitted individually, i.e. th
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Multilayer</span>
 
-<span class="n">si</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">2.07</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Si&#39;</span><span class="p">)</span>
-<span class="n">sio2</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">3.47</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;SiO2&#39;</span><span class="p">)</span>
-<span class="n">si_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">si</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Si layer&#39;</span><span class="p">)</span>
-<span class="n">sio2_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">sio2</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;SiO2 layer&#39;</span><span class="p">)</span>
+<span class="n">si</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
+    <span class="n">sld</span><span class="o">=</span><span class="mf">2.07</span><span class="p">,</span>
+    <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si&#39;</span>
+<span class="p">)</span>
+<span class="n">sio2</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
+    <span class="n">sld</span><span class="o">=</span><span class="mf">3.47</span><span class="p">,</span>
+    <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;SiO2&#39;</span>
+<span class="p">)</span>
+<span class="n">si_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span>
+    <span class="n">material</span><span class="o">=</span><span class="n">si</span><span class="p">,</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si layer&#39;</span>
+<span class="p">)</span>
+<span class="n">sio2_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span>
+    <span class="n">material</span><span class="o">=</span><span class="n">sio2</span><span class="p">,</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;SiO2 layer&#39;</span>
+<span class="p">)</span>
 
-<span class="n">subphase</span> <span class="o">=</span> <span class="n">Multilayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span>
+<span class="n">subphase</span> <span class="o">=</span> <span class="n">Multilayer</span><span class="p">(</span>
     <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="n">si_layer</span><span class="p">,</span> <span class="n">sio2_layer</span><span class="p">],</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si/SiO2 subphase&#39;</span>
 <span class="p">)</span>
@@ -393,12 +413,29 @@ There is a <a class="reference external" href="../tutorials/repeating.html">tuto
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">RepeatingMultilayer</span>
 
-<span class="n">ti</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="o">-</span><span class="mf">1.9493</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ti&#39;</span><span class="p">)</span>
-<span class="n">ni</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">9.4245</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ni&#39;</span><span class="p">)</span>
-<span class="n">ti_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">ti</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ti Layer&#39;</span><span class="p">)</span>
-<span class="n">ni_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ni Layer&#39;</span><span class="p">)</span>
-
-<span class="n">ni_ti</span> <span class="o">=</span> <span class="n">RepeatingMultilayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span>
+<span class="n">ti</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
+    <span class="n">sld</span><span class="o">=-</span><span class="mf">1.9493</span><span class="p">,</span>
+    <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Ti&#39;</span>
+<span class="p">)</span>
+<span class="n">ni</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
+    <span class="n">sld</span><span class="o">=</span><span class="mf">9.4245</span><span class="p">,</span>
+    <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Ni&#39;</span>
+<span class="p">)</span>
+<span class="n">ti_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span>
+    <span class="n">material</span><span class="o">=</span><span class="n">ti</span><span class="p">,</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Ti Layer&#39;</span>
+<span class="p">)</span>
+<span class="n">ni_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span>
+    <span class="n">material</span><span class="o">=</span><span class="n">ni</span><span class="p">,</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Ni Layer&#39;</span>
+<span class="p">)</span>
+<span class="n">ni_ti</span> <span class="o">=</span> <span class="n">RepeatingMultilayer</span><span class="p">(</span>
     <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="n">ti_layer</span><span class="p">,</span> <span class="n">ni_layer</span><span class="p">],</span>
     <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Ni/Ti Multilayer&#39;</span>
@@ -413,36 +450,42 @@ There is a <a class="reference external" href="../tutorials/repeating.html">tuto
 Using this assembly, we can define our surfactant in terms of the chemistry of the head and tail groups and be confident that the constraints are present to ensure the number density if kept constant.
 The <a class="reference external" href="../tutorials/monolayer.html">surfactant monolayer tutorial</a> looks in detail at the definition of the scattering length density in the <code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code>.
 However, it is founded on the chemical formula for the head and tail group and the area per molecule that these groups occupy.</p>
-<p>The creation of a <code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code> object takes a large number arguments that are shown below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
+<p>The creation of a <code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code> object is shown below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">LayerAreaPerMolecule</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">SurfactantLayer</span>
 
-<span class="n">subphase</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">6.36</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;D2O&#39;</span><span class="p">)</span>
-<span class="n">superphase</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;Air&#39;</span><span class="p">)</span>
-
-<span class="n">head_formula</span> <span class="o">=</span> <span class="s1">&#39;C10H18NO8P&#39;</span>
-<span class="n">tail_formula</span> <span class="o">=</span> <span class="s1">&#39;C30D64&#39;</span>
-<span class="n">head_thickness</span> <span class="o">=</span> <span class="mf">10.0</span>
-<span class="n">tail_thickness</span> <span class="o">=</span> <span class="mf">16.0</span>
-<span class="n">head_solvent_surface_coverage</span> <span class="o">=</span> <span class="mf">0.2</span>
-<span class="n">tail_solvent_surface_coverage</span> <span class="o">=</span> <span class="mf">0.0</span>
 <span class="n">area_per_molecule</span> <span class="o">=</span> <span class="mi">48</span>
 <span class="n">roughness</span> <span class="o">=</span> <span class="mf">3.3</span>
-
-<span class="n">dppc</span> <span class="o">=</span> <span class="n">SurfactantLayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span>
-    <span class="n">tail_layer_molecular_formula</span><span class="o">=</span><span class="n">tail_formula</span><span class="p">,</span>
-    <span class="n">tail_layer_thickness</span><span class="o">=</span><span class="n">tail_thickness</span><span class="p">,</span>
-    <span class="n">tail_layer_solvent</span><span class="o">=</span><span class="n">superphase</span><span class="p">,</span>
-    <span class="n">tail_layer_solvent_surface_coverage</span><span class="o">=</span><span class="n">tail_solvent_surface_coverage</span><span class="p">,</span>
-    <span class="n">tail_layer_area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
-    <span class="n">tail_layer_roughness</span><span class="o">=</span><span class="n">roughness</span><span class="p">,</span>
-    <span class="n">head_layer_molecular_formula</span><span class="o">=</span><span class="n">head_formula</span><span class="p">,</span>
-    <span class="n">head_layer_thickness</span><span class="o">=</span><span class="n">head_thickness</span><span class="p">,</span>
-    <span class="n">head_layer_solvent</span><span class="o">=</span><span class="n">subphase</span><span class="p">,</span>
-    <span class="n">head_layer_solvent_surface_coverage</span><span class="o">=</span><span class="n">head_solvent_surface_coverage</span><span class="p">,</span>
-    <span class="n">head_layer_area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
-    <span class="n">head_layer_roughness</span><span class="o">=</span><span class="n">roughness</span>
+<span class="n">subphase</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
+    <span class="n">sld</span><span class="o">=</span><span class="mf">6.36</span><span class="p">,</span>
+    <span class="n">isld</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;D2O&#39;</span>
+<span class="p">)</span>
+<span class="n">superphase</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
+    <span class="n">sld</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">isld</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Air&#39;</span>
+<span class="p">)</span>
+<span class="n">tail_layer</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="p">(</span>
+    <span class="n">molecular_formula</span><span class="o">=</span><span class="s1">&#39;C30D64&#39;</span><span class="p">,</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="mf">16.0</span><span class="p">,</span>
+    <span class="n">solvent</span><span class="o">=</span><span class="n">superphase</span><span class="p">,</span>
+    <span class="n">solvent_fraction</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span>
+<span class="p">)</span>
+<span class="n">head_layer</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="p">(</span>
+    <span class="n">molecular_formula</span><span class="o">=</span><span class="s1">&#39;C10H18NO8P&#39;</span><span class="p">,</span>
+    <span class="n">thickness</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">solvent</span><span class="o">=</span><span class="n">subphase</span><span class="p">,</span>
+    <span class="n">solvent_fraction</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">area_per_molecule</span><span class="o">=</span><span class="n">area_per_molecule</span><span class="p">,</span>
+    <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span>
+<span class="p">)</span>
+<span class="n">dspc</span> <span class="o">=</span> <span class="n">SurfactantLayer</span><span class="p">(</span>
+    <span class="n">tail_layer</span><span class="o">=</span><span class="n">tail_layer</span><span class="p">,</span>
+    <span class="n">head_layer</span><span class="o">=</span><span class="n">head_layer</span>
 <span class="p">)</span>
 </pre></div>
 </div>

@@ -38,7 +38,7 @@
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -166,12 +166,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../calculators.html">Calculators &amp; Optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../experiment/experiment.html">Experiment</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="simple_fitting.html">Fitting a simple slab model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="repeating.html">A multilayer fitting model</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Using the MaterialSolvated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="monolayer.html">Investigation of a surfactant monolayer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resolution_functions.html">Resolution functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
@@ -375,7 +377,8 @@ with some D2O intercalated. Therefore, if, for example, the surface covereage of
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">MaterialSolvated</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Multilayer</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment.model</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">percentage_fhwm_resolution_function</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.fitting</span> <span class="kn">import</span> <span class="n">Fitter</span>
 <span class="kn">from</span> <span class="nn">EasyReflectometry.plot</span> <span class="kn">import</span> <span class="n">plot</span>
@@ -402,7 +405,7 @@ with some D2O intercalated. Therefore, if, for example, the surface covereage of
 numpy: 1.26.4
 scipp: 24.02.0
 EasyReflectometry: 0.0.0
-refnx: 0.1.43
+refnx: 0.1.45
 </pre></div></div>
 </div>
 <p>For information about the data being read in and the details of the model see <a class="reference internal" href="simple_fitting.html"><span class="doc">the previous tutorial</span></a>. We will gloss over these details here.</p>
@@ -421,10 +424,10 @@ refnx: 0.1.43
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">si</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">2.07</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Si&#39;</span><span class="p">)</span>
-<span class="n">sio2</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">3.47</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;SiO2&#39;</span><span class="p">)</span>
-<span class="n">film</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Film&#39;</span><span class="p">)</span>
-<span class="n">d2o</span> <span class="o">=</span> <span class="n">Material</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="mf">6.36</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;D2O&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">si</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span><span class="n">sld</span><span class="o">=</span><span class="mf">2.07</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si&#39;</span><span class="p">)</span>
+<span class="n">sio2</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span><span class="n">sld</span><span class="o">=</span><span class="mf">3.47</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;SiO2&#39;</span><span class="p">)</span>
+<span class="n">film</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span><span class="n">sld</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Film&#39;</span><span class="p">)</span>
+<span class="n">d2o</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span><span class="n">sld</span><span class="o">=</span><span class="mf">6.36</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;D2O&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -433,7 +436,7 @@ refnx: 0.1.43
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solvated_film</span> <span class="o">=</span> <span class="n">MaterialSolvated</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solvated_film</span> <span class="o">=</span> <span class="n">MaterialSolvated</span><span class="p">(</span>
     <span class="n">material</span><span class="o">=</span><span class="n">film</span><span class="p">,</span>
     <span class="n">solvent</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span>
     <span class="n">solvent_fraction</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
@@ -461,7 +464,7 @@ refnx: 0.1.43
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Solvated Film:
-  solvent_fraction: 0.25
+  solvent_fraction: 0.250 dimensionless
   sld: 3.090e-6 1 / angstrom ** 2
   isld: 0.000e-6 1 / angstrom ** 2
   material:
@@ -479,16 +482,23 @@ Solvated Film:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">si_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">si</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Si layer&#39;</span><span class="p">)</span>
-<span class="n">sio2_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">sio2</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;SiO2 layer&#39;</span><span class="p">)</span>
-<span class="n">superphase</span> <span class="o">=</span> <span class="n">Multilayer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">([</span><span class="n">si_layer</span><span class="p">,</span> <span class="n">sio2_layer</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si/SiO2 Superphase&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">si_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">si</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si layer&#39;</span><span class="p">)</span>
+<span class="n">sio2_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">sio2</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;SiO2 layer&#39;</span><span class="p">)</span>
+<span class="n">superphase</span> <span class="o">=</span> <span class="n">Multilayer</span><span class="p">([</span><span class="n">si_layer</span><span class="p">,</span> <span class="n">sio2_layer</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si/SiO2 Superphase&#39;</span><span class="p">)</span>
 
-<span class="n">solvated_film_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">solvated_film</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;Film Layer&#39;</span><span class="p">)</span>
+<span class="n">solvated_film_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">solvated_film</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Film Layer&#39;</span><span class="p">)</span>
 
-<span class="n">subphase</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">d2o</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;D2O Subphase&#39;</span><span class="p">)</span>
+<span class="n">subphase</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;D2O Subphase&#39;</span><span class="p">)</span>
 
-<span class="n">sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">superphase</span><span class="p">,</span> <span class="n">solvated_film_layer</span><span class="p">,</span> <span class="n">subphase</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Film Structure&#39;</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">from_pars</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="s1">&#39;Film Model&#39;</span><span class="p">)</span>
+<span class="n">resolution_function</span> <span class="o">=</span> <span class="n">percentage_fhwm_resolution_function</span><span class="p">(</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">superphase</span><span class="p">,</span> <span class="n">solvated_film_layer</span><span class="p">,</span> <span class="n">subphase</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Film Structure&#39;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
+    <span class="n">sample</span><span class="o">=</span><span class="n">sample</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">background</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+    <span class="n">resolution_function</span><span class="o">=</span><span class="n">resolution_function</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Film Model&#39;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -517,7 +527,7 @@ Solvated Film:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;Parameter &#39;sld&#39;: 3.09+/-0 1/Å² (fixed), bounds=[-inf:inf]&gt;
+3.09
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -541,7 +551,7 @@ Solvated Film:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;Parameter &#39;sld&#39;: 3.465+/-0 1/Å² (fixed), bounds=[-inf:inf]&gt;
+3.465
 </pre></div></div>
 </div>
 <p>The parameter bounds are then set as follows.</p>
@@ -612,7 +622,7 @@ Solvated Film:
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Solvated Film:
-  solvent_fraction: 0.25
+  solvent_fraction: 0.250 dimensionless
   sld: 2.360e-6 1 / angstrom ** 2
   isld: 0.000e-6 1 / angstrom ** 2
   material:
