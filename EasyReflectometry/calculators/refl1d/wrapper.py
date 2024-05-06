@@ -6,7 +6,7 @@ import numpy as np
 from refl1d import model
 from refl1d import names
 
-from EasyReflectometry.experiment.resolution_functions import is_constant_resolution_function
+from EasyReflectometry.experiment.resolution_functions import is_percentage_fhwm_resolution_function
 
 from ..wrapper_base import WrapperBase
 
@@ -148,7 +148,7 @@ class Refl1dWrapper(WrapperBase):
         sample = _build_sample(self.storage, model_name)
         dq_array = self._resolution_function(q_array)
 
-        if is_constant_resolution_function(self._resolution_function):
+        if is_percentage_fhwm_resolution_function(self._resolution_function):
             # Get percentage of Q and change from sigma to FWHM
             dq_array = dq_array * q_array / 100 / (2 * np.sqrt(2 * np.log(2)))
 

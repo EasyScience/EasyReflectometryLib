@@ -1,4 +1,4 @@
-.. image:: https://github.com/easyScience/EasyReflectometryLib/raw/main/docs/_static/logo.png
+.. image:: https://github.com/easyScience/EasyReflectometryLib/raw/main/docs/src/_static/logo.png
         :target: https://easyscience.github.io/EasyReflectometryLib/
 
 |

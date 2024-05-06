@@ -11,7 +11,7 @@ import yaml
 from easyscience.Objects.ObjectClasses import BaseObj
 from easyscience.Objects.ObjectClasses import Parameter
 
-from EasyReflectometry.experiment.resolution_functions import is_constant_resolution_function
+from EasyReflectometry.experiment.resolution_functions import is_percentage_fhwm_resolution_function
 from EasyReflectometry.parameter_utils import get_as_parameter
 from EasyReflectometry.sample import BaseAssembly
 from EasyReflectometry.sample import Layer
@@ -69,6 +69,7 @@ class Model(BaseObj):
         :param scale: Scaling factor of profile.
         :param background: Linear background magnitude.
         :param name: Name of the model, defaults to 'EasyModel'.
+        :param resolution_function: Resolution function, defaults to percentage_fhwm_resolution_function.
         :param interface: Calculator interface, defaults to `None`.
 
         """
@@ -175,7 +176,7 @@ class Model(BaseObj):
     @property
     def _dict_repr(self) -> dict[str, dict[str, str]]:
         """A simplified dict representation."""
-        if is_constant_resolution_function(self._resolution_function):
+        if is_percentage_fhwm_resolution_function(self._resolution_function):
             resolution_value = self._resolution_function([0])[0]
             resolution = f'{resolution_value} %'
         else:
