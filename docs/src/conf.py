@@ -23,7 +23,7 @@ import sys
 import toml
 from pathlib import Path
 
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../src'))
 
 main_root = Path(__file__).parents[2]
 sys.path.append(str(main_root))
@@ -116,7 +116,6 @@ html_theme_options = {
     'navigation_with_keys': True
 }
 html_baseurl = 'https://docs.easyreflectometry.org'
-
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.  For a list of options available for each theme, see the
 # documentation.
