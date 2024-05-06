@@ -23,9 +23,9 @@ import sys
 import toml
 from pathlib import Path
 
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../..'))
 
-main_root = Path(__file__).parents[1]
+main_root = Path(__file__).parents[2]
 sys.path.append(str(main_root))
 project_info = toml.load(os.path.join(main_root, 'pyproject.toml'))
 
