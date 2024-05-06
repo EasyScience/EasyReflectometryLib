@@ -69,6 +69,7 @@ class Model(BaseObj):
         :param scale: Scaling factor of profile.
         :param background: Linear background magnitude.
         :param name: Name of the model, defaults to 'EasyModel'.
+        :param resolution_function: Resolution function, defaults to percentage_fhwm_resolution_function.
         :param interface: Calculator interface, defaults to `None`.
 
         """
