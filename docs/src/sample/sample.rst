@@ -1,7 +1,7 @@
 Sample
 ======
 
-The :py:mod:`EasyReflectometry` package is focused on making easy to use functionality for specific modelling approaches. 
+The :py:mod:`easyreflectometry` package is focused on making easy to use functionality for specific modelling approaches. 
 In order to achieve this, we have a sample library with different functionality. 
 
 .. toctree:: 

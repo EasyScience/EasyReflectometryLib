@@ -1,4 +1,4 @@
-.. automodule:: EasyReflectometry.sample.elements.layers.layer
+.. automodule:: easyreflectometry.sample.elements.layers.layer
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,7 +1,7 @@
 Layers
 ======
 
-Similar to a range of different `materials`_, there are a few different ways that a layer can be defined in :py:mod:`EasyReflectometry`.
+Similar to a range of different `materials`_, there are a few different ways that a layer can be defined in :py:mod:`easyreflectometry`.
 
 :py:class:`Layer`
 -----------------
@@ -11,8 +11,8 @@ So we construct a :py:class:`Layer` as follows for a 100 Å thick layer of boron
 
 .. code-block:: python
 
-    from EasyReflectometry.sample import Material
-    from EasyReflectometry.sample import Layer
+    from easyreflectometry.sample import Material
+    from easyreflectometry.sample import Layer
 
     boron = Material(
         sld=6.908,
@@ -32,8 +32,8 @@ To create a semi-infinite layer one needs to set the thickness to 0 and the roug
 
 .. code-block:: python
 
-    from EasyReflectometry.sample import Material
-    from EasyReflectometry.sample import Layer
+    from easyreflectometry.sample import Material
+    from easyreflectometry.sample import Layer
 
     si = Material(
         sld=2.07,
@@ -58,8 +58,8 @@ We can construct a 10 Å thick :py:class:`LayerAreaPerMolecule` of phosphatidylc
 
 .. code-block:: python
 
-    from EasyReflectometry.sample import Material
-    from EasyReflectometry.sample import LayerAreaPerMolecule
+    from easyreflectometry.sample import Material
+    from easyreflectometry.sample import LayerAreaPerMolecule
 
     d2o = Material(
         sld=6.36,
