@@ -1,11 +1,11 @@
-.. image:: https://github.com/easyScience/EasyReflectometryLib/raw/main/docs/src/_static/logo.png
+.. image:: https://github.com/easyScience/EasyReflectometryLib/raw/master/docs/src/_static/logo.png
         :target: https://easyscience.github.io/EasyReflectometryLib/
 
 |
 
 .. image:: https://github.com/easyScience/EasyReflectometryLib/actions/workflows/python-ci.yml/badge.svg
         :target: https://github.com/easyScience/easyReflectometryLib/actions/workflows/python-ci.yml
-.. image:: https://codecov.io/gh/easyScience/EasyReflectometryLib/branch/main/graph/badge.svg?token=LcnB8AMGkw
+.. image:: https://codecov.io/gh/easyScience/EasyReflectometryLib/branch/master/graph/badge.svg?token=LcnB8AMGkw
         :target: https://codecov.io/gh/easyScience/EasyReflectometryLib
 .. image:: https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib/badge
         :target: https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib
