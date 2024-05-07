@@ -1,8 +1,8 @@
 from typing import Union
 
 import numpy as np
-from easyscience.Fitting.Constraints import FunctionalConstraint
-from easyscience.Objects.ObjectClasses import Parameter
+from easyCore.Fitting.Constraints import FunctionalConstraint
+from easyCore.Objects.ObjectClasses import Parameter
 
 from EasyReflectometry.parameter_utils import get_as_parameter
 from EasyReflectometry.special.calculations import density_to_sld
