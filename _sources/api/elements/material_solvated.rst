@@ -1,4 +1,4 @@
-.. automodule:: EasyReflectometry.sample.elements.materials.material_solvated
+.. automodule:: easyreflectometry.sample.elements.materials.material_solvated
     :members:
     :undoc-members:
     :show-inheritance:

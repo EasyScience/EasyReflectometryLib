@@ -357,19 +357,19 @@ document.write(`
                   
   <section id="assemblies">
 <h1>Assemblies<a class="headerlink" href="#assemblies" title="Link to this heading">#</a></h1>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code> is designed to be used with a broad range of different assemblies.
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">easyreflectometry</span></code> is designed to be used with a broad range of different assemblies.
 These assemblies offer flexibility for the user and enable more powerful analysis by making chemical and pysical constraints available with limited code.
 In this page, we will document the assemblies that are available with simple examples of the constructors that exist.
-Full API documentation is also available for the <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry.sample.assemblies</span></code> module.</p>
+Full API documentation is also available for the <code class="xref py py-mod docutils literal notranslate"><span class="pre">easyreflectometry.sample.assemblies</span></code> module.</p>
 <section id="multilayer">
 <h2><code class="xref py py-class docutils literal notranslate"><span class="pre">Multilayer</span></code><a class="headerlink" href="#multilayer" title="Link to this heading">#</a></h2>
 <p>This assembly should be used for a series of layers that, for whatever reason, should be thought of as a single object.
 For example, in the <a class="reference external" href="../tutorials/simple_fitting.html">simple fitting tutorial</a> this assembly type is used to combine the silicon and silicon dioxide layer that as formed into a single object.
 All of the separate layers in these objects will be fitted individually, i.e. there is no constraints present, however, there is some cognative benefit to grouping layers together.</p>
 <p>To create a <code class="xref py py-class docutils literal notranslate"><span class="pre">Multilayer</span></code> object, we use the following construction.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Multilayer</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Multilayer</span>
 
 <span class="n">si</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
     <span class="n">sld</span><span class="o">=</span><span class="mf">2.07</span><span class="p">,</span>
@@ -409,9 +409,9 @@ This assembly type imposes some constraints, specifically that all of the repeat
 which brings with it some computational saving as the reflectometry coefficients only needs to be calculated once for this structure and propagated for the correct number of repeats.
 There is a <a class="reference external" href="../tutorials/repeating.html">tutorial</a> that discusses the utilisation of this assembly type for a nickel-titanium multilayer system.</p>
 <p>The creation of a <code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatingMultilayer</span></code> object is very similar to that for the <code class="xref py py-class docutils literal notranslate"><span class="pre">Multilayer</span></code>, with the addition of a number of repetitions.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">RepeatingMultilayer</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">RepeatingMultilayer</span>
 
 <span class="n">ti</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
     <span class="n">sld</span><span class="o">=-</span><span class="mf">1.9493</span><span class="p">,</span>
@@ -451,9 +451,9 @@ Using this assembly, we can define our surfactant in terms of the chemistry of t
 The <a class="reference external" href="../tutorials/monolayer.html">surfactant monolayer tutorial</a> looks in detail at the definition of the scattering length density in the <code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code>.
 However, it is founded on the chemical formula for the head and tail group and the area per molecule that these groups occupy.</p>
 <p>The creation of a <code class="xref py py-class docutils literal notranslate"><span class="pre">SurfactantLayer</span></code> object is shown below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">LayerAreaPerMolecule</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">SurfactantLayer</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">LayerAreaPerMolecule</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">SurfactantLayer</span>
 
 <span class="n">area_per_molecule</span> <span class="o">=</span> <span class="mi">48</span>
 <span class="n">roughness</span> <span class="o">=</span> <span class="mf">3.3</span>

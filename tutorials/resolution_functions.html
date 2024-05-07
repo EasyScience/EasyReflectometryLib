@@ -362,7 +362,7 @@ document.write(`
                   
   <section id="Resolution-functions">
 <h1>Resolution functions<a class="headerlink" href="#Resolution-functions" title="Link to this heading">#</a></h1>
-<p>The purpose of the resolution function is to enable the <code class="docutils literal notranslate"><span class="pre">EasyReflectometry</span></code> model to quantify the experimental uncertainties in wavelength and incident angle. When determining reflectivity the resolution function defines the smearing to apply. For a given Q-point such smearing is applied by determining an average of the neighboring Q-point weigthed by a normal distribution, which has a Q-point dependent Full Width at the Half Maximum (FWHM) that again is defined by the resolution function.</p>
+<p>The purpose of the resolution function is to enable the <code class="docutils literal notranslate"><span class="pre">easyreflectometry</span></code> model to quantify the experimental uncertainties in wavelength and incident angle. When determining reflectivity the resolution function defines the smearing to apply. For a given Q-point such smearing is applied by determining an average of the neighboring Q-point weigthed by a normal distribution, which has a Q-point dependent Full Width at the Half Maximum (FWHM) that again is defined by the resolution function.</p>
 <p>Often we rely on a resolution function that has a simple functional dependecy of the Q-point. By this is understood that the applied smearing in an Q point-has a FWHM that is given as a percentage of the value of the Q-point.</p>
 <p>Alternatively the FWHM value might be determined and declared directly for each measured Q-point. When this is the case the provided Q-points and the corresponding FWHM values can be used to declare a linear spline function and thereby enable a determination of the reflectivity at an arbitrary point within the provided range of discrete Q-points.</p>
 <section id="Setup">
@@ -379,19 +379,19 @@ document.write(`
 <span class="kn">import</span> <span class="nn">scipp</span> <span class="k">as</span> <span class="nn">sc</span>
 
 
-<span class="kn">import</span> <span class="nn">EasyReflectometry</span>
+<span class="kn">import</span> <span class="nn">easyreflectometry</span>
 <span class="kn">import</span> <span class="nn">refnx</span>
 
-<span class="kn">from</span> <span class="nn">EasyReflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.data</span> <span class="kn">import</span> <span class="n">load</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">percentage_fhwm_resolution_function</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">linear_spline_resolution_function</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Multilayer</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.plot</span> <span class="kn">import</span> <span class="n">plot</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.data</span> <span class="kn">import</span> <span class="n">load</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">percentage_fhwm_resolution_function</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">linear_spline_resolution_function</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Multilayer</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.plot</span> <span class="kn">import</span> <span class="n">plot</span>
 </pre></div>
 </div>
 </div>
@@ -402,7 +402,7 @@ document.write(`
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;numpy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;scipp: </span><span class="si">{</span><span class="n">sc</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;EasyReflectometry: </span><span class="si">{</span><span class="n">EasyReflectometry</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;easyreflectometry: </span><span class="si">{</span><span class="n">easyreflectometry</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Refl1D: </span><span class="si">{</span><span class="n">refnx</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -414,7 +414,7 @@ document.write(`
 <div class="highlight"><pre>
 numpy: 1.26.4
 scipp: 24.02.0
-EasyReflectometry: 0.0.0
+easyreflectometry: 0.0.0
 Refl1D: 0.1.45
 </pre></div></div>
 </div>
@@ -422,7 +422,7 @@ Refl1D: 0.1.45
 <section id="Reading-in-measured-data">
 <h2>Reading in measured data<a class="headerlink" href="#Reading-in-measured-data" title="Link to this heading">#</a></h2>
 <p>The data that we will investigate in this tutorial was generated with <code class="docutils literal notranslate"><span class="pre">Refnx</span></code> and are stored in <code class="docutils literal notranslate"><span class="pre">.ort</span></code> <a class="reference external" href="https://github.com/reflectivity/file_format/blob/master/specification.md">format file</a> files. In this tutorial we are investigation how we can include resolution effects when simulating and reproducing data measured in an experiment. For an <code class="docutils literal notranslate"><span class="pre">.ort</span></code> file the resoultion data for reflectivity is stored in the fourth column.</p>
-<p>IMPORTANT when using <code class="docutils literal notranslate"><span class="pre">EasyReflectometry</span></code> functionality for loading an <code class="docutils literal notranslate"><span class="pre">.ort</span></code> file we store the resolution data as a variance (squared value). As a consequence one needs to take the squareroot of the loaded data to recover the raw values (fourth column).</p>
+<p>IMPORTANT when using <code class="docutils literal notranslate"><span class="pre">easyreflectometry</span></code> functionality for loading an <code class="docutils literal notranslate"><span class="pre">.ort</span></code> file we store the resolution data as a variance (squared value). As a consequence one needs to take the squareroot of the loaded data to recover the raw values (fourth column).</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>

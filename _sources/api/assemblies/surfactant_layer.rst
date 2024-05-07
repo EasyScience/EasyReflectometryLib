@@ -1,4 +1,4 @@
-.. automodule:: EasyReflectometry.sample.assemblies.surfactant_layer
+.. automodule:: easyreflectometry.sample.assemblies.surfactant_layer
     :members:
     :undoc-members:
     :show-inheritance:

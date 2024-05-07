@@ -356,7 +356,7 @@ document.write(`
                   
   <section id="experiment">
 <h1>Experiment<a class="headerlink" href="#experiment" title="Link to this heading">#</a></h1>
-<p>The main component of an experiment in <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code> is the <cite>Model</cite>.
+<p>The main component of an experiment in <code class="xref py py-mod docutils literal notranslate"><span class="pre">easyreflectometry</span></code> is the <cite>Model</cite>.
 This is a description of the <cite>sample</cite> and the environment in which the experiment is performed.
 The <cite>Model</cite> is used to calculate the reflectivity of the <cite>Sample</cite> at a given set of angles (Q-points).
 The <cite>resolution_functions</cite> are used to quantify the experimental uncertainties in wavelength and angle, allowing the <cite>Model`</cite> to accurately describe the data.</p>
@@ -364,9 +364,9 @@ The <cite>resolution_functions</cite> are used to quantify the experimental unce
 <h2><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code><a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
 <p>A <cite>Model</cite> instance contains a <cite>Sample</cite> and variables describing experimental settings.
 To be able to compute reflectivities it is also necessary to have a <cite>Calculator</cite> (interface).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
 
 <span class="n">default_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">()</span>
 <span class="n">m</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
@@ -384,15 +384,15 @@ Following the <cite>interface</cite> is set to the default calculator that is <c
 </section>
 <section id="resolution-functions">
 <h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">resolution_functions</span></code><a class="headerlink" href="#resolution-functions" title="Link to this heading">#</a></h2>
-<p>A resolution function enables the <cite>EasyReflectometry</cite> model to incorporate the experimental uncertainties in wavelength and incident angle into the model.
+<p>A resolution function enables the <cite>easyreflectometry</cite> model to incorporate the experimental uncertainties in wavelength and incident angle into the model.
 In its essence the resolution function controls the smearing to apply when determing the reflectivtiy at a given Q-point.
 For a given Q-point the smearing to apply is given as a weighted average of the neighboring Q-point, which weigths are by a normal distribution.
 This normal distribution is then defined by a Q-point dependent Full Width at the Half Maximum (FWHM) that is given by the resolution function.</p>
 <p><code class="xref py py-func docutils literal notranslate"><span class="pre">percentage_fhwm_resolution_function()</span></code>
 Often we rely on a resolution function that has a simple functional dependecy of the Q-point.
 By this is understood that the applied smearing in an Q-point has a FWHM that is simply a percentage of the value of the Q-point.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">percentage_fhwm_resolution_function</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">percentage_fhwm_resolution_function</span>
 
 <span class="n">resolution_function</span> <span class="o">=</span> <span class="n">percentage_fhwm_resolution_function</span><span class="p">(</span><span class="mf">1.1</span><span class="p">)</span>
 
@@ -406,8 +406,8 @@ By this is understood that the applied smearing in an Q-point has a FWHM that is
 Alternatively the FWHM value might be determined and declared directly for each measured Q-point.
 When this is the case the provided Q-points and the corresponding FWHM values can be used to declare a linear spline function
 and thereby enable a determination of the reflectivity at an arbitrary point within the provided range of discrete Q-points.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">linear_spline_resolution_function</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">linear_spline_resolution_function</span>
 
 <span class="n">m</span> <span class="o">=</span> <span class="n">Model</span><span class="p">()</span>
 

@@ -360,7 +360,7 @@ document.write(`
                   
   <section id="Analysis-of-multiple-isotopic-contrasts">
 <h1>Analysis of multiple isotopic contrasts<a class="headerlink" href="#Analysis-of-multiple-isotopic-contrasts" title="Link to this heading">#</a></h1>
-<p>In the use of neutron reflectometry, it is common to use multiple isotopic contrasts of experimental data to analyse a system in a constrained fashion. That is to say, that we have data from multiple different species (where isotopic substitution has been used to produce data with different scattering length density) that share the same structure. In this tutorial we will look at how <code class="docutils literal notranslate"><span class="pre">EasyReflectometry</span></code> can be used to fit multiple contrasts of data from a <a class="reference internal" href="monolayer.html"><span class="doc">surfactant
+<p>In the use of neutron reflectometry, it is common to use multiple isotopic contrasts of experimental data to analyse a system in a constrained fashion. That is to say, that we have data from multiple different species (where isotopic substitution has been used to produce data with different scattering length density) that share the same structure. In this tutorial we will look at how <code class="docutils literal notranslate"><span class="pre">easyreflectometry</span></code> can be used to fit multiple contrasts of data from a <a class="reference internal" href="monolayer.html"><span class="doc">surfactant
 monolayer</span></a> system, if you haven’t looked at the tutorial for a single contrast of surfactant monolayer data it is suggested that you as this tutorial will build on it.</p>
 <p>First configure matplotlib to place figures in notebook and import needed modules</p>
 <div class="nbinput docutils container">
@@ -369,20 +369,20 @@ monolayer</span></a> system, if you haven’t looked at the tutorial for a singl
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 
-<span class="kn">import</span> <span class="nn">EasyReflectometry</span>
+<span class="kn">import</span> <span class="nn">easyreflectometry</span>
 <span class="kn">import</span> <span class="nn">refnx</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.data</span> <span class="kn">import</span> <span class="n">load</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.plot</span> <span class="kn">import</span> <span class="n">plot</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">SurfactantLayer</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">LayerAreaPerMolecule</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.experiment</span> <span class="kn">import</span> <span class="n">percentage_fhwm_resolution_function</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.fitting</span> <span class="kn">import</span> <span class="n">Fitter</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;EasyReflectometry: </span><span class="si">{</span><span class="n">EasyReflectometry</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.data</span> <span class="kn">import</span> <span class="n">load</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.plot</span> <span class="kn">import</span> <span class="n">plot</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">SurfactantLayer</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">LayerAreaPerMolecule</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">percentage_fhwm_resolution_function</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.fitting</span> <span class="kn">import</span> <span class="n">Fitter</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;easyreflectometry: </span><span class="si">{</span><span class="n">easyreflectometry</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;refnx: </span><span class="si">{</span><span class="n">refnx</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -392,7 +392,7 @@ monolayer</span></a> system, if you haven’t looked at the tutorial for a singl
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-EasyReflectometry: 0.0.0
+easyreflectometry: 0.0.0
 refnx: 0.1.45
 </pre></div></div>
 </div>
@@ -753,7 +753,7 @@ refnx: 0.1.45
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(44.516647095487805, 44.516647095487805, 44.516647095487805)
+(44.51664709456701, 44.51664709456701, 44.51664709456701)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">

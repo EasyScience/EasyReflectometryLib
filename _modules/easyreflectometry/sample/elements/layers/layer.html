@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EasyReflectometry.sample.elements.materials.material &#8212; EasyReflectometry  documentation</title>
+    <title>easyreflectometry.sample.elements.layers.layer &#8212; EasyReflectometry  documentation</title>
   
   
   
@@ -40,8 +40,8 @@
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/EasyReflectometry/sample/elements/materials/material';</script>
-    <link rel="canonical" href="https://docs.easyreflectometry.org/_modules/EasyReflectometry/sample/elements/materials/material.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/easyreflectometry/sample/elements/layers/layer';</script>
+    <link rel="canonical" href="https://docs.easyreflectometry.org/_modules/easyreflectometry/sample/elements/layers/layer.html" />
     <link rel="icon" href="../../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
@@ -294,67 +294,93 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for EasyReflectometry.sample.elements.materials.material</h1><div class="highlight"><pre>
+  <h1>Source code for easyreflectometry.sample.elements.layers.layer</h1><div class="highlight"><pre>
 <span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;github.com/arm61&#39;</span>
-
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">easyCore.Objects.ObjectClasses</span> <span class="kn">import</span> <span class="n">Parameter</span>
-
-<span class="kn">from</span> <span class="nn">EasyReflectometry.parameter_utils</span> <span class="kn">import</span> <span class="n">get_as_parameter</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.parameter_utils</span> <span class="kn">import</span> <span class="n">get_as_parameter</span>
 
 <span class="kn">from</span> <span class="nn">...base_core</span> <span class="kn">import</span> <span class="n">BaseCore</span>
+<span class="kn">from</span> <span class="nn">..materials.material</span> <span class="kn">import</span> <span class="n">Material</span>
 
 <span class="n">DEFAULTS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;sld&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The real scattering length density for a material in e-6 per squared angstrom.&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.ncnr.nist.gov/resources/activation/&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">4.186</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;1 / angstrom ** 2&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span>
+    <span class="s1">&#39;thickness&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The thickness of the layer in angstroms&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;angstrom&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span>
         <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s1">&#39;isld&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The imaginary scattering length density for a material in e-6 per squared angstrom.&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.ncnr.nist.gov/resources/activation/&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;1 / angstrom ** 2&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span>
+    <span class="s1">&#39;roughness&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The interfacial roughness, Nevot-Croce, for the layer in angstroms.&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://doi.org/10.1051/rphysap:01980001503076100&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">3.3</span><span class="p">,</span>
+        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;angstrom&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span>
         <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="Material">
-<a class="viewcode-back" href="../../../../../api/elements/material.html#EasyReflectometry.sample.elements.materials.material.Material">[docs]</a>
-<span class="k">class</span> <span class="nc">Material</span><span class="p">(</span><span class="n">BaseCore</span><span class="p">):</span>
+<div class="viewcode-block" id="Layer">
+<a class="viewcode-back" href="../../../../../api/elements/layer.html#easyreflectometry.sample.elements.layers.layer.Layer">[docs]</a>
+<span class="k">class</span> <span class="nc">Layer</span><span class="p">(</span><span class="n">BaseCore</span><span class="p">):</span>
     <span class="c1"># Added in super().__init__</span>
-    <span class="n">sld</span><span class="p">:</span> <span class="n">Parameter</span>
-    <span class="n">isld</span><span class="p">:</span> <span class="n">Parameter</span>
+    <span class="c1">#: Material that makes up the layer.</span>
+    <span class="n">material</span><span class="p">:</span> <span class="n">Material</span>
+    <span class="c1">#: Thickness of the layer in Angstrom.</span>
+    <span class="n">thickness</span><span class="p">:</span> <span class="n">Parameter</span>
+    <span class="c1">#: Roughness of the layer in Angstrom.</span>
+    <span class="n">roughness</span><span class="p">:</span> <span class="n">Parameter</span>
 
-<div class="viewcode-block" id="Material.__init__">
-<a class="viewcode-back" href="../../../../../api/elements/material.html#EasyReflectometry.sample.elements.materials.material.Material.__init__">[docs]</a>
+<div class="viewcode-block" id="Layer.__init__">
+<a class="viewcode-back" href="../../../../../api/elements/layer.html#easyreflectometry.sample.elements.layers.layer.Layer.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">sld</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">isld</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyMaterial&#39;</span><span class="p">,</span>
+        <span class="n">material</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Material</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">thickness</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">roughness</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyLayer&#39;</span><span class="p">,</span>
         <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
-<span class="sd">        :param sld: Real scattering length density.</span>
-<span class="sd">        :param isld: Imaginary scattering length density.</span>
-<span class="sd">        :param name: Name of the material, defaults to &#39;EasyMaterial&#39;.</span>
-<span class="sd">        :param interface: Calculator interface, defaults to `None`.</span>
+<span class="sd">        :param material: The material for the layer.</span>
+<span class="sd">        :param thickness: Layer thickness in Angstrom.</span>
+<span class="sd">        :param roughness: Upper roughness on the layer in Angstrom.</span>
+<span class="sd">        :param name: Name of the layer, defaults to &#39;EasyLayer&#39;</span>
+<span class="sd">        :param interface: Interface object, defaults to `None`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sld</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span><span class="s1">&#39;sld&#39;</span><span class="p">,</span> <span class="n">sld</span><span class="p">,</span> <span class="n">DEFAULTS</span><span class="p">)</span>
-        <span class="n">isld</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span><span class="s1">&#39;isld&#39;</span><span class="p">,</span> <span class="n">isld</span><span class="p">,</span> <span class="n">DEFAULTS</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">material</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">material</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">sld</span><span class="o">=</span><span class="n">sld</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="n">isld</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
+        <span class="n">thickness</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">DEFAULTS</span><span class="p">)</span>
+        <span class="n">roughness</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span><span class="s1">&#39;roughness&#39;</span><span class="p">,</span> <span class="n">roughness</span><span class="p">,</span> <span class="n">DEFAULTS</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">,</span>
+            <span class="n">material</span><span class="o">=</span><span class="n">material</span><span class="p">,</span>
+            <span class="n">thickness</span><span class="o">=</span><span class="n">thickness</span><span class="p">,</span>
+            <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Layer.assign_material">
+<a class="viewcode-back" href="../../../../../api/elements/layer.html#easyreflectometry.sample.elements.layers.layer.Layer.assign_material">[docs]</a>
+    <span class="k">def</span> <span class="nf">assign_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material</span><span class="p">:</span> <span class="n">Material</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign a material to the layer interface.</span>
+
+<span class="sd">        :param material: The material to assign to the layer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">material</span> <span class="o">=</span> <span class="n">material</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">()</span><span class="o">.</span><span class="n">assign_material_to_layer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">)</span></div>
 
 
     <span class="c1"># Representation</span>
@@ -363,8 +389,9 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;A simplified dict representation.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;sld&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sld</span><span class="o">.</span><span class="n">raw_value</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">e-6 </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sld</span><span class="o">.</span><span class="n">unit</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;isld&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">isld</span><span class="o">.</span><span class="n">raw_value</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">e-6 </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">isld</span><span class="o">.</span><span class="n">unit</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">,</span>
+                <span class="s1">&#39;thickness&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">raw_value</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">unit</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;roughness&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">raw_value</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">unit</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">}</span></div>
 

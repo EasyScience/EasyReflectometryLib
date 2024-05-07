@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EasyReflectometry.sample.assemblies.multilayer &#8212; EasyReflectometry  documentation</title>
+    <title>easyreflectometry.sample.assemblies.repeating_multilayer &#8212; EasyReflectometry  documentation</title>
   
   
   
@@ -40,8 +40,8 @@
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/EasyReflectometry/sample/assemblies/multilayer';</script>
-    <link rel="canonical" href="https://docs.easyreflectometry.org/_modules/EasyReflectometry/sample/assemblies/multilayer.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/easyreflectometry/sample/assemblies/repeating_multilayer';</script>
+    <link rel="canonical" href="https://docs.easyreflectometry.org/_modules/easyreflectometry/sample/assemblies/repeating_multilayer.html" />
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
@@ -294,123 +294,86 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for EasyReflectometry.sample.assemblies.multilayer</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+  <h1>Source code for easyreflectometry.sample.assemblies.repeating_multilayer</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">easyCore.Objects.ObjectClasses</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.parameter_utils</span> <span class="kn">import</span> <span class="n">get_as_parameter</span>
 
 <span class="kn">from</span> <span class="nn">..elements.layers.layer</span> <span class="kn">import</span> <span class="n">Layer</span>
-<span class="kn">from</span> <span class="nn">..elements.layers.layer_collection</span> <span class="kn">import</span> <span class="n">SIZE_DEFAULT_COLLECTION</span>
 <span class="kn">from</span> <span class="nn">..elements.layers.layer_collection</span> <span class="kn">import</span> <span class="n">LayerCollection</span>
-<span class="kn">from</span> <span class="nn">.base_assembly</span> <span class="kn">import</span> <span class="n">BaseAssembly</span>
+<span class="kn">from</span> <span class="nn">.multilayer</span> <span class="kn">import</span> <span class="n">Multilayer</span>
+
+<span class="n">DEFAULTS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;repetitions&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Number of repetitions of the given series of layers&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">9999</span><span class="p">,</span>
+        <span class="s1">&#39;fixed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
 
-<div class="viewcode-block" id="Multilayer">
-<a class="viewcode-back" href="../../../../api/assemblies/multilayer.html#EasyReflectometry.sample.assemblies.multilayer.Multilayer">[docs]</a>
-<span class="k">class</span> <span class="nc">Multilayer</span><span class="p">(</span><span class="n">BaseAssembly</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A multi layer is build from a single or a list of `Layer` or `LayerCollection`.</span>
-<span class="sd">    The multi layer will arrange the layers as slabs, allowing the reflectometry to be determined from them.</span>
-<span class="sd">    The front layer is where the neutron beam starts in, it has an index of 0.</span>
+<div class="viewcode-block" id="RepeatingMultilayer">
+<a class="viewcode-back" href="../../../../api/assemblies/repeating_multilayer.html#easyreflectometry.sample.assemblies.repeating_multilayer.RepeatingMultilayer">[docs]</a>
+<span class="k">class</span> <span class="nc">RepeatingMultilayer</span><span class="p">(</span><span class="n">Multilayer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A repeating multi layer is build from a `Multilayer` and which it repeats</span>
+<span class="sd">    for a given number of times. This enables a computational efficiency in many</span>
+<span class="sd">    reflectometry engines as the operation can be performed for a single</span>
+<span class="sd">    `Multilayer` and cheaply combined for the appropriate number of</span>
+<span class="sd">    `repetitions`.</span>
 
 <span class="sd">    More information about the usage of this assembly is available in the</span>
-<span class="sd">    `multilayer documentation`_</span>
+<span class="sd">    `repeating multilayer documentation`_</span>
 
-<span class="sd">    .. _`multilayer documentation`: ../sample/assemblies_library.html#multilayer</span>
+<span class="sd">    .. _`repeating multilayer documentation`: ../sample/assemblies_library.html#repeatingmultilayer</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Multilayer.__init__">
-<a class="viewcode-back" href="../../../../api/assemblies/multilayer.html#EasyReflectometry.sample.assemblies.multilayer.Multilayer.__init__">[docs]</a>
+<div class="viewcode-block" id="RepeatingMultilayer.__init__">
+<a class="viewcode-back" href="../../../../api/assemblies/repeating_multilayer.html#easyreflectometry.sample.assemblies.repeating_multilayer.RepeatingMultilayer.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">layers</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Layer</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Layer</span><span class="p">],</span> <span class="n">LayerCollection</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyMultilayer&#39;</span><span class="p">,</span>
+        <span class="n">layers</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">LayerCollection</span><span class="p">,</span> <span class="n">Layer</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Layer</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">repetitions</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;EasyRepeatingMultilayer&#39;</span><span class="p">,</span>
         <span class="n">interface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Multi-layer&#39;</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
-<span class="sd">        :param layers: The layers that make up the multi-layer.</span>
-<span class="sd">        :param name: Name for multi layer, defaults to &#39;EasyMultilayer&#39;.</span>
+<span class="sd">        :param layers: The layers that make up the multi-layer that will be repeated.</span>
+<span class="sd">        :param repetitions: Number of repetitions of the given series of layers</span>
+<span class="sd">        :param name: Name for the repeating multi layer, defaults to &#39;EasyRepeatingMultilayer&#39;.</span>
 <span class="sd">        :param interface: Calculator interface, defaults to `None`.</span>
-<span class="sd">        :param type: Type of the constructed instance, defaults to &#39;Multi-layer&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="n">layers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">layers</span> <span class="o">=</span> <span class="n">LayerCollection</span><span class="p">()</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="n">Layer</span><span class="p">):</span>
             <span class="n">layers</span> <span class="o">=</span> <span class="n">LayerCollection</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">layers</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">layers</span> <span class="o">=</span> <span class="n">LayerCollection</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">layer</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">]))</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">)</span></div>
 
+        <span class="n">repetitions</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span><span class="s1">&#39;repetitions&#39;</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span> <span class="n">DEFAULTS</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Multilayer.add_layer">
-<a class="viewcode-back" href="../../../../api/assemblies/multilayer.html#EasyReflectometry.sample.assemblies.multilayer.Multilayer.add_layer">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">layers</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Layer</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a layer to the multi layer.</span>
-
-<span class="sd">        :param layers: Layers to add to the multi layer.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">Layer</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">()</span><span class="o">.</span><span class="n">add_layer_to_item</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="Multilayer.duplicate_layer">
-<a class="viewcode-back" href="../../../../api/assemblies/multilayer.html#EasyReflectometry.sample.assemblies.multilayer.Multilayer.duplicate_layer">[docs]</a>
-    <span class="k">def</span> <span class="nf">duplicate_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Duplicate a given layer.</span>
-
-<span class="sd">        :param idx: index of layer to duplicate.</span>
-<span class="sd">        :type idx: int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">to_duplicate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-        <span class="n">duplicate_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span>
-            <span class="n">material</span><span class="o">=</span><span class="n">to_duplicate</span><span class="o">.</span><span class="n">material</span><span class="p">,</span>
-            <span class="n">thickness</span><span class="o">=</span><span class="n">to_duplicate</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span>
-            <span class="n">roughness</span><span class="o">=</span><span class="n">to_duplicate</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">to_duplicate</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; duplicate&#39;</span><span class="p">,</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">interface</span><span class="o">=</span><span class="n">interface</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Repeating Multi-layer&#39;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">duplicate_layer</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="Multilayer.remove_layer">
-<a class="viewcode-back" href="../../../../api/assemblies/multilayer.html#EasyReflectometry.sample.assemblies.multilayer.Multilayer.remove_layer">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a layer from the item.</span>
-
-<span class="sd">        :param idx: index of layer to remove</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">()</span><span class="o">.</span><span class="n">remove_layer_from_item</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">)</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="s1">&#39;repetitions&#39;</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span></div>
 
 
     <span class="c1"># Representation</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_dict_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;A simplified dict representation.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">front_layer</span><span class="o">.</span><span class="n">_dict_repr</span>
-        <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">}</span>
-
-<div class="viewcode-block" id="Multilayer.from_dict">
-<a class="viewcode-back" href="../../../../api/assemblies/multilayer.html#EasyReflectometry.sample.assemblies.multilayer.Multilayer.from_dict">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Multilayer</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a Multilayer from a dictionary.</span>
-
-<span class="sd">        :param data: dictionary of the Multilayer</span>
-<span class="sd">        :return: Multilayer</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">multilayer</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="c1"># Remove the default materials</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SIZE_DEFAULT_COLLECTION</span><span class="p">):</span>
-            <span class="k">del</span> <span class="n">multilayer</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">multilayer</span></div>
-</div>
+        <span class="n">d_dict</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">_dict_repr</span><span class="p">}</span>
+        <span class="n">d_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;repetitions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repetitions</span><span class="o">.</span><span class="n">raw_value</span>
+        <span class="k">return</span> <span class="n">d_dict</span></div>
 
 </pre></div>
 

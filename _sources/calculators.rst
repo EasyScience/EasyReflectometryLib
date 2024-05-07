@@ -1,7 +1,7 @@
 Calculators & Optimisation
 ==========================
 
-:py:mod:`EasyReflectometry` is built on the :py:mod:`easyScience` framework which facilities the use of a range of different reflectometry calculation engines and optimiser solutions. 
+:py:mod:`EasyReflectometry` is built on the :py:mod:`EasyScience` framework which facilities the use of a range of different reflectometry calculation engines and optimiser solutions. 
 Currently, :py:mod:`EasyReflectometry` can offer two different calculation engines, namely:
 
 * `refnx`_

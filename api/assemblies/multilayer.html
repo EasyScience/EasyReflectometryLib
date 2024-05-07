@@ -341,12 +341,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.__init__"><code class="docutils literal notranslate"><span class="pre">Multilayer.__init__()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.add_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.add_layer()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.duplicate_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.duplicate_layer()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.remove_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.remove_layer()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.from_dict"><code class="docutils literal notranslate"><span class="pre">Multilayer.from_dict()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.user_data"><code class="docutils literal notranslate"><span class="pre">Multilayer.user_data</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.__init__"><code class="docutils literal notranslate"><span class="pre">Multilayer.__init__()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.add_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.add_layer()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.duplicate_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.duplicate_layer()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.remove_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.remove_layer()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.from_dict"><code class="docutils literal notranslate"><span class="pre">Multilayer.from_dict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.user_data"><code class="docutils literal notranslate"><span class="pre">Multilayer.user_data</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -358,9 +358,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <dl class="py class" id="module-EasyReflectometry.sample.assemblies.multilayer">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.multilayer.Multilayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EasyReflectometry.sample.assemblies.multilayer.</span></span><span class="sig-name descname"><span class="pre">Multilayer</span></span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/multilayer.html#Multilayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer" title="Link to this definition">#</a></dt>
+  <dl class="py class" id="module-easyreflectometry.sample.assemblies.multilayer">
+<dt class="sig sig-object py" id="easyreflectometry.sample.assemblies.multilayer.Multilayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">easyreflectometry.sample.assemblies.multilayer.</span></span><span class="sig-name descname"><span class="pre">Multilayer</span></span><a class="reference internal" href="../../_modules/easyreflectometry/sample/assemblies/multilayer.html#Multilayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAssembly</span></code></p>
 <p>A multi layer is build from a single or a list of <cite>Layer</cite> or <cite>LayerCollection</cite>.
 The multi layer will arrange the layers as slabs, allowing the reflectometry to be determined from them.
@@ -368,13 +368,13 @@ The front layer is where the neutron beam starts in, it has an index of 0.</p>
 <p>More information about the usage of this assembly is available in the
 <a class="reference external" href="../sample/assemblies_library.html#multilayer">multilayer documentation</a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.multilayer.Multilayer.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMultilayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Multi-layer'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/multilayer.html#Multilayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.__init__" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="easyreflectometry.sample.assemblies.multilayer.Multilayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EasyMultilayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Multi-layer'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/easyreflectometry/sample/assemblies/multilayer.html#Multilayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>layers</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="../elements/layer.html#EasyReflectometry.sample.elements.layers.layer.Layer" title="EasyReflectometry.sample.elements.layers.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="../elements/layer.html#EasyReflectometry.sample.elements.layers.layer.Layer" title="EasyReflectometry.sample.elements.layers.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a>], <code class="xref py py-class docutils literal notranslate"><span class="pre">LayerCollection</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – The layers that make up the multi-layer.</p></li>
+<li><p><strong>layers</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="../elements/layer.html#easyreflectometry.sample.elements.layers.layer.Layer" title="easyreflectometry.sample.elements.layers.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="../elements/layer.html#easyreflectometry.sample.elements.layers.layer.Layer" title="easyreflectometry.sample.elements.layers.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a>], <code class="xref py py-class docutils literal notranslate"><span class="pre">LayerCollection</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – The layers that make up the multi-layer.</p></li>
 <li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name for multi layer, defaults to ‘EasyMultilayer’.</p></li>
 <li><p><strong>interface</strong> – Calculator interface, defaults to <cite>None</cite>.</p></li>
 <li><p><strong>type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Type of the constructed instance, defaults to ‘Multi-layer’</p></li>
@@ -384,12 +384,12 @@ The front layer is where the neutron beam starts in, it has an index of 0.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.multilayer.Multilayer.add_layer">
-<span class="sig-name descname"><span class="pre">add_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">layers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/multilayer.html#Multilayer.add_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.add_layer" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="easyreflectometry.sample.assemblies.multilayer.Multilayer.add_layer">
+<span class="sig-name descname"><span class="pre">add_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">layers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/easyreflectometry/sample/assemblies/multilayer.html#Multilayer.add_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.add_layer" title="Link to this definition">#</a></dt>
 <dd><p>Add a layer to the multi layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>layers</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="../elements/layer.html#EasyReflectometry.sample.elements.layers.layer.Layer" title="EasyReflectometry.sample.elements.layers.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a>]</span>) – Layers to add to the multi layer.</p>
+<dd class="field-odd"><p><strong>layers</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="../elements/layer.html#easyreflectometry.sample.elements.layers.layer.Layer" title="easyreflectometry.sample.elements.layers.layer.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a>]</span>) – Layers to add to the multi layer.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
@@ -398,8 +398,8 @@ The front layer is where the neutron beam starts in, it has an index of 0.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.multilayer.Multilayer.duplicate_layer">
-<span class="sig-name descname"><span class="pre">duplicate_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/multilayer.html#Multilayer.duplicate_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.duplicate_layer" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="easyreflectometry.sample.assemblies.multilayer.Multilayer.duplicate_layer">
+<span class="sig-name descname"><span class="pre">duplicate_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/easyreflectometry/sample/assemblies/multilayer.html#Multilayer.duplicate_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.duplicate_layer" title="Link to this definition">#</a></dt>
 <dd><p>Duplicate a given layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -412,8 +412,8 @@ The front layer is where the neutron beam starts in, it has an index of 0.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.multilayer.Multilayer.remove_layer">
-<span class="sig-name descname"><span class="pre">remove_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/multilayer.html#Multilayer.remove_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.remove_layer" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="easyreflectometry.sample.assemblies.multilayer.Multilayer.remove_layer">
+<span class="sig-name descname"><span class="pre">remove_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/easyreflectometry/sample/assemblies/multilayer.html#Multilayer.remove_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.remove_layer" title="Link to this definition">#</a></dt>
 <dd><p>Remove a layer from the item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -426,15 +426,15 @@ The front layer is where the neutron beam starts in, it has an index of 0.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.multilayer.Multilayer.from_dict">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/EasyReflectometry/sample/assemblies/multilayer.html#Multilayer.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.from_dict" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="easyreflectometry.sample.assemblies.multilayer.Multilayer.from_dict">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/easyreflectometry/sample/assemblies/multilayer.html#Multilayer.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.from_dict" title="Link to this definition">#</a></dt>
 <dd><p>Create a Multilayer from a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – dictionary of the Multilayer</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer" title="EasyReflectometry.sample.assemblies.multilayer.Multilayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Multilayer</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer" title="easyreflectometry.sample.assemblies.multilayer.Multilayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Multilayer</span></code></a></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Multilayer</p>
@@ -443,8 +443,8 @@ The front layer is where the neutron beam starts in, it has an index of 0.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="EasyReflectometry.sample.assemblies.multilayer.Multilayer.user_data">
-<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.user_data" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="easyreflectometry.sample.assemblies.multilayer.Multilayer.user_data">
+<span class="sig-name descname"><span class="pre">user_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.user_data" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -495,12 +495,12 @@ The front layer is where the neutron beam starts in, it has an index of 0.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.__init__"><code class="docutils literal notranslate"><span class="pre">Multilayer.__init__()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.add_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.add_layer()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.duplicate_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.duplicate_layer()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.remove_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.remove_layer()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.from_dict"><code class="docutils literal notranslate"><span class="pre">Multilayer.from_dict()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#EasyReflectometry.sample.assemblies.multilayer.Multilayer.user_data"><code class="docutils literal notranslate"><span class="pre">Multilayer.user_data</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.__init__"><code class="docutils literal notranslate"><span class="pre">Multilayer.__init__()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.add_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.add_layer()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.duplicate_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.duplicate_layer()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.remove_layer"><code class="docutils literal notranslate"><span class="pre">Multilayer.remove_layer()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.from_dict"><code class="docutils literal notranslate"><span class="pre">Multilayer.from_dict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#easyreflectometry.sample.assemblies.multilayer.Multilayer.user_data"><code class="docutils literal notranslate"><span class="pre">Multilayer.user_data</span></code></a></li>
 </ul>
   </nav></div>
 

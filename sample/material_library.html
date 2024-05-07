@@ -357,7 +357,7 @@ document.write(`
                   
   <section id="materials">
 <h1>Materials<a class="headerlink" href="#materials" title="Link to this heading">#</a></h1>
-<p>In order to support a wide range of applications (and to build complex <a class="reference external" href="./assemblies_library.html">assemblies</a>) there are a few different types of material that can be utilised in <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code>.
+<p>In order to support a wide range of applications (and to build complex <a class="reference external" href="./assemblies_library.html">assemblies</a>) there are a few different types of material that can be utilised in <code class="xref py py-mod docutils literal notranslate"><span class="pre">easyreflectometry</span></code>.
 These can include constraints or enabel the user to define the material based on chemical or physical properties.
 Full API documentation for the <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectoemtry.sample.elements.material</span></code> mdoule is also available, but here we will give some simple uses for them.</p>
 <section id="material">
@@ -365,7 +365,7 @@ Full API documentation for the <code class="xref py py-mod docutils literal notr
 <p>The simplest type of material that is available is the <code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code>.
 This allows the user to define a single type of material, with a real and imaginary component to the scattering length density.
 The construction of a <code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code> is achieved as shown below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
 
 <span class="n">boron</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
     <span class="n">sld</span><span class="o">=</span><span class="mf">6.908</span><span class="p">,</span>
@@ -383,7 +383,7 @@ As is shown in the <a class="reference external" href="../tutorials/tutorials.ht
 This is possible with the <code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialDensity</span></code> material type, which uses the scattering length and atomic mass from the chemical formula and the density to determine the scattering length density.
 It is then possible to vary the density, which defines the scattering length density in turn.
 The <code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialDensity</span></code> material can be create as follows.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">MaterialDensity</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">MaterialDensity</span>
 
 <span class="n">chemical_structure</span> <span class="o">=</span> <span class="s1">&#39;SiO2&#39;</span>
 <span class="n">si</span> <span class="o">=</span> <span class="n">MaterialDensity</span><span class="p">(</span>
@@ -402,8 +402,8 @@ An example of this is shown in the <a class="reference external" href="../tutori
 To produce a material that is described by such a mixture, there is <code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialSolvated</span></code>.
 This is constructed from two constituent <code class="xref py py-class docutils literal notranslate"><span class="pre">Materials</span></code> and the fractional amount of the material in the solvent.
 So to produce a <code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialSolvated</span></code> that is 20 % D2O in a polymer, the following is used.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
-<span class="kn">from</span> <span class="nn">EasyReflectometry.sample</span> <span class="kn">import</span> <span class="n">MaterialSolvated</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">MaterialSolvated</span>
 
 <span class="n">polymer</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
     <span class="n">sld</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span>
