@@ -1,7 +1,7 @@
 from typing import Any
 
 import yaml
-from easyscience.Objects.Groups import BaseCollection
+from easyCore.Objects.Groups import BaseCollection
 
 SIZE_DEFAULT_COLLECTION = 2
 
