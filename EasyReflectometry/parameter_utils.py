@@ -2,7 +2,7 @@ from copy import deepcopy
 from numbers import Number
 from typing import Union
 
-from easyscience.Objects.ObjectClasses import Parameter
+from easyCore.Objects.ObjectClasses import Parameter
 
 
 def get_as_parameter(name: str, value: Union[Parameter, Number, None], default_dict: dict) -> Parameter:

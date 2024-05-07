@@ -5,7 +5,7 @@ __author__ = 'github.com/arm61'
 from typing import Union
 
 import yaml
-from easyscience.Objects.Groups import BaseCollection
+from easyCore.Objects.Groups import BaseCollection
 
 from .assemblies.base_assembly import BaseAssembly
 from .assemblies.multilayer import Multilayer

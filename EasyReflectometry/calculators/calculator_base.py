@@ -4,8 +4,8 @@ from abc import ABCMeta
 from typing import Callable
 
 import numpy as np
-from easyscience.Objects.core import ComponentSerializer
-from easyscience.Objects.Inferface import ItemContainer
+from easyCore.Objects.core import ComponentSerializer
+from easyCore.Objects.Inferface import ItemContainer
 
 from EasyReflectometry.experiment import Model
 from EasyReflectometry.sample import BaseAssembly
