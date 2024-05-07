@@ -36,7 +36,7 @@ build
 *.dmg
 
 # Docs
-docs/_build 
+docs/_build
 
 # VSCode
 .vscode
@@ -47,4 +47,3 @@ docs/_build
 *.zip
 .ci/
 .idea/
-

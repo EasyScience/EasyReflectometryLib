@@ -8,9 +8,9 @@ __version__ = '0.0.1'
 
 import unittest
 
-from EasyReflectometry.sample.assemblies.surfactant_layer import SurfactantLayer
-from EasyReflectometry.sample.elements.layers.layer import Layer
-from EasyReflectometry.sample.elements.materials.material import Material
+from easyreflectometry.sample.assemblies.surfactant_layer import SurfactantLayer
+from easyreflectometry.sample.elements.layers.layer import Layer
+from easyreflectometry.sample.elements.materials.material import Material
 
 
 class TestSurfactantLayer(unittest.TestCase):

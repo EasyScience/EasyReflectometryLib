@@ -8,14 +8,13 @@ __version__ = '0.0.1'
 
 import unittest
 
+from easyreflectometry.calculators import CalculatorFactory
+from easyreflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
+from easyreflectometry.sample.elements.layers.layer import Layer
+from easyreflectometry.sample.elements.layers.layer_collection import LayerCollection
+from easyreflectometry.sample.elements.materials.material import Material
 from numpy.testing import assert_equal
 from numpy.testing import assert_raises
-
-from EasyReflectometry.calculators import CalculatorFactory
-from EasyReflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
-from EasyReflectometry.sample.elements.layers.layer import Layer
-from EasyReflectometry.sample.elements.layers.layer_collection import LayerCollection
-from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestRepeatingMultilayer(unittest.TestCase):

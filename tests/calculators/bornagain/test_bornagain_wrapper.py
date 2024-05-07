@@ -1,6 +1,7 @@
 """
 Tests for the BornAgain wrapper.
 """
+
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
@@ -8,7 +9,7 @@ __version__ = '0.0.1'
 # import unittest
 # import numpy as np
 # from numpy.testing import assert_equal, assert_almost_equal, assert_allclose
-# from EasyReflectometry.calculators.bornagain import BornAgain
+# from easyreflectometry.calculators.bornagain import BornAgain
 # import bornagain as ba
 
 # class TestBornAgain(unittest.TestCase):

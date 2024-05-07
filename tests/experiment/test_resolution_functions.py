@@ -1,7 +1,6 @@
 import numpy as np
-
-from EasyReflectometry.experiment.resolution_functions import linear_spline_resolution_function
-from EasyReflectometry.experiment.resolution_functions import percentage_fhwm_resolution_function
+from easyreflectometry.experiment.resolution_functions import linear_spline_resolution_function
+from easyreflectometry.experiment.resolution_functions import percentage_fhwm_resolution_function
 
 
 def test_percentage_fhwm_resolution_function():
