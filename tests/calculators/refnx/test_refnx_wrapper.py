@@ -9,14 +9,13 @@ __version__ = '0.0.1'
 import unittest
 
 import numpy as np
+from easyreflectometry.calculators.refnx.wrapper import RefnxWrapper
+from easyreflectometry.experiment import linear_spline_resolution_function
+from easyreflectometry.experiment import percentage_fhwm_resolution_function
 from numpy.testing import assert_allclose
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 from refnx import reflect
-
-from EasyReflectometry.calculators.refnx.wrapper import RefnxWrapper
-from EasyReflectometry.experiment import linear_spline_resolution_function
-from EasyReflectometry.experiment import percentage_fhwm_resolution_function
 
 
 class TestRefnx(unittest.TestCase):

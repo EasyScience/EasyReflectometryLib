@@ -1,12 +1,11 @@
 from unittest.mock import MagicMock
 
+import easyreflectometry.sample.elements.materials.material_mixture
+import easyreflectometry.sample.elements.materials.material_solvated
 import pytest
 from easyCore.Objects.ObjectClasses import Parameter
-
-import EasyReflectometry.sample.elements.materials.material_mixture
-import EasyReflectometry.sample.elements.materials.material_solvated
-from EasyReflectometry.sample.elements.materials.material import Material
-from EasyReflectometry.sample.elements.materials.material_solvated import MaterialSolvated
+from easyreflectometry.sample.elements.materials.material import Material
+from easyreflectometry.sample.elements.materials.material_solvated import MaterialSolvated
 
 
 class TestMaterialSolvated:
@@ -19,9 +18,9 @@ class TestMaterialSolvated:
         self.mock_interface = MagicMock()
         self.mock_Parameter = MagicMock()
         self.mock_FunctionalConstraint = MagicMock()
-        monkeypatch.setattr(EasyReflectometry.sample.elements.materials.material_mixture, 'Parameter', self.mock_Parameter)
+        monkeypatch.setattr(easyreflectometry.sample.elements.materials.material_mixture, 'Parameter', self.mock_Parameter)
         monkeypatch.setattr(
-            EasyReflectometry.sample.elements.materials.material_mixture,
+            easyreflectometry.sample.elements.materials.material_mixture,
             'FunctionalConstraint',
             self.mock_FunctionalConstraint,
         )

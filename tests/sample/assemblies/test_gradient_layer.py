@@ -4,14 +4,13 @@ Tests for GradientLayer class module
 
 from unittest.mock import MagicMock
 
+import easyreflectometry.sample.assemblies.gradient_layer
 import pytest
+from easyreflectometry.sample.assemblies.gradient_layer import GradientLayer
+from easyreflectometry.sample.assemblies.gradient_layer import _linear_gradient
+from easyreflectometry.sample.assemblies.gradient_layer import _prepare_gradient_layers
+from easyreflectometry.sample.elements.materials.material import Material
 from numpy.testing import assert_almost_equal
-
-import EasyReflectometry.sample.assemblies.gradient_layer
-from EasyReflectometry.sample.assemblies.gradient_layer import GradientLayer
-from EasyReflectometry.sample.assemblies.gradient_layer import _linear_gradient
-from EasyReflectometry.sample.assemblies.gradient_layer import _prepare_gradient_layers
-from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestGradientLayer:
@@ -160,10 +159,10 @@ def test_prepare_gradient_layers(monkeypatch):
     mock_LayerCollection = MagicMock()
     mock_Material = MagicMock(return_value='Material_from_mock')
     mock_linear_gradient = MagicMock(return_value=[1.0, 2.0, 3.0])
-    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, '_linear_gradient', mock_linear_gradient)
-    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'Layer', mock_Layer)
-    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'Material', mock_Material)
-    monkeypatch.setattr(EasyReflectometry.sample.assemblies.gradient_layer, 'LayerCollection', mock_LayerCollection)
+    monkeypatch.setattr(easyreflectometry.sample.assemblies.gradient_layer, '_linear_gradient', mock_linear_gradient)
+    monkeypatch.setattr(easyreflectometry.sample.assemblies.gradient_layer, 'Layer', mock_Layer)
+    monkeypatch.setattr(easyreflectometry.sample.assemblies.gradient_layer, 'Material', mock_Material)
+    monkeypatch.setattr(easyreflectometry.sample.assemblies.gradient_layer, 'LayerCollection', mock_LayerCollection)
 
     # Then
     _prepare_gradient_layers(mock_material_1, mock_material_2, 3, None)

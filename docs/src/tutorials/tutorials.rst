@@ -1,7 +1,7 @@
 Tutorials
 =========
 
-The tutorials associated with using :py:mod:`EasyReflectometry` are collected here. 
+The tutorials associated with using :py:mod:`easyreflectometry` are collected here. 
 
 .. toctree:: 
    :maxdepth: 1

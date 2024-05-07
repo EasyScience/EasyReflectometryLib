@@ -1,4 +1,4 @@
-.. automodule:: EasyReflectometry.sample.assemblies.gradient_layer
+.. automodule:: easyreflectometry.sample.assemblies.gradient_layer
     :members:
     :undoc-members:
     :show-inheritance:

@@ -8,14 +8,13 @@ __version__ = '0.0.1'
 import unittest
 
 import numpy as np
+from easyreflectometry.calculators.factory import CalculatorFactory
+from easyreflectometry.parameter_utils import get_as_parameter
+from easyreflectometry.sample.elements.layers.layer import DEFAULTS
+from easyreflectometry.sample.elements.layers.layer import Layer
+from easyreflectometry.sample.elements.materials.material import Material
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
-
-from EasyReflectometry.calculators.factory import CalculatorFactory
-from EasyReflectometry.parameter_utils import get_as_parameter
-from EasyReflectometry.sample.elements.layers.layer import DEFAULTS
-from EasyReflectometry.sample.elements.layers.layer import Layer
-from EasyReflectometry.sample.elements.materials.material import Material
 
 
 class TestLayer(unittest.TestCase):

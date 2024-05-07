@@ -11,19 +11,18 @@ from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
+from easyreflectometry.calculators import CalculatorFactory
+from easyreflectometry.experiment import Model
+from easyreflectometry.experiment import linear_spline_resolution_function
+from easyreflectometry.experiment import percentage_fhwm_resolution_function
+from easyreflectometry.sample import Layer
+from easyreflectometry.sample import LayerCollection
+from easyreflectometry.sample import Material
+from easyreflectometry.sample import Multilayer
+from easyreflectometry.sample import RepeatingMultilayer
+from easyreflectometry.sample import Sample
+from easyreflectometry.sample import SurfactantLayer
 from numpy.testing import assert_equal
-
-from EasyReflectometry.calculators import CalculatorFactory
-from EasyReflectometry.experiment import Model
-from EasyReflectometry.experiment import linear_spline_resolution_function
-from EasyReflectometry.experiment import percentage_fhwm_resolution_function
-from EasyReflectometry.sample import Layer
-from EasyReflectometry.sample import LayerCollection
-from EasyReflectometry.sample import Material
-from EasyReflectometry.sample import Multilayer
-from EasyReflectometry.sample import RepeatingMultilayer
-from EasyReflectometry.sample import Sample
-from EasyReflectometry.sample import SurfactantLayer
 
 
 class TestModel(unittest.TestCase):
