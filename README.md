@@ -1,18 +1,15 @@
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+![Logo](https://github.com/easyScience/EasyReflectometryLib/raw/master/docs/src/_static/logo.png)
 [![PyPI badge](http://img.shields.io/pypi/v/EasyReflectometryLib.svg)](https://pypi.python.org/pypi/EasyReflectometryLib)
-[![License: BSD 3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](LICENSE)
 
-# Easy Reflectometry
+# What is easyreflectometry?
 
-## About
+A reflectometry python package built on the [`easyscience` framework](https://easyscience.software).
 
-A reflectometry python package built on the [`EasyScience` framework](https://easyscience.software).
+This is information about the `easyreflectometry` Python library, but a graphical user application is also available. 
+Find out about this APP at [`easyreflectometry.org`](https://easyreflectometry.org)
 
-This is information about the `EasyReflectometry` Python library, but a graphical user application is also available. 
-Find out about that at [`easyreflectometry.org`](https://easyreflectometry.org)
-
-## Installation
+# Installation
 
 ```sh
-python -m pip install EasyReflectometryLib
+python -m pip install easyreflectometry
 ```
