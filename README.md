@@ -7,10 +7,10 @@
 
 # What is EasyReflectometry?
 
-A reflectometry application and a python package built on the [`easyscience` framework](https://easyscience.software).
+A reflectometry python package and an application.
 
-This repo and information is about the `easyreflectometry` Python library, but a graphical user application is also available. 
-Find out about this APP at [`easyreflectometry.org`](https://easyreflectometry.org)
+This repo and documentation is about the `easyreflectometry` Python library that is built on the [`easyscience` framework](https://easyscience.software).
+To get more information about the application visit [`easyreflectometry.org`](https://easyreflectometry.org)
 
 # Installation
 
