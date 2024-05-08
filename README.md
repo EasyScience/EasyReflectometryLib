@@ -1,7 +1,9 @@
 ![Logo](https://github.com/easyScience/EasyReflectometryLib/raw/master/docs/src/_static/logo.png)
 [![PyPI badge](http://img.shields.io/pypi/v/EasyReflectometryLib.svg)](https://pypi.python.org/pypi/EasyReflectometryLib)
+[![Coverage badge](https://codecov.io/gh/easyScience/EasyReflectometryLib/branch/master/graph/badge.svg?token=LcnB8AMGkw)](https://codecov.io/gh/easyScience/EasyReflectometryLib)
+[![Quality badge](https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib/badge)](https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib)
 
-# What is easyreflectometry?
+# What is EasyReflectometry?
 
 A reflectometry python package built on the [`easyscience` framework](https://easyscience.software).
 
