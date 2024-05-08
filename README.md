@@ -2,6 +2,7 @@
 [![PyPI badge](http://img.shields.io/pypi/v/EasyReflectometryLib.svg)](https://pypi.python.org/pypi/EasyReflectometryLib)
 [![Coverage badge](https://codecov.io/gh/easyScience/EasyReflectometryLib/branch/master/graph/badge.svg?token=LcnB8AMGkw)](https://codecov.io/gh/easyScience/EasyReflectometryLib)
 [![Quality badge](https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib/badge)](https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib)
+[![Docs badge](https://img.shields.io/badge/docs-built-blue)](http://docs.easyreflectometry.org)
 
 # What is EasyReflectometry?
 
