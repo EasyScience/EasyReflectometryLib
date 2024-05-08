@@ -7,5 +7,5 @@ min_python: '3.9'
 orgname: EasyScience
 packagename: easyreflectometry
 prettyname: Easy Reflectometry Library
-projectname: EasyReflectometry
+projectname: easyreflectometry
 year: 2024
