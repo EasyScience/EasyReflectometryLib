@@ -1,9 +1,9 @@
 from typing import Union
 
-from easyCore.Fitting.Constraints import FunctionalConstraint
-from easyCore.Objects.ObjectClasses import Parameter
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.special.calculations import weighted_average
+from easyscience.Fitting.Constraints import FunctionalConstraint
+from easyscience.Objects.ObjectClasses import Parameter
 
 from ...base_core import BaseCore
 from .material import DEFAULTS as MATERIAL_DEFAULTS

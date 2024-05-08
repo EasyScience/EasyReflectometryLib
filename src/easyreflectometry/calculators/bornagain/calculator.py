@@ -1,12 +1,12 @@
 __author__ = 'github.com/arm61'
 
 import numpy as np
-from easyCore.Objects.Inferface import ItemContainer
 from easyreflectometry.experiment import Model
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import MaterialMixture
 from easyreflectometry.sample import Multilayer
+from easyscience.Objects.Inferface import ItemContainer
 
 from ..calculator_base import CalculatorBase
 from .wrapper import BornAgainWrapper

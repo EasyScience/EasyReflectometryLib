@@ -1,12 +1,12 @@
 from typing import Union
 
 import numpy as np
-from easyCore.Fitting.Constraints import FunctionalConstraint
-from easyCore.Objects.ObjectClasses import Parameter
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.special.calculations import density_to_sld
 from easyreflectometry.special.calculations import molecular_weight
 from easyreflectometry.special.calculations import neutron_scattering_length
+from easyscience.Fitting.Constraints import FunctionalConstraint
+from easyscience.Objects.ObjectClasses import Parameter
 
 from .material import DEFAULTS as MATERIAL_DEFAULTS
 from .material import Material
