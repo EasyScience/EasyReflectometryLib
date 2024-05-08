@@ -54,6 +54,7 @@ dev = [
     "yapf>=0.31.0",
 ]
 docs = [
+    "myst_parser",
     "nbsphinx",
     "sphinx_book_theme",
     "sphinx_autodoc_typehints",
