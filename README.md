@@ -5,7 +5,7 @@
 [![Quality badge](https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib/badge)](https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib)
 [![Docs badge](https://img.shields.io/badge/docs-built-blue)](http://docs.easyreflectometry.org)
 
-# What is EasyReflectometry?
+# About
 
 A reflectometry python package and an application.
 
