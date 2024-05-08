@@ -9,7 +9,7 @@
 
 A reflectometry python package and an application.
 
-This repo and documentation is about the `easyreflectometry` Python library that is built on the [`easyscience` framework](https://easyscience.software).
+This repo and documentation is for the `easyreflectometry` Python package that is built on the `easyscience` [framework](https://easyscience.software).
 To get more information about the application visit [`easyreflectometry.org`](https://easyreflectometry.org)
 
 # Installation
