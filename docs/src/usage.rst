@@ -2,7 +2,7 @@
 Usage
 =====
 
-To use EasyReflectometry in a project::
+To use :py:mod:`easyreflectometry` in a project::
 
     import easyreflectometry
 

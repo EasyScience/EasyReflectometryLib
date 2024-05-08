@@ -8,7 +8,7 @@ Installation
 Stable release
 --------------
 
-To install EasyReflectometry, run this command in your terminal:
+To install :py:mod:`easyreflectometry`, run this command in your terminal:
 
 .. code-block:: console
 
