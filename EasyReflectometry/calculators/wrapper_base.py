@@ -3,9 +3,8 @@ from typing import Callable
 
 import numpy as np
 
+from EasyReflectometry.experiment import DEFAULT_RESOLUTION_FWHM_PERCENTAGE
 from EasyReflectometry.experiment import percentage_fhwm_resolution_function
-
-DEFAULT_RESOLUTION_FWHM_PERCENTAGE = 5.0
 
 
 class WrapperBase:
