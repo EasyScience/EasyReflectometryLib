@@ -214,7 +214,12 @@ class WrapperBase:
         """
         self._resolution_function = resolution_function
 
-    def set_magnetism(self, magnetism: bool) -> None:
+    @property
+    def magnetism(self) -> None:
+        return self._magnetism
+
+    @magnetism.setter
+    def magnetism(self, magnetism: bool) -> None:
         """Set the magnetism flag.
 
         :param magnetism: The magnetism flag

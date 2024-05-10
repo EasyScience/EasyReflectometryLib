@@ -138,7 +138,6 @@ class TestRefl1d(unittest.TestCase):
         p._wrapper.add_item('Item1', 'MyModel')
         p._wrapper.add_item('Item2', 'MyModel')
         p._wrapper.add_item('Item3', 'MyModel')
-        #        p._wrapper.update_item('Item2', repeat=10)
         q = np.linspace(0.001, 0.3, 10)
         expected = [
             9.99491251e-01,

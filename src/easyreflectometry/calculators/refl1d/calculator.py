@@ -33,11 +33,3 @@ class Refl1d(CalculatorBase):
     def __init__(self):
         super().__init__()
         self._wrapper = Refl1dWrapper()
-
-    def set_magnetism(self, magnetism: bool):
-        """
-        Set the magnetism flag for the calculator
-
-        :param magnetism: True if the calculator should include magnetism
-        """
-        self._wrapper.set_magnetism(magnetism)

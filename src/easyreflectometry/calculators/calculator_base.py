@@ -177,3 +177,16 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
 
     def set_resolution_function(self, resolution_function: Callable[[np.array], np.array]) -> None:
         return self._wrapper.set_resolution_function(resolution_function)
+
+    @property
+    def magnetism(self):
+        return self._wrapper.magnetism
+
+    @magnetism.setter
+    def magnetism(self, magnetism: bool):
+        """
+        Set the magnetism flag for the calculator
+
+        :param magnetism: True if the calculator should include magnetism
+        """
+        self._wrapper.magnetism = magnetism
