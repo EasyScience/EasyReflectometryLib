@@ -8,9 +8,10 @@ __version__ = '0.0.1'
 import unittest
 
 import numpy as np
-from easyreflectometry.calculators.refl1d.calculator import Refl1d
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
+
+from easyreflectometry.calculators.refl1d.calculator import Refl1d
 
 
 class TestRefl1d(unittest.TestCase):
@@ -105,6 +106,51 @@ class TestRefl1d(unittest.TestCase):
             4.1351306e-07,
             3.5132221e-07,
             2.5347996e-07,
+        ]
+        assert_almost_equal(p.fit_func(q, 'MyModel'), expected)
+
+    def test_calculate_magnetic(self):
+        p = Refl1d()
+        p.set_magnetism(True)
+        p._wrapper.create_material('Material1')
+        p._wrapper.update_material('Material1', rho=0.000, irho=0.000)
+        p._wrapper.create_material('Material2')
+        p._wrapper.update_material('Material2', rho=2.000, irho=0.000)
+        p._wrapper.create_material('Material3')
+        p._wrapper.update_material('Material3', rho=4.000, irho=0.000)
+        p._wrapper.create_model('MyModel')
+        p._wrapper.update_model('MyModel', bkg=1e-7)
+        p._wrapper.create_layer('Layer1')
+        p._wrapper.assign_material_to_layer('Material1', 'Layer1')
+        p._wrapper.create_layer('Layer2')
+        p._wrapper.assign_material_to_layer('Material2', 'Layer2')
+        p._wrapper.update_layer('Layer2', thickness=10, interface=1.0)
+        p._wrapper.create_layer('Layer3')
+        p._wrapper.assign_material_to_layer('Material3', 'Layer3')
+        p._wrapper.update_layer('Layer3', interface=1.0)
+        p._wrapper.create_item('Item1')
+        p._wrapper.add_layer_to_item('Layer1', 'Item1')
+        p._wrapper.create_item('Item2')
+        p._wrapper.add_layer_to_item('Layer2', 'Item2')
+        p._wrapper.add_layer_to_item('Layer1', 'Item2')
+        p._wrapper.create_item('Item3')
+        p._wrapper.add_layer_to_item('Layer3', 'Item3')
+        p._wrapper.add_item('Item1', 'MyModel')
+        p._wrapper.add_item('Item2', 'MyModel')
+        p._wrapper.add_item('Item3', 'MyModel')
+        #        p._wrapper.update_item('Item2', repeat=10)
+        q = np.linspace(0.001, 0.3, 10)
+        expected = [
+            9.99491251e-01,
+            1.08413641e-02,
+            1.46824402e-04,
+            2.11783999e-05,
+            5.24616472e-06,
+            1.61422945e-06,
+            5.66961121e-07,
+            2.34269519e-07,
+            1.30026616e-07,
+            1.05139655e-07,
         ]
         assert_almost_equal(p.fit_func(q, 'MyModel'), expected)
 

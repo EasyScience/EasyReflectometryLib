@@ -11,6 +11,7 @@ DEFAULT_RESOLUTION_FWHM_PERCENTAGE = 5.0
 class WrapperBase:
     def __init__(self):
         """Constructor."""
+        self._magnetism = False
         self.storage = {
             'material': {},
             'layer': {},
@@ -212,3 +213,10 @@ class WrapperBase:
         :param resolution_function: The resolution function
         """
         self._resolution_function = resolution_function
+
+    def set_magnetism(self, magnetism: bool) -> None:
+        """Set the magnetism flag.
+
+        :param magnetism: The magnetism flag
+        """
+        self._magnetism = magnetism

@@ -11,7 +11,6 @@ from ..wrapper_base import WrapperBase
 
 RESOLUTION_PADDING = 3.5
 OVERSAMPLING_FACTOR = 21
-MAGNETISM = False
 ALL_POLARIZATIONS = False
 
 
@@ -30,8 +29,8 @@ class Refl1dWrapper(WrapperBase):
 
         :param name: The name of the layer
         """
-        if MAGNETISM:  # A test with hardcoded magnetism in all layers
-            magnetism = names.Magnetism(rhoM=0.2, thetaM=270)
+        if self._magnetism:
+            magnetism = names.Magnetism(rhoM=0.0, thetaM=0.0)
         else:
             magnetism = None
         self.storage['layer'][name] = model.Slab(name=str(name), magnetism=magnetism)
@@ -47,17 +46,27 @@ class Refl1dWrapper(WrapperBase):
         )
         del self.storage['item'][name].stack[0]
 
-    def get_item_value(self, name: str, key: str) -> float:
-        """
-        A function to get a given item value
+    def update_layer(self, name: str, **kwargs):
+        """Update a layer in a given item.
 
-        :param name: The item name
-        :param key: The given value keys
-        :return: The desired value
+        :param name: The layer name.
+        :param kwargs:
         """
-        item = self.storage['item'][name]
-        item = getattr(item, key)
-        return getattr(item, 'value')
+        kwargs_no_magnetism = {k: v for k, v in kwargs.items() if k != 'magnetism_rhoM' and k != 'magnetism_thetaM'}
+        super().update_layer(name, **kwargs_no_magnetism)
+        if any(item.startswith('magnetism') for item in kwargs.keys()):
+            magnetism = names.Magnetism(rhoM=kwargs['magnetism_rhoM'], thetaM=kwargs['magnetism_thetaM'])
+            self.storage['layer'][name].magnetism = magnetism
+
+    def get_layer_value(self, name: str, key: str) -> float:
+        """A function to get a given layer value
+
+        :param name: The layer name
+        :param key: The given value keys
+        """
+        if key in ['magnetism_rhoM', 'magnetism_thetaM']:
+            return getattr(self.storage['layer'][name].magnetism, key.split('_')[-1])
+        return super().get_layer_value(name, key)
 
     def create_model(self, name: str):
         """
@@ -151,7 +160,7 @@ class Refl1dWrapper(WrapperBase):
             # Get percentage of Q and change from sigma to FWHM
             dq_array = dq_array * q_array / 100 / (2 * np.sqrt(2 * np.log(2)))
 
-        if not MAGNETISM:
+        if not self._magnetism:
             probe = _get_probe(
                 q_array=q_array,
                 dq_array=dq_array,
