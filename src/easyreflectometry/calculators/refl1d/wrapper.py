@@ -246,7 +246,7 @@ def _get_polarized_probe(
     storage: dict,
     oversampling_factor: int = 1,
     all_polarizations: bool = False,
-) -> names.QProbe:
+) -> names.PolarizedQProbe:
     four_probes = []
     for i in range(4):
         if i == 0 or all_polarizations:
