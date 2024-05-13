@@ -215,7 +215,7 @@ class WrapperBase:
         self._resolution_function = resolution_function
 
     @property
-    def magnetism(self) -> None:
+    def magnetism(self) -> bool:
         return self._magnetism
 
     @magnetism.setter

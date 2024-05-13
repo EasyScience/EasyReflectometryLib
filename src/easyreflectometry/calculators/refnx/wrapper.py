@@ -11,7 +11,7 @@ from ..wrapper_base import WrapperBase
 
 class RefnxWrapper(WrapperBase):
     @property
-    def magnetism(self) -> None:
+    def magnetism(self) -> bool:
         return self._magnetism
 
     @magnetism.setter
