@@ -1,7 +1,6 @@
 __author__ = 'github.com/arm61'
 
 import periodictable as pt
-
 from easyreflectometry.special.parsing import parse_formula
 
 

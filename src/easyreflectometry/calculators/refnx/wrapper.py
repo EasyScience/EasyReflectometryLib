@@ -3,9 +3,8 @@ __author__ = 'github.com/arm61'
 from typing import Tuple
 
 import numpy as np
-from refnx import reflect
-
 from easyreflectometry.experiment.resolution_functions import is_percentage_fhwm_resolution_function
+from refnx import reflect
 
 from ..wrapper_base import WrapperBase
 

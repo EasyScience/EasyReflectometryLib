@@ -4,14 +4,13 @@ Tests for GradientLayer class module
 
 from unittest.mock import MagicMock
 
-import pytest
-from numpy.testing import assert_almost_equal
-
 import easyreflectometry.sample.assemblies.gradient_layer
+import pytest
 from easyreflectometry.sample.assemblies.gradient_layer import GradientLayer
 from easyreflectometry.sample.assemblies.gradient_layer import _linear_gradient
 from easyreflectometry.sample.assemblies.gradient_layer import _prepare_gradient_layers
 from easyreflectometry.sample.elements.materials.material import Material
+from numpy.testing import assert_almost_equal
 
 
 class TestGradientLayer:

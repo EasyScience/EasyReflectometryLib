@@ -3,7 +3,6 @@ from typing import Union
 import numpy as np
 from easyCore.Fitting.Constraints import FunctionalConstraint
 from easyCore.Objects.ObjectClasses import Parameter
-
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.special.calculations import area_per_molecule_to_scattering_length_density
 from easyreflectometry.special.calculations import neutron_scattering_length

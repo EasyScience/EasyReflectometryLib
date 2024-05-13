@@ -4,7 +4,6 @@ from typing import Union
 
 import numpy as np
 from easyCore.Objects.ObjectClasses import Parameter
-
 from easyreflectometry.parameter_utils import get_as_parameter
 
 from ...base_core import BaseCore
