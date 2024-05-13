@@ -10,13 +10,14 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 
 import numpy as np
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_equal
+
 from easyreflectometry.calculators.refl1d.wrapper import Refl1dWrapper
 from easyreflectometry.calculators.refl1d.wrapper import _build_sample
 from easyreflectometry.calculators.refl1d.wrapper import _get_oversampling_q
 from easyreflectometry.calculators.refl1d.wrapper import _get_polarized_probe
 from easyreflectometry.calculators.refl1d.wrapper import _get_probe
-from numpy.testing import assert_almost_equal
-from numpy.testing import assert_equal
 
 
 class TestRefl1d(unittest.TestCase):
@@ -28,7 +29,7 @@ class TestRefl1d(unittest.TestCase):
 
     def test_set_magnetism(self):
         p = Refl1dWrapper()
-        p.set_magnetism(True)
+        p.magnetism = True
         assert p._magnetism is True
 
     def test_reset_storage(self):
@@ -78,7 +79,7 @@ class TestRefl1d(unittest.TestCase):
 
     def test_update_magnetic_layer(self):
         p = Refl1dWrapper()
-        p.set_magnetism(True)
+        p.magnetism = True
         p.create_layer('Si')
         p.update_layer('Si', magnetism_rhoM=5, magnetism_thetaM=10)
         assert_almost_equal(p.storage['layer']['Si'].magnetism.thetaM.value, 10)
@@ -93,7 +94,7 @@ class TestRefl1d(unittest.TestCase):
 
     def test_magnetic_get_layer_value(self):
         p = Refl1dWrapper()
-        p.set_magnetism(True)
+        p.magnetism = True
         p.create_layer('Si')
         p.update_layer('Si', magnetism_rhoM=5, magnetism_thetaM=10)
         assert_almost_equal(p.get_layer_value('Si', 'magnetism_thetaM'), 10)

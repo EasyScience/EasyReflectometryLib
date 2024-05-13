@@ -8,9 +8,10 @@ __version__ = '0.0.1'
 import unittest
 
 import numpy as np
-from easyreflectometry.calculators.refl1d.calculator import Refl1d
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
+
+from easyreflectometry.calculators.refl1d.calculator import Refl1d
 
 
 class TestRefl1d(unittest.TestCase):
@@ -110,7 +111,7 @@ class TestRefl1d(unittest.TestCase):
 
     def test_calculate_magnetic(self):
         p = Refl1d()
-        p.set_magnetism(True)
+        p.magnetism = True
         p._wrapper.create_material('Material1')
         p._wrapper.update_material('Material1', rho=0.000, irho=0.000)
         p._wrapper.create_material('Material2')
