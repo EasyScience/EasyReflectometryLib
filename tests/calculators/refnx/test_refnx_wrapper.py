@@ -10,13 +10,14 @@ import unittest
 
 import numpy as np
 import pytest
-from easyreflectometry.calculators.refnx.wrapper import RefnxWrapper
-from easyreflectometry.experiment import linear_spline_resolution_function
-from easyreflectometry.experiment import percentage_fhwm_resolution_function
 from numpy.testing import assert_allclose
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 from refnx import reflect
+
+from easyreflectometry.calculators.refnx.wrapper import RefnxWrapper
+from easyreflectometry.experiment import linear_spline_resolution_function
+from easyreflectometry.experiment import percentage_fhwm_resolution_function
 
 
 class TestRefnx(unittest.TestCase):
@@ -28,7 +29,7 @@ class TestRefnx(unittest.TestCase):
     def test_set_magnetism(self):
         p = RefnxWrapper()
         with pytest.raises(NotImplementedError):
-            p.set_magnetism(True)
+            p.magnetism = True
 
     def test_reset_storage(self):
         p = RefnxWrapper()

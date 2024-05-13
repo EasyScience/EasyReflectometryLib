@@ -10,6 +10,18 @@ from ..wrapper_base import WrapperBase
 
 
 class RefnxWrapper(WrapperBase):
+    @property
+    def magnetism(self) -> None:
+        return self._magnetism
+
+    @magnetism.setter
+    def magnetism(self, magnetism: bool) -> None:
+        """Set the magnetism flag.
+
+        :param magnetism: The magnetism flag
+        """
+        raise NotImplementedError('Magnetism is not supported by refnx')
+
     def create_material(self, name: str):
         """
         Create a material using SLD.
@@ -145,13 +157,6 @@ class RefnxWrapper(WrapperBase):
         :return: z and sld(z)
         """
         return _remove_unecessary_stacks(self.storage['model'][model_name].structure).sld_profile()
-
-    def set_magnetism(self, magnetism: bool) -> None:
-        """Set the magnetism flag.
-
-        :param magnetism: The magnetism flag
-        """
-        raise NotImplementedError('Magnetism is not supported by refnx')
 
 
 def _remove_unecessary_stacks(current_structure: reflect.Structure) -> reflect.Structure:
