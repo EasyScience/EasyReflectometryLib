@@ -1,9 +1,10 @@
 from unittest.mock import MagicMock
 
-import easyreflectometry.sample.elements.materials.material_mixture
-import easyreflectometry.sample.elements.materials.material_solvated
 import pytest
 from easyCore.Objects.ObjectClasses import Parameter
+
+import easyreflectometry.sample.elements.materials.material_mixture
+import easyreflectometry.sample.elements.materials.material_solvated
 from easyreflectometry.sample.elements.materials.material import Material
 from easyreflectometry.sample.elements.materials.material_solvated import MaterialSolvated
 

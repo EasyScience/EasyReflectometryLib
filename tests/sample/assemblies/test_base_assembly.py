@@ -5,8 +5,9 @@ Tests for BaseAssembly class module
 from typing import Any
 from unittest.mock import MagicMock
 
-import easyreflectometry.sample.assemblies.base_assembly
 import pytest
+
+import easyreflectometry.sample.assemblies.base_assembly
 from easyreflectometry.sample.assemblies.base_assembly import BaseAssembly
 
 

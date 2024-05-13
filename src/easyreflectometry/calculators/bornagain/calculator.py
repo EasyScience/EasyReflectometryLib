@@ -2,6 +2,7 @@ __author__ = 'github.com/arm61'
 
 import numpy as np
 from easyCore.Objects.Inferface import ItemContainer
+
 from easyreflectometry.experiment import Model
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material

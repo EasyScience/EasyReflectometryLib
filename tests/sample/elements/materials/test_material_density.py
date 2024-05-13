@@ -1,8 +1,9 @@
 import unittest
 
 import numpy as np
-from easyreflectometry.sample.elements.materials.material_density import MaterialDensity
 from numpy.testing import assert_almost_equal
+
+from easyreflectometry.sample.elements.materials.material_density import MaterialDensity
 
 
 class TestMaterialDensity(unittest.TestCase):
