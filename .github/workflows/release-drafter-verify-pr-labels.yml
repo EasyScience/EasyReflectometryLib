@@ -1,7 +1,10 @@
 # This workflow will
 # - verify that a PR has a known label before it can be merged.
 #
-# A label is needed for the release-drafter workflow to generate the notes.
+# A PR is enforced to have one of the labels listed in the valid-labels input.
+#
+# For more information see: https://github.com/marketplace/actions/release-drafter
+
 
 name: Verify PR labels
 on:

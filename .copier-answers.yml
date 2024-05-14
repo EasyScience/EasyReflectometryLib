@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: fd638f4
+_commit: 8bdcedc
 _src_path: gh:/EasyScience/EasyProjectTemplate
 description: A reflectometry python package built on the EasyScience framework.
 max_python: '3.12'
@@ -7,5 +7,5 @@ min_python: '3.9'
 orgname: EasyScience
 packagename: easyreflectometry
 prettyname: Easy Reflectometry Library
-projectname: EasyReflectometryLib
+projectname: easyreflectometry
 year: 2024
