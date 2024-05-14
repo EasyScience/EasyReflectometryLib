@@ -1,10 +1,10 @@
 Assemblies
 ==========
 
-:py:mod:`EasyReflectometry` is designed to be used with a broad range of different assemblies.
+:py:mod:`easyreflectometry` is designed to be used with a broad range of different assemblies.
 These assemblies offer flexibility for the user and enable more powerful analysis by making chemical and pysical constraints available with limited code. 
 In this page, we will document the assemblies that are available with simple examples of the constructors that exist.
-Full API documentation is also available for the :py:mod:`EasyReflectometry.sample.assemblies` module.
+Full API documentation is also available for the :py:mod:`easyreflectometry.sample.assemblies` module.
 
 :py:class:`Multilayer`
 ----------------------
@@ -17,9 +17,9 @@ To create a :py:class:`Multilayer` object, we use the following construction.
 
 .. code-block:: python 
 
-    from EasyReflectometry.sample import Layer
-    from EasyReflectometry.sample import Material
-    from EasyReflectometry.sample import Multilayer
+    from easyreflectometry.sample import Layer
+    from easyreflectometry.sample import Material
+    from easyreflectometry.sample import Multilayer
 
     si = Material(
         sld=2.07,
@@ -63,9 +63,9 @@ The creation of a :py:class:`RepeatingMultilayer` object is very similar to that
 
 .. code-block:: python 
 
-    from EasyReflectometry.sample import Layer
-    from EasyReflectometry.sample import Material
-    from EasyReflectometry.sample import RepeatingMultilayer
+    from easyreflectometry.sample import Layer
+    from easyreflectometry.sample import Material
+    from easyreflectometry.sample import RepeatingMultilayer
 
     ti = Material(
         sld=-1.9493,
@@ -109,9 +109,9 @@ The creation of a :py:class:`SurfactantLayer` object is shown below.
 
 .. code-block:: python
    
-    from EasyReflectometry.sample import LayerAreaPerMolecule
-    from EasyReflectometry.sample import Material
-    from EasyReflectometry.sample import SurfactantLayer
+    from easyreflectometry.sample import LayerAreaPerMolecule
+    from easyreflectometry.sample import Material
+    from easyreflectometry.sample import SurfactantLayer
 
     area_per_molecule = 48
     roughness = 3.3

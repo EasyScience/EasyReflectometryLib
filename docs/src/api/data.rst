@@ -1,4 +1,4 @@
-.. automodule:: EasyReflectometry.data
+.. automodule:: easyreflectometry.data
     :members:
     :undoc-members:
     :show-inheritance:

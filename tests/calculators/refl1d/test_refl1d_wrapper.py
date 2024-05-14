@@ -10,14 +10,13 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 
 import numpy as np
+from easyreflectometry.calculators.refl1d.wrapper import Refl1dWrapper
+from easyreflectometry.calculators.refl1d.wrapper import _build_sample
+from easyreflectometry.calculators.refl1d.wrapper import _get_oversampling_q
+from easyreflectometry.calculators.refl1d.wrapper import _get_polarized_probe
+from easyreflectometry.calculators.refl1d.wrapper import _get_probe
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
-
-from EasyReflectometry.calculators.refl1d.wrapper import Refl1dWrapper
-from EasyReflectometry.calculators.refl1d.wrapper import _build_sample
-from EasyReflectometry.calculators.refl1d.wrapper import _get_oversampling_q
-from EasyReflectometry.calculators.refl1d.wrapper import _get_polarized_probe
-from EasyReflectometry.calculators.refl1d.wrapper import _get_probe
 
 
 class TestRefl1d(unittest.TestCase):
@@ -403,8 +402,8 @@ def test_get_polarized_probe_polarization():
     assert len(probe.xs[3].calc_Qo) == len(q)
 
 
-@patch('EasyReflectometry.calculators.refl1d.wrapper.model.Stack')
-@patch('EasyReflectometry.calculators.refl1d.wrapper.model.Repeat')
+@patch('easyreflectometry.calculators.refl1d.wrapper.model.Stack')
+@patch('easyreflectometry.calculators.refl1d.wrapper.model.Repeat')
 def test_build_sample(mock_repeat, mock_stack):
     # When
     mock_item_1 = MagicMock()

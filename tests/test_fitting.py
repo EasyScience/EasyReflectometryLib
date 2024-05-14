@@ -3,23 +3,22 @@ __author__ = 'github.com/arm61'
 import os
 import unittest
 
-import EasyReflectometry
-from EasyReflectometry.calculators import CalculatorFactory
-from EasyReflectometry.data import load
-from EasyReflectometry.experiment import Model
-from EasyReflectometry.experiment import percentage_fhwm_resolution_function
-from EasyReflectometry.fitting import Fitter
-from EasyReflectometry.sample import Layer
-from EasyReflectometry.sample import Material
-from EasyReflectometry.sample import Sample
+import easyreflectometry
+from easyreflectometry.calculators import CalculatorFactory
+from easyreflectometry.data import load
+from easyreflectometry.experiment import Model
+from easyreflectometry.experiment import percentage_fhwm_resolution_function
+from easyreflectometry.fitting import Fitter
+from easyreflectometry.sample import Layer
+from easyreflectometry.sample import Material
+from easyreflectometry.sample import Sample
+
+PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests' , '_static')
 
 
 class TestFitting(unittest.TestCase):
     def test_fitting(self):
-        fpath = os.path.join(
-            os.path.dirname(os.path.dirname(EasyReflectometry.__file__)),
-            'tests/_static/example.ort',
-        )
+        fpath = os.path.join(PATH_STATIC, 'example.ort')
         data = load(fpath)
         si = Material(2.07, 0, 'Si')
         sio2 = Material(3.47, 0, 'SiO2')

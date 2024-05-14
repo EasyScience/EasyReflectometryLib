@@ -1,13 +1,13 @@
 """
 Tests for BaseAssembly class module
 """
+
 from typing import Any
 from unittest.mock import MagicMock
 
+import easyreflectometry.sample.assemblies.base_assembly
 import pytest
-
-import EasyReflectometry.sample.assemblies.base_assembly
-from EasyReflectometry.sample.assemblies.base_assembly import BaseAssembly
+from easyreflectometry.sample.assemblies.base_assembly import BaseAssembly
 
 
 class TestBaseAssembly:
@@ -41,7 +41,7 @@ class TestBaseAssembly:
         self.mock_layer_1.thickness = MagicMock()
         mock_obj_constraint = MagicMock()
         mock_ObjConstraint = MagicMock(return_value=mock_obj_constraint)
-        monkeypatch.setattr(EasyReflectometry.sample.assemblies.base_assembly, 'ObjConstraint', mock_ObjConstraint)
+        monkeypatch.setattr(easyreflectometry.sample.assemblies.base_assembly, 'ObjConstraint', mock_ObjConstraint)
 
         # Then
         base_assembly._setup_thickness_constraints()
@@ -94,7 +94,7 @@ class TestBaseAssembly:
         self.mock_layer_1.roughness = MagicMock()
         mock_obj_constraint = MagicMock()
         mock_ObjConstraint = MagicMock(return_value=mock_obj_constraint)
-        monkeypatch.setattr(EasyReflectometry.sample.assemblies.base_assembly, 'ObjConstraint', mock_ObjConstraint)
+        monkeypatch.setattr(easyreflectometry.sample.assemblies.base_assembly, 'ObjConstraint', mock_ObjConstraint)
 
         # Then
         base_assembly._setup_roughness_constraints()

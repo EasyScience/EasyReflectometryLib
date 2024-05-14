@@ -8,10 +8,9 @@ __version__ = '0.0.1'
 import unittest
 
 import numpy as np
+from easyreflectometry.calculators.refl1d.calculator import Refl1d
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
-
-from EasyReflectometry.calculators.refl1d.calculator import Refl1d
 
 
 class TestRefl1d(unittest.TestCase):

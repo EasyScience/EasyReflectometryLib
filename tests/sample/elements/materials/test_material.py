@@ -9,10 +9,9 @@ __version__ = '0.0.1'
 import unittest
 
 import numpy as np
-
-from EasyReflectometry.parameter_utils import get_as_parameter
-from EasyReflectometry.sample.elements.materials.material import DEFAULTS
-from EasyReflectometry.sample.elements.materials.material import Material
+from easyreflectometry.parameter_utils import get_as_parameter
+from easyreflectometry.sample.elements.materials.material import DEFAULTS
+from easyreflectometry.sample.elements.materials.material import Material
 
 
 class TestMaterial(unittest.TestCase):

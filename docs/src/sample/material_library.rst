@@ -1,9 +1,9 @@
 Materials
 =========
 
-In order to support a wide range of applications (and to build complex `assemblies`_) there are a few different types of material that can be utilised in :py:mod:`EasyReflectometry`. 
+In order to support a wide range of applications (and to build complex `assemblies`_) there are a few different types of material that can be utilised in :py:mod:`easyreflectometry`. 
 These can include constraints or enabel the user to define the material based on chemical or physical properties. 
-Full API documentation for the :py:mod:`EasyReflectoemtry.sample.elements.material` mdoule is also available, but here we will give some simple uses for them. 
+Full API documentation for the :py:mod:`easyreflectometry.sample.elements.material` mdoule is also available, but here we will give some simple uses for them. 
 
 :py:class:`Material`
 --------------------
@@ -14,7 +14,7 @@ The construction of a :py:class:`Material` is achieved as shown below.
 
 .. code-block:: python 
 
-    from EasyReflectometry.sample import Material
+    from easyreflectometry.sample import Material
 
     boron = Material(
         sld=6.908,
@@ -35,7 +35,7 @@ The :py:class:`MaterialDensity` material can be create as follows.
 
 .. code-block:: python 
 
-    from EasyReflectometry.sample import MaterialDensity 
+    from easyreflectometry.sample import MaterialDensity 
 
     chemical_structure = 'SiO2'
     si = MaterialDensity(
@@ -57,8 +57,8 @@ So to produce a :py:class:`MaterialSolvated` that is 20 % D2O in a polymer, the 
 
 .. code-block:: python
 
-    from EasyReflectometry.sample import Material 
-    from EasyReflectometry.sample import MaterialSolvated
+    from easyreflectometry.sample import Material 
+    from easyreflectometry.sample import MaterialSolvated
 
     polymer = Material(
         sld=2.,

@@ -1,22 +1,22 @@
 Experiment
 ==========
 
-The main component of an experiment in :py:mod:`EasyReflectometry` is the `Model`. 
-This is a description of the `sample` and the environment in which the experiment is performed. 
-The `Model` is used to calculate the reflectivity of the `Sample` at a given set of angles (Q-points).
-The `resolution_functions` are used to quantify the experimental uncertainties in wavelength and angle, allowing the `Model`` to accurately describe the data.
+The main component of an experiment in :py:mod:`easyreflectometry` is the :py:class:`Model`. 
+This is a description of the :py:class:`Sample` and the environment in which the experiment is performed. 
+The :py:class:`Model` is used to calculate the reflectivity of the :py:class:`Sample` at a given set of angles (Q-points).
+The :py:func:`resolution_functions` are used to quantify the experimental uncertainties in wavelength and angle, allowing the :py:class:`Model` to accurately describe the data.
 
 :py:class:`Model`
 -----------------
 
-A `Model` instance contains a `Sample` and variables describing experimental settings.
-To be able to compute reflectivities it is also necessary to have a `Calculator` (interface).
+A :py:class:`Model` instance contains a :py:class:`Sample` and variables describing experimental settings.
+To be able to compute reflectivities it is also necessary to have a :py:class:`Calculator` (interface).
 
 .. code-block:: python 
 
-   from EasyReflectometry.calculators import CalculatorFactory
-   from EasyReflectometry.experiment import Model
-   from EasyReflectometry.sample import Sample
+   from easyreflectometry.calculators import CalculatorFactory
+   from easyreflectometry.experiment import Model
+   from easyreflectometry.sample import Sample
 
    default_sample = Sample()
    m = Model(
@@ -28,13 +28,13 @@ To be able to compute reflectivities it is also necessary to have a `Calculator`
    interface = CalculatorFactory()
    model.interface = interface
 
-This will create a :py:class:`Model` instance with the `default_sample` and the environment variables `scale` factor set to 1.0 and a `background` of 1e-6.
-Following the `interface` is set to the default calculator that is `Refnx`.
+This will create a :py:class:`Model` instance with the :py:attr:`default_sample` and the environment variables :py:attr:`scale` factor set to 1.0 and a :py:attr:`background` of 1e-6.
+Following the :py:attr:`interface` is set to the default calculator that is :py:class:`Refnx`.
 
 
 :py:mod:`resolution_functions`
 ------------------------------
-A resolution function enables the `EasyReflectometry` model to incorporate the experimental uncertainties in wavelength and incident angle into the model.
+A resolution function enables the :py:mod:`easyreflectometry` model to incorporate the experimental uncertainties in wavelength and incident angle into the model.
 In its essence the resolution function controls the smearing to apply when determing the reflectivtiy at a given Q-point.
 For a given Q-point the smearing to apply is given as a weighted average of the neighboring Q-point, which weigths are by a normal distribution.
 This normal distribution is then defined by a Q-point dependent Full Width at the Half Maximum (FWHM) that is given by the resolution function.
@@ -45,8 +45,8 @@ By this is understood that the applied smearing in an Q-point has a FWHM that is
 
 .. code-block:: python 
 
-   from EasyReflectometry.experiment import Model
-   from EasyReflectometry.experiment import percentage_fhwm_resolution_function
+   from easyreflectometry.experiment import Model
+   from easyreflectometry.experiment import percentage_fhwm_resolution_function
 
    resolution_function = percentage_fhwm_resolution_function(1.1)
 
@@ -64,8 +64,8 @@ and thereby enable a determination of the reflectivity at an arbitrary point wit
 
 .. code-block:: python 
 
-   from EasyReflectometry.experiment import Model
-   from EasyReflectometry.experiment import linear_spline_resolution_function
+   from easyreflectometry.experiment import Model
+   from easyreflectometry.experiment import linear_spline_resolution_function
 
    m = Model()
 
