@@ -1,18 +1,19 @@
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+![Logo](https://github.com/easyScience/EasyReflectometryLib/raw/master/docs/src/_static/logo.png)
+[![CI badge](https://github.com/easyScience/EasyReflectometryLib/actions/workflows/python-ci.yml/badge.svg)](https://github.com/easyScience/easyReflectometryLib/actions/workflows/python-ci.yml)
 [![PyPI badge](http://img.shields.io/pypi/v/EasyReflectometryLib.svg)](https://pypi.python.org/pypi/EasyReflectometryLib)
-[![License: BSD 3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](LICENSE)
+[![Coverage badge](https://codecov.io/gh/easyScience/EasyReflectometryLib/branch/master/graph/badge.svg?token=LcnB8AMGkw)](https://codecov.io/gh/easyScience/EasyReflectometryLib)
+[![Quality badge](https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib/badge)](https://www.codefactor.io/repository/github/easyscience/easyreflectometrylib)
+[![Docs badge](https://img.shields.io/badge/docs-built-blue)](http://docs.easyreflectometry.org)
 
-# Easy Reflectometry
+# About
 
-## About
+A reflectometry python package and an application.
 
-A reflectometry python package built on the [`EasyScience` framework](https://easyscience.software).
+This repo and documentation is for the `easyreflectometry` Python package that is built on the `easyscience` [framework](https://easyscience.software).
+To get more information about the application visit [`easyreflectometry.org`](https://easyreflectometry.org)
 
-This is information about the `EasyReflectometry` Python library, but a graphical user application is also available. 
-Find out about that at [`easyreflectometry.org`](https://easyreflectometry.org)
-
-## Installation
+# Installation
 
 ```sh
-python -m pip install EasyReflectometryLib
+python -m pip install easyreflectometry
 ```

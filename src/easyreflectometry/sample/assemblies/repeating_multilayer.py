@@ -1,7 +1,7 @@
 from typing import Union
 
-from easyCore.Objects.ObjectClasses import Parameter
 from easyreflectometry.parameter_utils import get_as_parameter
+from easyscience.Objects.ObjectClasses import Parameter
 
 from ..elements.layers.layer import Layer
 from ..elements.layers.layer_collection import LayerCollection

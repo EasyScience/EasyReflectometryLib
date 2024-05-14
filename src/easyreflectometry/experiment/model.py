@@ -8,8 +8,8 @@ from typing import Union
 
 import numpy as np
 import yaml
-from easyCore.Objects.ObjectClasses import BaseObj
-from easyCore.Objects.ObjectClasses import Parameter
+from easyscience.Objects.ObjectClasses import BaseObj
+from easyscience.Objects.ObjectClasses import Parameter
 
 from easyreflectometry.experiment.resolution_functions import is_percentage_fhwm_resolution_function
 from easyreflectometry.parameter_utils import get_as_parameter
