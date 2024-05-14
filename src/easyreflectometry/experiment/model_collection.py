@@ -12,10 +12,16 @@ class ModelCollection(BaseElementCollection):
     # Added in super().__init__
     models: list[Model]
 
-    def __init__(self, *models: Optional[list[Model]], name: str = 'EasyModels', interface=None, **kwargs):
+    def __init__(
+        self,
+        *models: Optional[list[Model]],
+        name: str = 'EasyModels',
+        interface=None,
+        **kwargs,
+    ):
         if models is None:
             models = [Model(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
-        super().__init__(name, *models, **kwargs)
+        super().__init__(name, interface, *models, **kwargs)
         self.interface = interface
 
     def add_model(self, new_model: Model):
