@@ -201,7 +201,7 @@ class Model(BaseObj):
         if skip is None:
             skip = []
         this_dict = super().as_dict(skip=skip)
-        this_dict['sample'] = self.sample.as_dict()
+        this_dict['sample'] = self.sample.as_dict(skip=skip)
         this_dict['resolution_function'] = self.resolution_function.as_dict()
         return this_dict
 

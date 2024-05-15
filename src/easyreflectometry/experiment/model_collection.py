@@ -19,7 +19,7 @@ class ModelCollection(BaseElementCollection):
         interface=None,
         **kwargs,
     ):
-        if models is None:
+        if models == ():
             models = [Model(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
         super().__init__(name, interface, *models, **kwargs)
         self.interface = interface

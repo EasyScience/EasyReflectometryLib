@@ -69,7 +69,7 @@ class Sample(BaseCollection):
             skip = []
         this_dict = super().as_dict(skip=skip)
         for i, layer in enumerate(self.data):
-            this_dict['data'][i] = layer.as_dict()
+            this_dict['data'][i] = layer.as_dict(skip=skip)
         return this_dict
 
     @classmethod
