@@ -7,13 +7,13 @@ import easyreflectometry
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.data import load
 from easyreflectometry.experiment import Model
-from easyreflectometry.experiment import percentage_fhwm_resolution_function
+from easyreflectometry.experiment import PercentageFhwm
 from easyreflectometry.fitting import Fitter
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import Sample
 
-PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests' , '_static')
+PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
 
 
 class TestFitting(unittest.TestCase):
@@ -35,7 +35,7 @@ class TestFitting(unittest.TestCase):
             superphase,
             name='Film Structure',
         )
-        resolution_function = percentage_fhwm_resolution_function(0.02)
+        resolution_function = PercentageFhwm(0.02)
         model = Model(sample, 1, 1e-6, resolution_function, 'Film Model')
         # Thicknesses
         sio2_layer.thickness.bounds = (15, 50)
