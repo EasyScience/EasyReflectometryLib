@@ -70,3 +70,23 @@ class TestModelCollection(unittest.TestCase):
 
         # Expect
         assert dict_repr['data'][0]['resolution_function'] == {'smearing': 'PercentageFhwm', 'constant': 5.0}
+
+    def test_dict_round_trip(self):
+        # When
+        model_1 = Model(name='Model1')
+        model_2 = Model(name='Model2')
+        model_3 = Model(name='Model3')
+
+        # Then
+        collection = ModelCollection(model_1, model_2, model_3)
+
+        src_dict = collection.as_dict()
+
+        # Then
+        collection_from_dict = ModelCollection.from_dict(src_dict)
+
+        # Expect
+        assert collection.as_data_dict(skip=['resolution_function', 'interface']) == collection_from_dict.as_data_dict(
+            skip=['resolution_function', 'interface']
+        )
+        assert collection[0]._resolution_function.smearing(5.5) == collection_from_dict[0]._resolution_function.smearing(5.5)

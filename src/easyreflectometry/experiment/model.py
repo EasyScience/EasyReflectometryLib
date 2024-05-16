@@ -206,17 +206,20 @@ class Model(BaseObj):
         return this_dict
 
     @classmethod
-    def from_dict(cls, data: dict) -> Model:
+    def from_dict(cls, this_dict: dict) -> Model:
         """
         Create a Model from a dictionary.
 
-        :param data: dictionary of the Model
+        :param this_dict: dictionary of the Model
         :return: Model
         """
-        model = super().from_dict(data)
+        resolution_function = ResolutionFunction.from_dict(this_dict['resolution_function'])
+        del this_dict['resolution_function']
+        sample = Sample.from_dict(this_dict['sample'])
+        del this_dict['sample']
 
-        # Ensure that the sample is also converted
-        # TODO Should probably be handled in easyscience
-        model.sample = model.sample.__class__.from_dict(data['sample'])
-        model.resolution_function = ResolutionFunction.from_dict(data['resolution_function'])
+        model = super().from_dict(this_dict)
+
+        model.sample = sample
+        model.resolution_function = resolution_function
         return model
