@@ -16,12 +16,12 @@ class ModelCollection(BaseElementCollection):
 
     def __init__(
         self,
-        *models: Optional[list[Model]],
+        *models: Optional[tuple[Model]],
         name: str = 'EasyModels',
         interface=None,
         **kwargs,
     ):
-        if models == ():
+        if not models:
             models = [Model(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
         super().__init__(name, interface, *models, **kwargs)
         self.interface = interface
