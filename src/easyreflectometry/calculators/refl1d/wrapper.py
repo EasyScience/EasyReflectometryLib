@@ -3,7 +3,7 @@ __author__ = 'github.com/arm61'
 from typing import Tuple
 
 import numpy as np
-from easyreflectometry.experiment.resolution_functions import is_percentage_fhwm_resolution_function
+from easyreflectometry.experiment.resolution_functions import PercentageFhwm
 from refl1d import model
 from refl1d import names
 
@@ -154,9 +154,9 @@ class Refl1dWrapper(WrapperBase):
         :return: reflectivity calculated at q
         """
         sample = _build_sample(self.storage, model_name)
-        dq_array = self._resolution_function(q_array)
+        dq_array = self._resolution_function.smearing(q_array)
 
-        if is_percentage_fhwm_resolution_function(self._resolution_function):
+        if isinstance(self._resolution_function, PercentageFhwm):
             # Get percentage of Q and change from sigma to FWHM
             dq_array = dq_array * q_array / 100 / (2 * np.sqrt(2 * np.log(2)))
 

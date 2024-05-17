@@ -6,9 +6,9 @@ The tutorials associated with using :py:mod:`easyreflectometry` are collected he
 .. toctree:: 
    :maxdepth: 1
 
-   simple_fitting
-   repeating
-   material_solvated
-   monolayer
-   multi_contrast
-   resolution_functions
+   fitting/simple_fitting
+   fitting/repeating
+   sample/material_solvated
+   sample/monolayer
+   sample/multi_contrast
+   sample/resolution_functions

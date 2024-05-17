@@ -1,11 +1,9 @@
 from abc import abstractmethod
-from typing import Callable
 
 import numpy as np
 
-from easyreflectometry.experiment import percentage_fhwm_resolution_function
-
-DEFAULT_RESOLUTION_FWHM_PERCENTAGE = 5.0
+from easyreflectometry.experiment import PercentageFhwm
+from easyreflectometry.experiment import ResolutionFunction
 
 
 class WrapperBase:
@@ -18,7 +16,7 @@ class WrapperBase:
             'item': {},
             'model': {},
         }
-        self._resolution_function = percentage_fhwm_resolution_function(DEFAULT_RESOLUTION_FWHM_PERCENTAGE)
+        self._resolution_function = PercentageFhwm()
 
     def reset_storage(self):
         """Reset the storage area to blank."""
@@ -207,7 +205,7 @@ class WrapperBase:
         item = getattr(item, key)
         return getattr(item, 'value')
 
-    def set_resolution_function(self, resolution_function: Callable[[np.array], np.array]) -> None:
+    def set_resolution_function(self, resolution_function: ResolutionFunction) -> None:
         """Set the resolution function for the calculator.
 
         :param resolution_function: The resolution function

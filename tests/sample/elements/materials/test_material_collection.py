@@ -30,6 +30,12 @@ class TestLayerCollection(unittest.TestCase):
         assert p[0].name == 'Boron'
         assert p[1].name == 'Potassium'
 
+    def test_empty_list(self):
+        p = MaterialCollection([])
+        assert p.name == 'EasyMaterials'
+        assert p.interface is None
+        assert len(p) == 0
+
     def test_dict_repr(self):
         p = MaterialCollection()
         assert p._dict_repr == {

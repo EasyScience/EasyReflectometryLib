@@ -52,6 +52,7 @@ extensions = [
     'sphinx.ext.imgmath',
     'sphinx.ext.mathjax',
     'sphinx_autodoc_typehints',
+    'sphinx_copybutton',
     'nbsphinx',
     'myst_parser'
 ]
