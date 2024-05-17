@@ -3,7 +3,6 @@ from __future__ import annotations
 __author__ = 'github.com/arm61'
 
 from numbers import Number
-from typing import Callable
 from typing import Union
 
 import numpy as np
@@ -11,14 +10,14 @@ import yaml
 from easyscience.Objects.ObjectClasses import BaseObj
 from easyscience.Objects.ObjectClasses import Parameter
 
-from easyreflectometry.experiment.resolution_functions import is_percentage_fhwm_resolution_function
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.sample import BaseAssembly
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerCollection
 from easyreflectometry.sample import Sample
 
-from .resolution_functions import percentage_fhwm_resolution_function
+from .resolution_functions import PercentageFhwm
+from .resolution_functions import ResolutionFunction
 
 DEFAULTS = {
     'scale': {
@@ -59,7 +58,7 @@ class Model(BaseObj):
         sample: Union[Sample, None] = None,
         scale: Union[Parameter, Number, None] = None,
         background: Union[Parameter, Number, None] = None,
-        resolution_function: Union[Callable[[np.array], float], None] = None,
+        resolution_function: Union[ResolutionFunction, None] = None,
         name: str = 'EasyModel',
         interface=None,
     ):
@@ -69,7 +68,7 @@ class Model(BaseObj):
         :param scale: Scaling factor of profile.
         :param background: Linear background magnitude.
         :param name: Name of the model, defaults to 'EasyModel'.
-        :param resolution_function: Resolution function, defaults to percentage_fhwm_resolution_function.
+        :param resolution_function: Resolution function, defaults to PercentageFhwm.
         :param interface: Calculator interface, defaults to `None`.
 
         """
@@ -77,7 +76,7 @@ class Model(BaseObj):
         if sample is None:
             sample = Sample(interface=interface)
         if resolution_function is None:
-            resolution_function = percentage_fhwm_resolution_function(DEFAULTS['resolution']['value'])
+            resolution_function = PercentageFhwm(DEFAULTS['resolution']['value'])
 
         scale = get_as_parameter('scale', scale, DEFAULTS)
         background = get_as_parameter('background', background, DEFAULTS)
@@ -88,8 +87,6 @@ class Model(BaseObj):
             scale=scale,
             background=background,
         )
-        if not callable(resolution_function):
-            raise ValueError('Resolution function must be a callable.')
         self.resolution_function = resolution_function
         # Must be set after resolution function
         self.interface = interface
@@ -140,12 +137,12 @@ class Model(BaseObj):
         del self.sample[idx]
 
     @property
-    def resolution_function(self) -> Callable[[np.array], np.array]:
+    def resolution_function(self) -> ResolutionFunction:
         """Return the resolution function."""
         return self._resolution_function
 
     @resolution_function.setter
-    def resolution_function(self, resolution_function: Callable[[np.array], np.array]) -> None:
+    def resolution_function(self, resolution_function: ResolutionFunction) -> None:
         """Set the resolution function for the model."""
         self._resolution_function = resolution_function
         if self.interface is not None:
@@ -176,8 +173,8 @@ class Model(BaseObj):
     @property
     def _dict_repr(self) -> dict[str, dict[str, str]]:
         """A simplified dict representation."""
-        if is_percentage_fhwm_resolution_function(self._resolution_function):
-            resolution_value = self._resolution_function([0])[0]
+        if isinstance(self._resolution_function, PercentageFhwm):
+            resolution_value = self._resolution_function.as_dict()['constant']
             resolution = f'{resolution_value} %'
         else:
             resolution = 'function of Q'
@@ -204,21 +201,25 @@ class Model(BaseObj):
         if skip is None:
             skip = []
         this_dict = super().as_dict(skip=skip)
-        this_dict['sample'] = self.sample.as_dict()
+        this_dict['sample'] = self.sample.as_dict(skip=skip)
+        this_dict['resolution_function'] = self.resolution_function.as_dict()
         return this_dict
 
     @classmethod
-    def from_dict(cls, data: dict) -> Model:
+    def from_dict(cls, this_dict: dict) -> Model:
         """
         Create a Model from a dictionary.
 
-        :param data: dictionary of the Model
+        :param this_dict: dictionary of the Model
         :return: Model
         """
-        model = super().from_dict(data)
+        resolution_function = ResolutionFunction.from_dict(this_dict['resolution_function'])
+        del this_dict['resolution_function']
+        sample = Sample.from_dict(this_dict['sample'])
+        del this_dict['sample']
 
-        # Ensure that the sample is also converted
-        # TODO Should probably be handled in easyscience
-        model.sample = model.sample.__class__.from_dict(data['sample'])
+        model = super().from_dict(this_dict)
 
+        model.sample = sample
+        model.resolution_function = resolution_function
         return model
