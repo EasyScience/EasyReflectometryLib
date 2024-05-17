@@ -3,7 +3,7 @@ __author__ = 'github.com/arm61'
 from typing import Tuple
 
 import numpy as np
-from easyreflectometry.experiment.resolution_functions import is_percentage_fhwm_resolution_function
+from easyreflectometry.experiment.resolution_functions import PercentageFhwm
 from refnx import reflect
 
 from ..wrapper_base import WrapperBase
@@ -129,8 +129,8 @@ class RefnxWrapper(WrapperBase):
             dq_type='pointwise',
         )
 
-        dq_vector = self._resolution_function(q_array)
-        if is_percentage_fhwm_resolution_function(self._resolution_function):
+        dq_vector = self._resolution_function.smearing(q_array)
+        if isinstance(self._resolution_function, PercentageFhwm):
             # FWHM Percentage resolution is constant given as
             # For a constant resolution percentage refnx supports to pass a scalar value rather than a vector
             dq_vector = dq_vector[0]

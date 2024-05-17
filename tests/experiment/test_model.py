@@ -12,9 +12,9 @@ from unittest.mock import MagicMock
 import numpy as np
 import pytest
 from easyreflectometry.calculators import CalculatorFactory
+from easyreflectometry.experiment import LinearSpline
 from easyreflectometry.experiment import Model
-from easyreflectometry.experiment import linear_spline_resolution_function
-from easyreflectometry.experiment import percentage_fhwm_resolution_function
+from easyreflectometry.experiment import PercentageFhwm
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerCollection
 from easyreflectometry.sample import Material
@@ -43,8 +43,8 @@ class TestModel(unittest.TestCase):
         assert_equal(p.background.min, 0.0)
         assert_equal(p.background.max, np.Inf)
         assert_equal(p.background.fixed, True)
-        assert p._resolution_function([1]) == 5.0
-        assert p._resolution_function([100]) == 5.0
+        assert p._resolution_function.smearing([1]) == 5.0
+        assert p._resolution_function.smearing([100]) == 5.0
 
     def test_from_pars(self):
         m1 = Material(6.908, -0.278, 'Boron')
@@ -56,7 +56,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer(ls2, 1.0, 'oneLayerItem2')
         d = Sample(o1, o2, name='myModel')
-        resolution_function = percentage_fhwm_resolution_function(2.0)
+        resolution_function = PercentageFhwm(2.0)
         mod = Model(
             sample=d,
             scale=2,
@@ -79,8 +79,8 @@ class TestModel(unittest.TestCase):
         assert_equal(mod.background.min, 0.0)
         assert_equal(mod.background.max, np.Inf)
         assert_equal(mod.background.fixed, True)
-        assert mod._resolution_function([1]) == 2.0
-        assert mod._resolution_function([100]) == 2.0
+        assert mod._resolution_function.smearing([1]) == 2.0
+        assert mod._resolution_function.smearing([100]) == 2.0
 
     def test_add_item(self):
         m1 = Material(6.908, -0.278, 'Boron')
@@ -94,7 +94,7 @@ class TestModel(unittest.TestCase):
         surfactant = SurfactantLayer()
         multilayer = Multilayer()
         d = Sample(o1, name='myModel')
-        resolution_function = percentage_fhwm_resolution_function(2.0)
+        resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel')
         assert_equal(len(mod.sample), 1)
         mod.add_item(o2)
@@ -125,7 +125,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer(ls2, 1.0, 'oneLayerItem2')
         d = Sample(o1, name='myModel')
-        resolution_function = percentage_fhwm_resolution_function(2.0)
+        resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
@@ -145,7 +145,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer(ls2, 1.0, 'oneLayerItem2')
         d = Sample(o1, name='myModel')
-        resolution_function = percentage_fhwm_resolution_function(2.0)
+        resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
@@ -182,7 +182,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer(ls2, 1.0, 'oneLayerItem2')
         d = Sample(o1, name='myModel')
-        resolution_function = percentage_fhwm_resolution_function(2.0)
+        resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel')
         assert_equal(len(mod.sample), 1)
         mod.add_item(o2)
@@ -203,7 +203,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer(ls2, 1.0, 'oneLayerItem2')
         d = Sample(o1, name='myModel')
-        resolution_function = percentage_fhwm_resolution_function(2.0)
+        resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         mod.add_item(o2)
@@ -223,7 +223,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer(ls2, 1.0, 'oneLayerItem2')
         d = Sample(o1, name='myModel')
-        resolution_function = percentage_fhwm_resolution_function(2.0)
+        resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         mod.add_item(o2)
@@ -260,7 +260,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer(ls2, 1.0, 'oneLayerItem2')
         d = Sample(o1, name='myModel')
-        resolution_function = percentage_fhwm_resolution_function(2.0)
+        resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel')
         assert_equal(len(mod.sample), 1)
         mod.add_item(o2)
@@ -279,7 +279,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer(ls2, 1.0, 'oneLayerItem2')
         d = Sample(o1, name='myModel')
-        resolution_function = percentage_fhwm_resolution_function(2.0)
+        resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
@@ -302,7 +302,7 @@ class TestModel(unittest.TestCase):
         o1 = RepeatingMultilayer(ls1, 2.0, 'twoLayerItem1')
         o2 = RepeatingMultilayer(ls2, 1.0, 'oneLayerItem2')
         d = Sample(o1, name='myModel')
-        resolution_function = percentage_fhwm_resolution_function(2.0)
+        resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
@@ -384,7 +384,7 @@ class TestModel(unittest.TestCase):
         )
 
     def test_repr_resolution_function(self):
-        resolution_function = linear_spline_resolution_function([0, 10], [0, 10])
+        resolution_function = LinearSpline([0, 10], [0, 10])
         model = Model()
         model.resolution_function = resolution_function
         assert (
@@ -394,7 +394,7 @@ class TestModel(unittest.TestCase):
 
     def test_dict_round_trip(self):
         # When
-        resolution_function = linear_spline_resolution_function([0, 10], [0, 10])
+        resolution_function = LinearSpline([0, 10], [0, 10])
         interface = CalculatorFactory()
         model = Model(interface=interface)
         model.resolution_function = resolution_function
@@ -410,5 +410,5 @@ class TestModel(unittest.TestCase):
         model_from_dict = Model.from_dict(src_dict)
 
         # Expect
-        assert model.as_data_dict() == model_from_dict.as_data_dict()
-        assert model._resolution_function(5.5) == model_from_dict._resolution_function(5.5)
+        assert model.as_data_dict(skip=['resolution_function']) == model_from_dict.as_data_dict(skip=['resolution_function'])
+        assert model._resolution_function.smearing(5.5) == model_from_dict._resolution_function.smearing(5.5)
