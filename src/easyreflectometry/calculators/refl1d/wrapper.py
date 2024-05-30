@@ -168,6 +168,7 @@ class Refl1dWrapper(WrapperBase):
                 storage=self.storage,
                 oversampling_factor=OVERSAMPLING_FACTOR,
             )
+            # returns q, reflectivity
             _, reflectivity = names.Experiment(probe=probe, sample=sample).reflectivity()
         else:
             polarized_probe = _get_polarized_probe(
@@ -182,11 +183,14 @@ class Refl1dWrapper(WrapperBase):
 
             if ALL_POLARIZATIONS:
                 raise NotImplementedError('Polarized reflectivity not yet implemented')
+                # returns q, reflectivity
                 # _, reflectivity_pp = polarized_reflectivity[0]
                 # _, reflectivity_pm = polarized_reflectivity[1]
                 # _, reflectivity_mp = polarized_reflectivity[2]
                 # _, reflectivity_mm = polarized_reflectivity[3]
             else:
+                # Only pick the pp reflectivity
+                # returns q, reflectivity
                 _, reflectivity = polarized_reflectivity[0]
 
         return reflectivity
