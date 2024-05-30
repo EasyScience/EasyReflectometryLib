@@ -10,7 +10,8 @@ This includes the layer(s) under invistigation the surrounding superphase, subph
 Calculator
 ----------
 A calculator is the physics engine.
-We rely on third party software to provide the necessary calculators that. 
+We rely on third party software to provide the necessary calculators.
+Different calculators might have different capabilities and limitations. 
 
 Model
 -----
