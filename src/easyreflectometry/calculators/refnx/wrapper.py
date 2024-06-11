@@ -11,11 +11,11 @@ from ..wrapper_base import WrapperBase
 
 class RefnxWrapper(WrapperBase):
     @property
-    def magnetism(self) -> bool:
+    def include_magnetism(self) -> bool:
         return self._magnetism
 
-    @magnetism.setter
-    def magnetism(self, magnetism: bool) -> None:
+    @include_magnetism.setter
+    def include_magnetism(self, magnetism: bool) -> None:
         """Set the magnetism flag.
 
         :param magnetism: The magnetism flag

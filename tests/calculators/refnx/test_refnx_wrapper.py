@@ -28,7 +28,7 @@ class TestRefnx(unittest.TestCase):
     def test_set_magnetism(self):
         p = RefnxWrapper()
         with pytest.raises(NotImplementedError):
-            p.magnetism = True
+            p.include_magnetism = True
 
     def test_reset_storage(self):
         p = RefnxWrapper()

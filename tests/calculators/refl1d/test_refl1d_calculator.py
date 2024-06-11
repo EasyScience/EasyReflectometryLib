@@ -110,7 +110,7 @@ class TestRefl1d(unittest.TestCase):
 
     def test_calculate_magnetic(self):
         p = Refl1d()
-        p.magnetism = True
+        p.include_magnetism = True
         p._wrapper.create_material('Material1')
         p._wrapper.update_material('Material1', rho=0.000, irho=0.000)
         p._wrapper.create_material('Material2')

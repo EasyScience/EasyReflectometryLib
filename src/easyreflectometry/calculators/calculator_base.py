@@ -179,11 +179,11 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         return self._wrapper.set_resolution_function(resolution_function)
 
     @property
-    def magnetism(self):
+    def include_magnetism(self):
         return self._wrapper.magnetism
 
-    @magnetism.setter
-    def magnetism(self, magnetism: bool):
+    @include_magnetism.setter
+    def include_magnetism(self, magnetism: bool):
         """
         Set the magnetism flag for the calculator
 
