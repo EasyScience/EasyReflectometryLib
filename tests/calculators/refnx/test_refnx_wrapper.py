@@ -9,6 +9,7 @@ __version__ = '0.0.1'
 import unittest
 
 import numpy as np
+import pytest
 from easyreflectometry.calculators.refnx.wrapper import RefnxWrapper
 from easyreflectometry.experiment import LinearSpline
 from easyreflectometry.experiment import PercentageFhwm
@@ -23,6 +24,11 @@ class TestRefnx(unittest.TestCase):
         p = RefnxWrapper()
         assert_equal(list(p.storage.keys()), ['material', 'layer', 'item', 'model'])
         assert_equal(issubclass(p.storage['material'].__class__, dict), True)
+
+    def test_set_magnetism(self):
+        p = RefnxWrapper()
+        with pytest.raises(NotImplementedError):
+            p.include_magnetism = True
 
     def test_reset_storage(self):
         p = RefnxWrapper()

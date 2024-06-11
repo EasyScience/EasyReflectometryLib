@@ -9,6 +9,7 @@ from easyreflectometry.experiment import ResolutionFunction
 class WrapperBase:
     def __init__(self):
         """Constructor."""
+        self._magnetism = False
         self.storage = {
             'material': {},
             'layer': {},
@@ -210,3 +211,15 @@ class WrapperBase:
         :param resolution_function: The resolution function
         """
         self._resolution_function = resolution_function
+
+    @property
+    def magnetism(self) -> bool:
+        return self._magnetism
+
+    @magnetism.setter
+    def magnetism(self, magnetism: bool) -> None:
+        """Set the magnetism flag.
+
+        :param magnetism: The magnetism flag
+        """
+        self._magnetism = magnetism
