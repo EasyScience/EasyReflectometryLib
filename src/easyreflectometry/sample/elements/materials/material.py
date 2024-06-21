@@ -14,8 +14,8 @@ DEFAULTS = {
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 4.186,
         'units': '1 / angstrom ** 2',
-        'min': -np.Inf,
-        'max': np.Inf,
+        'min': -np.inf,
+        'max': np.inf,
         'fixed': True,
     },
     'isld': {
@@ -23,8 +23,8 @@ DEFAULTS = {
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 0.0,
         'units': '1 / angstrom ** 2',
-        'min': -np.Inf,
-        'max': np.Inf,
+        'min': -np.inf,
+        'max': np.inf,
         'fixed': True,
     },
 }
