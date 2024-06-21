@@ -25,7 +25,7 @@ DEFAULTS = {
         'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
         'value': 1.0,
         'min': 0,
-        'max': np.Inf,
+        'max': np.inf,
         'fixed': True,
     },
     'background': {
@@ -33,7 +33,7 @@ DEFAULTS = {
         'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
         'value': 1e-8,
         'min': 0.0,
-        'max': np.Inf,
+        'max': np.inf,
         'fixed': True,
     },
     'resolution': {
