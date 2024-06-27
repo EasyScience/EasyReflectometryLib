@@ -3,7 +3,7 @@ from typing import Union
 
 import numpy as np
 from easyreflectometry.parameter_utils import get_as_parameter
-from easyscience.Objects.ObjectClasses import Parameter
+from easyscience.Objects.new_variable import Parameter
 
 from ...base_core import BaseCore
 from ..materials.material import Material

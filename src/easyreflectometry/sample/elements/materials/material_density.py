@@ -6,7 +6,7 @@ from easyreflectometry.special.calculations import density_to_sld
 from easyreflectometry.special.calculations import molecular_weight
 from easyreflectometry.special.calculations import neutron_scattering_length
 from easyscience.fitting.Constraints import FunctionalConstraint
-from easyscience.Objects.ObjectClasses import Parameter
+from easyscience.Objects.new_variable import Parameter
 
 from .material import DEFAULTS as MATERIAL_DEFAULTS
 from .material import Material

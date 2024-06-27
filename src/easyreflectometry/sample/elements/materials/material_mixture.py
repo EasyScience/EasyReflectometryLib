@@ -3,7 +3,7 @@ from typing import Union
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.special.calculations import weighted_average
 from easyscience.fitting.Constraints import FunctionalConstraint
-from easyscience.Objects.ObjectClasses import Parameter
+from easyscience.Objects.new_variable import Parameter
 
 from ...base_core import BaseCore
 from .material import DEFAULTS as MATERIAL_DEFAULTS

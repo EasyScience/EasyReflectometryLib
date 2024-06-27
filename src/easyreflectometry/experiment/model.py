@@ -7,8 +7,8 @@ from typing import Union
 
 import numpy as np
 import yaml
+from easyscience.Objects.new_variable import Parameter
 from easyscience.Objects.ObjectClasses import BaseObj
-from easyscience.Objects.ObjectClasses import Parameter
 
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.sample import BaseAssembly
@@ -132,9 +132,10 @@ class Model(BaseObj):
 
         :param idx: Index of the item to remove.
         """
-        if self.interface is not None:
-            self.interface().remove_item_from_model(self.sample[idx].uid, self.uid)
+        item_uid = self.sample[idx].uid
         del self.sample[idx]
+        if self.interface is not None:
+            self.interface().remove_item_from_model(item_uid, self.uid)
 
     @property
     def resolution_function(self) -> ResolutionFunction:
