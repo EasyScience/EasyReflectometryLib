@@ -13,7 +13,7 @@ DEFAULTS = {
         'description': 'The real scattering length density for a material in e-6 per squared angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 4.186,
-        'units': '1 / angstrom ** 2',
+        'unit': '1 / angstrom^2',
         'min': -np.Inf,
         'max': np.Inf,
         'fixed': True,
@@ -22,7 +22,7 @@ DEFAULTS = {
         'description': 'The imaginary scattering length density for a material in e-6 per squared angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 0.0,
-        'units': '1 / angstrom ** 2',
+        'unit': '1 / angstrom^2',
         'min': -np.Inf,
         'max': np.Inf,
         'fixed': True,
@@ -60,7 +60,7 @@ class Material(BaseCore):
         """A simplified dict representation."""
         return {
             self.name: {
-                'sld': f'{self.sld.raw_value:.3f}e-6 {self.sld.unit}',
-                'isld': f'{self.isld.raw_value:.3f}e-6 {self.isld.unit}',
+                'sld': f'{self.sld.value:.3f}e-6 {self.sld.unit}',
+                'isld': f'{self.isld.value:.3f}e-6 {self.isld.unit}',
             }
         }

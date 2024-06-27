@@ -61,8 +61,8 @@ class Multilayer(BaseAssembly):
         to_duplicate = self.layers[idx]
         duplicate_layer = Layer(
             material=to_duplicate.material,
-            thickness=to_duplicate.thickness.raw_value,
-            roughness=to_duplicate.roughness.raw_value,
+            thickness=to_duplicate.thickness.value,
+            roughness=to_duplicate.roughness.value,
             name=to_duplicate.name + ' duplicate',
         )
         self.add_layer(duplicate_layer)

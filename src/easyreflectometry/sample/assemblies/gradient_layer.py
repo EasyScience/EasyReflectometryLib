@@ -73,7 +73,7 @@ class GradientLayer(BaseAssembly):
     @property
     def thickness(self) -> float:
         """Get the thickness of the gradient layer in Angstrom."""
-        return self.front_layer.thickness.raw_value * self._discretisation_elements
+        return self.front_layer.thickness.value * self._discretisation_elements
 
     @thickness.setter
     def thickness(self, thickness: float) -> None:
@@ -86,7 +86,7 @@ class GradientLayer(BaseAssembly):
     @property
     def roughness(self) -> float:
         """Get the Roughness of the gradient layer in Angstrom."""
-        return self.front_layer.roughness.raw_value
+        return self.front_layer.roughness.value
 
     @roughness.setter
     def roughness(self, roughness: float) -> None:
@@ -100,8 +100,8 @@ class GradientLayer(BaseAssembly):
     def _dict_repr(self) -> dict[str, str]:
         """A simplified dict representation."""
         return {
-            'thickness': self.thickness,
-            'discretisation_elements': self._discretisation_elements,
+            'thickness': float(self.thickness),
+            'discretisation_elements': int(self._discretisation_elements),
             'back_layer': self.back_layer._dict_repr,
             'front_layer': self.front_layer._dict_repr,
         }
@@ -139,13 +139,13 @@ def _prepare_gradient_layers(
     interface=None,
 ) -> LayerCollection:
     gradient_sld = _linear_gradient(
-        front_value=front_material.sld.raw_value,
-        back_value=back_material.sld.raw_value,
+        front_value=front_material.sld.value,
+        back_value=back_material.sld.value,
         discretisation_elements=discretisation_elements,
     )
     gradient_isld = _linear_gradient(
-        front_value=front_material.isld.raw_value,
-        back_value=back_material.isld.raw_value,
+        front_value=front_material.isld.value,
+        back_value=back_material.isld.value,
         discretisation_elements=discretisation_elements,
     )
     gradient_layers = []

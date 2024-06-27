@@ -13,7 +13,7 @@ DEFAULTS = {
         'description': 'The thickness of the layer in angstroms',
         'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
         'value': 10.0,
-        'units': 'angstrom',
+        'unit': 'angstrom',
         'min': 0.0,
         'max': np.Inf,
         'fixed': True,
@@ -22,7 +22,7 @@ DEFAULTS = {
         'description': 'The interfacial roughness, Nevot-Croce, for the layer in angstroms.',
         'url': 'https://doi.org/10.1051/rphysap:01980001503076100',
         'value': 3.3,
-        'units': 'angstrom',
+        'unit': 'angstrom',
         'min': 0.0,
         'max': np.Inf,
         'fixed': True,
@@ -85,7 +85,7 @@ class Layer(BaseCore):
         return {
             self.name: {
                 'material': self.material._dict_repr,
-                'thickness': f'{self.thickness.raw_value:.3f} {self.thickness.unit}',
-                'roughness': f'{self.roughness.raw_value:.3f} {self.roughness.unit}',
+                'thickness': f'{self.thickness.value:.3f} {self.thickness.unit}',
+                'roughness': f'{self.roughness.value:.3f} {self.roughness.unit}',
             }
         }

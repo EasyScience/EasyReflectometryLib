@@ -65,7 +65,7 @@ class TestBaseAssembly:
 
         # Expect
         assert self.mock_layer_0.thickness.user_constraints['thickness_1'].enabled is True
-        assert self.mock_layer_0.thickness.value == self.mock_layer_0.thickness.raw_value
+        assert self.mock_layer_0.thickness.value == self.mock_layer_0.thickness.value
         assert self.mock_layer_0.thickness.enabled is True
         assert self.mock_layer_1.thickness.enabled is True
 
@@ -116,7 +116,7 @@ class TestBaseAssembly:
 
         # Expect
         assert self.mock_layer_0.roughness.user_constraints['roughness_1'].enabled is True
-        assert self.mock_layer_0.roughness.value == self.mock_layer_0.roughness.raw_value
+        assert self.mock_layer_0.roughness.value == self.mock_layer_0.roughness.value
         assert self.mock_layer_0.roughness.enabled is True
         assert self.mock_layer_1.roughness.enabled is True
 

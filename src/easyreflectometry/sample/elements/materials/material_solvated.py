@@ -10,7 +10,7 @@ DEFAULTS = {
     'solvent_fraction': {
         'description': 'Fraction of solvent in layer.',
         'value': 0.2,
-        'units': 'dimensionless',
+        'unit': 'dimensionless',
         'min': 0,
         'max': 1,
         'fixed': True,
@@ -118,9 +118,9 @@ class MaterialSolvated(MaterialMixture):
         """A simplified dict representation."""
         return {
             self.name: {
-                'solvent_fraction': f'{self._fraction.raw_value:.3f} {self._fraction.unit}',
-                'sld': f'{self._sld.raw_value:.3f}e-6 {self._sld.unit}',
-                'isld': f'{self._isld.raw_value:.3f}e-6 {self._isld.unit}',
+                'solvent_fraction': f'{self._fraction.value:.3f} {self._fraction.unit}',
+                'sld': f'{self._sld.value:.3f}e-6 {self._sld.unit}',
+                'isld': f'{self._isld.value:.3f}e-6 {self._isld.unit}',
                 'material': self.material._dict_repr,
                 'solvent': self.solvent._dict_repr,
             }

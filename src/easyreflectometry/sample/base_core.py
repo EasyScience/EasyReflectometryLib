@@ -33,7 +33,7 @@ class BaseCore(BaseObj):
         :return: a string representation of the layer
         :rtype: str
         """
-        return yaml.dump(self._dict_repr, sort_keys=False)
+        return yaml.dump(self._dict_repr, sort_keys=False, allow_unicode=True)
 
     # For classes with special serialization needs one must adopt the dict produced by super
     # def as_dict(self, skip: list = None) -> dict:

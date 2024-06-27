@@ -115,8 +115,8 @@ class Model(BaseObj):
             duplicate_layers.append(
                 Layer(
                     material=i.material,
-                    thickness=i.thickness.raw_value,
-                    roughness=i.roughness.raw_value,
+                    thickness=i.thickness.value,
+                    roughness=i.roughness.value,
                     name=i.name + ' duplicate',
                     interface=i.interface,
                 )
@@ -181,8 +181,8 @@ class Model(BaseObj):
 
         return {
             self.name: {
-                'scale': self.scale.raw_value,
-                'background': self.background.raw_value,
+                'scale': float(self.scale.value),
+                'background': float(self.background.value),
                 'resolution': resolution,
                 'sample': self.sample._dict_repr,
             }
@@ -190,7 +190,7 @@ class Model(BaseObj):
 
     def __repr__(self) -> str:
         """String representation of the layer."""
-        return yaml.dump(self._dict_repr, sort_keys=False)
+        return yaml.dump(self._dict_repr, sort_keys=False, allow_unicode=True)
 
     def as_dict(self, skip: list = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.

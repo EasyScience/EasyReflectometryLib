@@ -2,7 +2,7 @@ from typing import Union
 
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.special.calculations import weighted_average
-from easyscience.Fitting.Constraints import FunctionalConstraint
+from easyscience.fitting.Constraints import FunctionalConstraint
 from easyscience.Objects.ObjectClasses import Parameter
 
 from ...base_core import BaseCore
@@ -13,7 +13,7 @@ DEFAULTS = {
     'fraction': {
         'description': 'The fraction of material b in material a',
         'value': 0.5,
-        'units': 'dimensionless',
+        'unit': 'dimensionless',
         'min': 0,
         'max': 1,
         'fixed': True,
@@ -52,14 +52,14 @@ class MaterialMixture(BaseCore):
         fraction = get_as_parameter('fraction', fraction, DEFAULTS)
 
         sld = weighted_average(
-            a=material_a.sld.raw_value,
-            b=material_b.sld.raw_value,
-            p=fraction.raw_value,
+            a=material_a.sld.value,
+            b=material_b.sld.value,
+            p=fraction.value,
         )
         isld = weighted_average(
-            a=material_a.isld.raw_value,
-            b=material_b.isld.raw_value,
-            p=fraction.raw_value,
+            a=material_a.isld.value,
+            b=material_b.isld.value,
+            p=fraction.value,
         )
 
         self._sld = get_as_parameter('sld', sld, DEFAULTS)
@@ -85,11 +85,11 @@ class MaterialMixture(BaseCore):
 
     @property
     def sld(self) -> float:
-        return self._sld.raw_value
+        return self._sld.value
 
     @property
     def isld(self) -> float:
-        return self._isld.raw_value
+        return self._isld.value
 
     def _materials_constraints(self):
         self._sld.enabled = True
@@ -116,7 +116,7 @@ class MaterialMixture(BaseCore):
     @property
     def fraction(self) -> float:
         """Get the fraction of material_b."""
-        return self._fraction.raw_value
+        return self._fraction.value
 
     @fraction.setter
     def fraction(self, fraction: float) -> None:
@@ -126,7 +126,7 @@ class MaterialMixture(BaseCore):
         """
         if not isinstance(fraction, float):
             raise ValueError('fraction must be a float')
-        self._fraction.raw_value = fraction
+        self._fraction.value = fraction
 
     @property
     def material_a(self) -> Material:
@@ -171,9 +171,9 @@ class MaterialMixture(BaseCore):
         """A simplified dict representation."""
         return {
             self.name: {
-                'fraction': f'{self._fraction.raw_value:.3f} {self._fraction.unit}',
-                'sld': f'{self._sld.raw_value:.3f}e-6 {self._sld.unit}',
-                'isld': f'{self._isld.raw_value:.3f}e-6 {self._isld.unit}',
+                'fraction': f'{self._fraction.value:.3f} {self._fraction.unit}',
+                'sld': f'{self._sld.value:.3f}e-6 {self._sld.unit}',
+                'isld': f'{self._isld.value:.3f}e-6 {self._isld.unit}',
                 'material_a': self._material_a._dict_repr,
                 'material_b': self._material_b._dict_repr,
             }

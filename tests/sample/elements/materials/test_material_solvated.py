@@ -5,7 +5,7 @@ import easyreflectometry.sample.elements.materials.material_solvated
 import pytest
 from easyreflectometry.sample.elements.materials.material import Material
 from easyreflectometry.sample.elements.materials.material_solvated import MaterialSolvated
-from easyscience.Objects.ObjectClasses import Parameter
+from easyscience.Objects.new_variable import Parameter
 
 
 class TestMaterialSolvated:
@@ -14,7 +14,7 @@ class TestMaterialSolvated:
         self.material = Material(sld=1.0, isld=0, name='material')
         self.solvent = Material(sld=2.0, isld=0, name='solvent')
         self.mock_solvent_fraction = MagicMock(spec=Parameter)
-        self.mock_solvent_fraction.raw_value = 0.1
+        self.mock_solvent_fraction.value = 0.1
         self.mock_interface = MagicMock()
         self.mock_Parameter = MagicMock()
         self.mock_FunctionalConstraint = MagicMock()
@@ -109,10 +109,10 @@ class TestMaterialSolvated:
         assert p._dict_repr == {
             'D2O in H2O': {
                 'solvent_fraction': '0.200 dimensionless',
-                'sld': '4.976e-6 1 / angstrom ** 2',
-                'isld': '0.000e-6 1 / angstrom ** 2',
-                'material': {'D2O': {'sld': '6.360e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}},
-                'solvent': {'H2O': {'sld': '-0.561e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}},
+                'sld': '4.976e-6 1/Å^2',
+                'isld': '0.000e-6 1/Å^2',
+                'material': {'D2O': {'sld': '6.360e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
+                'solvent': {'H2O': {'sld': '-0.561e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
             }
         }
 

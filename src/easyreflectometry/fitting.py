@@ -2,7 +2,7 @@ __author__ = 'github.com/arm61'
 
 import numpy as np
 import scipp as sc
-from easyscience.Fitting.Fitting import MultiFitter as easyFitter
+from easyscience.fitting.multi_fitter import MultiFitter as easyFitter
 
 from easyreflectometry.experiment import Model
 
@@ -46,7 +46,7 @@ class Fitter:
                 dims=[f'Qz_{id}'], values=self._fit_func[i](data['coords'][f'Qz_{id}'].values)
             )
             sld_profile = self.easy_f._fit_objects[i].interface.sld_profile(self._models[i].uid)
-            new_data[f'SLD_{id}'] = sc.array(dims=[f'z_{id}'], values=sld_profile[1] * 1e-6, unit=sc.Unit('1/angstrom') ** 2)
+            new_data[f'SLD_{id}'] = sc.array(dims=[f'z_{id}'], values=sld_profile[1] * 1e-6, unit=sc.Unit('1/angstrom') ^ 2)
             new_data['attrs'][f'R_{id}_model'] = {'model': sc.scalar(self._models[i].as_dict())}
             new_data['coords'][f'z_{id}'] = sc.array(
                 dims=[f'z_{id}'], values=sld_profile[0], unit=(1 / new_data['coords'][f'Qz_{id}'].unit).unit

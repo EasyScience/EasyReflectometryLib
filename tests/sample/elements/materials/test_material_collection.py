@@ -40,16 +40,17 @@ class TestLayerCollection(unittest.TestCase):
         p = MaterialCollection()
         assert p._dict_repr == {
             'EasyMaterials': [
-                {'EasyMaterial': {'isld': '0.000e-6 1 / angstrom ** 2', 'sld': '4.186e-6 1 / angstrom ** 2'}},
-                {'EasyMaterial': {'isld': '0.000e-6 1 / angstrom ** 2', 'sld': '4.186e-6 1 / angstrom ** 2'}},
+                {'EasyMaterial': {'isld': '0.000e-6 1/Å^2', 'sld': '4.186e-6 1/Å^2'}},
+                {'EasyMaterial': {'isld': '0.000e-6 1/Å^2', 'sld': '4.186e-6 1/Å^2'}},
             ]
         }
 
     def test_repr(self):
         p = MaterialCollection()
+        p.__repr__()
         assert (
             p.__repr__()
-            == 'EasyMaterials:\n- EasyMaterial:\n    sld: 4.186e-6 1 / angstrom ** 2\n    isld: 0.000e-6 1 / angstrom ** 2\n- EasyMaterial:\n    sld: 4.186e-6 1 / angstrom ** 2\n    isld: 0.000e-6 1 / angstrom ** 2\n'  # noqa: E501
+            == 'EasyMaterials:\n- EasyMaterial:\n    sld: 4.186e-6 1/Å^2\n    isld: 0.000e-6 1/Å^2\n- EasyMaterial:\n    sld: 4.186e-6 1/Å^2\n    isld: 0.000e-6 1/Å^2\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):

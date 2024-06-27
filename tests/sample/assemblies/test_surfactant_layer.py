@@ -37,15 +37,15 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.layers[0].name == 'A Test Tail Layer'
         assert p.tail_layer.name == 'A Test Tail Layer'
         assert p.tail_layer.molecular_formula == 'C8O10H12P'
-        assert p.tail_layer.thickness.raw_value == 12
+        assert p.tail_layer.thickness.value == 12
         assert p.tail_layer.solvent.as_data_dict() == h2o.as_data_dict()
         assert p.tail_layer.solvent_fraction == 0.5
         assert p.tail_layer.area_per_molecule == 50
-        assert p.tail_layer.roughness.raw_value == 2
+        assert p.tail_layer.roughness.value == 2
         assert p.layers[1].name == 'A Test Head Layer'
         assert p.head_layer.name == 'A Test Head Layer'
         assert p.head_layer.molecular_formula == 'C10H24'
-        assert p.head_layer.thickness.raw_value == 10
+        assert p.head_layer.thickness.value == 10
         assert p.head_layer.solvent.as_data_dict() == noth2o.as_data_dict()
         assert p.head_layer.solvent_fraction == 0.2
         assert p.head_layer.area_per_molecule == 40
@@ -68,33 +68,33 @@ class TestSurfactantLayer(unittest.TestCase):
     def test_conformal_roughness(self):
         p = SurfactantLayer()
         p.tail_layer.roughness.value = 2
-        assert p.tail_layer.roughness.raw_value == 2
-        assert p.head_layer.roughness.raw_value == 3
+        assert p.tail_layer.roughness.value == 2
+        assert p.head_layer.roughness.value == 3
         p.conformal_roughness = True
-        assert p.tail_layer.roughness.raw_value == 2
-        assert p.head_layer.roughness.raw_value == 2
+        assert p.tail_layer.roughness.value == 2
+        assert p.head_layer.roughness.value == 2
         assert p.conformal_roughness is True
         p.tail_layer.roughness.value = 4
-        assert p.tail_layer.roughness.raw_value == 4
-        assert p.head_layer.roughness.raw_value == 4
+        assert p.tail_layer.roughness.value == 4
+        assert p.head_layer.roughness.value == 4
 
     def test_constain_solvent_roughness(self):
         p = SurfactantLayer()
         layer = Layer()
         p.tail_layer.roughness.value = 2
-        assert p.tail_layer.roughness.raw_value == 2
-        assert p.head_layer.roughness.raw_value == 3
-        assert layer.roughness.raw_value == 3.3
+        assert p.tail_layer.roughness.value == 2
+        assert p.head_layer.roughness.value == 3
+        assert layer.roughness.value == 3.3
         p.conformal_roughness = True
         p.constrain_solvent_roughness(layer.roughness)
-        assert p.tail_layer.roughness.raw_value == 2
-        assert p.head_layer.roughness.raw_value == 2
-        assert layer.roughness.raw_value == 2
+        assert p.tail_layer.roughness.value == 2
+        assert p.head_layer.roughness.value == 2
+        assert layer.roughness.value == 2
         assert p.conformal_roughness is True
         p.tail_layer.roughness.value = 4
-        assert p.tail_layer.roughness.raw_value == 4
-        assert p.head_layer.roughness.raw_value == 4
-        assert layer.roughness.raw_value == 4
+        assert p.tail_layer.roughness.value == 4
+        assert p.head_layer.roughness.value == 4
+        assert layer.roughness.value == 4
 
     def test_dict_repr(self):
         p = SurfactantLayer()
@@ -105,42 +105,34 @@ class TestSurfactantLayer(unittest.TestCase):
                         'material': {
                             'C10H18NO8P in D2O': {
                                 'solvent_fraction': '0.200 dimensionless',
-                                'sld': '2.269e-6 1 / angstrom ** 2',
-                                'isld': '0.000e-6 1 / angstrom ** 2',
-                                'material': {
-                                    'C10H18NO8P': {'sld': '1.246e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
-                                },
-                                'solvent': {
-                                    'D2O': {'sld': '6.360e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
-                                },
+                                'sld': '2.269e-6 1/Å^2',
+                                'isld': '0.000e-6 1/Å^2',
+                                'material': {'C10H18NO8P': {'sld': '1.246e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
+                                'solvent': {'D2O': {'sld': '6.360e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
                             }
                         },
-                        'thickness': '10.000 angstrom',
-                        'roughness': '3.000 angstrom',
+                        'thickness': '10.000 Å',
+                        'roughness': '3.000 Å',
                     },
                     'molecular_formula': 'C10H18NO8P',
-                    'area_per_molecule': '48.20 angstrom ** 2',
+                    'area_per_molecule': '48.20 Å^2',
                 },
                 'tail_layer': {
                     'DPPC Tail': {
                         'material': {
                             'C32D64 in Air': {
                                 'solvent_fraction': '0.000 dimensionless',
-                                'sld': '8.297e-6 1 / angstrom ** 2',
-                                'isld': '0.000e-6 1 / angstrom ** 2',
-                                'material': {
-                                    'C32D64': {'sld': '8.297e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
-                                },
-                                'solvent': {
-                                    'Air': {'sld': '0.000e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
-                                },
+                                'sld': '8.297e-6 1/Å^2',
+                                'isld': '0.000e-6 1/Å^2',
+                                'material': {'C32D64': {'sld': '8.297e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
+                                'solvent': {'Air': {'sld': '0.000e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
                             }
                         },
-                        'thickness': '16.000 angstrom',
-                        'roughness': '3.000 angstrom',
+                        'thickness': '16.000 Å',
+                        'roughness': '3.000 Å',
                     },
                     'molecular_formula': 'C32D64',
-                    'area_per_molecule': '48.20 angstrom ** 2',
+                    'area_per_molecule': '48.20 Å^2',
                 },
                 'area per molecule constrained': False,
                 'conformal roughness': False,

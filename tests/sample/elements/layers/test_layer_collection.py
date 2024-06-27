@@ -49,20 +49,16 @@ class TestLayerCollection(unittest.TestCase):
             'EasyLayers': [
                 {
                     'EasyLayer': {
-                        'material': {
-                            'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
-                        },
-                        'thickness': '10.000 angstrom',
-                        'roughness': '3.300 angstrom',
+                        'material': {'EasyMaterial': {'sld': '4.186e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
+                        'thickness': '10.000 Å',
+                        'roughness': '3.300 Å',
                     }
                 },
                 {
                     'EasyLayer': {
-                        'material': {
-                            'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
-                        },
-                        'thickness': '10.000 angstrom',
-                        'roughness': '3.300 angstrom',
+                        'material': {'EasyMaterial': {'sld': '4.186e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
+                        'thickness': '10.000 Å',
+                        'roughness': '3.300 Å',
                     }
                 },
             ]
@@ -72,7 +68,7 @@ class TestLayerCollection(unittest.TestCase):
         p = LayerCollection()
         assert (
             p.__repr__()
-            == 'EasyLayers:\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 10.000 angstrom\n    roughness: 3.300 angstrom\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 10.000 angstrom\n    roughness: 3.300 angstrom\n'  # noqa: E501
+            == 'EasyLayers:\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1/Å^2\n        isld: 0.000e-6 1/Å^2\n    thickness: 10.000 Å\n    roughness: 3.300 Å\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1/Å^2\n        isld: 0.000e-6 1/Å^2\n    thickness: 10.000 Å\n    roughness: 3.300 Å\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):

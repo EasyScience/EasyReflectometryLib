@@ -11,23 +11,23 @@ class TestMaterialMixture(unittest.TestCase):
         p = MaterialMixture()
         assert p.fraction == 0.5
         assert str(p._fraction.unit) == 'dimensionless'
-        assert p.sld == Material().sld.raw_value
-        assert p.isld == Material().isld.raw_value
-        assert str(p._sld.unit) == '1 / angstrom ** 2'
-        assert str(p._isld.unit) == '1 / angstrom ** 2'
+        assert p.sld == Material().sld.value
+        assert p.isld == Material().isld.value
+        assert str(p._sld.unit) == '1/Å^2'
+        assert str(p._isld.unit) == '1/Å^2'
 
     def test_default_constraint(self):
         p = MaterialMixture()
         assert p.fraction == 0.5
         assert str(p._fraction.unit) == 'dimensionless'
-        assert p.sld == Material().sld.raw_value
-        assert p.isld == Material().isld.raw_value
+        assert p.sld == Material().sld.value
+        assert p.isld == Material().isld.value
         p.material_a.sld.value = 0
         p.material_b.isld.value = -1
         assert_almost_equal(p.sld, 2.093)
         assert_almost_equal(p.isld, -0.5)
-        assert str(p._sld.unit) == '1 / angstrom ** 2'
-        assert str(p._isld.unit) == '1 / angstrom ** 2'
+        assert str(p._sld.unit) == '1/Å^2'
+        assert str(p._isld.unit) == '1/Å^2'
 
     def test_fraction_constraint(self):
         p = Material()
@@ -45,8 +45,8 @@ class TestMaterialMixture(unittest.TestCase):
         p = MaterialMixture()
         assert p.fraction == 0.5
         assert str(p._fraction.unit) == 'dimensionless'
-        assert p.sld == Material().sld.raw_value
-        assert p.isld == Material().isld.raw_value
+        assert p.sld == Material().sld.value
+        assert p.isld == Material().isld.value
         q = Material(6.908, -0.278, 'Boron')
         p.material_a = q
         assert p.fraction == 0.5
@@ -58,8 +58,8 @@ class TestMaterialMixture(unittest.TestCase):
         p = MaterialMixture()
         assert p.fraction == 0.5
         assert str(p._fraction.unit) == 'dimensionless'
-        assert p.sld == Material().sld.raw_value
-        assert p.isld == Material().isld.raw_value
+        assert p.sld == Material().sld.value
+        assert p.isld == Material().isld.value
         q = Material(6.908, -0.278, 'Boron')
         p.material_b = q
         assert p.fraction == 0.5
@@ -71,8 +71,8 @@ class TestMaterialMixture(unittest.TestCase):
         p = MaterialMixture()
         assert p.fraction == 0.5
         assert str(p._fraction.unit) == 'dimensionless'
-        assert p.sld == Material().sld.raw_value
-        assert p.isld == Material().isld.raw_value
+        assert p.sld == Material().sld.value
+        assert p.isld == Material().isld.value
         q = Material(6.908, -0.278, 'Boron')
         p.material_b = q
         assert p.name == 'EasyMaterial/Boron'
@@ -96,18 +96,18 @@ class TestMaterialMixture(unittest.TestCase):
         assert str(r._fraction.unit) == 'dimensionless'
         assert_almost_equal(r.sld, 4.7304)
         assert_almost_equal(r.isld, -0.0556)
-        assert str(r._sld.unit) == '1 / angstrom ** 2'
-        assert str(r._isld.unit) == '1 / angstrom ** 2'
+        assert str(r._sld.unit) == '1/Å^2'
+        assert str(r._isld.unit) == '1/Å^2'
 
     def test_dict_repr(self):
         p = MaterialMixture()
         assert p._dict_repr == {
             'EasyMaterial/EasyMaterial': {
                 'fraction': '0.500 dimensionless',
-                'sld': '4.186e-6 1 / angstrom ** 2',
-                'isld': '0.000e-6 1 / angstrom ** 2',
-                'material_a': {'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}},
-                'material_b': {'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}},
+                'sld': '4.186e-6 1/Å^2',
+                'isld': '0.000e-6 1/Å^2',
+                'material_a': {'EasyMaterial': {'sld': '4.186e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
+                'material_b': {'EasyMaterial': {'sld': '4.186e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
             }
         }
 

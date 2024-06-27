@@ -4,7 +4,7 @@ import numpy as np
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.special.calculations import area_per_molecule_to_scattering_length_density
 from easyreflectometry.special.calculations import neutron_scattering_length
-from easyscience.Fitting.Constraints import FunctionalConstraint
+from easyscience.fitting.Constraints import FunctionalConstraint
 from easyscience.Objects.ObjectClasses import Parameter
 
 from ..materials.material import Material
@@ -18,7 +18,7 @@ DEFAULTS = {
     'area_per_molecule': {
         'description': 'Surface coverage',
         'value': 48.2,
-        'units': 'angstrom ** 2',
+        'unit': 'angstrom^2',
         'min': 0,
         'max': np.inf,
         'fixed': True,
@@ -27,7 +27,7 @@ DEFAULTS = {
         'description': 'The real scattering length for a molecule formula in angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 4.186,
-        'units': 'angstrom',
+        'unit': 'angstrom',
         'min': -np.Inf,
         'max': np.Inf,
         'fixed': True,
@@ -36,7 +36,7 @@ DEFAULTS = {
         'description': 'The real scattering length for a molecule formula in angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 0.0,
-        'units': 'angstrom',
+        'unit': 'angstrom',
         'min': -np.Inf,
         'max': np.Inf,
         'fixed': True,
@@ -149,7 +149,7 @@ class LayerAreaPerMolecule(Layer):
     @property
     def area_per_molecule(self) -> float:
         """Get the area per molecule."""
-        return self._area_per_molecule.raw_value
+        return self._area_per_molecule.value
 
     @area_per_molecule.setter
     def area_per_molecule(self, new_area_per_molecule: float) -> None:

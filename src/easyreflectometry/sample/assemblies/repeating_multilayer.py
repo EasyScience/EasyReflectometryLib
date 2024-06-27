@@ -70,5 +70,5 @@ class RepeatingMultilayer(Multilayer):
     def _dict_repr(self) -> dict:
         """A simplified dict representation."""
         d_dict = {self.name: self.layers._dict_repr}
-        d_dict[self.name]['repetitions'] = self.repetitions.raw_value
+        d_dict[self.name]['repetitions'] = float(self.repetitions.value)
         return d_dict

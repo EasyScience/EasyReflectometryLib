@@ -1,7 +1,7 @@
 from typing import Any
 from typing import Optional
 
-from easyscience.Fitting.Constraints import ObjConstraint
+from easyscience.fitting.Constraints import ObjConstraint
 
 from ..base_core import BaseCore
 from ..elements.layers.layer import Layer
@@ -109,7 +109,10 @@ class BaseAssembly(BaseCore):
             # Make sure that the thickness parameter is enabled
             for i in range(len(self.layers)):
                 self.layers[i].thickness.enabled = True
-            self.front_layer.thickness.value = self.front_layer.thickness.raw_value
+            # Make sure that the thickness constraint is applied
+            for i in range(1, len(self.layers)):
+                self.front_layer.thickness.user_constraints[f'thickness_{i}']()
+
         else:
             raise Exception('Roughness constraints not setup')
 
@@ -148,7 +151,9 @@ class BaseAssembly(BaseCore):
             # Make sure that the roughness parameter is enabled
             for i in range(len(self.layers)):
                 self.layers[i].roughness.enabled = True
-            self.front_layer.roughness.value = self.front_layer.roughness.raw_value
+            # Make sure that the roughness constraint is applied
+            for i in range(1, len(self.layers)):
+                self.front_layer.roughness.user_constraints[f'roughness_{i}']()
         else:
             raise Exception('Roughness constraints not setup')
 

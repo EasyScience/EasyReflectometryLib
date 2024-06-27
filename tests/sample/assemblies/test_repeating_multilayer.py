@@ -26,7 +26,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(len(p.layers), 2)
         assert_equal(p.repetitions.display_name, 'repetitions')
         assert_equal(str(p.repetitions.unit), 'dimensionless')
-        assert_equal(p.repetitions.value.value.magnitude, 1.0)
+        assert_equal(p.repetitions.value, 1.0)
         assert_equal(p.repetitions.min, 1)
         assert_equal(p.repetitions.max, 9999)
         assert_equal(p.repetitions.fixed, True)
@@ -44,7 +44,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(o.interface, None)
         assert_equal(o.repetitions.display_name, 'repetitions')
         assert_equal(str(o.repetitions.unit), 'dimensionless')
-        assert_equal(o.repetitions.value.value.magnitude, 2.0)
+        assert_equal(o.repetitions.value, 2.0)
         assert_equal(o.repetitions.min, 1)
         assert_equal(o.repetitions.max, 9999)
         assert_equal(o.repetitions.fixed, True)
@@ -58,7 +58,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(o.interface, None)
         assert_equal(o.repetitions.display_name, 'repetitions')
         assert_equal(str(o.repetitions.unit), 'dimensionless')
-        assert_equal(o.repetitions.value.value.magnitude, 2.0)
+        assert_equal(o.repetitions.value, 2.0)
         assert_equal(o.repetitions.min, 1)
         assert_equal(o.repetitions.max, 9999)
         assert_equal(o.repetitions.fixed, True)
@@ -73,7 +73,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(o.name, 'twoLayerItem')
         assert_equal(o.interface, None)
         assert_equal(o.layers.name, 'thinBoron/layerPotassium')
-        assert_equal(o.repetitions.value.value.magnitude, 10.0)
+        assert_equal(o.repetitions.value, 10.0)
         assert_equal(o.repetitions.min, 1)
         assert_equal(o.repetitions.max, 9999)
 
@@ -171,7 +171,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         p = RepeatingMultilayer()
         assert (
             p.__repr__()
-            == 'EasyRepeatingMultilayer:\n  EasyLayers:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n  repetitions: 1.0\n'  # noqa: E501
+            == 'EasyRepeatingMultilayer:\n  EasyLayers:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1/Å^2\n          isld: 0.000e-6 1/Å^2\n      thickness: 10.000 Å\n      roughness: 3.300 Å\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1/Å^2\n          isld: 0.000e-6 1/Å^2\n      thickness: 10.000 Å\n      roughness: 3.300 Å\n  repetitions: 1.0\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):

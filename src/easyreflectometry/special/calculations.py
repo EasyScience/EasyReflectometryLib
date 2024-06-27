@@ -59,8 +59,8 @@ def area_per_molecule_to_scattering_length_density(
 
     :param scattering_length: Scattering length of component, in angstrom.
     :param thickness: Thickness of component, in angstrom.
-    :param area_per_molecule: Area per molecule, in angstrom ** 2.
-    :return: Scattering length density of layer in e-6 1/angstrom ** 2.
+    :param area_per_molecule: Area per molecule, in angstrom^2.
+    :return: Scattering length density of layer in e-6 1/angstrom^2.
     """
     return scattering_length / (thickness * area_per_molecule) * 1e6
 
@@ -72,7 +72,7 @@ def density_to_sld(scattering_length: float, molecular_weight: float, density: f
     :param scattering_length: Scattering length of component, in angstrom.
     :param molecular_weight: Molecular weight of component, in u.
     :param density: Mass density of the component, in gram centimeter^-3.
-    :return: Scattering length density of layer in e-6 1/angstrom ** 2.
+    :return: Scattering length density of layer in e-6 1/angstrom^2.
     """
     # 0.602214076 is avogadros constant times 1e-24
     return 0.602214076e6 * density * scattering_length / molecular_weight

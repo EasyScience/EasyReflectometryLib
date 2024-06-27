@@ -33,13 +33,13 @@ class TestModel(unittest.TestCase):
         assert_equal(p.sample.name, 'EasySample')
         assert_equal(p.scale.display_name, 'scale')
         assert_equal(str(p.scale.unit), 'dimensionless')
-        assert_equal(p.scale.value.value.magnitude, 1.0)
+        assert_equal(p.scale.value, 1.0)
         assert_equal(p.scale.min, 0.0)
         assert_equal(p.scale.max, np.Inf)
         assert_equal(p.scale.fixed, True)
         assert_equal(p.background.display_name, 'background')
         assert_equal(str(p.background.unit), 'dimensionless')
-        assert_equal(p.background.value.value.magnitude, 1.0e-8)
+        assert_equal(p.background.value, 1.0e-8)
         assert_equal(p.background.min, 0.0)
         assert_equal(p.background.max, np.Inf)
         assert_equal(p.background.fixed, True)
@@ -69,13 +69,13 @@ class TestModel(unittest.TestCase):
         assert_equal(mod.sample.name, 'myModel')
         assert_equal(mod.scale.display_name, 'scale')
         assert_equal(str(mod.scale.unit), 'dimensionless')
-        assert_equal(mod.scale.value.value.magnitude, 2.0)
+        assert_equal(mod.scale.value, 2.0)
         assert_equal(mod.scale.min, 0.0)
         assert_equal(mod.scale.max, np.Inf)
         assert_equal(mod.scale.fixed, True)
         assert_equal(mod.background.display_name, 'background')
         assert_equal(str(mod.background.unit), 'dimensionless')
-        assert_equal(mod.background.value.value.magnitude, 1.0e-5)
+        assert_equal(mod.background.value, 1.0e-5)
         assert_equal(mod.background.min, 0.0)
         assert_equal(mod.background.max, np.Inf)
         assert_equal(mod.background.fixed, True)
@@ -380,7 +380,7 @@ class TestModel(unittest.TestCase):
 
         assert (
             model.__repr__()
-            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n'  # noqa: E501
+            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n'  # noqa: E501
         )
 
     def test_repr_resolution_function(self):
@@ -389,7 +389,7 @@ class TestModel(unittest.TestCase):
         model.resolution_function = resolution_function
         assert (
             model.__repr__()
-            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: function of Q\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n'  # noqa: E501
+            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: function of Q\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):
