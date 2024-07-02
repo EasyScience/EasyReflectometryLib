@@ -10,6 +10,7 @@ import unittest
 
 from easyreflectometry.sample.assemblies.surfactant_layer import SurfactantLayer
 from easyreflectometry.sample.elements.layers.layer import Layer
+from easyreflectometry.sample.elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
 from easyreflectometry.sample.elements.materials.material import Material
 
 
@@ -182,8 +183,25 @@ class TestSurfactantLayer(unittest.TestCase):
         assert p.layers[0] == new_layer
 
     def test_dict_round_trip(self):
-        p = SurfactantLayer()
-        q = SurfactantLayer.from_dict(p.as_dict())
+        solvent = Material(-0.561, 0, 'H2O')
+        tail_layer = LayerAreaPerMolecule(
+            molecular_formula='CO2',
+            solvent=solvent,
+            solvent_fraction=0.25,
+            area_per_molecule=50,
+            thickness=10,
+            roughness=4,
+        )
+        head_layer = LayerAreaPerMolecule(
+            molecular_formula='CH2',
+            solvent_fraction=0.75,
+            area_per_molecule=50,
+            thickness=5,
+            roughness=2,
+        )
+        p = SurfactantLayer(head_layer=head_layer, tail_layer=tail_layer)
+        data_dict = p.as_dict()
+        q = SurfactantLayer.from_dict(data_dict)
         assert p.as_data_dict() == q.as_data_dict()
 
     def test_dict_round_trip_area_per_molecule_constraint_enabled(self):

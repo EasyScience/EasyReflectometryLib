@@ -84,7 +84,7 @@ class Sample(BaseCollection):
 
         # Remove the default multilayers
         for i in range(NR_DEFAULT_LAYERS):
-            sample.__delitem__(0)
+            del sample[0]
 
         # Ensure that the data is also converted
         # TODO Should probably be handled in easyscience

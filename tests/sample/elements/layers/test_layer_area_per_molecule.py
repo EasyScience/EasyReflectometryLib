@@ -161,6 +161,15 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
         }
 
     def test_dict_round_trip(self):
-        p = LayerAreaPerMolecule()
-        q = LayerAreaPerMolecule.from_dict(p.as_dict())
+        solvent = Material(-0.561, 0, 'H2O')
+        p = LayerAreaPerMolecule(
+            molecular_formula='CO2',
+            solvent=solvent,
+            solvent_fraction=0.5,
+            area_per_molecule=50,
+            thickness=10,
+            roughness=3,
+        )
+        dict_src = p.as_dict()
+        q = LayerAreaPerMolecule.from_dict(dict_src)
         assert p.as_data_dict() == q.as_data_dict()
