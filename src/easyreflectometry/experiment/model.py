@@ -2,6 +2,7 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
+import copy
 from numbers import Number
 from typing import Union
 
@@ -201,26 +202,43 @@ class Model(BaseObj):
         """
         if skip is None:
             skip = []
+        skip.extend(['sample', 'resolution_function', 'interface'])
         this_dict = super().as_dict(skip=skip)
         this_dict['sample'] = self.sample.as_dict(skip=skip)
         this_dict['resolution_function'] = self.resolution_function.as_dict()
+        if self.interface is None:
+            this_dict['interface'] = None
+        else:
+            this_dict['interface'] = self.interface().name
         return this_dict
 
     @classmethod
-    def from_dict(cls, this_dict: dict) -> Model:
+    def from_dict(cls, passed_dict: dict) -> Model:
         """
         Create a Model from a dictionary.
 
         :param this_dict: dictionary of the Model
         :return: Model
         """
+        # Causes circular import if imported at the top
+        from easyreflectometry.calculators import CalculatorFactory
+
+        this_dict = copy.deepcopy(passed_dict)
         resolution_function = ResolutionFunction.from_dict(this_dict['resolution_function'])
         del this_dict['resolution_function']
         sample = Sample.from_dict(this_dict['sample'])
         del this_dict['sample']
+        interface_name = this_dict['interface']
+        del this_dict['interface']
+        if interface_name is not None:
+            interface = CalculatorFactory()
+            interface.switch(interface_name)
+        else:
+            interface = None
 
         model = super().from_dict(this_dict)
 
         model.sample = sample
         model.resolution_function = resolution_function
+        model.interface = interface
         return model

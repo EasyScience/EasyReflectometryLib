@@ -418,3 +418,6 @@ def test_dict_round_trip(interface, additional_layer):
         skip=['resolution_function', 'interface']
     )
     assert model._resolution_function.smearing(5.5) == model_from_dict._resolution_function.smearing(5.5)
+    if interface is not None:
+        assert model.interface().name == model_from_dict.interface().name
+        assert model.interface().fit_func([0.3], model.uid) == model_from_dict.interface().fit_func([0.3], model_from_dict.uid)
