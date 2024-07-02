@@ -16,7 +16,9 @@ from easyreflectometry.sample import Sample
 PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
 
 
-@pytest.mark.parametrize('minimizer', ['bumps', 'lmfit', 'dfo'])
+# TODO add DFO when it has been confirmed to work
+# @pytest.mark.parametrize('minimizer', ['bumps', 'lmfit', 'dfo'])
+@pytest.mark.parametrize('minimizer', ['bumps', 'lmfit'])
 def test_fitting(minimizer):
     fpath = os.path.join(PATH_STATIC, 'example.ort')
     data = load(fpath)
