@@ -395,19 +395,19 @@ class TestModel(unittest.TestCase):
 
 @pytest.mark.parametrize(
     'interface',
-    [(None), (CalculatorFactory())],
+    [None, CalculatorFactory()],
 )
-def test_dict_round_trip(interface):
+@pytest.mark.parametrize(
+    'additional_layer',
+    [SurfactantLayer(), Multilayer(), RepeatingMultilayer()],
+    ids=['SurfactantLayer', 'Multilayer', 'RepeatingMultilayer'],
+)
+def test_dict_round_trip(interface, additional_layer):
     # When
     resolution_function = LinearSpline([0, 10], [0, 10])
     model = Model(interface=interface)
     model.resolution_function = resolution_function
-    surfactant = SurfactantLayer()
-    model.add_item(surfactant)
-    multilayer = Multilayer()
-    model.add_item(multilayer)
-    repeating = RepeatingMultilayer()
-    model.add_item(repeating)
+    model.add_item(additional_layer)
     src_dict = model.as_dict()
 
     # Then
