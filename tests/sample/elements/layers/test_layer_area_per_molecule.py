@@ -6,6 +6,7 @@ import unittest
 
 from easyreflectometry.sample.elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
 from easyreflectometry.sample.elements.materials.material import Material
+from easyscience import global_object
 from numpy.testing import assert_almost_equal
 
 
@@ -161,6 +162,7 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
         }
 
     def test_dict_round_trip(self):
+        global_object.map._clear()
         solvent = Material(-0.561, 0, 'H2O')
         p = LayerAreaPerMolecule(
             molecular_formula='CO2',
@@ -170,6 +172,7 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
             thickness=10,
             roughness=3,
         )
-        dict_src = p.as_dict()
-        q = LayerAreaPerMolecule.from_dict(dict_src)
+        p_dict = p.as_dict()
+        global_object.map._clear()
+        q = LayerAreaPerMolecule.from_dict(p_dict)
         assert p.as_data_dict() == q.as_data_dict()

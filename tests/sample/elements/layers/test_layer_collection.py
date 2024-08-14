@@ -11,6 +11,7 @@ from easyreflectometry.sample.assemblies.repeating_multilayer import RepeatingMu
 from easyreflectometry.sample.elements.layers.layer import Layer
 from easyreflectometry.sample.elements.layers.layer_collection import LayerCollection
 from easyreflectometry.sample.elements.materials.material import Material
+from easyscience import global_object
 from numpy.testing import assert_equal
 
 
@@ -80,9 +81,11 @@ class TestLayerCollection(unittest.TestCase):
         r = LayerCollection()
         r.insert(0, p)
         r.append(q)
+        r_dict = r.as_dict()
+        global_object.map._clear()
 
         # Then
-        s = LayerCollection.from_dict(r.as_dict())
+        s = LayerCollection.from_dict(r_dict)
 
         # Expect
         assert s.as_data_dict() == r.as_data_dict()

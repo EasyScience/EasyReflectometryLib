@@ -12,6 +12,7 @@ from easyreflectometry.sample.assemblies.multilayer import Multilayer
 from easyreflectometry.sample.elements.layers.layer import Layer
 from easyreflectometry.sample.elements.layers.layer_collection import LayerCollection
 from easyreflectometry.sample.elements.materials.material import Material
+from easyscience import global_object
 from numpy.testing import assert_equal
 from numpy.testing import assert_raises
 
@@ -154,5 +155,7 @@ class TestMultilayer(unittest.TestCase):
 
     def test_dict_round_trip(self):
         p = Multilayer()
-        q = Multilayer.from_dict(p.as_dict())
+        p_dict = p.as_dict()
+        global_object.map._clear()
+        q = Multilayer.from_dict(p_dict)
         assert p.as_data_dict() == q.as_data_dict()

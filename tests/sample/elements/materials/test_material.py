@@ -12,6 +12,7 @@ import numpy as np
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.sample.elements.materials.material import DEFAULTS
 from easyreflectometry.sample.elements.materials.material import Material
+from easyscience import global_object
 
 
 class TestMaterial(unittest.TestCase):
@@ -91,5 +92,7 @@ class TestMaterial(unittest.TestCase):
 
     def test_dict_round_trip(self):
         p = Material()
-        q = Material.from_dict(p.as_dict())
+        p_dict = p.as_dict()
+        global_object.map._clear()
+        q = Material.from_dict(p_dict)
         assert p.as_data_dict() == q.as_data_dict()

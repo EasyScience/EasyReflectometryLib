@@ -9,9 +9,10 @@ import unittest
 
 from easyreflectometry.sample.elements.materials.material import Material
 from easyreflectometry.sample.elements.materials.material_collection import MaterialCollection
+from easyscience import global_object
 
 
-class TestLayerCollection(unittest.TestCase):
+class TestMaterialCollection(unittest.TestCase):
     def test_default(self):
         p = MaterialCollection()
         assert p.name == 'EasyMaterials'
@@ -60,9 +61,11 @@ class TestLayerCollection(unittest.TestCase):
         p = MaterialCollection()
         p.insert(0, m)
         p.append(k)
+        p_dict = p.as_dict()
+        global_object.map._clear()
 
         # Then
-        q = MaterialCollection.from_dict(p.as_dict())
+        q = MaterialCollection.from_dict(p_dict)
 
         # Expect
         assert p.as_data_dict() == q.as_data_dict()

@@ -13,6 +13,7 @@ from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.sample.elements.layers.layer import DEFAULTS
 from easyreflectometry.sample.elements.layers.layer import Layer
 from easyreflectometry.sample.elements.materials.material import Material
+from easyscience import global_object
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
@@ -127,5 +128,7 @@ class TestLayer(unittest.TestCase):
 
     def test_dict_round_trip(self):
         p = Layer()
-        q = Layer.from_dict(p.as_dict())
+        p_dict = p.as_dict()
+        global_object.map._clear()
+        q = Layer.from_dict(p_dict)
         assert p.as_data_dict() == q.as_data_dict()

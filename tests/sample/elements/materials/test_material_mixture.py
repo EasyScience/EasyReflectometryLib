@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 from easyreflectometry.sample.elements.materials.material import Material
 from easyreflectometry.sample.elements.materials.material_mixture import MaterialMixture
+from easyscience import global_object
 from numpy.testing import assert_almost_equal
 
 
@@ -113,7 +114,9 @@ class TestMaterialMixture(unittest.TestCase):
 
     def test_dict_round_trip(self):
         p = MaterialMixture()
-        q = MaterialMixture.from_dict(p.as_dict())
+        p_dict = p.as_dict()
+        global_object.map._clear()
+        q = MaterialMixture.from_dict(p_dict)
         assert p.as_data_dict() == q.as_data_dict()
 
     def test_update_name(self):

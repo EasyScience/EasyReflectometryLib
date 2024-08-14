@@ -14,6 +14,7 @@ from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import RepeatingMultilayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.sample import SurfactantLayer
+from easyscience import global_object
 from numpy.testing import assert_equal
 
 
@@ -72,9 +73,11 @@ class TestSample(unittest.TestCase):
         p.append(multilayer)
         repeating = RepeatingMultilayer()
         p.append(repeating)
+        p_dict = p.as_dict()
+        global_object.map._clear()
 
         # Then
-        q = Sample.from_dict(p.as_dict())
+        q = Sample.from_dict(p_dict)
 
         # Expect
         assert p.as_data_dict() == q.as_data_dict()

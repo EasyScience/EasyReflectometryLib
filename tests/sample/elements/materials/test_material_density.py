@@ -2,6 +2,7 @@ import unittest
 
 import numpy as np
 from easyreflectometry.sample.elements.materials.material_density import MaterialDensity
+from easyscience import global_object
 from numpy.testing import assert_almost_equal
 
 
@@ -52,6 +53,9 @@ class TestMaterialDensity(unittest.TestCase):
         }
 
     def test_dict_round_trip(self):
+        global_object.map._clear()
         p = MaterialDensity()
-        q = MaterialDensity.from_dict(p.as_dict())
+        p_dict = p.as_dict()
+        global_object.map._clear()
+        q = MaterialDensity.from_dict(p_dict)
         assert p.as_data_dict() == q.as_data_dict()
