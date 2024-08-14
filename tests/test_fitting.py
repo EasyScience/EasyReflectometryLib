@@ -12,11 +12,12 @@ from easyreflectometry.fitting import Fitter
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import Sample
+from easyscience.fitting.minimizers.factory import AvailableMinimizers
 
 PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
 
 
-@pytest.mark.parametrize('minimizer', ['bumps', 'lmfit', 'dfo'])
+@pytest.mark.parametrize('minimizer', [AvailableMinimizers.Bumps, AvailableMinimizers.DFO, AvailableMinimizers.LMFit])
 def test_fitting(minimizer):
     fpath = os.path.join(PATH_STATIC, 'example.ort')
     data = load(fpath)
