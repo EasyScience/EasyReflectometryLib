@@ -19,12 +19,12 @@ class BaseCore(BaseObj):
     @abstractmethod
     def _dict_repr(self) -> dict[str, str]: ...
 
-    @property
-    def uid(self) -> int:
-        """
-        :return: UID from the borg map
-        """
-        return self._borg.map.convert_id_to_key(self)
+    # @property
+    # def uid(self) -> int:
+    #     """
+    #     :return: UID from the borg map
+    #     """
+    #     return self._borg.map.convert_id_to_key(self)
 
     def __repr__(self) -> str:
         """

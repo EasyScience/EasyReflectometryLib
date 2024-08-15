@@ -103,11 +103,11 @@ class TestLayer(unittest.TestCase):
         m = Material(6.908, -0.278, 'Boron', interface=interface)
         p = Layer(m, 5.0, 2.0, 'thinBoron', interface=interface)
         k = Material(2.074, 0.0, 'Silicon', interface=interface)
-        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.uid].sld.real.value, 6.908)
-        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.uid].sld.imag.value, -0.278)
+        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.unique_name].sld.real.value, 6.908)
+        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.unique_name].sld.imag.value, -0.278)
         p.assign_material(k)
-        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.uid].sld.real.value, 2.074)
-        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.uid].sld.imag.value, 0.0)
+        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.unique_name].sld.real.value, 2.074)
+        assert_almost_equal(p.interface()._wrapper.storage['layer'][p.unique_name].sld.imag.value, 0.0)
 
     def test_dict_repr(self):
         p = Layer()

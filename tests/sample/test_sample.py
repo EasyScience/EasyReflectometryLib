@@ -66,6 +66,7 @@ class TestSample(unittest.TestCase):
 
     def test_dict_round_trip(self):
         # When
+        global_object.map._clear()
         p = Sample()
         surfactant = SurfactantLayer()
         p.append(surfactant)

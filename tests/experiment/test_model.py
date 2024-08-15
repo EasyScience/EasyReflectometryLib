@@ -335,9 +335,9 @@ class TestModel(unittest.TestCase):
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
-    def test_uid(self):
-        p = Model()
-        assert_equal(p.uid, p._borg.map.convert_id_to_key(p))
+    # def test_uid(self):
+    #     p = Model()
+    #     assert_equal(p.uid, p._borg.map.convert_id_to_key(p))
 
     def test_resolution_function(self):
         mock_resolution_function = MagicMock()
@@ -420,4 +420,6 @@ def test_dict_round_trip(interface, additional_layer):
     assert model._resolution_function.smearing(5.5) == model_from_dict._resolution_function.smearing(5.5)
     if interface is not None:
         assert model.interface().name == model_from_dict.interface().name
-        assert model.interface().fit_func([0.3], model.uid) == model_from_dict.interface().fit_func([0.3], model_from_dict.uid)
+        assert model.interface().fit_func([0.3], model.unique_name) == model_from_dict.interface().fit_func(
+            [0.3], model_from_dict.unique_name
+        )

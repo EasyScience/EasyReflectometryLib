@@ -1,5 +1,6 @@
 from typing import Optional
 
+from easyscience import global_object
 from numpy import arange
 
 from ..elements.layers.layer import Layer
@@ -157,6 +158,7 @@ def _prepare_gradient_layers(
             roughness=0.0,
             name=str(i),
             interface=interface,
+            unique_name=global_object.generate_unique_name('GradientLayer'),
         )
         gradient_layers.append(layer)
     return LayerCollection(gradient_layers)

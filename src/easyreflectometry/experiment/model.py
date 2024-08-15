@@ -101,7 +101,7 @@ class Model(BaseObj):
             if issubclass(arg.__class__, BaseAssembly):
                 self.sample.append(arg)
                 if self.interface is not None:
-                    self.interface().add_item_to_model(arg.uid, self.uid)
+                    self.interface().add_item_to_model(arg.unique_name, self.unique_name)
             else:
                 raise ValueError(f'Object {arg} is not a valid type, must be a child of BaseAssembly.')
 
@@ -133,10 +133,10 @@ class Model(BaseObj):
 
         :param idx: Index of the item to remove.
         """
-        item_uid = self.sample[idx].uid
+        item_unique_name = self.sample[idx].unique_name
         del self.sample[idx]
         if self.interface is not None:
-            self.interface().remove_item_from_model(item_uid, self.uid)
+            self.interface().remove_item_from_model(item_unique_name, self.unique_name)
 
     @property
     def resolution_function(self) -> ResolutionFunction:
@@ -166,10 +166,10 @@ class Model(BaseObj):
             self.generate_bindings()
             self._interface().set_resolution_function(self._resolution_function)
 
-    @property
-    def uid(self) -> int:
-        """Return a UID from the borg map."""
-        return self._borg.map.convert_id_to_key(self)
+    # @property
+    # def uid(self) -> int:
+    #     """Return a UID from the borg map."""
+    #     return self._borg.map.convert_id_to_key(self)
 
     # Representation
     @property

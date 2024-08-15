@@ -50,7 +50,7 @@ class Multilayer(BaseAssembly):
             if issubclass(arg.__class__, Layer):
                 self.layers.append(arg)
                 if self.interface is not None:
-                    self.interface().add_layer_to_item(arg.uid, self.uid)
+                    self.interface().add_layer_to_item(arg.unique_name, self.unique_name)
 
     def duplicate_layer(self, idx: int) -> None:
         """Duplicate a given layer.
@@ -73,7 +73,7 @@ class Multilayer(BaseAssembly):
         :param idx: index of layer to remove
         """
         if self.interface is not None:
-            self.interface().remove_layer_from_item(self.layers[idx].uid, self.uid)
+            self.interface().remove_layer_from_item(self.layers[idx].unique_name, self.unique_name)
         del self.layers[idx]
 
     # Representation

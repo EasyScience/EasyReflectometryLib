@@ -1,6 +1,7 @@
 from typing import Union
 
 from easyreflectometry.parameter_utils import get_as_parameter
+from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 
 from .material import Material
@@ -40,7 +41,12 @@ class MaterialSolvated(MaterialMixture):
         if solvent is None:
             solvent = Material(sld=-0.561, isld=0, name='H2O', interface=interface)
 
-        solvent_fraction = get_as_parameter('solvent_fraction', solvent_fraction, DEFAULTS)
+        solvent_fraction = get_as_parameter(
+            name='solvent_fraction',
+            value=solvent_fraction,
+            default_dict=DEFAULTS,
+            unique_name_prefix='MaterialSolvatedFraction',
+        )
 
         # In super class, the fraction is the fraction of material b in material a
         super().__init__(

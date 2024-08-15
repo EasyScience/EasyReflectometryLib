@@ -4,6 +4,7 @@ from typing import Union
 
 import numpy as np
 from easyreflectometry.parameter_utils import get_as_parameter
+from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 
 from ...base_core import BaseCore
@@ -49,8 +50,18 @@ class Material(BaseCore):
         :param name: Name of the material, defaults to 'EasyMaterial'.
         :param interface: Calculator interface, defaults to `None`.
         """
-        sld = get_as_parameter('sld', sld, DEFAULTS)
-        isld = get_as_parameter('isld', isld, DEFAULTS)
+        sld = get_as_parameter(
+            name='sld',
+            value=sld,
+            default_dict=DEFAULTS,
+            unique_name_prefix='MaterialSld',
+        )
+        isld = get_as_parameter(
+            name='isld',
+            value=isld,
+            default_dict=DEFAULTS,
+            unique_name_prefix='MaterialIsld',
+        )
 
         super().__init__(name=name, sld=sld, isld=isld, interface=interface)
 

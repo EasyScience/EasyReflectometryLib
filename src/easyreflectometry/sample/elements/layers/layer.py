@@ -1,8 +1,10 @@
 __author__ = 'github.com/arm61'
+from typing import Optional
 from typing import Union
 
 import numpy as np
 from easyreflectometry.parameter_utils import get_as_parameter
+from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 
 from ...base_core import BaseCore
@@ -45,6 +47,7 @@ class Layer(BaseCore):
         thickness: Union[Parameter, float, None] = None,
         roughness: Union[Parameter, float, None] = None,
         name: str = 'EasyLayer',
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -58,8 +61,18 @@ class Layer(BaseCore):
         if material is None:
             material = Material(interface=interface)
 
-        thickness = get_as_parameter('thickness', thickness, DEFAULTS)
-        roughness = get_as_parameter('roughness', roughness, DEFAULTS)
+        thickness = get_as_parameter(
+            name='thickness',
+            value=thickness,
+            default_dict=DEFAULTS,
+            unique_name_prefix='LayerThickness',
+        )
+        roughness = get_as_parameter(
+            name='roughness',
+            value=roughness,
+            default_dict=DEFAULTS,
+            unique_name_prefix='LayerRoughness',
+        )
 
         super().__init__(
             name=name,
@@ -67,6 +80,7 @@ class Layer(BaseCore):
             material=material,
             thickness=thickness,
             roughness=roughness,
+            unique_name=unique_name,
         )
 
     def assign_material(self, material: Material) -> None:
@@ -76,7 +90,7 @@ class Layer(BaseCore):
         """
         self.material = material
         if self.interface is not None:
-            self.interface().assign_material_to_layer(self.material.uid, self.uid)
+            self.interface().assign_material_to_layer(self.material.unique_name, self.unique_name)
 
     # Representation
     @property

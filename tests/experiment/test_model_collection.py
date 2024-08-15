@@ -2,6 +2,7 @@ import unittest
 
 from easyreflectometry.experiment.model import Model
 from easyreflectometry.experiment.model_collection import ModelCollection
+from easyscience import global_object
 
 
 class TestModelCollection(unittest.TestCase):
@@ -73,17 +74,16 @@ class TestModelCollection(unittest.TestCase):
 
     def test_dict_round_trip(self):
         # When
+        global_object.map._clear()
         model_1 = Model(name='Model1')
         model_2 = Model(name='Model2')
         model_3 = Model(name='Model3')
-
-        # Then
         collection = ModelCollection(model_1, model_2, model_3)
-
-        src_dict = collection.as_dict()
+        collection_dict = collection.as_dict()
+        global_object.map._clear()
 
         # Then
-        collection_from_dict = ModelCollection.from_dict(src_dict)
+        collection_from_dict = ModelCollection.from_dict(collection_dict)
 
         # Expect
         assert collection.as_data_dict(skip=['resolution_function', 'interface']) == collection_from_dict.as_data_dict(

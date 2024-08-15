@@ -2,6 +2,7 @@ from typing import Union
 
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.special.calculations import weighted_average
+from easyscience import global_object
 from easyscience.fitting.Constraints import FunctionalConstraint
 from easyscience.Objects.new_variable import Parameter
 
@@ -49,7 +50,12 @@ class MaterialMixture(BaseCore):
         if material_b is None:
             material_b = Material(interface=interface)
 
-        fraction = get_as_parameter('fraction', fraction, DEFAULTS)
+        fraction = get_as_parameter(
+            name='fraction',
+            value=fraction,
+            default_dict=DEFAULTS,
+            unique_name_prefix='MaterialMixtureFraction',
+        )
 
         sld = weighted_average(
             a=material_a.sld.value,
@@ -62,8 +68,18 @@ class MaterialMixture(BaseCore):
             p=fraction.value,
         )
 
-        self._sld = get_as_parameter('sld', sld, DEFAULTS)
-        self._isld = get_as_parameter('isld', isld, DEFAULTS)
+        self._sld = get_as_parameter(
+            name='sld',
+            value=sld,
+            default_dict=DEFAULTS,
+            unique_name_prefix='MaterialMixtureSld',
+        )
+        self._isld = get_as_parameter(
+            name='isld',
+            value=isld,
+            default_dict=DEFAULTS,
+            unique_name_prefix='MaterialMixtureIsld',
+        )
 
         # To avoid problems when setting the interface
         # self._sld and self._isld need to be declared before calling the super constructor

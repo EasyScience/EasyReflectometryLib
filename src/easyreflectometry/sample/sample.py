@@ -44,10 +44,10 @@ class Sample(BaseCollection):
         super().__init__(name, *new_items, **kwargs)
         self.interface = interface
 
-    @property
-    def uid(self) -> int:
-        """The UID from the borg map."""
-        return self._borg.map.convert_id_to_key(self)
+    # @property
+    # def uid(self) -> int:
+    #     """The UID from the borg map."""
+    #     return self._borg.map.convert_id_to_key(self)
 
     # Representation
     @property
