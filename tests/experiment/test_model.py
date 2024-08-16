@@ -22,6 +22,7 @@ from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import RepeatingMultilayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.sample import SurfactantLayer
+from easyscience import global_object
 from numpy.testing import assert_equal
 
 
@@ -409,13 +410,14 @@ def test_dict_round_trip(interface, additional_layer):
     model.resolution_function = resolution_function
     model.add_item(additional_layer)
     src_dict = model.as_dict()
+    global_object.map._clear()
 
     # Then
     model_from_dict = Model.from_dict(src_dict)
 
     # Expect
-    assert model.as_data_dict(skip=['resolution_function', 'interface']) == model_from_dict.as_data_dict(
-        skip=['resolution_function', 'interface']
+    assert model.as_data_dict(skip=['resolution_function', 'interface', 'unique_name']) == model_from_dict.as_data_dict(
+        skip=['resolution_function', 'interface', 'unique_name']
     )
     assert model._resolution_function.smearing(5.5) == model_from_dict._resolution_function.smearing(5.5)
     if interface is not None:

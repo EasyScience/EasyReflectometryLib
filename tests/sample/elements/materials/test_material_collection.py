@@ -68,4 +68,5 @@ class TestMaterialCollection(unittest.TestCase):
         q = MaterialCollection.from_dict(p_dict)
 
         # Expect
-        assert p.as_data_dict() == q.as_data_dict()
+        # We have to skip the unique_name as some are generated on the fly
+        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])

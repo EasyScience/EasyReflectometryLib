@@ -36,7 +36,7 @@ def get_as_parameter(
 
     # Add specific unique name prefix if requested
     if unique_name_prefix is not None:
-        parameter_dict['unique_name'] = global_object.generate_unique_name(unique_name_prefix)
+        parameter_dict['unique_name'] = global_object.generate_unique_name(unique_name_prefix + 'Parameter')
 
     if value is None:
         # Create a default parameter using both value and metadata from dictionary

@@ -1,3 +1,4 @@
+from typing import Optional
 from typing import Union
 
 from easyreflectometry.parameter_utils import get_as_parameter
@@ -35,6 +36,7 @@ class MaterialMixture(BaseCore):
         material_b: Union[Material, None] = None,
         fraction: Union[Parameter, float, None] = None,
         name: Union[str, None] = None,
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -45,6 +47,9 @@ class MaterialMixture(BaseCore):
         :param name: Name of the material, defaults to None that causes the name to be constructed.
         :param interface: Calculator interface, defaults to `None`.
         """
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         if material_a is None:
             material_a = Material(interface=interface)
         if material_b is None:
@@ -54,7 +59,7 @@ class MaterialMixture(BaseCore):
             name='fraction',
             value=fraction,
             default_dict=DEFAULTS,
-            unique_name_prefix='MaterialMixtureFraction',
+            unique_name_prefix=f'{unique_name}-Fraction',
         )
 
         sld = weighted_average(
@@ -72,13 +77,13 @@ class MaterialMixture(BaseCore):
             name='sld',
             value=sld,
             default_dict=DEFAULTS,
-            unique_name_prefix='MaterialMixtureSld',
+            unique_name_prefix=f'{unique_name}-Sld',
         )
         self._isld = get_as_parameter(
             name='isld',
             value=isld,
             default_dict=DEFAULTS,
-            unique_name_prefix='MaterialMixtureIsld',
+            unique_name_prefix=f'{unique_name}-Isld',
         )
 
         # To avoid problems when setting the interface

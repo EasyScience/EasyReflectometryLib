@@ -1,3 +1,4 @@
+from typing import Optional
 from typing import Union
 
 import numpy as np
@@ -48,6 +49,7 @@ class MaterialDensity(Material):
         chemical_structure: Union[str, None] = None,
         density: Union[Parameter, float, None] = None,
         name: str = 'EasyMaterialDensity',
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -57,10 +59,18 @@ class MaterialDensity(Material):
         :param name: Identifier, defaults to `EasyMaterialDensity`.
         :param interface: Interface object, defaults to `None`.
         """
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         if chemical_structure is None:
             chemical_structure = DEFAULTS['chemical_structure']
 
-        density = get_as_parameter('density', density, DEFAULTS)
+        density = get_as_parameter(
+            name='density',
+            value=density,
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}-Density',
+        )
 
         scattering_length = neutron_scattering_length(chemical_structure)
 
@@ -68,31 +78,31 @@ class MaterialDensity(Material):
             name='molecular_weight',
             value=molecular_weight(chemical_structure),
             default_dict=DEFAULTS,
-            unique_name_prefix='MaterialDensityMw',
+            unique_name_prefix=f'{unique_name}-Mw',
         )
         scattering_length_real = get_as_parameter(
             name='scattering_length_real',
             value=scattering_length.real,
             default_dict=DEFAULTS['sld'],
-            unique_name_prefix='MaterialDensityScatteringLengthReal',
+            unique_name_prefix=f'{unique_name}-ScatteringLengthReal',
         )
         scattering_length_imag = get_as_parameter(
             name='scattering_length_imag',
             value=scattering_length.imag,
             default_dict=DEFAULTS['isld'],
-            unique_name_prefix='MaterialDensityScatteringLengthImag',
+            unique_name_prefix=f'{unique_name}-ScatteringLengthImag',
         )
         sld = get_as_parameter(
             name='sld',
             value=density_to_sld(scattering_length_real.value, mw.value, density.value),
             default_dict=DEFAULTS,
-            unique_name_prefix='MaterialDensitySld',
+            unique_name_prefix=f'{unique_name}-Sld',
         )
         isld = get_as_parameter(
             name='isld',
             value=density_to_sld(scattering_length_imag.value, mw.value, density.value),
             default_dict=DEFAULTS,
-            unique_name_prefix='MaterialDensityIsld',
+            unique_name_prefix=f'{unique_name}-Isld',
         )
 
         constraint = FunctionalConstraint(sld, density_to_sld, [scattering_length_real, mw, density])

@@ -1,11 +1,10 @@
-import unittest
-
+import pytest
 from easyreflectometry.experiment.model import Model
 from easyreflectometry.experiment.model_collection import ModelCollection
 from easyscience import global_object
 
 
-class TestModelCollection(unittest.TestCase):
+class TestModelCollection:
     def test_default(self):
         # When Then
         collection = ModelCollection()
@@ -86,7 +85,8 @@ class TestModelCollection(unittest.TestCase):
         collection_from_dict = ModelCollection.from_dict(collection_dict)
 
         # Expect
-        assert collection.as_data_dict(skip=['resolution_function', 'interface']) == collection_from_dict.as_data_dict(
-            skip=['resolution_function', 'interface']
-        )
+        # We have to skip the resolution_function, interface and unique_name as some are generated on the fly
+        assert collection.as_data_dict(
+            skip=['resolution_function', 'interface', 'unique_name']
+        ) == collection_from_dict.as_data_dict(skip=['resolution_function', 'interface', 'unique_name'])
         assert collection[0]._resolution_function.smearing(5.5) == collection_from_dict[0]._resolution_function.smearing(5.5)

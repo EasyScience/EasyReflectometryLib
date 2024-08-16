@@ -61,17 +61,20 @@ class Layer(BaseCore):
         if material is None:
             material = Material(interface=interface)
 
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         thickness = get_as_parameter(
             name='thickness',
             value=thickness,
             default_dict=DEFAULTS,
-            unique_name_prefix='LayerThickness',
+            unique_name_prefix=f'{unique_name}-Thickness',
         )
         roughness = get_as_parameter(
             name='roughness',
             value=roughness,
             default_dict=DEFAULTS,
-            unique_name_prefix='LayerRoughness',
+            unique_name_prefix=f'{unique_name}-Roughness',
         )
 
         super().__init__(

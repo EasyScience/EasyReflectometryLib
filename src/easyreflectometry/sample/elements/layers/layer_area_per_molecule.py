@@ -1,3 +1,4 @@
+from typing import Optional
 from typing import Union
 
 import numpy as np
@@ -73,6 +74,7 @@ class LayerAreaPerMolecule(Layer):
         area_per_molecule: Union[Parameter, float, None] = None,
         roughness: Union[Parameter, float, None] = None,
         name: str = 'EasyLayerAreaPerMolecule',
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -89,6 +91,9 @@ class LayerAreaPerMolecule(Layer):
         if solvent is None:
             solvent = Material(6.36, 0, 'D2O', interface=interface)
 
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         # Create the solvated molecule and corresponding constraints
         if molecular_formula is None:
             molecular_formula = DEFAULTS['molecular_formula']
@@ -98,25 +103,25 @@ class LayerAreaPerMolecule(Layer):
             name='thickness',
             value=thickness,
             default_dict=DEFAULTS,
-            unique_name_prefix='LayerAreaPerMoleculeThickness',
+            unique_name_prefix=f'{unique_name}-Thickness',
         )
         _area_per_molecule = get_as_parameter(
             name='area_per_molecule',
             value=area_per_molecule,
             default_dict=DEFAULTS,
-            unique_name_prefix='LayerAreaPerMoleculeAreaPerMolecule',
+            unique_name_prefix=f'{unique_name}-AreaPerMolecule',
         )
         _scattering_length_real = get_as_parameter(
             name='scattering_length_real',
             value=0.0,
             default_dict=DEFAULTS['sl'],
-            unique_name_prefix='LayerAreaPerMoleculeSl',
+            unique_name_prefix=f'{unique_name}-Sl',
         )
         _scattering_length_imag = get_as_parameter(
             name='scattering_length_imag',
             value=0.0,
             default_dict=DEFAULTS['isl'],
-            unique_name_prefix='LayerAreaPerMoleculeIsl',
+            unique_name_prefix=f'{unique_name}-Isl',
         )
 
         # Constrain the real part of the sld value for the molecule

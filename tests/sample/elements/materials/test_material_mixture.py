@@ -1,6 +1,5 @@
 from unittest.mock import MagicMock
 
-import pytest
 from easyreflectometry.sample.elements.materials.material import Material
 from easyreflectometry.sample.elements.materials.material_mixture import MaterialMixture
 from easyscience import global_object
@@ -8,11 +7,7 @@ from numpy.testing import assert_almost_equal
 
 
 class TestMaterialMixture:
-    @pytest.fixture
-    def clean_global_object(self) -> None:
-        global_object.map._clear()
-
-    def test_default(self, clean_global_object) -> None:
+    def test_default(self) -> None:
         material_mixture = MaterialMixture()
         assert material_mixture.fraction == 0.5
         assert str(material_mixture._fraction.unit) == 'dimensionless'
@@ -21,7 +16,7 @@ class TestMaterialMixture:
         assert str(material_mixture._sld.unit) == '1/Å^2'
         assert str(material_mixture._isld.unit) == '1/Å^2'
 
-    def test_default_constraint(self, clean_global_object) -> None:
+    def test_default_constraint(self) -> None:
         material_mixture = MaterialMixture()
         assert material_mixture.fraction == 0.5
         assert str(material_mixture._fraction.unit) == 'dimensionless'
@@ -34,7 +29,7 @@ class TestMaterialMixture:
         assert str(material_mixture._sld.unit) == '1/Å^2'
         assert str(material_mixture._isld.unit) == '1/Å^2'
 
-    def test_fraction_constraint(self, clean_global_object):
+    def test_fraction_constraint(self):
         p = Material()
         q = Material(6.908, -0.278, 'Boron')
         material_mixture = MaterialMixture(p, q, 0.2)
@@ -46,7 +41,7 @@ class TestMaterialMixture:
         assert_almost_equal(material_mixture.sld, 5.54700)
         assert_almost_equal(material_mixture.isld, -0.1390)
 
-    def test_material_a_change(self, clean_global_object) -> None:
+    def test_material_a_change(self) -> None:
         material_mixture = MaterialMixture()
         assert material_mixture.fraction == 0.5
         assert str(material_mixture._fraction.unit) == 'dimensionless'
@@ -59,7 +54,7 @@ class TestMaterialMixture:
         assert_almost_equal(material_mixture.sld, 5.54700)
         assert_almost_equal(material_mixture.isld, -0.1390)
 
-    def test_material_b_change(self, clean_global_object) -> None:
+    def test_material_b_change(self) -> None:
         material_mixture = MaterialMixture()
         assert material_mixture.fraction == 0.5
         assert str(material_mixture._fraction.unit) == 'dimensionless'
@@ -72,7 +67,7 @@ class TestMaterialMixture:
         assert_almost_equal(material_mixture.sld, 5.54700)
         assert_almost_equal(material_mixture.isld, -0.1390)
 
-    def test_material_b_change_double(self, clean_global_object) -> None:
+    def test_material_b_change_double(self) -> None:
         material_mixture = MaterialMixture()
         assert material_mixture.fraction == 0.5
         assert str(material_mixture._fraction.unit) == 'dimensionless'
@@ -93,7 +88,7 @@ class TestMaterialMixture:
         assert_almost_equal(material_mixture.sld, 2.0930)
         assert_almost_equal(material_mixture.isld, 0.0000)
 
-    def test_from_pars(self, clean_global_object):
+    def test_from_pars(self):
         p = Material()
         q = Material(6.908, -0.278, 'Boron')
         material_mixture = MaterialMixture(p, q, 0.2)
@@ -104,7 +99,7 @@ class TestMaterialMixture:
         assert str(material_mixture._sld.unit) == '1/Å^2'
         assert str(material_mixture._isld.unit) == '1/Å^2'
 
-    def test_dict_repr(self, clean_global_object) -> None:
+    def test_dict_repr(self) -> None:
         material_mixture = MaterialMixture()
         assert material_mixture._dict_repr == {
             'EasyMaterial/EasyMaterial': {
@@ -116,19 +111,20 @@ class TestMaterialMixture:
             }
         }
 
-    def test_dict_round_trip(self, clean_global_object) -> None:
+    def test_dict_round_trip(self) -> None:
         # When
-        material_mixture = MaterialMixture()
-        material_mixture_dict = material_mixture.as_dict()
+        p = MaterialMixture()
+        p_dict = p.as_dict()
         global_object.map._clear()
 
         # Then
-        q = MaterialMixture.from_dict(material_mixture_dict)
+        q = MaterialMixture.from_dict(p_dict)
 
         # Expect
-        assert material_mixture.as_data_dict() == q.as_data_dict()
+        # We have to skip the unique_name as some are generated on the fly
+        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
 
-    def test_update_name(self, clean_global_object) -> None:
+    def test_update_name(self) -> None:
         # When
         material_mixture = MaterialMixture()
         mock_material_a = MagicMock()

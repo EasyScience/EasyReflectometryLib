@@ -1,5 +1,6 @@
 __author__ = 'github.com/arm61'
 
+from typing import Optional
 from typing import Union
 
 import numpy as np
@@ -41,6 +42,7 @@ class Material(BaseCore):
         sld: Union[Parameter, float, None] = None,
         isld: Union[Parameter, float, None] = None,
         name: str = 'EasyMaterial',
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -50,17 +52,20 @@ class Material(BaseCore):
         :param name: Name of the material, defaults to 'EasyMaterial'.
         :param interface: Calculator interface, defaults to `None`.
         """
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         sld = get_as_parameter(
             name='sld',
             value=sld,
             default_dict=DEFAULTS,
-            unique_name_prefix='MaterialSld',
+            unique_name_prefix=f'{unique_name}-Sld',
         )
         isld = get_as_parameter(
             name='isld',
             value=isld,
             default_dict=DEFAULTS,
-            unique_name_prefix='MaterialIsld',
+            unique_name_prefix=f'{unique_name}-Isld',
         )
 
         super().__init__(name=name, sld=sld, isld=isld, interface=interface)

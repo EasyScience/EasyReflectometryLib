@@ -16,10 +16,6 @@ from numpy.testing import assert_almost_equal
 
 class TestGradientLayer:
     @pytest.fixture
-    def clean_global_object(self) -> None:
-        global_object.map._clear()
-
-    @pytest.fixture
     def gradient_layer(self) -> GradientLayer:
         self.front = Material(10.0, -10.0, 'Material_1')
         self.back = Material(0.0, 0.0, 'Material_2')
@@ -60,7 +56,7 @@ class TestGradientLayer:
         assert result.interface is None
         assert len(result.layers) == 10
 
-    def test_from_pars(self, clean_global_object) -> None:
+    def test_from_pars(self) -> None:
         # When
         front = Material(6.908, -0.278, 'Boron')
         back = Material(0.487, 0.000, 'Potassium')
@@ -86,7 +82,7 @@ class TestGradientLayer:
         expected_str = "thickness: 1.0\ndiscretisation_elements: 10\nback_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1/Å^2\n        isld: -1.000e-6 1/Å^2\n    thickness: 0.100 Å\n    roughness: 2.000 Å\nfront_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1/Å^2\n        isld: -10.000e-6 1/Å^2\n    thickness: 0.100 Å\n    roughness: 2.000 Å\n"  # noqa: E501
         assert gradient_layer.__repr__() == expected_str
 
-    def test_dict_round_trip(self, clean_global_object) -> None:
+    def test_dict_round_trip(self) -> None:
         # When
         p = GradientLayer()
         p_dict = p.as_dict()
@@ -95,8 +91,8 @@ class TestGradientLayer:
         # Then
         q = GradientLayer.from_dict(p_dict)
 
-        # Expect
-        assert p.as_data_dict() == q.as_data_dict()
+        # We have to skip the unique_name as some are generated on the fly
+        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
         assert len(p.layers) == len(q.layers)
         # Just one layer of the generated layers is checked
         assert p.layers[5].__repr__() == q.layers[5].__repr__()

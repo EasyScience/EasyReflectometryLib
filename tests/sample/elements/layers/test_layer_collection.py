@@ -88,4 +88,5 @@ class TestLayerCollection(unittest.TestCase):
         s = LayerCollection.from_dict(r_dict)
 
         # Expect
-        assert s.as_data_dict() == r.as_data_dict()
+        # We have to skip the unique_name as some are generated on the fly
+        assert s.as_data_dict(skip=['unique_name']) == r.as_data_dict(skip=['unique_name'])

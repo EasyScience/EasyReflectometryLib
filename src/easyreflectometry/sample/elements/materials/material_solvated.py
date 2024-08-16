@@ -1,3 +1,4 @@
+from typing import Optional
 from typing import Union
 
 from easyreflectometry.parameter_utils import get_as_parameter
@@ -26,6 +27,7 @@ class MaterialSolvated(MaterialMixture):
         solvent: Union[Material, None] = None,
         solvent_fraction: Union[Parameter, float, None] = None,
         name=None,
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -36,6 +38,9 @@ class MaterialSolvated(MaterialMixture):
         :param name: Name of the material, defaults to None that causes the name to be constructed.
         :param interface: Calculator interface, defaults to `None`.
         """
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         if material is None:
             material = Material(sld=6.36, isld=0, name='D2O', interface=interface)
         if solvent is None:
@@ -45,7 +50,7 @@ class MaterialSolvated(MaterialMixture):
             name='solvent_fraction',
             value=solvent_fraction,
             default_dict=DEFAULTS,
-            unique_name_prefix='MaterialSolvatedFraction',
+            unique_name_prefix=f'{unique_name}-Fraction',
         )
 
         # In super class, the fraction is the fraction of material b in material a

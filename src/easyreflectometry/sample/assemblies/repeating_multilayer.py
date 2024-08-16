@@ -1,6 +1,8 @@
+from typing import Optional
 from typing import Union
 
 from easyreflectometry.parameter_utils import get_as_parameter
+from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 
 from ..elements.layers.layer import Layer
@@ -37,6 +39,7 @@ class RepeatingMultilayer(Multilayer):
         layers: Union[LayerCollection, Layer, list[Layer], None] = None,
         repetitions: Union[Parameter, int, None] = None,
         name: str = 'EasyRepeatingMultilayer',
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -46,6 +49,8 @@ class RepeatingMultilayer(Multilayer):
         :param name: Name for the repeating multi layer, defaults to 'EasyRepeatingMultilayer'.
         :param interface: Calculator interface, defaults to `None`.
         """
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
 
         if layers is None:
             layers = LayerCollection()
@@ -54,7 +59,12 @@ class RepeatingMultilayer(Multilayer):
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
 
-        repetitions = get_as_parameter('repetitions', repetitions, DEFAULTS)
+        repetitions = get_as_parameter(
+            name='repetitions',
+            value=repetitions,
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}-Repetitions',
+        )
 
         super().__init__(
             layers=layers,

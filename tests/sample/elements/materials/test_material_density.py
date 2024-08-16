@@ -58,4 +58,6 @@ class TestMaterialDensity(unittest.TestCase):
         p_dict = p.as_dict()
         global_object.map._clear()
         q = MaterialDensity.from_dict(p_dict)
-        assert p.as_data_dict() == q.as_data_dict()
+
+        # We have to skip the unique_name as some are generated on the fly
+        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
