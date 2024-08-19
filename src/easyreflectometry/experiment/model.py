@@ -166,11 +166,6 @@ class Model(BaseObj):
             self.generate_bindings()
             self._interface().set_resolution_function(self._resolution_function)
 
-    # @property
-    # def uid(self) -> int:
-    #     """Return a UID from the borg map."""
-    #     return self._borg.map.convert_id_to_key(self)
-
     # Representation
     @property
     def _dict_repr(self) -> dict[str, dict[str, str]]:

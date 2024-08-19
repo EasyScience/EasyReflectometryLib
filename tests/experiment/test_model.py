@@ -337,10 +337,6 @@ class TestModel(unittest.TestCase):
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
-    # def test_uid(self):
-    #     p = Model()
-    #     assert_equal(p.uid, p._borg.map.convert_id_to_key(p))
-
     def test_resolution_function(self):
         mock_resolution_function = MagicMock()
         interface = CalculatorFactory()

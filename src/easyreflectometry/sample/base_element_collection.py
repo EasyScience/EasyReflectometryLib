@@ -19,13 +19,6 @@ class BaseElementCollection(BaseCollection):
         super().__init__(name, *args, **kwargs)
         self.interface = interface
 
-    # @property
-    # def uid(self) -> int:
-    #     """
-    #     :return: UID from the borg map
-    #     """
-    #     return self._borg.map.convert_id_to_key(self)
-
     @property
     def names(self) -> list:
         """
