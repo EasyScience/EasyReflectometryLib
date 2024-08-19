@@ -69,7 +69,7 @@ class MaterialDensity(Material):
             name='density',
             value=density,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Density',
+            unique_name_prefix=f'{unique_name}_Density',
         )
 
         scattering_length = neutron_scattering_length(chemical_structure)
@@ -78,31 +78,31 @@ class MaterialDensity(Material):
             name='molecular_weight',
             value=molecular_weight(chemical_structure),
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Mw',
+            unique_name_prefix=f'{unique_name}_Mw',
         )
         scattering_length_real = get_as_parameter(
             name='scattering_length_real',
             value=scattering_length.real,
             default_dict=DEFAULTS['sld'],
-            unique_name_prefix=f'{unique_name}-ScatteringLengthReal',
+            unique_name_prefix=f'{unique_name}_ScatteringLengthReal',
         )
         scattering_length_imag = get_as_parameter(
             name='scattering_length_imag',
             value=scattering_length.imag,
             default_dict=DEFAULTS['isld'],
-            unique_name_prefix=f'{unique_name}-ScatteringLengthImag',
+            unique_name_prefix=f'{unique_name}_ScatteringLengthImag',
         )
         sld = get_as_parameter(
             name='sld',
             value=density_to_sld(scattering_length_real.value, mw.value, density.value),
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Sld',
+            unique_name_prefix=f'{unique_name}_Sld',
         )
         isld = get_as_parameter(
             name='isld',
             value=density_to_sld(scattering_length_imag.value, mw.value, density.value),
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Isld',
+            unique_name_prefix=f'{unique_name}_Isld',
         )
 
         constraint = FunctionalConstraint(sld, density_to_sld, [scattering_length_real, mw, density])

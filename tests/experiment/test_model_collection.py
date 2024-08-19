@@ -1,4 +1,3 @@
-import pytest
 from easyreflectometry.experiment.model import Model
 from easyreflectometry.experiment.model_collection import ModelCollection
 from easyscience import global_object
@@ -73,7 +72,6 @@ class TestModelCollection:
 
     def test_dict_round_trip(self):
         # When
-        global_object.map._clear()
         model_1 = Model(name='Model1')
         model_2 = Model(name='Model2')
         model_3 = Model(name='Model3')
@@ -85,8 +83,8 @@ class TestModelCollection:
         collection_from_dict = ModelCollection.from_dict(collection_dict)
 
         # Expect
-        # We have to skip the resolution_function, interface and unique_name as some are generated on the fly
-        assert collection.as_data_dict(
-            skip=['resolution_function', 'interface', 'unique_name']
-        ) == collection_from_dict.as_data_dict(skip=['resolution_function', 'interface', 'unique_name'])
+        # We have to skip the resolution_function and interface
+        assert sorted(collection.as_data_dict(skip=['resolution_function', 'interface'])) == sorted(
+            collection_from_dict.as_data_dict(skip=['resolution_function', 'interface'])
+        )
         assert collection[0]._resolution_function.smearing(5.5) == collection_from_dict[0]._resolution_function.smearing(5.5)

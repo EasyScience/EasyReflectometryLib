@@ -91,8 +91,7 @@ class TestGradientLayer:
         # Then
         q = GradientLayer.from_dict(p_dict)
 
-        # We have to skip the unique_name as some are generated on the fly
-        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
         assert len(p.layers) == len(q.layers)
         # Just one layer of the generated layers is checked
         assert p.layers[5].__repr__() == q.layers[5].__repr__()

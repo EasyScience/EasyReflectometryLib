@@ -59,7 +59,7 @@ class MaterialMixture(BaseCore):
             name='fraction',
             value=fraction,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Fraction',
+            unique_name_prefix=f'{unique_name}_Fraction',
         )
 
         sld = weighted_average(
@@ -77,13 +77,13 @@ class MaterialMixture(BaseCore):
             name='sld',
             value=sld,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Sld',
+            unique_name_prefix=f'{unique_name}_Sld',
         )
         self._isld = get_as_parameter(
             name='isld',
             value=isld,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Isld',
+            unique_name_prefix=f'{unique_name}_Isld',
         )
 
         # To avoid problems when setting the interface

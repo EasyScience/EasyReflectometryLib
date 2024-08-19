@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Optional
 from typing import Union
 
 from ..elements.layers.layer import Layer
@@ -25,6 +26,7 @@ class Multilayer(BaseAssembly):
         name: str = 'EasyMultilayer',
         interface=None,
         type: str = 'Multi-layer',
+        populate_if_none: Optional[bool] = True,
     ):
         """Constructor.
 
@@ -34,12 +36,18 @@ class Multilayer(BaseAssembly):
         :param type: Type of the constructed instance, defaults to 'Multi-layer'
         """
         if layers is None:
-            layers = LayerCollection()
+            if populate_if_none:
+                layers = LayerCollection([Layer(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)])
+            else:
+                layers = LayerCollection()
         elif isinstance(layers, Layer):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
         super().__init__(name, layers=layers, type=type, interface=interface)
+
+        # Needed by the as_dict functionality
+        self.populate_if_none = False
 
     def add_layer(self, *layers: tuple[Layer]) -> None:
         """Add a layer to the multi layer.

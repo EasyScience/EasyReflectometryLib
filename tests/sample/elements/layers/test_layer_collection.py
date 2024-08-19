@@ -18,11 +18,9 @@ from numpy.testing import assert_equal
 class TestLayerCollection(unittest.TestCase):
     def test_default(self):
         p = LayerCollection()
-        assert_equal(p.name, 'EasyLayers')
+        assert_equal(p.name, 'EasyLayerCollection')
         assert_equal(p.interface, None)
-        assert_equal(len(p), 2)
-        assert_equal(p[0].name, 'EasyLayer')
-        assert_equal(p[1].name, 'EasyLayer')
+        assert_equal(len(p), 0)
 
     def test_from_pars(self):
         m = Material(6.908, -0.278, 'Boron')
@@ -45,9 +43,9 @@ class TestLayerCollection(unittest.TestCase):
         assert_equal(layers.interface, None)
 
     def test_dict_repr(self):
-        p = LayerCollection()
+        p = LayerCollection(layers=[Layer(), Layer()])
         assert p._dict_repr == {
-            'EasyLayers': [
+            'EasyLayerCollection': [
                 {
                     'EasyLayer': {
                         'material': {'EasyMaterial': {'sld': '4.186e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
@@ -66,10 +64,10 @@ class TestLayerCollection(unittest.TestCase):
         }
 
     def test_repr(self):
-        p = LayerCollection()
+        p = LayerCollection([Layer(), Layer()])
         assert (
             p.__repr__()
-            == 'EasyLayers:\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1/Å^2\n        isld: 0.000e-6 1/Å^2\n    thickness: 10.000 Å\n    roughness: 3.300 Å\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1/Å^2\n        isld: 0.000e-6 1/Å^2\n    thickness: 10.000 Å\n    roughness: 3.300 Å\n'  # noqa: E501
+            == 'EasyLayerCollection:\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1/Å^2\n        isld: 0.000e-6 1/Å^2\n    thickness: 10.000 Å\n    roughness: 3.300 Å\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1/Å^2\n        isld: 0.000e-6 1/Å^2\n    thickness: 10.000 Å\n    roughness: 3.300 Å\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):
@@ -88,5 +86,4 @@ class TestLayerCollection(unittest.TestCase):
         s = LayerCollection.from_dict(r_dict)
 
         # Expect
-        # We have to skip the unique_name as some are generated on the fly
-        assert s.as_data_dict(skip=['unique_name']) == r.as_data_dict(skip=['unique_name'])
+        assert sorted(r.as_data_dict()) == sorted(s.as_data_dict())

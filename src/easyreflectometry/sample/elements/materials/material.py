@@ -59,13 +59,13 @@ class Material(BaseCore):
             name='sld',
             value=sld,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Sld',
+            unique_name_prefix=f'{unique_name}_Sld',
         )
         isld = get_as_parameter(
             name='isld',
             value=isld,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Isld',
+            unique_name_prefix=f'{unique_name}_Isld',
         )
 
         super().__init__(name=name, sld=sld, isld=isld, interface=interface)

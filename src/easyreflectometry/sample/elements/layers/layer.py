@@ -68,13 +68,13 @@ class Layer(BaseCore):
             name='thickness',
             value=thickness,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Thickness',
+            unique_name_prefix=f'{unique_name}_Thickness',
         )
         roughness = get_as_parameter(
             name='roughness',
             value=roughness,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Roughness',
+            unique_name_prefix=f'{unique_name}_Roughness',
         )
 
         super().__init__(

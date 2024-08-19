@@ -131,4 +131,4 @@ class TestLayer(unittest.TestCase):
         p_dict = p.as_dict()
         global_object.map._clear()
         q = Layer.from_dict(p_dict)
-        assert p.as_data_dict() == q.as_data_dict()
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())

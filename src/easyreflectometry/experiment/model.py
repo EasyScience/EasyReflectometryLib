@@ -226,8 +226,6 @@ class Model(BaseObj):
         this_dict = copy.deepcopy(passed_dict)
         resolution_function = ResolutionFunction.from_dict(this_dict['resolution_function'])
         del this_dict['resolution_function']
-        sample = Sample.from_dict(this_dict['sample'])
-        del this_dict['sample']
         interface_name = this_dict['interface']
         del this_dict['interface']
         if interface_name is not None:
@@ -238,7 +236,6 @@ class Model(BaseObj):
 
         model = super().from_dict(this_dict)
 
-        model.sample = sample
         model.resolution_function = resolution_function
         model.interface = interface
         return model

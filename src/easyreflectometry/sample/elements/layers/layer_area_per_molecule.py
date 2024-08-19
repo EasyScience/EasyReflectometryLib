@@ -97,36 +97,42 @@ class LayerAreaPerMolecule(Layer):
         # Create the solvated molecule and corresponding constraints
         if molecular_formula is None:
             molecular_formula = DEFAULTS['molecular_formula']
-        molecule = Material(sld=0.0, isld=0.0, name=molecular_formula, interface=interface)
+        molecule_material = Material(
+            sld=0.0,
+            isld=0.0,
+            name=molecular_formula,
+            interface=interface,
+            unique_name=unique_name + 'Material',
+        )
 
         thickness = get_as_parameter(
             name='thickness',
             value=thickness,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Thickness',
+            unique_name_prefix=f'{unique_name}_Thickness',
         )
         _area_per_molecule = get_as_parameter(
             name='area_per_molecule',
             value=area_per_molecule,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-AreaPerMolecule',
+            unique_name_prefix=f'{unique_name}_AreaPerMolecule',
         )
         _scattering_length_real = get_as_parameter(
             name='scattering_length_real',
             value=0.0,
             default_dict=DEFAULTS['sl'],
-            unique_name_prefix=f'{unique_name}-Sl',
+            unique_name_prefix=f'{unique_name}_Sl',
         )
         _scattering_length_imag = get_as_parameter(
             name='scattering_length_imag',
             value=0.0,
             default_dict=DEFAULTS['isl'],
-            unique_name_prefix=f'{unique_name}-Isl',
+            unique_name_prefix=f'{unique_name}_Isl',
         )
 
         # Constrain the real part of the sld value for the molecule
         constraint_sld_real = FunctionalConstraint(
-            dependent_obj=molecule.sld,
+            dependent_obj=molecule_material.sld,
             func=area_per_molecule_to_scattering_length_density,
             independent_objs=[_scattering_length_real, thickness, _area_per_molecule],
         )
@@ -136,7 +142,7 @@ class LayerAreaPerMolecule(Layer):
 
         # Constrain the imaginary part of the sld value for the molecule
         constraint_sld_imag = FunctionalConstraint(
-            dependent_obj=molecule.isld,
+            dependent_obj=molecule_material.isld,
             func=area_per_molecule_to_scattering_length_density,
             independent_objs=[_scattering_length_imag, thickness, _area_per_molecule],
         )
@@ -144,14 +150,15 @@ class LayerAreaPerMolecule(Layer):
         _area_per_molecule.user_constraints['iarea_per_molecule'] = constraint_sld_imag
         _scattering_length_imag.user_constraints['iarea_per_molecule'] = constraint_sld_imag
 
-        solvated_molecule = MaterialSolvated(
-            material=molecule,
+        solvated_molecule_material = MaterialSolvated(
+            material=molecule_material,
             solvent=solvent,
             solvent_fraction=solvent_fraction,
             interface=interface,
+            unique_name=unique_name + 'MaterialSolvated',
         )
         super().__init__(
-            material=solvated_molecule,
+            material=solvated_molecule_material,
             thickness=thickness,
             roughness=roughness,
             name=name,

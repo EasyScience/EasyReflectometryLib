@@ -209,8 +209,7 @@ class TestSurfactantLayer:
         q = SurfactantLayer.from_dict(p_dict)
 
         # Expect
-        # We have to skip the unique_name as some are generated on the fly
-        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
     def test_dict_round_trip_area_per_molecule_constraint_enabled(self):
         # When
@@ -223,8 +222,7 @@ class TestSurfactantLayer:
         q = SurfactantLayer.from_dict(p_dict)
 
         # Expect
-        # We have to skip the unique_name as some are generated on the fly
-        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
     def test_dict_round_trip_area_per_molecule_constraint_disabled(self):
         # When
@@ -238,8 +236,7 @@ class TestSurfactantLayer:
         q = SurfactantLayer.from_dict(p_dict)
 
         # Expect
-        # We have to skip the unique_name as some are generated on the fly
-        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
     def test_dict_round_trip_roughness_constraint_enabled(self):
         # When
@@ -252,8 +249,7 @@ class TestSurfactantLayer:
         q = SurfactantLayer.from_dict(p_dict)
 
         # Expect
-        # We have to skip the unique_name as some are generated on the fly
-        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
     def test_dict_round_trip_roughness_constraint_disabled(self):
         # When
@@ -267,5 +263,4 @@ class TestSurfactantLayer:
         q = SurfactantLayer.from_dict(p_dict)
 
         # Expect
-        # We have to skip the unique_name as some are generated on the fly
-        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())

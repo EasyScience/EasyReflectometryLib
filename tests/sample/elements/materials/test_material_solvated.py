@@ -123,8 +123,7 @@ class TestMaterialSolvated:
         global_object.map._clear()
         q = MaterialSolvated.from_dict(p_dict)
 
-        # We have to skip the unique_name as some are generated on the fly
-        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
     def test_update_name(self, material_solvated: MaterialSolvated) -> None:
         # When

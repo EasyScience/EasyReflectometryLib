@@ -61,17 +61,3 @@ class BaseElementCollection(BaseCollection):
         for collection_element in self:
             this_dict['data'].append(collection_element.as_dict(skip=skip))
         return this_dict
-
-    @classmethod
-    def from_dict(cls, data: dict) -> Any:
-        """
-        Create an instance of a collection from a dictionary.
-
-        :param data: The dictionary for the collection
-        :return: An instance of the collection
-        """
-        collection = super().from_dict(data)
-        # Remove the default elements
-        for i in range(SIZE_DEFAULT_COLLECTION):
-            del collection[0]
-        return collection

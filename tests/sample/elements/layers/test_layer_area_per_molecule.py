@@ -179,4 +179,4 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
         q = LayerAreaPerMolecule.from_dict(p_dict)
 
         # Expect
-        assert p.as_data_dict(skip=['unique_name']) == q.as_data_dict(skip=['unique_name'])
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())

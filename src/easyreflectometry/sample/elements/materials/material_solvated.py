@@ -50,7 +50,7 @@ class MaterialSolvated(MaterialMixture):
             name='solvent_fraction',
             value=solvent_fraction,
             default_dict=DEFAULTS,
-            unique_name_prefix=f'{unique_name}-Fraction',
+            unique_name_prefix=f'{unique_name}_Fraction',
         )
 
         # In super class, the fraction is the fraction of material b in material a
