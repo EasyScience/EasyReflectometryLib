@@ -1,3 +1,4 @@
+import gc
 from unittest.mock import MagicMock
 
 import pytest
@@ -123,6 +124,7 @@ class TestMaterialSolvated:
         p_dict = p.as_dict()
         for vertex in global_object.map.vertices():
             global_object.map.prune(vertex)
+        gc.collect()
 
         q = MaterialSolvated.from_dict(p_dict)
 

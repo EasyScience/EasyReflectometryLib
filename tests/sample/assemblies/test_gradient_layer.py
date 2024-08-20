@@ -94,6 +94,7 @@ class TestGradientLayer:
         p_dict = p.as_dict()
         for vertex in global_object.map.vertices():
             global_object.map.prune(vertex)
+        gc.collect()
 
         # Then
         q = GradientLayer.from_dict(p_dict)

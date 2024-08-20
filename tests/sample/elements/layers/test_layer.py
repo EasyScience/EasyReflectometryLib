@@ -5,6 +5,7 @@ Tests for Layer class.
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
+import gc
 import unittest
 
 import numpy as np
@@ -132,5 +133,7 @@ class TestLayer(unittest.TestCase):
         p_dict = p.as_dict()
         for vertex in global_object.map.vertices():
             global_object.map.prune(vertex)
+        gc.collect()
+
         q = Layer.from_dict(p_dict)
         assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())

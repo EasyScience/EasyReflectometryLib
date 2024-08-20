@@ -2,6 +2,7 @@
 Tests for BaseAssembly class module
 """
 
+import gc
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -17,6 +18,7 @@ class TestBaseAssembly:
     def base_assembly(self) -> BaseAssembly:
         for vertex in global_object.map.vertices():
             global_object.map.prune(vertex)
+        gc.collect()
 
         self.mock_layer_0 = MagicMock()
         self.mock_layer_1 = MagicMock()

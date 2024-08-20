@@ -1,3 +1,5 @@
+import gc
+
 from easyscience import global_object
 
 from easyreflectometry.experiment.model import Model
@@ -80,6 +82,7 @@ class TestModelCollection:
         collection_dict = collection.as_dict()
         for vertex in global_object.map.vertices():
             global_object.map.prune(vertex)
+        gc.collect()
 
         # Then
         collection_from_dict = ModelCollection.from_dict(collection_dict)

@@ -5,7 +5,7 @@ Tests for Model class.
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
-
+import gc
 import unittest
 from unittest.mock import MagicMock
 
@@ -406,6 +406,7 @@ def test_dict_round_trip(interface):  # , additional_layer):
     src_dict = model.as_dict()
     for vertex in global_object.map.vertices():
         global_object.map.prune(vertex)
+    gc.collect()
 
     # Then
     model_from_dict = Model.from_dict(src_dict)

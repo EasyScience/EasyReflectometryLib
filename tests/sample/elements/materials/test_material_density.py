@@ -1,3 +1,4 @@
+import gc
 import unittest
 
 import numpy as np
@@ -58,6 +59,8 @@ class TestMaterialDensity(unittest.TestCase):
         p_dict = p.as_dict()
         for vertex in global_object.map.vertices():
             global_object.map.prune(vertex)
+        gc.collect()
+
         q = MaterialDensity.from_dict(p_dict)
 
         assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
