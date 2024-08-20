@@ -6,6 +6,7 @@ __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
 
+import gc
 import unittest
 
 from easyscience import global_object
@@ -184,84 +185,99 @@ class TestSurfactantLayer:
         assert p.front_layer == new_layer
         assert p.layers[0] == new_layer
 
-    def test_dict_round_trip(self):
-        # When
-        solvent = Material(-0.561, 0, 'H2O')
-        tail_layer = LayerAreaPerMolecule(
-            molecular_formula='CO2',
-            solvent=solvent,
-            solvent_fraction=0.25,
-            area_per_molecule=50,
-            thickness=10,
-            roughness=4,
-        )
-        head_layer = LayerAreaPerMolecule(
-            molecular_formula='CH2',
-            solvent_fraction=0.75,
-            area_per_molecule=50,
-            thickness=5,
-            roughness=2,
-        )
-        p = SurfactantLayer(head_layer=head_layer, tail_layer=tail_layer)
-        p_dict = p.as_dict()
-        global_object.map._clear()
 
-        # Then
-        q = SurfactantLayer.from_dict(p_dict)
+def test_dict_round_trip():
+    # When
+    solvent = Material(-0.561, 0, 'H2O')
+    tail_layer = LayerAreaPerMolecule(
+        molecular_formula='CO2',
+        solvent=solvent,
+        solvent_fraction=0.25,
+        area_per_molecule=50,
+        thickness=10,
+        roughness=4,
+    )
+    head_layer = LayerAreaPerMolecule(
+        molecular_formula='CH2',
+        solvent_fraction=0.75,
+        area_per_molecule=50,
+        thickness=5,
+        roughness=2,
+    )
+    p = SurfactantLayer(head_layer=head_layer, tail_layer=tail_layer)
+    p_dict = p.as_dict()
+    for vertex in global_object.map.vertices():
+        global_object.map.prune(vertex)
+    gc.collect()
 
-        # Expect
-        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
+    # Then
+    q = SurfactantLayer.from_dict(p_dict)
 
-    def test_dict_round_trip_area_per_molecule_constraint_enabled(self):
-        # When
-        p = SurfactantLayer()
-        p.constrain_area_per_molecule = True
-        p_dict = p.as_dict()
-        global_object.map._clear()
+    # Expect
+    assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-        # Then
-        q = SurfactantLayer.from_dict(p_dict)
 
-        # Expect
-        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
+def test_dict_round_trip_area_per_molecule_constraint_enabled():
+    # When
+    p = SurfactantLayer()
+    p.constrain_area_per_molecule = True
+    p_dict = p.as_dict()
+    for vertex in global_object.map.vertices():
+        global_object.map.prune(vertex)
+    gc.collect()
 
-    def test_dict_round_trip_area_per_molecule_constraint_disabled(self):
-        # When
-        p = SurfactantLayer()
-        p.constrain_area_per_molecule = True
-        p.constrain_area_per_molecule = False
-        p_dict = p.as_dict()
-        global_object.map._clear()
+    # Then
+    q = SurfactantLayer.from_dict(p_dict)
 
-        # Then
-        q = SurfactantLayer.from_dict(p_dict)
+    # Expect
+    assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-        # Expect
-        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-    def test_dict_round_trip_roughness_constraint_enabled(self):
-        # When
-        p = SurfactantLayer()
-        p.conformal_roughness = True
-        p_dict = p.as_dict()
-        global_object.map._clear()
+def test_dict_round_trip_area_per_molecule_constraint_disabled():
+    # When
+    p = SurfactantLayer()
+    p.constrain_area_per_molecule = True
+    p.constrain_area_per_molecule = False
+    p_dict = p.as_dict()
+    for vertex in global_object.map.vertices():
+        global_object.map.prune(vertex)
+    gc.collect()
 
-        # Then
-        q = SurfactantLayer.from_dict(p_dict)
+    # Then
+    q = SurfactantLayer.from_dict(p_dict)
 
-        # Expect
-        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
+    # Expect
+    assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-    def test_dict_round_trip_roughness_constraint_disabled(self):
-        # When
-        p = SurfactantLayer()
-        p.conformal_roughness = True
-        p.conformal_roughness = False
-        p_dict = p.as_dict()
-        global_object.map._clear()
 
-        # Then
-        q = SurfactantLayer.from_dict(p_dict)
+def test_dict_round_trip_roughness_constraint_enabled():
+    # When
+    p = SurfactantLayer()
+    p.conformal_roughness = True
+    p_dict = p.as_dict()
+    for vertex in global_object.map.vertices():
+        global_object.map.prune(vertex)
+    gc.collect()
 
-        # Expect
-        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
+    # Then
+    q = SurfactantLayer.from_dict(p_dict)
+
+    # Expect
+    assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
+
+
+def test_dict_round_trip_roughness_constraint_disabled():
+    # When
+    p = SurfactantLayer()
+    p.conformal_roughness = True
+    p.conformal_roughness = False
+    p_dict = p.as_dict()
+    for vertex in global_object.map.vertices():
+        global_object.map.prune(vertex)
+    gc.collect()
+
+    # Then
+    q = SurfactantLayer.from_dict(p_dict)
+
+    # Expect
+    assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())

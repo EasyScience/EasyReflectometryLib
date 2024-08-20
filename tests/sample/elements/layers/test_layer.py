@@ -130,6 +130,7 @@ class TestLayer(unittest.TestCase):
     def test_dict_round_trip(self):
         p = Layer()
         p_dict = p.as_dict()
-        global_object.map._clear()
+        for vertex in global_object.map.vertices():
+            global_object.map.prune(vertex)
         q = Layer.from_dict(p_dict)
         assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())

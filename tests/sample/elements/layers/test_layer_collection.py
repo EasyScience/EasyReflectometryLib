@@ -81,7 +81,8 @@ class TestLayerCollection(unittest.TestCase):
         r.insert(0, p)
         r.append(q)
         r_dict = r.as_dict()
-        global_object.map._clear()
+        for vertex in global_object.map.vertices():
+            global_object.map.prune(vertex)
 
         # Then
         s = LayerCollection.from_dict(r_dict)

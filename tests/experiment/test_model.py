@@ -404,7 +404,8 @@ def test_dict_round_trip(interface):  # , additional_layer):
     for additional_layer in [SurfactantLayer(), Multilayer(), RepeatingMultilayer()]:
         model.add_item(additional_layer)
     src_dict = model.as_dict()
-    global_object.map._clear()
+    for vertex in global_object.map.vertices():
+        global_object.map.prune(vertex)
 
     # Then
     model_from_dict = Model.from_dict(src_dict)

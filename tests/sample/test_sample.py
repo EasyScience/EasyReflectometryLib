@@ -67,7 +67,6 @@ class TestSample(unittest.TestCase):
 
     def test_dict_round_trip(self):
         # When
-        global_object.map._clear()
         p = Sample()
         surfactant = SurfactantLayer()
         p.append(surfactant)
@@ -76,7 +75,8 @@ class TestSample(unittest.TestCase):
         repeating = RepeatingMultilayer()
         p.append(repeating)
         p_dict = p.as_dict()
-        global_object.map._clear()
+        for vertex in global_object.map.vertices():
+            global_object.map.prune(vertex)
 
         # Then
         q = Sample.from_dict(p_dict)

@@ -78,7 +78,8 @@ class TestModelCollection:
         model_3 = Model(name='Model3')
         collection = ModelCollection(model_1, model_2, model_3)
         collection_dict = collection.as_dict()
-        global_object.map._clear()
+        for vertex in global_object.map.vertices():
+            global_object.map.prune(vertex)
 
         # Then
         collection_from_dict = ModelCollection.from_dict(collection_dict)

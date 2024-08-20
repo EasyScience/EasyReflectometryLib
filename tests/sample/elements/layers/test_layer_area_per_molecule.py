@@ -174,7 +174,8 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
             roughness=3,
         )
         p_dict = p.as_dict()
-        global_object.map._clear()
+        for vertex in global_object.map.vertices():
+            global_object.map.prune(vertex)
 
         # Then
         q = LayerAreaPerMolecule.from_dict(p_dict)

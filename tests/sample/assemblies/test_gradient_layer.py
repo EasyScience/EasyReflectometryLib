@@ -2,6 +2,7 @@
 Tests for GradientLayer class module
 """
 
+import gc
 from unittest.mock import MagicMock
 
 import pytest
@@ -18,6 +19,10 @@ from easyreflectometry.sample.elements.materials.material import Material
 class TestGradientLayer:
     @pytest.fixture
     def gradient_layer(self) -> GradientLayer:
+        for vertex in global_object.map.vertices():
+            global_object.map.prune(vertex)
+        gc.collect()
+
         self.front = Material(10.0, -10.0, 'Material_1')
         self.back = Material(0.0, 0.0, 'Material_2')
 
@@ -87,7 +92,8 @@ class TestGradientLayer:
         # When
         p = GradientLayer()
         p_dict = p.as_dict()
-        global_object.map._clear()
+        for vertex in global_object.map.vertices():
+            global_object.map.prune(vertex)
 
         # Then
         q = GradientLayer.from_dict(p_dict)
@@ -99,7 +105,6 @@ class TestGradientLayer:
 
     def test_thickness_setter(self) -> None:
         # When
-        global_object.map._clear()
         gradient_layer = GradientLayer()
         gradient_layer.thickness = 10.0
 

@@ -6,6 +6,7 @@ from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
+from easyscience import global_object
 
 import easyreflectometry.sample.assemblies.base_assembly
 from easyreflectometry.sample.assemblies.base_assembly import BaseAssembly
@@ -14,6 +15,9 @@ from easyreflectometry.sample.assemblies.base_assembly import BaseAssembly
 class TestBaseAssembly:
     @pytest.fixture
     def base_assembly(self) -> BaseAssembly:
+        for vertex in global_object.map.vertices():
+            global_object.map.prune(vertex)
+
         self.mock_layer_0 = MagicMock()
         self.mock_layer_1 = MagicMock()
         self.mock_layers = [self.mock_layer_0, self.mock_layer_1]
