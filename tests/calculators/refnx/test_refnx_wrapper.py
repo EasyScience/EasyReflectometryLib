@@ -10,13 +10,14 @@ import unittest
 
 import numpy as np
 import pytest
-from easyreflectometry.calculators.refnx.wrapper import RefnxWrapper
-from easyreflectometry.experiment import LinearSpline
-from easyreflectometry.experiment import PercentageFhwm
 from numpy.testing import assert_allclose
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 from refnx import reflect
+
+from easyreflectometry.calculators.refnx.wrapper import RefnxWrapper
+from easyreflectometry.experiment import LinearSpline
+from easyreflectometry.experiment import PercentageFhwm
 
 
 class TestRefnx(unittest.TestCase):

@@ -8,14 +8,15 @@ __version__ = '0.0.1'
 
 import unittest
 
+from easyscience import global_object
+from numpy.testing import assert_equal
+from numpy.testing import assert_raises
+
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
 from easyreflectometry.sample.elements.layers.layer import Layer
 from easyreflectometry.sample.elements.layers.layer_collection import LayerCollection
 from easyreflectometry.sample.elements.materials.material import Material
-from easyscience import global_object
-from numpy.testing import assert_equal
-from numpy.testing import assert_raises
 
 
 class TestRepeatingMultilayer(unittest.TestCase):

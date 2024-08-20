@@ -1,9 +1,10 @@
 from unittest.mock import MagicMock
 
-from easyreflectometry.sample.elements.materials.material import Material
-from easyreflectometry.sample.elements.materials.material_mixture import MaterialMixture
 from easyscience import global_object
 from numpy.testing import assert_almost_equal
+
+from easyreflectometry.sample.elements.materials.material import Material
+from easyreflectometry.sample.elements.materials.material_mixture import MaterialMixture
 
 
 class TestMaterialMixture:

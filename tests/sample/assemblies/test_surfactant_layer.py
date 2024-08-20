@@ -8,11 +8,12 @@ __version__ = '0.0.1'
 
 import unittest
 
+from easyscience import global_object
+
 from easyreflectometry.sample.assemblies.surfactant_layer import SurfactantLayer
 from easyreflectometry.sample.elements.layers.layer import Layer
 from easyreflectometry.sample.elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
 from easyreflectometry.sample.elements.materials.material import Material
-from easyscience import global_object
 
 
 class TestSurfactantLayer:

@@ -3,9 +3,10 @@ from typing import Optional
 from typing import Union
 
 import numpy as np
-from easyreflectometry.parameter_utils import get_as_parameter
 from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
+
+from easyreflectometry.parameter_utils import get_as_parameter
 
 from ...base_core import BaseCore
 from ..materials.material import Material

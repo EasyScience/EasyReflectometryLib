@@ -7,6 +7,9 @@ __version__ = '0.0.1'
 
 import unittest
 
+from easyscience import global_object
+from numpy.testing import assert_equal
+
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerCollection
 from easyreflectometry.sample import Material
@@ -14,8 +17,6 @@ from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import RepeatingMultilayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.sample import SurfactantLayer
-from easyscience import global_object
-from numpy.testing import assert_equal
 
 
 class TestSample(unittest.TestCase):

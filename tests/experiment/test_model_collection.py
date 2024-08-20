@@ -1,6 +1,7 @@
+from easyscience import global_object
+
 from easyreflectometry.experiment.model import Model
 from easyreflectometry.experiment.model_collection import ModelCollection
-from easyscience import global_object
 
 
 class TestModelCollection:

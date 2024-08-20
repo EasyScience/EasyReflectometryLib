@@ -7,9 +7,10 @@ __version__ = '0.0.1'
 
 import unittest
 
+from easyscience import global_object
+
 from easyreflectometry.sample.elements.materials.material import Material
 from easyreflectometry.sample.elements.materials.material_collection import MaterialCollection
-from easyscience import global_object
 
 
 class TestMaterialCollection(unittest.TestCase):

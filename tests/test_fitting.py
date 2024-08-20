@@ -2,8 +2,10 @@ __author__ = 'github.com/arm61'
 
 import os
 
-import easyreflectometry
 import pytest
+from easyscience.fitting.minimizers.factory import AvailableMinimizers
+
+import easyreflectometry
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.data import load
 from easyreflectometry.experiment import Model
@@ -12,7 +14,6 @@ from easyreflectometry.fitting import Fitter
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import Sample
-from easyscience.fitting.minimizers.factory import AvailableMinimizers
 
 PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
 

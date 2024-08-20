@@ -1,9 +1,10 @@
 from typing import Optional
 from typing import Union
 
-from easyreflectometry.parameter_utils import get_as_parameter
 from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
+
+from easyreflectometry.parameter_utils import get_as_parameter
 
 from ..elements.layers.layer import Layer
 from ..elements.layers.layer_collection import SIZE_DEFAULT_COLLECTION

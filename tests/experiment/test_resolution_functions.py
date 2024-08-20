@@ -1,6 +1,7 @@
 import unittest
 
 import numpy as np
+
 from easyreflectometry.experiment.resolution_functions import DEFAULT_RESOLUTION_FWHM_PERCENTAGE
 from easyreflectometry.experiment.resolution_functions import LinearSpline
 from easyreflectometry.experiment.resolution_functions import PercentageFhwm

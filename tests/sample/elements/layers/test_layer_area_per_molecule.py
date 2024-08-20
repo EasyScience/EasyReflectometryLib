@@ -4,10 +4,11 @@ Tests for LayerAreaPerMolecule class.
 
 import unittest
 
-from easyreflectometry.sample.elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
-from easyreflectometry.sample.elements.materials.material import Material
 from easyscience import global_object
 from numpy.testing import assert_almost_equal
+
+from easyreflectometry.sample.elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
+from easyreflectometry.sample.elements.materials.material import Material
 
 
 class TestLayerAreaPerMolecule(unittest.TestCase):

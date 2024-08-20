@@ -10,13 +10,14 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 
 import numpy as np
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_equal
+
 from easyreflectometry.calculators.refl1d.wrapper import Refl1dWrapper
 from easyreflectometry.calculators.refl1d.wrapper import _build_sample
 from easyreflectometry.calculators.refl1d.wrapper import _get_oversampling_q
 from easyreflectometry.calculators.refl1d.wrapper import _get_polarized_probe
 from easyreflectometry.calculators.refl1d.wrapper import _get_probe
-from numpy.testing import assert_almost_equal
-from numpy.testing import assert_equal
 
 
 class TestRefl1d(unittest.TestCase):
