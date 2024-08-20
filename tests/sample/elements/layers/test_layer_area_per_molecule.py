@@ -2,7 +2,6 @@
 Tests for LayerAreaPerMolecule class.
 """
 
-import gc
 import unittest
 
 from easyscience import global_object
@@ -175,9 +174,7 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
             roughness=3,
         )
         p_dict = p.as_dict()
-        for vertex in global_object.map.vertices():
-            global_object.map.prune(vertex)
-        gc.collect()
+        global_object.map._clear()
 
         # Then
         q = LayerAreaPerMolecule.from_dict(p_dict)

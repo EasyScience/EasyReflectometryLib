@@ -5,7 +5,6 @@ Tests for Sample class.
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
-import gc
 import unittest
 
 from easyscience import global_object
@@ -76,9 +75,7 @@ class TestSample(unittest.TestCase):
         repeating = RepeatingMultilayer()
         p.append(repeating)
         p_dict = p.as_dict()
-        for vertex in global_object.map.vertices():
-            global_object.map.prune(vertex)
-        gc.collect()
+        global_object.map._clear()
 
         # Then
         q = Sample.from_dict(p_dict)

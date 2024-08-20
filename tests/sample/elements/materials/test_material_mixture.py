@@ -1,4 +1,3 @@
-import gc
 from unittest.mock import MagicMock
 
 from easyscience import global_object
@@ -117,9 +116,7 @@ class TestMaterialMixture:
         # When
         p = MaterialMixture()
         p_dict = p.as_dict()
-        for vertex in global_object.map.vertices():
-            global_object.map.prune(vertex)
-        gc.collect()
+        global_object.map._clear()
 
         # Then
         q = MaterialMixture.from_dict(p_dict)

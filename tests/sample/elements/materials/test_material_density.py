@@ -1,4 +1,3 @@
-import gc
 import unittest
 
 import numpy as np
@@ -57,9 +56,7 @@ class TestMaterialDensity(unittest.TestCase):
     def test_dict_round_trip(self):
         p = MaterialDensity()
         p_dict = p.as_dict()
-        for vertex in global_object.map.vertices():
-            global_object.map.prune(vertex)
-        gc.collect()
+        global_object.map._clear()
 
         q = MaterialDensity.from_dict(p_dict)
 

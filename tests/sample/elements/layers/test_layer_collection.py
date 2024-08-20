@@ -5,7 +5,6 @@ Tests for LayerCollection class.
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
-import gc
 import unittest
 
 from easyscience import global_object
@@ -82,9 +81,7 @@ class TestLayerCollection(unittest.TestCase):
         r.insert(0, p)
         r.append(q)
         r_dict = r.as_dict()
-        for vertex in global_object.map.vertices():
-            global_object.map.prune(vertex)
-        gc.collect()
+        global_object.map._clear()
 
         # Then
         s = LayerCollection.from_dict(r_dict)

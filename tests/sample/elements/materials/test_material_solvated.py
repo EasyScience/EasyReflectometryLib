@@ -1,4 +1,3 @@
-import gc
 from unittest.mock import MagicMock
 
 import pytest
@@ -122,9 +121,7 @@ class TestMaterialSolvated:
     def test_dict_round_trip(self):
         p = MaterialSolvated()
         p_dict = p.as_dict()
-        for vertex in global_object.map.vertices():
-            global_object.map.prune(vertex)
-        gc.collect()
+        global_object.map._clear()
 
         q = MaterialSolvated.from_dict(p_dict)
 

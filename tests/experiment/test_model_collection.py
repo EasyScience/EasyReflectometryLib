@@ -1,5 +1,3 @@
-import gc
-
 from easyscience import global_object
 
 from easyreflectometry.experiment.model import Model
@@ -80,9 +78,7 @@ class TestModelCollection:
         model_3 = Model(name='Model3')
         p = ModelCollection(model_1, model_2, model_3)
         p_dict = p.as_dict()
-        for vertex in global_object.map.vertices():
-            global_object.map.prune(vertex)
-        gc.collect()
+        global_object.map._clear()
 
         # Then
         q = ModelCollection.from_dict(p_dict)

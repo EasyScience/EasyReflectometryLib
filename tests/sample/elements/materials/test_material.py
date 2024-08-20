@@ -6,7 +6,6 @@ __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
 
-import gc
 import unittest
 
 import numpy as np
@@ -95,9 +94,7 @@ class TestMaterial(unittest.TestCase):
     def test_dict_round_trip(self):
         p = Material()
         p_dict = p.as_dict()
-        for vertex in global_object.map.vertices():
-            global_object.map.prune(vertex)
-        gc.collect()
+        global_object.map._clear()
 
         q = Material.from_dict(p_dict)
 
