@@ -78,18 +78,18 @@ class TestModelCollection:
         model_1 = Model(name='Model1')
         model_2 = Model(name='Model2')
         model_3 = Model(name='Model3')
-        collection = ModelCollection(model_1, model_2, model_3)
-        collection_dict = collection.as_dict()
+        p = ModelCollection(model_1, model_2, model_3)
+        p_dict = p.as_dict()
         for vertex in global_object.map.vertices():
             global_object.map.prune(vertex)
         gc.collect()
 
         # Then
-        collection_from_dict = ModelCollection.from_dict(collection_dict)
+        q = ModelCollection.from_dict(p_dict)
 
         # Expect
         # We have to skip the resolution_function and interface
-        assert sorted(collection.as_data_dict(skip=['resolution_function', 'interface'])) == sorted(
-            collection_from_dict.as_data_dict(skip=['resolution_function', 'interface'])
+        assert sorted(p.as_data_dict(skip=['resolution_function', 'interface'])) == sorted(
+            q.as_data_dict(skip=['resolution_function', 'interface'])
         )
-        assert collection[0]._resolution_function.smearing(5.5) == collection_from_dict[0]._resolution_function.smearing(5.5)
+        assert p[0]._resolution_function.smearing(5.5) == q[0]._resolution_function.smearing(5.5)
