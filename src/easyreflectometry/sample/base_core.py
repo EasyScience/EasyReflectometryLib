@@ -1,7 +1,8 @@
 from abc import abstractmethod
 
-import yaml
 from easyscience.Objects.ObjectClasses import BaseObj
+
+from easyreflectometry.parameter_utils import yaml_dump
 
 
 class BaseCore(BaseObj):
@@ -26,7 +27,7 @@ class BaseCore(BaseObj):
         :return: a string representation of the layer
         :rtype: str
         """
-        return yaml.dump(self._dict_repr, sort_keys=False, allow_unicode=True)
+        return yaml_dump(self._dict_repr)
 
     # For classes with special serialization needs one must adopt the dict produced by super
     # def as_dict(self, skip: list = None) -> dict:

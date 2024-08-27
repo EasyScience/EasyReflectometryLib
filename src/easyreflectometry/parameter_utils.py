@@ -3,6 +3,7 @@ from numbers import Number
 from typing import Optional
 from typing import Union
 
+import yaml
 from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 
@@ -47,3 +48,7 @@ def get_as_parameter(
         return Parameter(name, value, **parameter_dict)
 
     raise ValueError(f'{name} must be a Parameter, a number, or None.')
+
+
+def yaml_dump(dict_repr: dict) -> str:
+    return yaml.dump(dict_repr, sort_keys=False, allow_unicode=True)

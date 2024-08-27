@@ -1,8 +1,9 @@
 from typing import List
 from typing import Optional
 
-import yaml
 from easyscience.Objects.Groups import BaseCollection
+
+from easyreflectometry.parameter_utils import yaml_dump
 
 SIZE_DEFAULT_COLLECTION = 2
 
@@ -31,7 +32,7 @@ class BaseElementCollection(BaseCollection):
 
         :return: a string representation of the collection
         """
-        return yaml.dump(self._dict_repr, sort_keys=False, allow_unicode=True)
+        return yaml_dump(self._dict_repr)
 
     @property
     def _dict_repr(self) -> dict:

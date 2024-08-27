@@ -4,8 +4,9 @@ __author__ = 'github.com/arm61'
 
 from typing import Union
 
-import yaml
 from easyscience.Objects.Groups import BaseCollection
+
+from easyreflectometry.parameter_utils import yaml_dump
 
 from .assemblies.base_assembly import BaseAssembly
 from .assemblies.multilayer import Multilayer
@@ -59,7 +60,7 @@ class Sample(BaseCollection):
 
     def __repr__(self) -> str:
         """String representation of the sample."""
-        return yaml.dump(self._dict_repr, sort_keys=False, allow_unicode=True)
+        return yaml_dump(self._dict_repr)
 
     def as_dict(self, skip: list = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.

@@ -7,11 +7,11 @@ from numbers import Number
 from typing import Union
 
 import numpy as np
-import yaml
 from easyscience.Objects.new_variable import Parameter
 from easyscience.Objects.ObjectClasses import BaseObj
 
 from easyreflectometry.parameter_utils import get_as_parameter
+from easyreflectometry.parameter_utils import yaml_dump
 from easyreflectometry.sample import BaseAssembly
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerCollection
@@ -187,7 +187,7 @@ class Model(BaseObj):
 
     def __repr__(self) -> str:
         """String representation of the layer."""
-        return yaml.dump(self._dict_repr, sort_keys=False, allow_unicode=True)
+        return yaml_dump(self._dict_repr)
 
     def as_dict(self, skip: list = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
