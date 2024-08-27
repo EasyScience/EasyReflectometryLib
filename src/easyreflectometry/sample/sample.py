@@ -38,6 +38,9 @@ class Sample(BaseCollection):
                 list_layer_like = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_LAYERS)]
             else:
                 list_layer_like = []
+        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
+        # Else collisions might occur in global_object.map
+        self.populate_if_none = False
 
         for layer_like in list_layer_like:
             if issubclass(type(layer_like), Layer):
@@ -48,9 +51,6 @@ class Sample(BaseCollection):
                 raise ValueError('The items must be either a Layer or an Assembly.')
         super().__init__(name, *new_items, **kwargs)
         self.interface = interface
-
-        # Needed by the as_dict functionality
-        self.populate_if_none = False
 
     # Representation
     @property

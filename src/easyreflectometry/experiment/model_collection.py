@@ -28,11 +28,12 @@ class ModelCollection(BaseElementCollection):
                 models = [Model(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
             else:
                 models = []
+        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
+        # Else collisions might occur in global_object.map
+        self.populate_if_none = False
+
         super().__init__(name, interface, *models, **kwargs)
         self.interface = interface
-
-        # Needed by the as_dict functionality
-        self.populate_if_none = False
 
     def add_model(self, new_model: Model):
         """

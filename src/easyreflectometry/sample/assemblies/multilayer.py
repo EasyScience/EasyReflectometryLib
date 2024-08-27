@@ -45,10 +45,11 @@ class Multilayer(BaseAssembly):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
-        super().__init__(name, layers=layers, type=type, interface=interface)
-
-        # Needed by the as_dict functionality
+        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
+        # Else collisions might occur in global_object.map
         self.populate_if_none = False
+
+        super().__init__(name, layers=layers, type=type, interface=interface)
 
     def add_layer(self, *layers: tuple[Layer]) -> None:
         """Add a layer to the multi layer.

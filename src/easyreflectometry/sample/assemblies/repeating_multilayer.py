@@ -64,6 +64,9 @@ class RepeatingMultilayer(Multilayer):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
+        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
+        # Else collisions might occur in global_object.map
+        self.populate_if_none = False
 
         repetitions = get_as_parameter(
             name='repetitions',
@@ -80,9 +83,6 @@ class RepeatingMultilayer(Multilayer):
         )
         self._add_component('repetitions', repetitions)
         self.interface = interface
-
-        # Needed by the as_dict functionality
-        self.populate_if_none = False
 
     # Representation
     @property
