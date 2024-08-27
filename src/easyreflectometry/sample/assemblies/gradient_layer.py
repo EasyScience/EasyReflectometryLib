@@ -101,8 +101,8 @@ class GradientLayer(BaseAssembly):
     def _dict_repr(self) -> dict[str, str]:
         """A simplified dict representation."""
         return {
-            'thickness': float(self.thickness),
-            'discretisation_elements': int(self._discretisation_elements),
+            'thickness': float(self.thickness),  #  Conversion to float is necessary to prevent property reference in dict
+            'discretisation_elements': int(self._discretisation_elements),  # Same as above
             'back_layer': self.back_layer._dict_repr,
             'front_layer': self.front_layer._dict_repr,
         }
