@@ -2,6 +2,7 @@ __author__ = 'github.com/arm61'
 
 import numpy as np
 import scipp as sc
+from easyscience.fitting.minimizers.factory import AvailableMinimizers
 from easyscience.fitting.multi_fitter import MultiFitter as easyFitter
 
 from easyreflectometry.experiment import Model
@@ -27,7 +28,8 @@ class Fitter:
         self._models = args
         self.easy_f = easyFitter(args, self._fit_func)
 
-    def fit(self, data: sc.DataGroup, method: str = 'least_squares', id: int = 0) -> sc.DataGroup:
+    #    def fit(self, data: sc.DataGroup, method: str = 'least_squares', id: int = 0) -> sc.DataGroup:
+    def fit(self, data: sc.DataGroup, id: int = 0) -> sc.DataGroup:
         """
         Perform the fitting and populate the DataGroups with the result.
 
@@ -38,7 +40,7 @@ class Fitter:
         x = [data['coords'][f'Qz_{i}'].values for i in refl_nums]
         y = [data['data'][f'R_{i}'].values for i in refl_nums]
         dy = [1 / np.sqrt(data['data'][f'R_{i}'].variances) for i in refl_nums]
-        result = self.easy_f.fit(x, y, weights=dy, method=method)
+        result = self.easy_f.fit(x, y, weights=dy)
         new_data = data.copy()
         for i, _ in enumerate(result):
             id = refl_nums[i]
@@ -52,6 +54,14 @@ class Fitter:
                 dims=[f'z_{id}'], values=sld_profile[0], unit=(1 / new_data['coords'][f'Qz_{id}'].unit).unit
             )
         return new_data
+
+    def switch_minimizer(self, minimizer: AvailableMinimizers) -> None:
+        """
+        Switch the minimizer for the fitting.
+
+        :param minimizer: Minimizer to be switched to
+        """
+        self.easy_f.switch_minimizer(minimizer)
 
 
 def _flatten_list(this_list: list) -> list:
