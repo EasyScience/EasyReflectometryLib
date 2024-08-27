@@ -2,7 +2,7 @@ __author__ = 'github.com/arm61'
 
 import numpy as np
 import scipp as sc
-from easyscience.fitting.minimizers.factory import AvailableMinimizers
+from easyscience.fitting import AvailableMinimizers
 from easyscience.fitting.multi_fitter import MultiFitter as easyFitter
 
 from easyreflectometry.experiment import Model
@@ -28,7 +28,6 @@ class Fitter:
         self._models = args
         self.easy_f = easyFitter(args, self._fit_func)
 
-    #    def fit(self, data: sc.DataGroup, method: str = 'least_squares', id: int = 0) -> sc.DataGroup:
     def fit(self, data: sc.DataGroup, id: int = 0) -> sc.DataGroup:
         """
         Perform the fitting and populate the DataGroups with the result.
