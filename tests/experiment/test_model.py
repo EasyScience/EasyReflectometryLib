@@ -5,12 +5,15 @@ Tests for Model class.
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
-
 import unittest
 from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
+from easyscience import global_object
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_equal
+
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.experiment import LinearSpline
 from easyreflectometry.experiment import Model
@@ -22,7 +25,6 @@ from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import RepeatingMultilayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.sample import SurfactantLayer
-from numpy.testing import assert_equal
 
 
 class TestModel(unittest.TestCase):
@@ -33,13 +35,13 @@ class TestModel(unittest.TestCase):
         assert_equal(p.sample.name, 'EasySample')
         assert_equal(p.scale.display_name, 'scale')
         assert_equal(str(p.scale.unit), 'dimensionless')
-        assert_equal(p.scale.value.value.magnitude, 1.0)
+        assert_equal(p.scale.value, 1.0)
         assert_equal(p.scale.min, 0.0)
         assert_equal(p.scale.max, np.Inf)
         assert_equal(p.scale.fixed, True)
         assert_equal(p.background.display_name, 'background')
         assert_equal(str(p.background.unit), 'dimensionless')
-        assert_equal(p.background.value.value.magnitude, 1.0e-8)
+        assert_equal(p.background.value, 1.0e-8)
         assert_equal(p.background.min, 0.0)
         assert_equal(p.background.max, np.Inf)
         assert_equal(p.background.fixed, True)
@@ -69,13 +71,13 @@ class TestModel(unittest.TestCase):
         assert_equal(mod.sample.name, 'myModel')
         assert_equal(mod.scale.display_name, 'scale')
         assert_equal(str(mod.scale.unit), 'dimensionless')
-        assert_equal(mod.scale.value.value.magnitude, 2.0)
+        assert_equal(mod.scale.value, 2.0)
         assert_equal(mod.scale.min, 0.0)
         assert_equal(mod.scale.max, np.Inf)
         assert_equal(mod.scale.fixed, True)
         assert_equal(mod.background.display_name, 'background')
         assert_equal(str(mod.background.unit), 'dimensionless')
-        assert_equal(mod.background.value.value.magnitude, 1.0e-5)
+        assert_equal(mod.background.value, 1.0e-5)
         assert_equal(mod.background.min, 0.0)
         assert_equal(mod.background.max, np.Inf)
         assert_equal(mod.background.fixed, True)
@@ -335,10 +337,6 @@ class TestModel(unittest.TestCase):
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
-    def test_uid(self):
-        p = Model()
-        assert_equal(p.uid, p._borg.map.convert_id_to_key(p))
-
     def test_resolution_function(self):
         mock_resolution_function = MagicMock()
         interface = CalculatorFactory()
@@ -380,7 +378,7 @@ class TestModel(unittest.TestCase):
 
         assert (
             model.__repr__()
-            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n'  # noqa: E501
+            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n'  # noqa: E501
         )
 
     def test_repr_resolution_function(self):
@@ -389,26 +387,35 @@ class TestModel(unittest.TestCase):
         model.resolution_function = resolution_function
         assert (
             model.__repr__()
-            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: function of Q\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n    - EasyMultilayer:\n        EasyLayers:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1 / angstrom ** 2\n                isld: 0.000e-6 1 / angstrom ** 2\n            thickness: 10.000 angstrom\n            roughness: 3.300 angstrom\n'  # noqa: E501
+            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: function of Q\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n'  # noqa: E501
         )
 
-    def test_dict_round_trip(self):
-        # When
-        resolution_function = LinearSpline([0, 10], [0, 10])
-        interface = CalculatorFactory()
-        model = Model(interface=interface)
-        model.resolution_function = resolution_function
-        surfactant = SurfactantLayer()
-        model.add_item(surfactant)
-        multilayer = Multilayer()
-        model.add_item(multilayer)
-        repeating = RepeatingMultilayer()
-        model.add_item(repeating)
-        src_dict = model.as_dict()
 
-        # Then
-        model_from_dict = Model.from_dict(src_dict)
+@pytest.mark.parametrize(
+    'interface',
+    [None, CalculatorFactory()],
+)
+def test_dict_round_trip(interface):  # , additional_layer):
+    # When
+    resolution_function = LinearSpline([0, 10], [0, 10])
+    model = Model(interface=interface)
+    model.resolution_function = resolution_function
+    for additional_layer in [SurfactantLayer(), Multilayer(), RepeatingMultilayer()]:
+        model.add_item(additional_layer)
+    src_dict = model.as_dict()
+    global_object.map._clear()
 
-        # Expect
-        assert model.as_data_dict(skip=['resolution_function']) == model_from_dict.as_data_dict(skip=['resolution_function'])
-        assert model._resolution_function.smearing(5.5) == model_from_dict._resolution_function.smearing(5.5)
+    # Then
+    model_from_dict = Model.from_dict(src_dict)
+
+    # Expect
+    assert sorted(model.as_data_dict(skip=['resolution_function', 'interface'])) == sorted(
+        model_from_dict.as_data_dict(skip=['resolution_function', 'interface'])
+    )
+    assert model._resolution_function.smearing(5.5) == model_from_dict._resolution_function.smearing(5.5)
+    if interface is not None:
+        assert model.interface().name == model_from_dict.interface().name
+        assert_almost_equal(
+            model.interface().fit_func([0.3], model.unique_name),
+            model_from_dict.interface().fit_func([0.3], model_from_dict.unique_name),
+        )

@@ -1,11 +1,14 @@
+from typing import Optional
 from typing import Union
 
 import numpy as np
+from easyscience import global_object
+from easyscience.fitting.Constraints import FunctionalConstraint
+from easyscience.Objects.new_variable import Parameter
+
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.special.calculations import area_per_molecule_to_scattering_length_density
 from easyreflectometry.special.calculations import neutron_scattering_length
-from easyscience.Fitting.Constraints import FunctionalConstraint
-from easyscience.Objects.ObjectClasses import Parameter
 
 from ..materials.material import Material
 from ..materials.material_solvated import DEFAULTS as MATERIAL_SOLVATED_DEFAULTS
@@ -18,7 +21,7 @@ DEFAULTS = {
     'area_per_molecule': {
         'description': 'Surface coverage',
         'value': 48.2,
-        'units': 'angstrom ** 2',
+        'unit': 'angstrom^2',
         'min': 0,
         'max': np.inf,
         'fixed': True,
@@ -27,7 +30,7 @@ DEFAULTS = {
         'description': 'The real scattering length for a molecule formula in angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 4.186,
-        'units': 'angstrom',
+        'unit': 'angstrom',
         'min': -np.Inf,
         'max': np.Inf,
         'fixed': True,
@@ -36,7 +39,7 @@ DEFAULTS = {
         'description': 'The real scattering length for a molecule formula in angstrom.',
         'url': 'https://www.ncnr.nist.gov/resources/activation/',
         'value': 0.0,
-        'units': 'angstrom',
+        'unit': 'angstrom',
         'min': -np.Inf,
         'max': np.Inf,
         'fixed': True,
@@ -72,6 +75,7 @@ class LayerAreaPerMolecule(Layer):
         area_per_molecule: Union[Parameter, float, None] = None,
         roughness: Union[Parameter, float, None] = None,
         name: str = 'EasyLayerAreaPerMolecule',
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -88,19 +92,48 @@ class LayerAreaPerMolecule(Layer):
         if solvent is None:
             solvent = Material(6.36, 0, 'D2O', interface=interface)
 
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         # Create the solvated molecule and corresponding constraints
         if molecular_formula is None:
             molecular_formula = DEFAULTS['molecular_formula']
-        molecule = Material(sld=0.0, isld=0.0, name=molecular_formula, interface=interface)
+        molecule_material = Material(
+            sld=0.0,
+            isld=0.0,
+            name=molecular_formula,
+            interface=interface,
+            unique_name=unique_name + 'Material',
+        )
 
-        thickness = get_as_parameter('thickness', thickness, DEFAULTS)
-        _area_per_molecule = get_as_parameter('area_per_molecule', area_per_molecule, DEFAULTS)
-        _scattering_length_real = get_as_parameter('scattering_length_real', 0.0, DEFAULTS['sl'])
-        _scattering_length_imag = get_as_parameter('scattering_length_imag', 0.0, DEFAULTS['isl'])
+        thickness = get_as_parameter(
+            name='thickness',
+            value=thickness,
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}_Thickness',
+        )
+        _area_per_molecule = get_as_parameter(
+            name='area_per_molecule',
+            value=area_per_molecule,
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}_AreaPerMolecule',
+        )
+        _scattering_length_real = get_as_parameter(
+            name='scattering_length_real',
+            value=0.0,
+            default_dict=DEFAULTS['sl'],
+            unique_name_prefix=f'{unique_name}_Sl',
+        )
+        _scattering_length_imag = get_as_parameter(
+            name='scattering_length_imag',
+            value=0.0,
+            default_dict=DEFAULTS['isl'],
+            unique_name_prefix=f'{unique_name}_Isl',
+        )
 
         # Constrain the real part of the sld value for the molecule
         constraint_sld_real = FunctionalConstraint(
-            dependent_obj=molecule.sld,
+            dependent_obj=molecule_material.sld,
             func=area_per_molecule_to_scattering_length_density,
             independent_objs=[_scattering_length_real, thickness, _area_per_molecule],
         )
@@ -110,7 +143,7 @@ class LayerAreaPerMolecule(Layer):
 
         # Constrain the imaginary part of the sld value for the molecule
         constraint_sld_imag = FunctionalConstraint(
-            dependent_obj=molecule.isld,
+            dependent_obj=molecule_material.isld,
             func=area_per_molecule_to_scattering_length_density,
             independent_objs=[_scattering_length_imag, thickness, _area_per_molecule],
         )
@@ -118,14 +151,15 @@ class LayerAreaPerMolecule(Layer):
         _area_per_molecule.user_constraints['iarea_per_molecule'] = constraint_sld_imag
         _scattering_length_imag.user_constraints['iarea_per_molecule'] = constraint_sld_imag
 
-        solvated_molecule = MaterialSolvated(
-            material=molecule,
+        solvated_molecule_material = MaterialSolvated(
+            material=molecule_material,
             solvent=solvent,
             solvent_fraction=solvent_fraction,
             interface=interface,
+            unique_name=unique_name + 'MaterialSolvated',
         )
         super().__init__(
-            material=solvated_molecule,
+            material=solvated_molecule_material,
             thickness=thickness,
             roughness=roughness,
             name=name,
@@ -149,7 +183,7 @@ class LayerAreaPerMolecule(Layer):
     @property
     def area_per_molecule(self) -> float:
         """Get the area per molecule."""
-        return self._area_per_molecule.raw_value
+        return self._area_per_molecule.value
 
     @area_per_molecule.setter
     def area_per_molecule(self, new_area_per_molecule: float) -> None:
@@ -236,6 +270,8 @@ class LayerAreaPerMolecule(Layer):
         """
         this_dict = super().as_dict(skip=skip)
         this_dict['solvent_fraction'] = self.material._fraction.as_dict()
+        this_dict['area_per_molecule'] = self._area_per_molecule.as_dict()
+        this_dict['solvent'] = self.solvent.as_dict()
         del this_dict['material']
         del this_dict['_scattering_length_real']
         del this_dict['_scattering_length_imag']

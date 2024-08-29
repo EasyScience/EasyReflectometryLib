@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from typing import Optional
 from typing import Union
 
+from easyreflectometry.sample.base_element_collection import SIZE_DEFAULT_COLLECTION
+
 from ..elements.layers.layer import Layer
-from ..elements.layers.layer_collection import SIZE_DEFAULT_COLLECTION
 from ..elements.layers.layer_collection import LayerCollection
 from .base_assembly import BaseAssembly
 
@@ -25,6 +27,7 @@ class Multilayer(BaseAssembly):
         name: str = 'EasyMultilayer',
         interface=None,
         type: str = 'Multi-layer',
+        populate_if_none: Optional[bool] = True,
     ):
         """Constructor.
 
@@ -34,11 +37,18 @@ class Multilayer(BaseAssembly):
         :param type: Type of the constructed instance, defaults to 'Multi-layer'
         """
         if layers is None:
-            layers = LayerCollection()
+            if populate_if_none:
+                layers = LayerCollection([Layer(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)])
+            else:
+                layers = LayerCollection()
         elif isinstance(layers, Layer):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
+        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
+        # Else collisions might occur in global_object.map
+        self.populate_if_none = False
+
         super().__init__(name, layers=layers, type=type, interface=interface)
 
     def add_layer(self, *layers: tuple[Layer]) -> None:
@@ -50,7 +60,7 @@ class Multilayer(BaseAssembly):
             if issubclass(arg.__class__, Layer):
                 self.layers.append(arg)
                 if self.interface is not None:
-                    self.interface().add_layer_to_item(arg.uid, self.uid)
+                    self.interface().add_layer_to_item(arg.unique_name, self.unique_name)
 
     def duplicate_layer(self, idx: int) -> None:
         """Duplicate a given layer.
@@ -61,8 +71,8 @@ class Multilayer(BaseAssembly):
         to_duplicate = self.layers[idx]
         duplicate_layer = Layer(
             material=to_duplicate.material,
-            thickness=to_duplicate.thickness.raw_value,
-            roughness=to_duplicate.roughness.raw_value,
+            thickness=to_duplicate.thickness.value,
+            roughness=to_duplicate.roughness.value,
             name=to_duplicate.name + ' duplicate',
         )
         self.add_layer(duplicate_layer)
@@ -73,7 +83,7 @@ class Multilayer(BaseAssembly):
         :param idx: index of layer to remove
         """
         if self.interface is not None:
-            self.interface().remove_layer_from_item(self.layers[idx].uid, self.uid)
+            self.interface().remove_layer_from_item(self.layers[idx].unique_name, self.unique_name)
         del self.layers[idx]
 
     # Representation

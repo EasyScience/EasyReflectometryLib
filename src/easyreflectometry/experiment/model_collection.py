@@ -2,6 +2,7 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
+from typing import List
 from typing import Optional
 
 from easyreflectometry.sample.base_element_collection import SIZE_DEFAULT_COLLECTION
@@ -19,10 +20,18 @@ class ModelCollection(BaseElementCollection):
         *models: Optional[tuple[Model]],
         name: str = 'EasyModels',
         interface=None,
+        populate_if_none: bool = True,
         **kwargs,
     ):
         if not models:
-            models = [Model(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
+            if populate_if_none:
+                models = [Model(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
+            else:
+                models = []
+        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
+        # Else collisions might occur in global_object.map
+        self.populate_if_none = False
+
         super().__init__(name, interface, *models, **kwargs)
         self.interface = interface
 
@@ -42,6 +51,11 @@ class ModelCollection(BaseElementCollection):
         """
         del self[idx]
 
+    def as_dict(self, skip: List[str] | None = None) -> dict:
+        this_dict = super().as_dict(skip)
+        this_dict['populate_if_none'] = self.populate_if_none
+        return this_dict
+
     @classmethod
     def from_dict(cls, this_dict: dict) -> ModelCollection:
         """
@@ -50,11 +64,17 @@ class ModelCollection(BaseElementCollection):
         :param data: The dictionary for the collection
         :return: An instance of the collection
         """
-        collection = super().from_dict(this_dict)  # type: ModelCollection
+        collection_dict = this_dict.copy()
+        # We neeed to call from_dict on the base class to get the models
+        dict_data = collection_dict['data']
+        del collection_dict['data']
+
+        collection = super().from_dict(collection_dict)  # type: ModelCollection
+
+        for model_data in dict_data:
+            collection.add_model(Model.from_dict(model_data))
 
         if len(collection) != len(this_dict['data']):
             raise ValueError(f"Expected {len(collection)} models, got {len(this_dict['data'])}")
-        for i, model_data in enumerate(this_dict['data']):
-            collection[i] = Model.from_dict(model_data)
 
         return collection

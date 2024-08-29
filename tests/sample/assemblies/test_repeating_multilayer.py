@@ -8,13 +8,15 @@ __version__ = '0.0.1'
 
 import unittest
 
+from easyscience import global_object
+from numpy.testing import assert_equal
+from numpy.testing import assert_raises
+
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
 from easyreflectometry.sample.elements.layers.layer import Layer
 from easyreflectometry.sample.elements.layers.layer_collection import LayerCollection
 from easyreflectometry.sample.elements.materials.material import Material
-from numpy.testing import assert_equal
-from numpy.testing import assert_raises
 
 
 class TestRepeatingMultilayer(unittest.TestCase):
@@ -26,11 +28,24 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(len(p.layers), 2)
         assert_equal(p.repetitions.display_name, 'repetitions')
         assert_equal(str(p.repetitions.unit), 'dimensionless')
-        assert_equal(p.repetitions.value.value.magnitude, 1.0)
+        assert_equal(p.repetitions.value, 1.0)
         assert_equal(p.repetitions.min, 1)
         assert_equal(p.repetitions.max, 9999)
         assert_equal(p.repetitions.fixed, True)
-        assert_equal(p.layers.name, 'EasyLayers')
+        assert_equal(p.layers.name, 'EasyLayerCollection')
+
+    def test_default_empty(self):
+        p = RepeatingMultilayer(populate_if_none=False)
+        assert_equal(p.name, 'EasyRepeatingMultilayer')
+        assert_equal(p._type, 'Repeating Multi-layer')
+        assert_equal(p.interface, None)
+        assert_equal(p.repetitions.display_name, 'repetitions')
+        assert_equal(str(p.repetitions.unit), 'dimensionless')
+        assert_equal(p.repetitions.value, 1.0)
+        assert_equal(p.repetitions.min, 1)
+        assert_equal(p.repetitions.max, 9999)
+        assert_equal(p.repetitions.fixed, True)
+        assert_equal(p.layers.name, 'EasyLayerCollection')
 
     def test_from_pars(self):
         m = Material(6.908, -0.278, 'Boron')
@@ -44,7 +59,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(o.interface, None)
         assert_equal(o.repetitions.display_name, 'repetitions')
         assert_equal(str(o.repetitions.unit), 'dimensionless')
-        assert_equal(o.repetitions.value.value.magnitude, 2.0)
+        assert_equal(o.repetitions.value, 2.0)
         assert_equal(o.repetitions.min, 1)
         assert_equal(o.repetitions.max, 9999)
         assert_equal(o.repetitions.fixed, True)
@@ -58,7 +73,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(o.interface, None)
         assert_equal(o.repetitions.display_name, 'repetitions')
         assert_equal(str(o.repetitions.unit), 'dimensionless')
-        assert_equal(o.repetitions.value.value.magnitude, 2.0)
+        assert_equal(o.repetitions.value, 2.0)
         assert_equal(o.repetitions.min, 1)
         assert_equal(o.repetitions.max, 9999)
         assert_equal(o.repetitions.fixed, True)
@@ -73,7 +88,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(o.name, 'twoLayerItem')
         assert_equal(o.interface, None)
         assert_equal(o.layers.name, 'thinBoron/layerPotassium')
-        assert_equal(o.repetitions.value.value.magnitude, 10.0)
+        assert_equal(o.repetitions.value, 10.0)
         assert_equal(o.repetitions.min, 1)
         assert_equal(o.repetitions.max, 9999)
 
@@ -96,10 +111,10 @@ class TestRepeatingMultilayer(unittest.TestCase):
         p = Layer(m, 5.0, 2.0, 'thinBoron', interface=interface)
         q = Layer(k, 50.0, 1.0, 'thickPotassium', interface=interface)
         o = RepeatingMultilayer(p, 2.0, 'twoLayerItem', interface=interface)
-        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.unique_name].components), 1)
         o.add_layer(q)
-        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
-        assert_equal(o.interface()._wrapper.storage['item'][o.uid].components[1].thick.value, 50.0)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.unique_name].components), 2)
+        assert_equal(o.interface()._wrapper.storage['item'][o.unique_name].components[1].thick.value, 50.0)
 
     def test_duplicate_layer(self):
         m = Material(6.908, -0.278, 'Boron')
@@ -123,18 +138,18 @@ class TestRepeatingMultilayer(unittest.TestCase):
         p = Layer(m, 5.0, 2.0, 'thinBoron', interface=interface)
         q = Layer(k, 50.0, 1.0, 'thickPotassium', interface=interface)
         o = RepeatingMultilayer(p, 2.0, 'twoLayerItem', interface=interface)
-        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.unique_name].components), 1)
         o.add_layer(q)
-        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
-        assert_equal(o.interface()._wrapper.storage['item'][o.uid].components[1].thick.value, 50.0)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.unique_name].components), 2)
+        assert_equal(o.interface()._wrapper.storage['item'][o.unique_name].components[1].thick.value, 50.0)
         o.duplicate_layer(1)
-        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 3)
-        assert_equal(o.interface()._wrapper.storage['item'][o.uid].components[2].thick.value, 50.0)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.unique_name].components), 3)
+        assert_equal(o.interface()._wrapper.storage['item'][o.unique_name].components[2].thick.value, 50.0)
         assert_raises(
             AssertionError,
             assert_equal,
-            o.interface()._wrapper.storage['item'][o.uid].components[1].name,
-            o.interface()._wrapper.storage['item'][o.uid].components[2].name,
+            o.interface()._wrapper.storage['item'][o.unique_name].components[1].name,
+            o.interface()._wrapper.storage['item'][o.unique_name].components[2].name,
         )
 
     def test_remove_layer(self):
@@ -159,22 +174,25 @@ class TestRepeatingMultilayer(unittest.TestCase):
         p = Layer(m, 5.0, 2.0, 'thinBoron', interface=interface)
         q = Layer(k, 50.0, 1.0, 'thickPotassium', interface=interface)
         o = RepeatingMultilayer(p, repetitions=2.0, name='twoLayerItem', interface=interface)
-        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.unique_name].components), 1)
         o.add_layer(q)
-        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 2)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.unique_name].components), 2)
         assert_equal(o.layers[1].name, 'thickPotassium')
         o.remove_layer(1)
-        assert_equal(len(o.interface()._wrapper.storage['item'][o.uid].components), 1)
+        assert_equal(len(o.interface()._wrapper.storage['item'][o.unique_name].components), 1)
         assert_equal(o.layers[0].name, 'thinBoron')
 
     def test_repr(self):
-        p = RepeatingMultilayer()
+        p = RepeatingMultilayer(populate_if_none=True)
         assert (
             p.__repr__()
-            == 'EasyRepeatingMultilayer:\n  EasyLayers:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1 / angstrom ** 2\n          isld: 0.000e-6 1 / angstrom ** 2\n      thickness: 10.000 angstrom\n      roughness: 3.300 angstrom\n  repetitions: 1.0\n'  # noqa: E501
+            == 'EasyRepeatingMultilayer:\n  EasyLayerCollection:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1/Å^2\n          isld: 0.000e-6 1/Å^2\n      thickness: 10.000 Å\n      roughness: 3.300 Å\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1/Å^2\n          isld: 0.000e-6 1/Å^2\n      thickness: 10.000 Å\n      roughness: 3.300 Å\n  repetitions: 1.0\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):
-        p = RepeatingMultilayer()
-        q = RepeatingMultilayer.from_dict(p.as_dict())
-        assert p.as_data_dict() == q.as_data_dict()
+        p = RepeatingMultilayer(populate_if_none=True)
+        p_dict = p.as_dict()
+        global_object.map._clear()
+
+        q = RepeatingMultilayer.from_dict(p_dict)
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())

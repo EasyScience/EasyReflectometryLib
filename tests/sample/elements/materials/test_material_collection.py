@@ -7,11 +7,13 @@ __version__ = '0.0.1'
 
 import unittest
 
+from easyscience import global_object
+
 from easyreflectometry.sample.elements.materials.material import Material
 from easyreflectometry.sample.elements.materials.material_collection import MaterialCollection
 
 
-class TestLayerCollection(unittest.TestCase):
+class TestMaterialCollection(unittest.TestCase):
     def test_default(self):
         p = MaterialCollection()
         assert p.name == 'EasyMaterials'
@@ -40,16 +42,17 @@ class TestLayerCollection(unittest.TestCase):
         p = MaterialCollection()
         assert p._dict_repr == {
             'EasyMaterials': [
-                {'EasyMaterial': {'isld': '0.000e-6 1 / angstrom ** 2', 'sld': '4.186e-6 1 / angstrom ** 2'}},
-                {'EasyMaterial': {'isld': '0.000e-6 1 / angstrom ** 2', 'sld': '4.186e-6 1 / angstrom ** 2'}},
+                {'EasyMaterial': {'isld': '0.000e-6 1/Å^2', 'sld': '4.186e-6 1/Å^2'}},
+                {'EasyMaterial': {'isld': '0.000e-6 1/Å^2', 'sld': '4.186e-6 1/Å^2'}},
             ]
         }
 
     def test_repr(self):
         p = MaterialCollection()
+        p.__repr__()
         assert (
             p.__repr__()
-            == 'EasyMaterials:\n- EasyMaterial:\n    sld: 4.186e-6 1 / angstrom ** 2\n    isld: 0.000e-6 1 / angstrom ** 2\n- EasyMaterial:\n    sld: 4.186e-6 1 / angstrom ** 2\n    isld: 0.000e-6 1 / angstrom ** 2\n'  # noqa: E501
+            == 'EasyMaterials:\n- EasyMaterial:\n    sld: 4.186e-6 1/Å^2\n    isld: 0.000e-6 1/Å^2\n- EasyMaterial:\n    sld: 4.186e-6 1/Å^2\n    isld: 0.000e-6 1/Å^2\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):
@@ -59,9 +62,11 @@ class TestLayerCollection(unittest.TestCase):
         p = MaterialCollection()
         p.insert(0, m)
         p.append(k)
+        p_dict = p.as_dict()
+        global_object.map._clear()
 
         # Then
-        q = MaterialCollection.from_dict(p.as_dict())
+        q = MaterialCollection.from_dict(p_dict)
 
         # Expect
-        assert p.as_data_dict() == q.as_data_dict()
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())

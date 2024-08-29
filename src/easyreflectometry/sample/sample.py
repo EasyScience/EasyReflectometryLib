@@ -4,8 +4,9 @@ __author__ = 'github.com/arm61'
 
 from typing import Union
 
-import yaml
 from easyscience.Objects.Groups import BaseCollection
+
+from easyreflectometry.parameter_utils import yaml_dump
 
 from .assemblies.base_assembly import BaseAssembly
 from .assemblies.multilayer import Multilayer
@@ -22,6 +23,7 @@ class Sample(BaseCollection):
         *list_layer_like: list[Union[Layer, BaseAssembly]],
         name: str = 'EasySample',
         interface=None,
+        populate_if_none: bool = True,
         **kwargs,
     ):
         """Constructor.
@@ -32,7 +34,13 @@ class Sample(BaseCollection):
         """
         new_items = []
         if not list_layer_like:
-            list_layer_like = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_LAYERS)]
+            if populate_if_none:
+                list_layer_like = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_LAYERS)]
+            else:
+                list_layer_like = []
+        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
+        # Else collisions might occur in global_object.map
+        self.populate_if_none = False
 
         for layer_like in list_layer_like:
             if issubclass(type(layer_like), Layer):
@@ -44,11 +52,6 @@ class Sample(BaseCollection):
         super().__init__(name, *new_items, **kwargs)
         self.interface = interface
 
-    @property
-    def uid(self) -> int:
-        """The UID from the borg map."""
-        return self._borg.map.convert_id_to_key(self)
-
     # Representation
     @property
     def _dict_repr(self) -> dict:
@@ -57,7 +60,7 @@ class Sample(BaseCollection):
 
     def __repr__(self) -> str:
         """String representation of the sample."""
-        return yaml.dump(self._dict_repr, sort_keys=False)
+        return yaml_dump(self._dict_repr)
 
     def as_dict(self, skip: list = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
@@ -70,25 +73,5 @@ class Sample(BaseCollection):
         this_dict = super().as_dict(skip=skip)
         for i, layer in enumerate(self.data):
             this_dict['data'][i] = layer.as_dict(skip=skip)
+        this_dict['populate_if_none'] = self.populate_if_none
         return this_dict
-
-    @classmethod
-    def from_dict(cls, data: dict) -> Sample:
-        """
-        Create a Sample from a dictionary.
-
-        :param data: dictionary of the Sample
-        :return: Sample
-        """
-        sample = super().from_dict(data)
-
-        # Remove the default multilayers
-        for i in range(NR_DEFAULT_LAYERS):
-            sample.__delitem__(0)
-
-        # Ensure that the data is also converted
-        # TODO Should probably be handled in easyscience
-        for i in range(len(sample.data)):
-            sample[i] = sample[i].__class__.from_dict(data['data'][i])
-
-        return sample

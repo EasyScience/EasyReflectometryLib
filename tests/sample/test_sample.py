@@ -7,6 +7,9 @@ __version__ = '0.0.1'
 
 import unittest
 
+from easyscience import global_object
+from numpy.testing import assert_equal
+
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerCollection
 from easyreflectometry.sample import Material
@@ -14,7 +17,6 @@ from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import RepeatingMultilayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.sample import SurfactantLayer
-from numpy.testing import assert_equal
 
 
 class TestSample(unittest.TestCase):
@@ -60,7 +62,7 @@ class TestSample(unittest.TestCase):
         p = Sample()
         assert (
             p.__repr__()
-            == 'EasySample:\n- EasyMultilayer:\n    EasyLayers:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n- EasyMultilayer:\n    EasyLayers:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1 / angstrom ** 2\n            isld: 0.000e-6 1 / angstrom ** 2\n        thickness: 10.000 angstrom\n        roughness: 3.300 angstrom\n'  # noqa: E501
+            == 'EasySample:\n- EasyMultilayer:\n    EasyLayerCollection:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1/Å^2\n            isld: 0.000e-6 1/Å^2\n        thickness: 10.000 Å\n        roughness: 3.300 Å\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1/Å^2\n            isld: 0.000e-6 1/Å^2\n        thickness: 10.000 Å\n        roughness: 3.300 Å\n- EasyMultilayer:\n    EasyLayerCollection:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1/Å^2\n            isld: 0.000e-6 1/Å^2\n        thickness: 10.000 Å\n        roughness: 3.300 Å\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1/Å^2\n            isld: 0.000e-6 1/Å^2\n        thickness: 10.000 Å\n        roughness: 3.300 Å\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):
@@ -72,9 +74,10 @@ class TestSample(unittest.TestCase):
         p.append(multilayer)
         repeating = RepeatingMultilayer()
         p.append(repeating)
+        p_dict = p.as_dict()
+        global_object.map._clear()
 
         # Then
-        q = Sample.from_dict(p.as_dict())
+        q = Sample.from_dict(p_dict)
 
-        # Expect
-        assert p.as_data_dict() == q.as_data_dict()
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())

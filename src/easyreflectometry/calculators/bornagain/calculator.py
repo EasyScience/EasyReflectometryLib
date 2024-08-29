@@ -1,12 +1,13 @@
 __author__ = 'github.com/arm61'
 
 import numpy as np
+from easyscience.Objects.Inferface import ItemContainer
+
 from easyreflectometry.experiment import Model
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import MaterialMixture
 from easyreflectometry.sample import Multilayer
-from easyscience.Objects.Inferface import ItemContainer
 
 from ..calculator_base import CalculatorBase
 from .wrapper import BornAgainWrapper
@@ -66,7 +67,7 @@ class BornAgain(CalculatorBase):
         r_list = []
         t_ = type(model)
         if issubclass(t_, Material):
-            key = model.uid
+            key = model.unique_name
             if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
@@ -78,7 +79,7 @@ class BornAgain(CalculatorBase):
                 )
             )
         elif issubclass(t_, MaterialMixture):
-            key = model.uid
+            key = model.unique_name
             if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
@@ -90,7 +91,7 @@ class BornAgain(CalculatorBase):
                 )
             )
         elif issubclass(t_, Layer):
-            key = model.uid
+            key = model.unique_name
             if key not in self._wrapper.storage['layer'].keys():
                 self._wrapper.create_layer(key)
             r_list.append(
@@ -101,9 +102,9 @@ class BornAgain(CalculatorBase):
                     self._wrapper.update_layer,
                 )
             )
-            self.assign_material_to_layer(model.material.uid, key)
+            self.assign_material_to_layer(model.material.unique_name, key)
         elif issubclass(t_, Multilayer):
-            key = model.uid
+            key = model.unique_name
             self._wrapper.create_item(key)
             r_list.append(
                 ItemContainer(
@@ -114,7 +115,7 @@ class BornAgain(CalculatorBase):
                 )
             )
             for i in model.layers:
-                self.add_layer_to_item(i.uid, model.uid)
+                self.add_layer_to_item(i.unique_name, model.unique_name)
         elif issubclass(t_, Model):
             self._wrapper.create_model()
             r_list.append(
@@ -126,7 +127,7 @@ class BornAgain(CalculatorBase):
                 )
             )
             for i in model.structure:
-                self.add_item_to_model(i.uid)
+                self.add_item_to_model(i.unique_name)
         return r_list
 
     def assign_material_to_layer(self, material_id: int, layer_id: int) -> None:

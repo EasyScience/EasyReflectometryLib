@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
-from easyreflectometry.parameter_utils import get_as_parameter
 from numpy.testing import assert_equal
+
+from easyreflectometry.parameter_utils import get_as_parameter
 
 PARAMETER_DETAILS = {
     'test_parameter': {
@@ -33,7 +34,7 @@ def test_get_as_parameter():
     # Expected
     test_parameter.name == 'test_parameter'
     assert_equal(str(test_parameter.unit), 'dimensionless')
-    assert_equal(test_parameter.raw_value, 1.0)
+    assert_equal(test_parameter.value, 1.0)
     assert_equal(test_parameter.min, 0.0)
     assert_equal(test_parameter.max, np.Inf)
     assert_equal(test_parameter.fixed, True)
@@ -48,7 +49,7 @@ def test_get_as_parameter_from_float():
     test_parameter = get_as_parameter('test_parameter', float(test_parameter), PARAMETER_DETAILS)
 
     # Expected
-    assert_equal(test_parameter.raw_value, 2.0)
+    assert_equal(test_parameter.value, 2.0)
 
 
 def test_get_as_parameter_from_int():
@@ -59,7 +60,7 @@ def test_get_as_parameter_from_int():
     test_parameter = get_as_parameter('test_parameter', int(test_parameter), PARAMETER_DETAILS)
 
     # Expected
-    assert_equal(test_parameter.raw_value, 2.0)
+    assert_equal(test_parameter.value, 2.0)
 
 
 def test_get_as_parameter_from_parameter():
@@ -72,7 +73,7 @@ def test_get_as_parameter_from_parameter():
     # Expected
     test_parameter.name == 'test_parameter'
     assert_equal(str(test_parameter.unit), 'dimensionless')
-    assert_equal(test_parameter.raw_value, 10.0)
+    assert_equal(test_parameter.value, 10.0)
     assert_equal(test_parameter.min, -10.0)
     assert_equal(test_parameter.max, 10.0)
     assert_equal(test_parameter.fixed, False)
