@@ -2,15 +2,16 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
+import copy
 from numbers import Number
 from typing import Union
 
 import numpy as np
-import yaml
+from easyscience.Objects.new_variable import Parameter
 from easyscience.Objects.ObjectClasses import BaseObj
-from easyscience.Objects.ObjectClasses import Parameter
 
 from easyreflectometry.parameter_utils import get_as_parameter
+from easyreflectometry.parameter_utils import yaml_dump
 from easyreflectometry.sample import BaseAssembly
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerCollection
@@ -100,7 +101,7 @@ class Model(BaseObj):
             if issubclass(arg.__class__, BaseAssembly):
                 self.sample.append(arg)
                 if self.interface is not None:
-                    self.interface().add_item_to_model(arg.uid, self.uid)
+                    self.interface().add_item_to_model(arg.unique_name, self.unique_name)
             else:
                 raise ValueError(f'Object {arg} is not a valid type, must be a child of BaseAssembly.')
 
@@ -115,8 +116,8 @@ class Model(BaseObj):
             duplicate_layers.append(
                 Layer(
                     material=i.material,
-                    thickness=i.thickness.raw_value,
-                    roughness=i.roughness.raw_value,
+                    thickness=i.thickness.value,
+                    roughness=i.roughness.value,
                     name=i.name + ' duplicate',
                     interface=i.interface,
                 )
@@ -132,9 +133,10 @@ class Model(BaseObj):
 
         :param idx: Index of the item to remove.
         """
-        if self.interface is not None:
-            self.interface().remove_item_from_model(self.sample[idx].uid, self.uid)
+        item_unique_name = self.sample[idx].unique_name
         del self.sample[idx]
+        if self.interface is not None:
+            self.interface().remove_item_from_model(item_unique_name, self.unique_name)
 
     @property
     def resolution_function(self) -> ResolutionFunction:
@@ -164,11 +166,6 @@ class Model(BaseObj):
             self.generate_bindings()
             self._interface().set_resolution_function(self._resolution_function)
 
-    @property
-    def uid(self) -> int:
-        """Return a UID from the borg map."""
-        return self._borg.map.convert_id_to_key(self)
-
     # Representation
     @property
     def _dict_repr(self) -> dict[str, dict[str, str]]:
@@ -181,8 +178,8 @@ class Model(BaseObj):
 
         return {
             self.name: {
-                'scale': self.scale.raw_value,
-                'background': self.background.raw_value,
+                'scale': float(self.scale.value),
+                'background': float(self.background.value),
                 'resolution': resolution,
                 'sample': self.sample._dict_repr,
             }
@@ -190,7 +187,7 @@ class Model(BaseObj):
 
     def __repr__(self) -> str:
         """String representation of the layer."""
-        return yaml.dump(self._dict_repr, sort_keys=False)
+        return yaml_dump(self._dict_repr)
 
     def as_dict(self, skip: list = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
@@ -200,26 +197,40 @@ class Model(BaseObj):
         """
         if skip is None:
             skip = []
+        skip.extend(['sample', 'resolution_function', 'interface'])
         this_dict = super().as_dict(skip=skip)
         this_dict['sample'] = self.sample.as_dict(skip=skip)
         this_dict['resolution_function'] = self.resolution_function.as_dict()
+        if self.interface is None:
+            this_dict['interface'] = None
+        else:
+            this_dict['interface'] = self.interface().name
         return this_dict
 
     @classmethod
-    def from_dict(cls, this_dict: dict) -> Model:
+    def from_dict(cls, passed_dict: dict) -> Model:
         """
         Create a Model from a dictionary.
 
         :param this_dict: dictionary of the Model
         :return: Model
         """
+        # Causes circular import if imported at the top
+        from easyreflectometry.calculators import CalculatorFactory
+
+        this_dict = copy.deepcopy(passed_dict)
         resolution_function = ResolutionFunction.from_dict(this_dict['resolution_function'])
         del this_dict['resolution_function']
-        sample = Sample.from_dict(this_dict['sample'])
-        del this_dict['sample']
+        interface_name = this_dict['interface']
+        del this_dict['interface']
+        if interface_name is not None:
+            interface = CalculatorFactory()
+            interface.switch(interface_name)
+        else:
+            interface = None
 
         model = super().from_dict(this_dict)
 
-        model.sample = sample
         model.resolution_function = resolution_function
+        model.interface = interface
         return model

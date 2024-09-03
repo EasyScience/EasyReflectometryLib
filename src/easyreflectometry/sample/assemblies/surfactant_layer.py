@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from easyscience.Fitting.Constraints import ObjConstraint
-from easyscience.Objects.ObjectClasses import Parameter
+from easyscience.fitting.Constraints import ObjConstraint
+from easyscience.Objects.new_variable import Parameter
 
 from ..elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
 from ..elements.layers.layer_collection import LayerCollection
@@ -117,10 +117,12 @@ class SurfactantLayer(BaseAssembly):
         """Set the status for the area per molecule constraint such that the head and tail layers have the
         same area per molecule.
 
-        :param x: Boolean description the wanted of the constraint.
+        :param status: Boolean description the wanted of the constraint.
         """
         self.tail_layer._area_per_molecule.user_constraints['area_per_molecule'].enabled = status
-        self.tail_layer._area_per_molecule.value = self.tail_layer._area_per_molecule.raw_value
+        if status:
+            # Apply the constraint by running it
+            self.tail_layer._area_per_molecule.user_constraints['area_per_molecule']()
 
     @property
     def conformal_roughness(self) -> bool:
@@ -129,10 +131,12 @@ class SurfactantLayer(BaseAssembly):
 
     @conformal_roughness.setter
     def conformal_roughness(self, status: bool):
-        """Set the status for the roughness to be the same for both layers."""
+        """Set the status for the roughness to be the same for both layers.
+
+        :param status: Boolean description the wanted of the constraint.
+        """
         if status:
             self._enable_roughness_constraints()
-            self.tail_layer.roughness.value = self.tail_layer.roughness.raw_value
         else:
             self._disable_roughness_constraints()
 

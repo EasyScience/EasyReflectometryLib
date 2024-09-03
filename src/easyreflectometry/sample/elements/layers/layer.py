@@ -1,9 +1,12 @@
 __author__ = 'github.com/arm61'
+from typing import Optional
 from typing import Union
 
 import numpy as np
+from easyscience import global_object
+from easyscience.Objects.new_variable import Parameter
+
 from easyreflectometry.parameter_utils import get_as_parameter
-from easyscience.Objects.ObjectClasses import Parameter
 
 from ...base_core import BaseCore
 from ..materials.material import Material
@@ -13,7 +16,7 @@ DEFAULTS = {
         'description': 'The thickness of the layer in angstroms',
         'url': 'https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex',
         'value': 10.0,
-        'units': 'angstrom',
+        'unit': 'angstrom',
         'min': 0.0,
         'max': np.inf,
         'fixed': True,
@@ -22,7 +25,7 @@ DEFAULTS = {
         'description': 'The interfacial roughness, Nevot-Croce, for the layer in angstroms.',
         'url': 'https://doi.org/10.1051/rphysap:01980001503076100',
         'value': 3.3,
-        'units': 'angstrom',
+        'unit': 'angstrom',
         'min': 0.0,
         'max': np.inf,
         'fixed': True,
@@ -45,6 +48,7 @@ class Layer(BaseCore):
         thickness: Union[Parameter, float, None] = None,
         roughness: Union[Parameter, float, None] = None,
         name: str = 'EasyLayer',
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -58,8 +62,21 @@ class Layer(BaseCore):
         if material is None:
             material = Material(interface=interface)
 
-        thickness = get_as_parameter('thickness', thickness, DEFAULTS)
-        roughness = get_as_parameter('roughness', roughness, DEFAULTS)
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
+        thickness = get_as_parameter(
+            name='thickness',
+            value=thickness,
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}_Thickness',
+        )
+        roughness = get_as_parameter(
+            name='roughness',
+            value=roughness,
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}_Roughness',
+        )
 
         super().__init__(
             name=name,
@@ -67,6 +84,7 @@ class Layer(BaseCore):
             material=material,
             thickness=thickness,
             roughness=roughness,
+            unique_name=unique_name,
         )
 
     def assign_material(self, material: Material) -> None:
@@ -76,7 +94,7 @@ class Layer(BaseCore):
         """
         self.material = material
         if self.interface is not None:
-            self.interface().assign_material_to_layer(self.material.uid, self.uid)
+            self.interface().assign_material_to_layer(self.material.unique_name, self.unique_name)
 
     # Representation
     @property
@@ -85,7 +103,7 @@ class Layer(BaseCore):
         return {
             self.name: {
                 'material': self.material._dict_repr,
-                'thickness': f'{self.thickness.raw_value:.3f} {self.thickness.unit}',
-                'roughness': f'{self.roughness.raw_value:.3f} {self.roughness.unit}',
+                'thickness': f'{self.thickness.value:.3f} {self.thickness.unit}',
+                'roughness': f'{self.roughness.value:.3f} {self.roughness.unit}',
             }
         }

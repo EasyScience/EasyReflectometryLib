@@ -4,18 +4,22 @@ Tests for GradientLayer class module
 
 from unittest.mock import MagicMock
 
-import easyreflectometry.sample.assemblies.gradient_layer
 import pytest
+from easyscience import global_object
+from numpy.testing import assert_almost_equal
+
+import easyreflectometry.sample.assemblies.gradient_layer
 from easyreflectometry.sample.assemblies.gradient_layer import GradientLayer
 from easyreflectometry.sample.assemblies.gradient_layer import _linear_gradient
 from easyreflectometry.sample.assemblies.gradient_layer import _prepare_gradient_layers
 from easyreflectometry.sample.elements.materials.material import Material
-from numpy.testing import assert_almost_equal
 
 
 class TestGradientLayer:
     @pytest.fixture
     def gradient_layer(self) -> GradientLayer:
+        global_object.map._clear()
+
         self.front = Material(10.0, -10.0, 'Material_1')
         self.back = Material(0.0, 0.0, 'Material_2')
 
@@ -36,14 +40,14 @@ class TestGradientLayer:
         assert gradient_layer._type, 'Gradient-layer'
         assert gradient_layer.interface is None
         assert gradient_layer.thickness == 1.0
-        assert gradient_layer.back_layer.thickness.raw_value == 0.1
+        assert gradient_layer.back_layer.thickness.value == 0.1
 
-        assert gradient_layer.front_layer.material.sld.raw_value == 10.0
-        assert gradient_layer.layers[5].material.sld.raw_value == 5.0
-        assert gradient_layer.back_layer.material.sld.raw_value == 1.0
-        assert gradient_layer.front_layer.material.isld.raw_value == -10.0
-        assert gradient_layer.layers[5].material.isld.raw_value == -5.0
-        assert gradient_layer.back_layer.material.isld.raw_value == -1.0
+        assert gradient_layer.front_layer.material.sld.value == 10.0
+        assert gradient_layer.layers[5].material.sld.value == 5.0
+        assert gradient_layer.back_layer.material.sld.value == 1.0
+        assert gradient_layer.front_layer.material.isld.value == -10.0
+        assert gradient_layer.layers[5].material.isld.value == -5.0
+        assert gradient_layer.back_layer.material.isld.value == -1.0
 
     def test_default(self) -> None:
         # When Then
@@ -78,32 +82,37 @@ class TestGradientLayer:
 
     def test_repr(self, gradient_layer: GradientLayer) -> None:
         # When Then Expect
-        expected_str = "thickness: 1.0\ndiscretisation_elements: 10\nback_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1 / angstrom ** 2\n        isld: -1.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\nfront_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1 / angstrom ** 2\n        isld: -10.000e-6 1 / angstrom ** 2\n    thickness: 0.100 angstrom\n    roughness: 2.000 angstrom\n"  # noqa: E501
+        expected_str = "thickness: 1.0\ndiscretisation_elements: 10\nback_layer:\n  '9':\n    material:\n      EasyMaterial:\n        sld: 1.000e-6 1/Å^2\n        isld: -1.000e-6 1/Å^2\n    thickness: 0.100 Å\n    roughness: 2.000 Å\nfront_layer:\n  '0':\n    material:\n      EasyMaterial:\n        sld: 10.000e-6 1/Å^2\n        isld: -10.000e-6 1/Å^2\n    thickness: 0.100 Å\n    roughness: 2.000 Å\n"  # noqa: E501
         assert gradient_layer.__repr__() == expected_str
 
-    def test_dict_round_trip(self, gradient_layer: GradientLayer) -> None:
-        # When Then
-        result = GradientLayer.from_dict(gradient_layer.as_dict())
-
-        # Expect
-        assert result.as_data_dict() == gradient_layer.as_data_dict()
-        assert len(gradient_layer.layers) == len(result.layers)
-        # Just one layer of the generated layers is checked
-        assert gradient_layer.layers[5].__repr__() == result.layers[5].__repr__()
-
-    def test_thickness_setter(self, gradient_layer: GradientLayer) -> None:
+    def test_dict_round_trip(self) -> None:
         # When
+        p = GradientLayer()
+        p_dict = p.as_dict()
+        global_object.map._clear()
+
+        # Then
+        q = GradientLayer.from_dict(p_dict)
+
+        assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
+        assert len(p.layers) == len(q.layers)
+        # Just one layer of the generated layers is checked
+        assert p.layers[5].__repr__() == q.layers[5].__repr__()
+
+    def test_thickness_setter(self) -> None:
+        # When
+        gradient_layer = GradientLayer()
         gradient_layer.thickness = 10.0
 
         # Then
         assert gradient_layer.thickness == 10.0
-        assert gradient_layer.front_layer.thickness.raw_value == 1.0
-        assert gradient_layer.back_layer.thickness.raw_value == 1.0
+        assert gradient_layer.front_layer.thickness.value == 1.0
+        assert gradient_layer.back_layer.thickness.value == 1.0
 
     def test_thickness_getter(self, gradient_layer: GradientLayer) -> None:
         # When
         gradient_layer.layers = [MagicMock(), MagicMock()]
-        gradient_layer.front_layer.thickness.raw_value = 10.0
+        gradient_layer.front_layer.thickness.value = 10.0
 
         # Then
         # discretisation_elements * discrete_layer_thickness
@@ -115,13 +124,13 @@ class TestGradientLayer:
 
         # Then
         assert gradient_layer.roughness == 10.0
-        assert gradient_layer.front_layer.roughness.raw_value == 10.0
-        assert gradient_layer.back_layer.roughness.raw_value == 10.0
+        assert gradient_layer.front_layer.roughness.value == 10.0
+        assert gradient_layer.back_layer.roughness.value == 10.0
 
     def test_roughness_getter(self, gradient_layer: GradientLayer) -> None:
         # When
         gradient_layer.layers = [MagicMock(), MagicMock()]
-        gradient_layer.front_layer.roughness.raw_value = 10.0
+        gradient_layer.front_layer.roughness.value = 10.0
 
         # Then
         assert gradient_layer.roughness == 10.0
@@ -177,9 +186,3 @@ def test_prepare_gradient_layers(monkeypatch):
     assert mock_Layer.call_args_list[0][1]['thickness'] == 0.0
     assert mock_Layer.call_args_list[0][1]['name'] == '0'
     assert mock_Layer.call_args_list[0][1]['interface'] is None
-
-
-def test_dict_round_trip():
-    p = GradientLayer()
-    q = GradientLayer.from_dict(p.as_dict())
-    assert p.as_data_dict() == q.as_data_dict()

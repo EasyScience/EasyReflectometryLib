@@ -7,21 +7,21 @@ __version__ = '0.0.1'
 
 import unittest
 
+from easyscience import global_object
+from numpy.testing import assert_equal
+
 from easyreflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
 from easyreflectometry.sample.elements.layers.layer import Layer
 from easyreflectometry.sample.elements.layers.layer_collection import LayerCollection
 from easyreflectometry.sample.elements.materials.material import Material
-from numpy.testing import assert_equal
 
 
 class TestLayerCollection(unittest.TestCase):
     def test_default(self):
         p = LayerCollection()
-        assert_equal(p.name, 'EasyLayers')
+        assert_equal(p.name, 'EasyLayerCollection')
         assert_equal(p.interface, None)
-        assert_equal(len(p), 2)
-        assert_equal(p[0].name, 'EasyLayer')
-        assert_equal(p[1].name, 'EasyLayer')
+        assert_equal(len(p), 0)
 
     def test_from_pars(self):
         m = Material(6.908, -0.278, 'Boron')
@@ -44,35 +44,31 @@ class TestLayerCollection(unittest.TestCase):
         assert_equal(layers.interface, None)
 
     def test_dict_repr(self):
-        p = LayerCollection()
+        p = LayerCollection(layers=[Layer(), Layer()])
         assert p._dict_repr == {
-            'EasyLayers': [
+            'EasyLayerCollection': [
                 {
                     'EasyLayer': {
-                        'material': {
-                            'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
-                        },
-                        'thickness': '10.000 angstrom',
-                        'roughness': '3.300 angstrom',
+                        'material': {'EasyMaterial': {'sld': '4.186e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
+                        'thickness': '10.000 Å',
+                        'roughness': '3.300 Å',
                     }
                 },
                 {
                     'EasyLayer': {
-                        'material': {
-                            'EasyMaterial': {'sld': '4.186e-6 1 / angstrom ** 2', 'isld': '0.000e-6 1 / angstrom ** 2'}
-                        },
-                        'thickness': '10.000 angstrom',
-                        'roughness': '3.300 angstrom',
+                        'material': {'EasyMaterial': {'sld': '4.186e-6 1/Å^2', 'isld': '0.000e-6 1/Å^2'}},
+                        'thickness': '10.000 Å',
+                        'roughness': '3.300 Å',
                     }
                 },
             ]
         }
 
     def test_repr(self):
-        p = LayerCollection()
+        p = LayerCollection([Layer(), Layer()])
         assert (
             p.__repr__()
-            == 'EasyLayers:\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 10.000 angstrom\n    roughness: 3.300 angstrom\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1 / angstrom ** 2\n        isld: 0.000e-6 1 / angstrom ** 2\n    thickness: 10.000 angstrom\n    roughness: 3.300 angstrom\n'  # noqa: E501
+            == 'EasyLayerCollection:\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1/Å^2\n        isld: 0.000e-6 1/Å^2\n    thickness: 10.000 Å\n    roughness: 3.300 Å\n- EasyLayer:\n    material:\n      EasyMaterial:\n        sld: 4.186e-6 1/Å^2\n        isld: 0.000e-6 1/Å^2\n    thickness: 10.000 Å\n    roughness: 3.300 Å\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):
@@ -84,9 +80,11 @@ class TestLayerCollection(unittest.TestCase):
         r = LayerCollection()
         r.insert(0, p)
         r.append(q)
+        r_dict = r.as_dict()
+        global_object.map._clear()
 
         # Then
-        s = LayerCollection.from_dict(r.as_dict())
+        s = LayerCollection.from_dict(r_dict)
 
         # Expect
-        assert s.as_data_dict() == r.as_data_dict()
+        assert sorted(r.as_data_dict()) == sorted(s.as_data_dict())

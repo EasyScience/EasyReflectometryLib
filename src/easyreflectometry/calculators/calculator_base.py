@@ -54,7 +54,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         r_list = []
         t_ = type(model)
         if issubclass(t_, Material):
-            key = model.uid
+            key = model.unique_name
             if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
@@ -66,7 +66,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
                 )
             )
         elif issubclass(t_, MaterialMixture):
-            key = model.uid
+            key = model.unique_name
             if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
@@ -78,7 +78,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
                 )
             )
         elif issubclass(t_, Layer):
-            key = model.uid
+            key = model.unique_name
             if key not in self._wrapper.storage['layer'].keys():
                 self._wrapper.create_layer(key)
             r_list.append(
@@ -89,9 +89,9 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
                     self._wrapper.update_layer,
                 )
             )
-            self.assign_material_to_layer(model.material.uid, key)
+            self.assign_material_to_layer(model.material.unique_name, key)
         elif issubclass(t_, BaseAssembly):
-            key = model.uid
+            key = model.unique_name
             self._wrapper.create_item(key)
             r_list.append(
                 ItemContainer(
@@ -102,9 +102,9 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
                 )
             )
             for i in model.layers:
-                self.add_layer_to_item(i.uid, model.uid)
+                self.add_layer_to_item(i.unique_name, model.unique_name)
         elif issubclass(t_, Model):
-            key = model.uid
+            key = model.unique_name
             self._wrapper.create_model(key)
             r_list.append(
                 ItemContainer(
@@ -115,7 +115,7 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
                 )
             )
             for i in model.sample:
-                self.add_item_to_model(i.uid, key)
+                self.add_item_to_model(i.unique_name, key)
         return r_list
 
     def assign_material_to_layer(self, material_id: str, layer_id: str) -> None:

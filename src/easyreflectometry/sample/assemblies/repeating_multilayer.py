@@ -1,7 +1,11 @@
+from typing import Optional
 from typing import Union
 
+from easyscience import global_object
+from easyscience.Objects.new_variable import Parameter
+
 from easyreflectometry.parameter_utils import get_as_parameter
-from easyscience.Objects.ObjectClasses import Parameter
+from easyreflectometry.sample.base_element_collection import SIZE_DEFAULT_COLLECTION
 
 from ..elements.layers.layer import Layer
 from ..elements.layers.layer_collection import LayerCollection
@@ -37,7 +41,9 @@ class RepeatingMultilayer(Multilayer):
         layers: Union[LayerCollection, Layer, list[Layer], None] = None,
         repetitions: Union[Parameter, int, None] = None,
         name: str = 'EasyRepeatingMultilayer',
+        unique_name: Optional[str] = None,
         interface=None,
+        populate_if_none: bool = True,
     ):
         """Constructor.
 
@@ -46,15 +52,28 @@ class RepeatingMultilayer(Multilayer):
         :param name: Name for the repeating multi layer, defaults to 'EasyRepeatingMultilayer'.
         :param interface: Calculator interface, defaults to `None`.
         """
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
 
         if layers is None:
-            layers = LayerCollection()
+            if populate_if_none:
+                layers = LayerCollection([Layer(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)])
+            else:
+                layers = LayerCollection()
         elif isinstance(layers, Layer):
             layers = LayerCollection(layers, name=layers.name)
         elif isinstance(layers, list):
             layers = LayerCollection(*layers, name='/'.join([layer.name for layer in layers]))
+        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
+        # Else collisions might occur in global_object.map
+        self.populate_if_none = False
 
-        repetitions = get_as_parameter('repetitions', repetitions, DEFAULTS)
+        repetitions = get_as_parameter(
+            name='repetitions',
+            value=repetitions,
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}_Repetitions',
+        )
 
         super().__init__(
             layers=layers,
@@ -70,5 +89,5 @@ class RepeatingMultilayer(Multilayer):
     def _dict_repr(self) -> dict:
         """A simplified dict representation."""
         d_dict = {self.name: self.layers._dict_repr}
-        d_dict[self.name]['repetitions'] = self.repetitions.raw_value
+        d_dict[self.name]['repetitions'] = float(self.repetitions.value)
         return d_dict
