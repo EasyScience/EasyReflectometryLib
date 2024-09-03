@@ -48,6 +48,7 @@ dev = [
     "jupyter>=1.0.0",
     "jupyterlab",
     "plopp",
+    "pooch",
     "pytest>=5.2",
     "pytest-cov>=3.0.0",
     "ruff",
