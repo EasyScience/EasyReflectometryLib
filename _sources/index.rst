@@ -11,6 +11,7 @@
    calculators
    experiment/experiment
    tutorials/tutorials
+   dictionary
    contributing
    authors
    api/api
