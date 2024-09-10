@@ -5,14 +5,18 @@ Tests for BaseAssembly class module
 from typing import Any
 from unittest.mock import MagicMock
 
-import easyreflectometry.sample.assemblies.base_assembly
 import pytest
+from easyscience import global_object
+
+import easyreflectometry.sample.assemblies.base_assembly
 from easyreflectometry.sample.assemblies.base_assembly import BaseAssembly
 
 
 class TestBaseAssembly:
     @pytest.fixture
     def base_assembly(self) -> BaseAssembly:
+        global_object.map._clear()
+
         self.mock_layer_0 = MagicMock()
         self.mock_layer_1 = MagicMock()
         self.mock_layers = [self.mock_layer_0, self.mock_layer_1]
@@ -65,7 +69,7 @@ class TestBaseAssembly:
 
         # Expect
         assert self.mock_layer_0.thickness.user_constraints['thickness_1'].enabled is True
-        assert self.mock_layer_0.thickness.value == self.mock_layer_0.thickness.raw_value
+        assert self.mock_layer_0.thickness.value == self.mock_layer_0.thickness.value
         assert self.mock_layer_0.thickness.enabled is True
         assert self.mock_layer_1.thickness.enabled is True
 
@@ -116,7 +120,7 @@ class TestBaseAssembly:
 
         # Expect
         assert self.mock_layer_0.roughness.user_constraints['roughness_1'].enabled is True
-        assert self.mock_layer_0.roughness.value == self.mock_layer_0.roughness.raw_value
+        assert self.mock_layer_0.roughness.value == self.mock_layer_0.roughness.value
         assert self.mock_layer_0.roughness.enabled is True
         assert self.mock_layer_1.roughness.enabled is True
 

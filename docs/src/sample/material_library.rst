@@ -22,7 +22,7 @@ The construction of a :py:class:`Material` is achieved as shown below.
         name='Boron'
     )
 
-The above object will have the properties of :py:attr:`sld` and :py:attr:`isld`, which will have values of :code:`6.908 1 / angstrom ** 2` and :code:`-0.278 1 / angstrom ** 2` respectively. 
+The above object will have the properties of :py:attr:`sld` and :py:attr:`isld`, which will have values of :code:`6.908 1/angstrom^2` and :code:`-0.278 1/angstrom^2` respectively. 
 As is shown in the `tutorials`_, a material can be used to construct a :py:class:`Layer` from which `slab models`_ are created.
 
 :py:class:`MaterialDensity`
@@ -78,7 +78,7 @@ So to produce a :py:class:`MaterialSolvated` that is 20 % D2O in a polymer, the 
         name='Solvated Polymer'
     )
 
-For the :py:attr:`solvated_polymer` object, the :py:attr:`sld` will be :code:`2.872 1 / angstrom ** 2` (the weighted average of the two scattering length densities). 
+For the :py:attr:`solvated_polymer` object, the :py:attr:`sld` will be :code:`2.872 1/angstrom^2` (the weighted average of the two scattering length densities). 
 The :py:class:`MaterialSolvated` includes a constraint such that if the value of either constituent scattering length densities (both real and imaginary components) or the fraction changes, then the resulting material :py:attr:`sld` and :py:attr:`isld` will change appropriately. 
 
 .. _`assemblies`: ./assemblies_library.html

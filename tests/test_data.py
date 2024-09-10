@@ -4,14 +4,15 @@ __version__ = '0.0.1'
 import os
 import unittest
 
-import easyreflectometry
 import numpy as np
-from easyreflectometry.data import _load_orso
-from easyreflectometry.data import _load_txt
-from easyreflectometry.data import load
 from numpy.testing import assert_almost_equal
 from orsopy.fileio import Header
 from orsopy.fileio import load_orso
+
+import easyreflectometry
+from easyreflectometry.data import _load_orso
+from easyreflectometry.data import _load_txt
+from easyreflectometry.data import load
 
 PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests' , '_static')
 

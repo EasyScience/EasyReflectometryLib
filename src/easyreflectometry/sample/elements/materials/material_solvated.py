@@ -1,7 +1,10 @@
+from typing import Optional
 from typing import Union
 
+from easyscience import global_object
+from easyscience.Objects.new_variable import Parameter
+
 from easyreflectometry.parameter_utils import get_as_parameter
-from easyscience.Objects.ObjectClasses import Parameter
 
 from .material import Material
 from .material_mixture import MaterialMixture
@@ -10,7 +13,7 @@ DEFAULTS = {
     'solvent_fraction': {
         'description': 'Fraction of solvent in layer.',
         'value': 0.2,
-        'units': 'dimensionless',
+        'unit': 'dimensionless',
         'min': 0,
         'max': 1,
         'fixed': True,
@@ -25,6 +28,7 @@ class MaterialSolvated(MaterialMixture):
         solvent: Union[Material, None] = None,
         solvent_fraction: Union[Parameter, float, None] = None,
         name=None,
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -35,12 +39,20 @@ class MaterialSolvated(MaterialMixture):
         :param name: Name of the material, defaults to None that causes the name to be constructed.
         :param interface: Calculator interface, defaults to `None`.
         """
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         if material is None:
             material = Material(sld=6.36, isld=0, name='D2O', interface=interface)
         if solvent is None:
             solvent = Material(sld=-0.561, isld=0, name='H2O', interface=interface)
 
-        solvent_fraction = get_as_parameter('solvent_fraction', solvent_fraction, DEFAULTS)
+        solvent_fraction = get_as_parameter(
+            name='solvent_fraction',
+            value=solvent_fraction,
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}_Fraction',
+        )
 
         # In super class, the fraction is the fraction of material b in material a
         super().__init__(
@@ -118,9 +130,9 @@ class MaterialSolvated(MaterialMixture):
         """A simplified dict representation."""
         return {
             self.name: {
-                'solvent_fraction': f'{self._fraction.raw_value:.3f} {self._fraction.unit}',
-                'sld': f'{self._sld.raw_value:.3f}e-6 {self._sld.unit}',
-                'isld': f'{self._isld.raw_value:.3f}e-6 {self._isld.unit}',
+                'solvent_fraction': f'{self._fraction.value:.3f} {self._fraction.unit}',
+                'sld': f'{self._sld.value:.3f}e-6 {self._sld.unit}',
+                'isld': f'{self._isld.value:.3f}e-6 {self._isld.unit}',
                 'material': self.material._dict_repr,
                 'solvent': self.solvent._dict_repr,
             }

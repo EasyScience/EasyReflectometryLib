@@ -1,41 +1,26 @@
+from typing import Optional
 from typing import Union
 
 import numpy as np
+from easyscience import global_object
+from easyscience.fitting.Constraints import FunctionalConstraint
+from easyscience.Objects.new_variable import Parameter
+
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.special.calculations import density_to_sld
 from easyreflectometry.special.calculations import molecular_weight
 from easyreflectometry.special.calculations import neutron_scattering_length
-from easyscience.Fitting.Constraints import FunctionalConstraint
-from easyscience.Objects.ObjectClasses import Parameter
 
 from .material import DEFAULTS as MATERIAL_DEFAULTS
 from .material import Material
 
 DEFAULTS = {
     'chemical_structure': 'Si',
-    'sl': {
-        'description': 'The real scattering length for a chemical formula in angstrom.',
-        'url': 'https://www.ncnr.nist.gov/resources/activation/',
-        'value': 4.1491,
-        'units': 'angstrom',
-        'min': -np.Inf,
-        'max': np.Inf,
-        'fixed': True,
-    },
-    'isl': {
-        'description': 'The real scattering length for a chemical formula in angstrom.',
-        'url': 'https://www.ncnr.nist.gov/resources/activation/',
-        'value': 0.0,
-        'units': 'angstrom',
-        'min': -np.Inf,
-        'max': np.Inf,
-        'fixed': True,
-    },
     'density': {
         'description': 'The mass density of the material.',
         'url': 'https://en.wikipedia.org/wiki/Density',
         'value': 2.33,
-        'units': 'gram / centimeter ** 3',
+        'unit': 'gram / centimeter ** 3',
         'min': 0,
         'max': np.Inf,
         'fixed': True,
@@ -44,7 +29,7 @@ DEFAULTS = {
         'description': 'The molecular weight of a material.',
         'url': 'https://en.wikipedia.org/wiki/Molecular_mass',
         'value': 28.02,
-        'units': 'g / mole',
+        'unit': 'g / mole',
         'min': -np.Inf,
         'max': np.Inf,
         'fixed': True,
@@ -65,6 +50,7 @@ class MaterialDensity(Material):
         chemical_structure: Union[str, None] = None,
         density: Union[Parameter, float, None] = None,
         name: str = 'EasyMaterialDensity',
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -74,26 +60,50 @@ class MaterialDensity(Material):
         :param name: Identifier, defaults to `EasyMaterialDensity`.
         :param interface: Interface object, defaults to `None`.
         """
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         if chemical_structure is None:
             chemical_structure = DEFAULTS['chemical_structure']
 
-        density = get_as_parameter('density', density, DEFAULTS)
+        density = get_as_parameter(
+            name='density',
+            value=density,
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}_Density',
+        )
 
         scattering_length = neutron_scattering_length(chemical_structure)
 
-        mw = get_as_parameter('molecular_weight', molecular_weight(chemical_structure), DEFAULTS)
+        mw = get_as_parameter(
+            name='molecular_weight',
+            value=molecular_weight(chemical_structure),
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}_Mw',
+        )
         scattering_length_real = get_as_parameter(
             name='scattering_length_real',
             value=scattering_length.real,
             default_dict=DEFAULTS['sld'],
+            unique_name_prefix=f'{unique_name}_ScatteringLengthReal',
         )
-        scattering_length_imag = get_as_parameter('scattering_length_imag', scattering_length.imag, DEFAULTS['isld'])
-
+        scattering_length_imag = get_as_parameter(
+            name='scattering_length_imag',
+            value=scattering_length.imag,
+            default_dict=DEFAULTS['isld'],
+            unique_name_prefix=f'{unique_name}_ScatteringLengthImag',
+        )
         sld = get_as_parameter(
-            'sld', density_to_sld(scattering_length_real.raw_value, mw.raw_value, density.raw_value), DEFAULTS
+            name='sld',
+            value=density_to_sld(scattering_length_real.value, mw.value, density.value),
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}_Sld',
         )
         isld = get_as_parameter(
-            'isld', density_to_sld(scattering_length_imag.raw_value, mw.raw_value, density.raw_value), DEFAULTS
+            name='isld',
+            value=density_to_sld(scattering_length_imag.value, mw.value, density.value),
+            default_dict=DEFAULTS,
+            unique_name_prefix=f'{unique_name}_Isld',
         )
 
         constraint = FunctionalConstraint(sld, density_to_sld, [scattering_length_real, mw, density])
@@ -135,7 +145,7 @@ class MaterialDensity(Material):
         """Dictionary representation of the instance."""
         mat_dict = super()._dict_repr
         mat_dict['chemical_structure'] = self._chemical_structure
-        mat_dict['density'] = f'{self.density.raw_value:.2e} {self.density.unit}'
+        mat_dict['density'] = f'{self.density.value:.2e} {self.density.unit}'
         return mat_dict
 
     def as_dict(self, skip: list = []) -> dict[str, str]:

@@ -1,11 +1,19 @@
 from copy import deepcopy
 from numbers import Number
+from typing import Optional
 from typing import Union
 
-from easyscience.Objects.ObjectClasses import Parameter
+import yaml
+from easyscience import global_object
+from easyscience.Objects.new_variable import Parameter
 
 
-def get_as_parameter(name: str, value: Union[Parameter, Number, None], default_dict: dict) -> Parameter:
+def get_as_parameter(
+    name: str,
+    value: Union[Parameter, Number, None],
+    default_dict: dict,
+    unique_name_prefix: Optional[str] = None,
+) -> Parameter:
     """
     This function creates a parameter for the variable `name`.  A parameter has a value and metadata.
     If the value already is a parameter, it is returned.
@@ -16,12 +24,20 @@ def get_as_parameter(name: str, value: Union[Parameter, Number, None], default_d
     param name: The name of the parameter
     param default_dict: Dictionary with entry for `name` containing the default value and metadata for the parameter
     """
+    # This is a parameter, return it
+    if isinstance(value, Parameter):
+        return value
+
     # Ensure we got the dictionary for the parameter with the given name
     # Should leave the passed dictionary unchanged
     if name not in default_dict:
         parameter_dict = deepcopy(default_dict)
     else:
         parameter_dict = deepcopy(default_dict[name])
+
+    # Add specific unique name prefix if requested
+    if unique_name_prefix is not None:
+        parameter_dict['unique_name'] = global_object.generate_unique_name(unique_name_prefix + 'Parameter')
 
     if value is None:
         # Create a default parameter using both value and metadata from dictionary
@@ -30,6 +46,9 @@ def get_as_parameter(name: str, value: Union[Parameter, Number, None], default_d
         # Create a parameter using provided value and metadata from dictionary
         del parameter_dict['value']
         return Parameter(name, value, **parameter_dict)
-    elif not isinstance(value, Parameter):
-        raise ValueError(f'{name} must be a Parameter, a number, or None.')
-    return value
+
+    raise ValueError(f'{name} must be a Parameter, a number, or None.')
+
+
+def yaml_dump(dict_repr: dict) -> str:
+    return yaml.dump(dict_repr, sort_keys=False, allow_unicode=True)

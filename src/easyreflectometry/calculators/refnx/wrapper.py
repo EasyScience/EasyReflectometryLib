@@ -3,13 +3,26 @@ __author__ = 'github.com/arm61'
 from typing import Tuple
 
 import numpy as np
-from easyreflectometry.experiment.resolution_functions import PercentageFhwm
 from refnx import reflect
+
+from easyreflectometry.experiment.resolution_functions import PercentageFhwm
 
 from ..wrapper_base import WrapperBase
 
 
 class RefnxWrapper(WrapperBase):
+    @property
+    def include_magnetism(self) -> bool:
+        return self._magnetism
+
+    @include_magnetism.setter
+    def include_magnetism(self, magnetism: bool) -> None:
+        """Set the magnetism flag.
+
+        :param magnetism: The magnetism flag
+        """
+        raise NotImplementedError('Magnetism is not supported by refnx')
+
     def create_material(self, name: str):
         """
         Create a material using SLD.
