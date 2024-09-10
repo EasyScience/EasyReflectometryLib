@@ -12,3 +12,4 @@ The tutorials associated with using :py:mod:`easyreflectometry` are collected he
    sample/monolayer
    sample/multi_contrast
    sample/resolution_functions
+   magnetism
