@@ -262,16 +262,16 @@ class LayerAreaPerMolecule(Layer):
         dict_repr['area_per_molecule'] = f'{self.area_per_molecule:.2f} ' f'{self._area_per_molecule.unit}'
         return dict_repr
 
-    def as_dict(self, skip: list = None) -> dict[str, str]:
+    def as_dict(self, skip: Optional[list[str]] = None) -> dict[str, str]:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
         The resulting dict matches the parameters in __init__
 
         :param skip: List of keys to skip, defaults to `None`.
         """
         this_dict = super().as_dict(skip=skip)
-        this_dict['solvent_fraction'] = self.material._fraction.as_dict()
-        this_dict['area_per_molecule'] = self._area_per_molecule.as_dict()
-        this_dict['solvent'] = self.solvent.as_dict()
+        this_dict['solvent_fraction'] = self.material._fraction.as_dict(skip=skip)
+        this_dict['area_per_molecule'] = self._area_per_molecule.as_dict(skip=skip)
+        this_dict['solvent'] = self.solvent.as_dict(skip=skip)
         del this_dict['material']
         del this_dict['_scattering_length_real']
         del this_dict['_scattering_length_imag']

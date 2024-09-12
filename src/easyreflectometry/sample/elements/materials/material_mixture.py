@@ -201,14 +201,14 @@ class MaterialMixture(BaseCore):
             }
         }
 
-    def as_dict(self, skip: list = None) -> dict[str, str]:
+    def as_dict(self, skip: Optional[list[str]] = None) -> dict[str, str]:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
         The resulting dict matches the parameters in __init__
 
         :param skip: List of keys to skip, defaults to `None`.
         """
         this_dict = super().as_dict(skip=skip)
-        this_dict['material_a'] = self._material_a.as_dict()
-        this_dict['material_b'] = self._material_b.as_dict()
-        this_dict['fraction'] = self._fraction.as_dict()
+        this_dict['material_a'] = self._material_a.as_dict(skip=skip)
+        this_dict['material_b'] = self._material_b.as_dict(skip=skip)
+        this_dict['fraction'] = self._fraction.as_dict(skip=skip)
         return this_dict

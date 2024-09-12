@@ -230,7 +230,7 @@ class SurfactantLayer(BaseAssembly):
             }
         }
 
-    def as_dict(self, skip: list = None) -> dict:
+    def as_dict(self, skip: Optional[list[str]] = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
         The resulting dict matches the parameters in __init__
 

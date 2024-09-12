@@ -52,7 +52,7 @@ class ModelCollection(BaseElementCollection):
         del self[idx]
 
     def as_dict(self, skip: List[str] | None = None) -> dict:
-        this_dict = super().as_dict(skip)
+        this_dict = super().as_dict(skip=skip)
         this_dict['populate_if_none'] = self.populate_if_none
         return this_dict
 
