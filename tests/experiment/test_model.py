@@ -6,6 +6,7 @@ __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
 import unittest
+from copy import copy
 from unittest.mock import MagicMock
 
 import numpy as np
@@ -391,11 +392,37 @@ class TestModel(unittest.TestCase):
         )
 
 
+def test_copy():
+    # When
+    resolution_function = LinearSpline([0, 10], [0, 10])
+    model = Model(interface=CalculatorFactory())
+    model.resolution_function = resolution_function
+    for additional_layer in [SurfactantLayer(), Multilayer(), RepeatingMultilayer()]:
+        model.add_item(additional_layer)
+
+    # Then
+    model_copy = copy(model)
+
+    # Expect
+    assert sorted(model.as_data_dict()) == sorted(model_copy.as_data_dict())
+    assert model._resolution_function.smearing(5.5) == model_copy._resolution_function.smearing(5.5)
+    assert model.interface().name == model_copy.interface().name
+    assert_almost_equal(
+        model.interface().fit_func([0.3], model.unique_name),
+        model_copy.interface().fit_func([0.3], model_copy.unique_name),
+    )
+    assert model.unique_name != model_copy.unique_name
+    assert model.name == model_copy.name
+    assert model.as_data_dict(skip=['interface', 'unique_name', 'resolution_function']) == model_copy.as_data_dict(
+        skip=['interface', 'unique_name', 'resolution_function']
+    )
+
+
 @pytest.mark.parametrize(
     'interface',
     [None, CalculatorFactory()],
 )
-def test_dict_round_trip(interface):  # , additional_layer):
+def test_dict_round_trip(interface):
     # When
     resolution_function = LinearSpline([0, 10], [0, 10])
     model = Model(interface=interface)
@@ -419,3 +446,18 @@ def test_dict_round_trip(interface):  # , additional_layer):
             model.interface().fit_func([0.3], model.unique_name),
             model_from_dict.interface().fit_func([0.3], model_from_dict.unique_name),
         )
+
+
+def test_dict_skip_unique_name():
+    # When
+    resolution_function = LinearSpline([0, 10], [0, 10])
+    model = Model(interface=CalculatorFactory())
+    model.resolution_function = resolution_function
+    for additional_layer in [SurfactantLayer(), Multilayer(), RepeatingMultilayer()]:
+        model.add_item(additional_layer)
+
+    # Then
+    dict_no_unique_name = model.as_dict(skip=['unique_name'])
+
+    # Expect
+    assert 'unique_name' not in dict_no_unique_name
