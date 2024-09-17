@@ -1,7 +1,7 @@
 from typing import Any
 from typing import Optional
 
-from easyscience.fitting.Constraints import ObjConstraint
+from easyscience.Constraints import ObjConstraint
 
 from ..base_core import BaseCore
 from ..elements.layers.layer import Layer

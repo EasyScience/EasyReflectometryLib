@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from easyscience.fitting.Constraints import ObjConstraint
+from easyscience.Constraints import ObjConstraint
 from easyscience.Objects.new_variable import Parameter
 
 from ..elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
