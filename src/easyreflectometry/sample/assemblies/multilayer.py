@@ -103,7 +103,4 @@ class Multilayer(BaseAssembly):
         :return: Multilayer
         """
         multilayer = super().from_dict(data)
-        # Remove the default materials
-        for i in range(SIZE_DEFAULT_COLLECTION):
-            del multilayer.layers[0]
         return multilayer

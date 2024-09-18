@@ -2,7 +2,6 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
-from typing import List
 from typing import Union
 
 from easyscience.Objects.Groups import BaseCollection
@@ -11,15 +10,15 @@ from easyreflectometry.parameter_utils import yaml_dump
 
 from ..assemblies.base_assembly import BaseAssembly
 from ..assemblies.multilayer import Multilayer
+from ..assemblies.repeating_multilayer import RepeatingMultilayer
+from ..assemblies.surfactant_layer import SurfactantLayer
 from ..elements.layers.layer import Layer
 
 NR_DEFAULT_ASSEMBLIES = 2
 
 
 class Sample(BaseCollection):
-    """Collection of assemblies that represent the sample for which experimental measurements exist."""
-
-    assemblies: List[BaseAssembly]
+    """A sample is a collection of assemblies that represent the structure for which experimental measurements exist."""
 
     def __init__(
         self,
@@ -55,24 +54,72 @@ class Sample(BaseCollection):
         super().__init__(name, *assemblies, **kwargs)
         self.interface = interface
 
-    def remove_assmbly(self, index: int):
-        """Remove the assembly at given index from the sample.
+    def add_assembly(self, assembly: BaseAssembly):
+        """Add an assembly to the sample.
+
+        :param assembly: Assembly to add.
+        """
+        self._enable_changes_to_outermost_layers()
+        self.append(assembly)
+        self._disable_changes_to_outermost_layers()
+
+    def duplicate_assembly(self, index: int):
+        """Add an assembly to the sample.
+
+        :param assembly: Assembly to add.
+        """
+        self._enable_changes_to_outermost_layers()
+        to_be_duplicated = self[index]
+        if isinstance(to_be_duplicated, RepeatingMultilayer):
+            duplicate = RepeatingMultilayer.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
+        elif isinstance(to_be_duplicated, SurfactantLayer):
+            duplicate = SurfactantLayer.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
+        elif isinstance(to_be_duplicated, Multilayer):
+            duplicate = Multilayer.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
+        duplicate.name = duplicate.name + ' duplicate'
+        self.append(duplicate)
+        self._disable_changes_to_outermost_layers()
+
+    def move_assembly_up(self, index: int):
+        """Move the assembly at the given index up in the sample.
+
+        :param index: Index of the assembly to move up.
+        """
+        if index == 0:
+            return
+        self._enable_changes_to_outermost_layers()
+        self.insert(index - 1, self.pop(index))
+        self._disable_changes_to_outermost_layers()
+
+    def move_assembly_down(self, index: int):
+        """Move the assembly at the given index down in the sample.
+
+        :param index: Index of the assembly to move down.
+        """
+        if index == len(self) - 1:
+            return
+        self._enable_changes_to_outermost_layers()
+        self.insert(index + 1, self.pop(index))
+        self._disable_changes_to_outermost_layers()
+
+    def remove_assembly(self, index: int):
+        """Remove the assembly at the given index from the sample.
 
         :param index: Index of the assembly to remove.
         """
         self._enable_changes_to_outermost_layers()
-        self.assemblies.remove(index)
+        self.pop(index)
         self._disable_changes_to_outermost_layers()
 
     @property
     def superphase(self) -> Layer:
         """The superphase of the sample."""
-        return self.assemblies[0].front_layer
+        return self[0].front_layer
 
     @property
     def subphase(self) -> Layer:
         """The superphase of the sample."""
-        return self.assemblies[1].back_layer
+        return self[-1].back_layer
 
     def _enable_changes_to_outermost_layers(self):
         """Allowed to change the outermost layers of the sample.
