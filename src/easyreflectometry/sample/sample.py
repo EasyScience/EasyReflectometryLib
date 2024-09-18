@@ -20,7 +20,7 @@ class Sample(BaseCollection):
 
     def __init__(
         self,
-        *list_layer_like: list[Union[Layer, BaseAssembly]],
+        *list_assembly_like: list[Union[Layer, BaseAssembly]],
         name: str = 'EasySample',
         interface=None,
         populate_if_none: bool = True,
@@ -32,25 +32,32 @@ class Sample(BaseCollection):
         :param name: Name of the sample, defaults to 'EasySample'.
         :param interface: Calculator interface, defaults to `None`.
         """
-        new_items = []
-        if not list_layer_like:
+        assemblies = []
+        if not list_assembly_like:
             if populate_if_none:
-                list_layer_like = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_LAYERS)]
+                list_assembly_like = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_LAYERS)]
             else:
-                list_layer_like = []
+                list_assembly_like = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
         # Else collisions might occur in global_object.map
         self.populate_if_none = False
 
-        for layer_like in list_layer_like:
-            if issubclass(type(layer_like), Layer):
-                new_items.append(Multilayer(layer_like, name=layer_like.name))
-            elif issubclass(type(layer_like), BaseAssembly):
-                new_items.append(layer_like)
+        for assembly_like in list_assembly_like:
+            if issubclass(type(assembly_like), Layer):
+                assemblies.append(Multilayer(assembly_like, name=assembly_like.name))
+            elif issubclass(type(assembly_like), BaseAssembly):
+                assemblies.append(assembly_like)
             else:
                 raise ValueError('The items must be either a Layer or an Assembly.')
-        super().__init__(name, *new_items, **kwargs)
+        super().__init__(name, *assemblies, **kwargs)
         self.interface = interface
+
+    def remove_assmbly(self, assembly: BaseAssembly):
+        """Remove an assembly from the sample.
+
+        :param assembly: The assembly to remove.
+        """
+        self.remove(assembly)
 
     # Representation
     @property
@@ -71,7 +78,7 @@ class Sample(BaseCollection):
         if skip is None:
             skip = []
         this_dict = super().as_dict(skip=skip)
-        for i, layer in enumerate(self.data):
-            this_dict['data'][i] = layer.as_dict(skip=skip)
+        for i, assembly in enumerate(self.data):
+            this_dict['data'][i] = assembly.as_dict(skip=skip)
         this_dict['populate_if_none'] = self.populate_if_none
         return this_dict
