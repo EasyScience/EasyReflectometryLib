@@ -21,20 +21,19 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Development Status :: 3 - Alpha"
 ]
-requires-python = ">=3.9,<3.12"
+requires-python = ">=3.10,<3.12"
 dependencies = [
     "easyscience>=1.0.1",
     "scipp>=23.12.0",
     "refnx>=0.1.15",
     "refl1d>=0.8.14",
     "orsopy>=0.0.4",
-    "pint==0.23"  # Only to ensure that unit is reported as dimensionless rather than empty string
+    "pint==0.24"  # Only to ensure that unit is reported as dimensionless rather than empty string
 ]
 
 [project.optional-dependencies]
@@ -130,10 +129,9 @@ force-single-line = true
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{3.9,3.10,3.11,3.12}
+envlist = py{3.10,3.11,3.12}
 [gh-actions]
 python =
-        3.9: py39
         3.10: py310
         3.11: py311
         3.12: py312
