@@ -2,8 +2,8 @@ __author__ = 'github.com/arm61'
 
 from typing import Optional
 
-from ...base_element_collection import BaseElementCollection
-from .layer import Layer
+from ..elements.layers.layer import Layer
+from .base_element_collection import BaseElementCollection
 
 
 class LayerCollection(BaseElementCollection):

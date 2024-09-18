@@ -4,7 +4,7 @@ from easyscience import global_object
 from numpy import arange
 
 from ..elements.layers.layer import Layer
-from ..elements.layers.layer_collection import LayerCollection
+from ..collections.layer_collection import LayerCollection
 from ..elements.materials.material import Material
 from .base_assembly import BaseAssembly
 

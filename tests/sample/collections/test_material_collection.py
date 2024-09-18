@@ -9,8 +9,8 @@ import unittest
 
 from easyscience import global_object
 
+from easyreflectometry.sample.collections.material_collection import MaterialCollection
 from easyreflectometry.sample.elements.materials.material import Material
-from easyreflectometry.sample.elements.materials.material_collection import MaterialCollection
 
 
 class TestMaterialCollection(unittest.TestCase):

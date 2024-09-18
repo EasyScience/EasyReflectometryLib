@@ -2,21 +2,24 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
+from typing import List
 from typing import Union
 
 from easyscience.Objects.Groups import BaseCollection
 
 from easyreflectometry.parameter_utils import yaml_dump
 
-from .assemblies.base_assembly import BaseAssembly
-from .assemblies.multilayer import Multilayer
-from .elements.layers.layer import Layer
+from ..assemblies.base_assembly import BaseAssembly
+from ..assemblies.multilayer import Multilayer
+from ..elements.layers.layer import Layer
 
-NR_DEFAULT_LAYERS = 2
+NR_DEFAULT_ASSEMBLIES = 2
 
 
 class Sample(BaseCollection):
     """Collection of assemblies that represent the sample for which experimental measurements exist."""
+
+    assemblies: List[BaseAssembly]
 
     def __init__(
         self,
@@ -35,7 +38,7 @@ class Sample(BaseCollection):
         assemblies = []
         if not list_assembly_like:
             if populate_if_none:
-                list_assembly_like = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_LAYERS)]
+                list_assembly_like = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_ASSEMBLIES)]
             else:
                 list_assembly_like = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
@@ -52,12 +55,42 @@ class Sample(BaseCollection):
         super().__init__(name, *assemblies, **kwargs)
         self.interface = interface
 
-    def remove_assmbly(self, assembly: BaseAssembly):
-        """Remove an assembly from the sample.
+    def remove_assmbly(self, index: int):
+        """Remove the assembly at given index from the sample.
 
-        :param assembly: The assembly to remove.
+        :param index: Index of the assembly to remove.
         """
-        self.remove(assembly)
+        self._enable_changes_to_outermost_layers()
+        self.assemblies.remove(index)
+        self._disable_changes_to_outermost_layers()
+
+    @property
+    def superphase(self) -> Layer:
+        """The superphase of the sample."""
+        return self.assemblies[0].front_layer
+
+    @property
+    def subphase(self) -> Layer:
+        """The superphase of the sample."""
+        return self.assemblies[1].back_layer
+
+    def _enable_changes_to_outermost_layers(self):
+        """Allowed to change the outermost layers of the sample.
+        Superphase can change thickness and roughness.
+        Subphase can change thickness.
+        """
+        self.superphase.thickness.enabled = True
+        self.superphase.roughness.enabled = True
+        self.subphase.thickness.enabled = True
+
+    def _disable_changes_to_outermost_layers(self):
+        """No allowed to change the outermost layers of the sample.
+        Superphase can change thickness and roughness.
+        Subphase can change thickness.
+        """
+        self.superphase.thickness.enabled = False
+        self.superphase.roughness.enabled = False
+        self.subphase.thickness.enabled = False
 
     # Representation
     @property

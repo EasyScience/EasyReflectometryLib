@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import Optional
 from typing import Union
 
-from easyreflectometry.sample.base_element_collection import SIZE_DEFAULT_COLLECTION
+from easyreflectometry.sample.collections.base_element_collection import SIZE_DEFAULT_COLLECTION
 
+from ..collections.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
-from ..elements.layers.layer_collection import LayerCollection
 from .base_assembly import BaseAssembly
 
 

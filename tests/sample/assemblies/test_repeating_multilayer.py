@@ -14,8 +14,8 @@ from numpy.testing import assert_raises
 
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
+from easyreflectometry.sample.collections.layer_collection import LayerCollection
 from easyreflectometry.sample.elements.layers.layer import Layer
-from easyreflectometry.sample.elements.layers.layer_collection import LayerCollection
 from easyreflectometry.sample.elements.materials.material import Material
 
 
