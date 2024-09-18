@@ -3,7 +3,7 @@ from __future__ import annotations
 __author__ = 'github.com/arm61'
 
 from typing import List
-from typing import Optional
+from typing import Tuple
 
 from easyreflectometry.sample.base_element_collection import SIZE_DEFAULT_COLLECTION
 from easyreflectometry.sample.base_element_collection import BaseElementCollection
@@ -17,7 +17,7 @@ class ModelCollection(BaseElementCollection):
 
     def __init__(
         self,
-        *models: Optional[tuple[Model]],
+        *models: Tuple[Model],
         name: str = 'EasyModels',
         interface=None,
         populate_if_none: bool = True,
@@ -52,7 +52,7 @@ class ModelCollection(BaseElementCollection):
         del self[idx]
 
     def as_dict(self, skip: List[str] | None = None) -> dict:
-        this_dict = super().as_dict(skip)
+        this_dict = super().as_dict(skip=skip)
         this_dict['populate_if_none'] = self.populate_if_none
         return this_dict
 

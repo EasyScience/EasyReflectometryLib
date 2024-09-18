@@ -8,6 +8,8 @@ FWHM = 2.35 * sigma [2 * np.sqrt(2 * np.log(2)) * sigma].
 from __future__ import annotations
 
 from abc import abstractmethod
+from typing import List
+from typing import Optional
 from typing import Union
 
 import numpy as np
@@ -17,10 +19,10 @@ DEFAULT_RESOLUTION_FWHM_PERCENTAGE = 5.0
 
 class ResolutionFunction:
     @abstractmethod
-    def smearing(q: Union[np.array, float]) -> np.array: ...
+    def smearing(self, q: Union[np.array, float]) -> np.array: ...
 
     @abstractmethod
-    def as_dict() -> dict: ...
+    def as_dict(self, skip: Optional[List[str]] = None) -> dict: ...
 
     @classmethod
     def from_dict(cls, data: dict) -> ResolutionFunction:
@@ -31,7 +33,7 @@ class ResolutionFunction:
         raise ValueError('Unknown resolution function type')
 
 
-class PercentageFhwm:
+class PercentageFhwm(ResolutionFunction):
     def __init__(self, constant: Union[None, float] = None):
         if constant is None:
             constant = DEFAULT_RESOLUTION_FWHM_PERCENTAGE
@@ -40,11 +42,13 @@ class PercentageFhwm:
     def smearing(self, q: Union[np.array, float]) -> np.array:
         return np.ones(np.array(q).size) * self.constant
 
-    def as_dict(self) -> dict:
+    def as_dict(
+        self, skip: Optional[List[str]] = None
+    ) -> dict[str, str]:  # skip is kept for consistency of the as_dict signature
         return {'smearing': 'PercentageFhwm', 'constant': self.constant}
 
 
-class LinearSpline:
+class LinearSpline(ResolutionFunction):
     def __init__(self, q_data_points: np.array, fwhm_values: np.array):
         self.q_data_points = q_data_points
         self.fwhm_values = fwhm_values
@@ -52,5 +56,7 @@ class LinearSpline:
     def smearing(self, q: Union[np.array, float]) -> np.array:
         return np.interp(q, self.q_data_points, self.fwhm_values)
 
-    def as_dict(self) -> dict:
+    def as_dict(
+        self, skip: Optional[List[str]] = None
+    ) -> dict[str, str]:  # skip is kept for consistency of the as_dict signature
         return {'smearing': 'LinearSpline', 'q_data_points': self.q_data_points, 'fwhm_values': self.fwhm_values}
