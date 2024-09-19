@@ -307,7 +307,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">easyscience</span> <span class="kn">import</span> <span class="n">global_object</span>
-<span class="kn">from</span> <span class="nn">easyscience.fitting.Constraints</span> <span class="kn">import</span> <span class="n">FunctionalConstraint</span>
+<span class="kn">from</span> <span class="nn">easyscience.Constraints</span> <span class="kn">import</span> <span class="n">FunctionalConstraint</span>
 <span class="kn">from</span> <span class="nn">easyscience.Objects.new_variable</span> <span class="kn">import</span> <span class="n">Parameter</span>
 
 <span class="kn">from</span> <span class="nn">easyreflectometry.parameter_utils</span> <span class="kn">import</span> <span class="n">get_as_parameter</span>
@@ -513,16 +513,16 @@ document.write(`
 
 <div class="viewcode-block" id="MaterialMixture.as_dict">
 <a class="viewcode-back" href="../../../../../api/elements/material_mixture.html#easyreflectometry.sample.elements.materials.material_mixture.MaterialMixture.as_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Produces a cleaned dict using a custom as_dict method to skip necessary things.</span>
 <span class="sd">        The resulting dict matches the parameters in __init__</span>
 
 <span class="sd">        :param skip: List of keys to skip, defaults to `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">this_dict</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
-        <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;material_a&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_a</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
-        <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;material_b&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_b</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
-        <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;fraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fraction</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+        <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;material_a&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_a</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
+        <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;material_b&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_b</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
+        <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;fraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fraction</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">this_dict</span></div>
 </div>
 

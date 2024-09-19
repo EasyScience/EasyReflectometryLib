@@ -309,6 +309,7 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -510,7 +511,7 @@ document.write(`
 
 <div class="viewcode-block" id="Model.as_dict">
 <a class="viewcode-back" href="../../../api/model.html#easyreflectometry.experiment.model.Model.as_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Produces a cleaned dict using a custom as_dict method to skip necessary things.</span>
 <span class="sd">        The resulting dict matches the parameters in __init__</span>
 
@@ -521,7 +522,7 @@ document.write(`
         <span class="n">skip</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;sample&#39;</span><span class="p">,</span> <span class="s1">&#39;resolution_function&#39;</span><span class="p">,</span> <span class="s1">&#39;interface&#39;</span><span class="p">])</span>
         <span class="n">this_dict</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
         <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;sample&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
-        <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;resolution_function&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution_function</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+        <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;resolution_function&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution_function</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">this_dict</span><span class="p">[</span><span class="s1">&#39;interface&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
