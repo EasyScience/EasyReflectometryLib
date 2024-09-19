@@ -4,6 +4,7 @@ __author__ = 'github.com/arm61'
 
 import copy
 from numbers import Number
+from typing import Optional
 from typing import Union
 
 import numpy as np
@@ -189,7 +190,7 @@ class Model(BaseObj):
         """String representation of the layer."""
         return yaml_dump(self._dict_repr)
 
-    def as_dict(self, skip: list = None) -> dict:
+    def as_dict(self, skip: Optional[list[str]] = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
         The resulting dict matches the parameters in __init__
 
@@ -200,7 +201,7 @@ class Model(BaseObj):
         skip.extend(['sample', 'resolution_function', 'interface'])
         this_dict = super().as_dict(skip=skip)
         this_dict['sample'] = self.sample.as_dict(skip=skip)
-        this_dict['resolution_function'] = self.resolution_function.as_dict()
+        this_dict['resolution_function'] = self.resolution_function.as_dict(skip=skip)
         if self.interface is None:
             this_dict['interface'] = None
         else:

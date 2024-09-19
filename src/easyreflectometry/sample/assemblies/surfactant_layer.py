@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from easyscience.fitting.Constraints import ObjConstraint
+from easyscience.Constraints import ObjConstraint
 from easyscience.Objects.new_variable import Parameter
 
 from ..elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
@@ -230,7 +230,7 @@ class SurfactantLayer(BaseAssembly):
             }
         }
 
-    def as_dict(self, skip: list = None) -> dict:
+    def as_dict(self, skip: Optional[list[str]] = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
         The resulting dict matches the parameters in __init__
 
