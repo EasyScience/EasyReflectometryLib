@@ -6,7 +6,7 @@ import numpy as np
 from refl1d import model
 from refl1d import names
 
-from easyreflectometry.model.resolution_functions import PercentageFhwm
+from easyreflectometry.model import PercentageFhwm
 
 from ..wrapper_base import WrapperBase
 
