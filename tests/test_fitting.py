@@ -8,9 +8,9 @@ from easyscience.fitting.minimizers.factory import AvailableMinimizers
 import easyreflectometry
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.data import load
-from easyreflectometry.experiment import Model
-from easyreflectometry.experiment import PercentageFhwm
 from easyreflectometry.fitting import Fitter
+from easyreflectometry.model import Model
+from easyreflectometry.model import PercentageFhwm
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import Sample

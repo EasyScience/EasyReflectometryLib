@@ -8,8 +8,8 @@ from copy import copy
 from numpy.testing import assert_almost_equal
 
 from easyreflectometry.calculators import CalculatorFactory
-from easyreflectometry.experiment import LinearSpline
-from easyreflectometry.experiment import Model
+from easyreflectometry.model import LinearSpline
+from easyreflectometry.model import Model
 from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import RepeatingMultilayer
 from easyreflectometry.sample import SurfactantLayer

@@ -15,9 +15,9 @@ from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
 from easyreflectometry.calculators import CalculatorFactory
-from easyreflectometry.experiment import LinearSpline
-from easyreflectometry.experiment import Model
-from easyreflectometry.experiment import PercentageFhwm
+from easyreflectometry.model import LinearSpline
+from easyreflectometry.model import Model
+from easyreflectometry.model import PercentageFhwm
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerCollection
 from easyreflectometry.sample import Material
