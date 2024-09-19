@@ -395,7 +395,7 @@ class TestModel(unittest.TestCase):
     'interface',
     [None, CalculatorFactory()],
 )
-def test_dict_round_trip(interface):  # , additional_layer):
+def test_dict_round_trip(interface):
     # When
     resolution_function = LinearSpline([0, 10], [0, 10])
     model = Model(interface=interface)
