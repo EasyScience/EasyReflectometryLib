@@ -70,12 +70,12 @@ class Sample(BaseCollection):
         """
         self._enable_changes_to_outermost_layers()
         to_be_duplicated = self[index]
-        if isinstance(to_be_duplicated, RepeatingMultilayer):
+        if isinstance(to_be_duplicated, Multilayer):
+            duplicate = Multilayer.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
+        elif isinstance(to_be_duplicated, RepeatingMultilayer):
             duplicate = RepeatingMultilayer.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
         elif isinstance(to_be_duplicated, SurfactantLayer):
             duplicate = SurfactantLayer.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
-        elif isinstance(to_be_duplicated, Multilayer):
-            duplicate = Multilayer.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
         duplicate.name = duplicate.name + ' duplicate'
         self.append(duplicate)
         self._disable_changes_to_outermost_layers()
@@ -118,8 +118,12 @@ class Sample(BaseCollection):
 
     @property
     def subphase(self) -> Layer:
-        """The superphase of the sample."""
-        return self[-1].back_layer
+        """The subphase of the sample."""
+        # This assembly on got one layer
+        if self[-1].back_layer is None:
+            return self[-1].front_layer
+        else:
+            return self[-1].back_layer
 
     def _enable_changes_to_outermost_layers(self):
         """Allowed to change the outermost layers of the sample.

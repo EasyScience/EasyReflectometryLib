@@ -20,8 +20,7 @@ def test_dict_skip_unique_name():
     resolution_function = LinearSpline([0, 10], [0, 10])
     model = Model(interface=CalculatorFactory())
     model.resolution_function = resolution_function
-    for additional_layer in [SurfactantLayer(), Multilayer(), RepeatingMultilayer()]:
-        model.add_item(additional_layer)
+    model.add_assemblies(SurfactantLayer(), Multilayer(), RepeatingMultilayer())
 
     # Then
     dict_no_unique_name = model.as_dict(skip=['unique_name'])
@@ -35,8 +34,7 @@ def test_copy():
     resolution_function = LinearSpline([0, 10], [0, 10])
     model = Model(interface=CalculatorFactory())
     model.resolution_function = resolution_function
-    for additional_layer in [SurfactantLayer(), Multilayer(), RepeatingMultilayer()]:
-        model.add_item(additional_layer)
+    model.add_assemblies(SurfactantLayer(), Multilayer(), RepeatingMultilayer())
 
     # Then
     model_copy = copy(model)
