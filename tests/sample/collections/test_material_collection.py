@@ -2,18 +2,13 @@
 Tests for LayerCollection class.
 """
 
-__author__ = 'github.com/arm61'
-__version__ = '0.0.1'
-
-import unittest
-
 from easyscience import global_object
 
 from easyreflectometry.sample.collections.material_collection import MaterialCollection
 from easyreflectometry.sample.elements.materials.material import Material
 
 
-class TestMaterialCollection(unittest.TestCase):
+class TestMaterialCollection:
     def test_default(self):
         p = MaterialCollection()
         assert p.name == 'EasyMaterials'
@@ -70,3 +65,98 @@ class TestMaterialCollection(unittest.TestCase):
 
         # Expect
         assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
+
+    def test_add_material(self):
+        # Given
+        p = MaterialCollection()
+        m = Material(6.908, -0.278, 'Boron')
+
+        # When
+        p.add_material(m)
+
+        # Then
+        assert p[2] == m
+
+    def test_duplicate_material(self):
+        # Given
+        p = MaterialCollection()
+        m = Material(6.908, -0.278, 'Boron')
+        p.add_material(m)
+
+        # When
+        p.duplicate_material(2)
+
+        # Then
+        assert p[3].name == 'Boron duplicate'
+
+    def test_move_material_up(self):
+        # Given
+        p = MaterialCollection()
+        k = Material(0.487, 0.000, 'Bottom')
+        p.add_material(k)
+
+        # When
+        p.move_material_up(2)
+
+        # Then
+        assert p[1].name == 'Bottom'
+        assert p[2].name == 'EasyMaterial'
+
+    def test_move_material_up_to_top_and_further(self):
+        # Given
+        p = MaterialCollection()
+        m = Material(0.487, 0.000, 'Bottom')
+        p.add_material(m)
+
+        # When
+        p.move_material_up(2)
+        p.move_material_up(1)
+        p.move_material_up(0)
+
+        # Then
+        assert p[0].name == 'Bottom'
+        assert p[2].name == 'EasyMaterial'
+
+    def test_move_material_down(self):
+        # Given
+        p = MaterialCollection()
+        m = Material(0.487, 0.000, 'Bottom')
+        p.add_material(m)
+
+        # When
+        p.move_material_down(1)
+
+        # Then
+        assert p[1].name == 'Bottom'
+        assert p[2].name == 'EasyMaterial'
+
+    def test_move_material_down_to_bottom_and_further(self):
+        # Given
+        p = MaterialCollection()
+        k = Material(0.487, 0.000, 'Middle')
+        m = Material(0.487, 0.000, 'Bottom')
+        p.add_material(k)
+        p.add_material(m)
+
+        # When
+        p.move_material_down(2)
+        p.move_material_down(3)
+
+        # Then
+        assert p[0].name == 'EasyMaterial'
+        assert p[2].name == 'Bottom'
+        assert p[3].name == 'Middle'
+
+    def test_remove_material(self):
+        # Given
+        p = MaterialCollection()
+        m = Material(0.487, 0.000, 'Bottom')
+        p.add_material(m)
+
+        # When
+        p.remove_material(1)
+
+        # Then
+        assert len(p) == 2
+        assert p[0].name == 'EasyMaterial'
+        assert p[1].name == 'Bottom'

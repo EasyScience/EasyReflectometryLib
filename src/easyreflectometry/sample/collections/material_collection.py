@@ -1,20 +1,16 @@
 __author__ = 'github.com/arm61'
+from typing import Optional
 from typing import Tuple
-from typing import Union
 
 from ..elements.materials.material import Material
-from ..elements.materials.material_mixture import MaterialMixture
 from .base_element_collection import SIZE_DEFAULT_COLLECTION
 from .base_element_collection import BaseElementCollection
 
 
 class MaterialCollection(BaseElementCollection):
-    # Added in super().__init__
-    matertials: list[Union[Material, MaterialMixture]]
-
     def __init__(
         self,
-        *materials: Tuple[Union[Material, MaterialMixture]],
+        *materials: Tuple[Material],
         name: str = 'EasyMaterials',
         interface=None,
         populate_if_none: bool = True,
@@ -22,9 +18,9 @@ class MaterialCollection(BaseElementCollection):
     ):
         if not materials:  # Empty tuple if no materials are provided
             if populate_if_none:
-                materials = [Material(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
+                materials = (Material(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION))
             else:
-                materials = []
+                materials = ()
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
         # Else collisions might occur in global_object.map
         self.populate_if_none = False
@@ -35,3 +31,45 @@ class MaterialCollection(BaseElementCollection):
             *materials,
             **kwargs,
         )
+
+    def add_material(self, material: Optional[Material] = None):
+        """Add a material to the collection.
+
+        :param material: Material to add.
+        """
+        self.append(material)
+
+    def duplicate_material(self, index: int):
+        """Duplicate a material in the collection.
+
+        :param material: Assembly to add.
+        """
+        to_be_duplicated = self[index]
+        duplicate = Material.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
+        duplicate.name = duplicate.name + ' duplicate'
+        self.append(duplicate)
+
+    def move_material_up(self, index: int):
+        """Move the material at the given index up in the collection.
+
+        :param index: Index of the material to move up.
+        """
+        if index == 0:
+            return
+        self.insert(index - 1, self.pop(index))
+
+    def move_material_down(self, index: int):
+        """Move the material at the given index down in the collection.
+
+        :param index: Index of the material to move down.
+        """
+        if index == len(self) - 1:
+            return
+        self.insert(index + 1, self.pop(index))
+
+    def remove_material(self, index: int):
+        """Remove the material at the given index from the collection.
+
+        :param index: Index of the material to remove.
+        """
+        self.pop(index)
