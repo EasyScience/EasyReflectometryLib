@@ -2,6 +2,7 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
+from typing import Optional
 from typing import Union
 
 from easyscience.Objects.Groups import BaseCollection
@@ -54,11 +55,13 @@ class Sample(BaseCollection):
         super().__init__(name, *assemblies, **kwargs)
         self.interface = interface
 
-    def add_assembly(self, assembly: BaseAssembly):
+    def add_assembly(self, assembly: Optional[BaseAssembly] = None):
         """Add an assembly to the sample.
 
         :param assembly: Assembly to add.
         """
+        if assembly is None:
+            assembly = Multilayer(name='New EasyMultilayer', interface=self.interface)
         self._enable_changes_to_outermost_layers()
         self.append(assembly)
         self._disable_changes_to_outermost_layers()
