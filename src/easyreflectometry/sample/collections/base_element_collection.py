@@ -5,8 +5,6 @@ from easyscience.Objects.Groups import BaseCollection
 
 from easyreflectometry.parameter_utils import yaml_dump
 
-SIZE_DEFAULT_COLLECTION = 2
-
 
 class BaseElementCollection(BaseCollection):
     def __init__(

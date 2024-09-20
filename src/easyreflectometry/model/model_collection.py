@@ -5,16 +5,14 @@ __author__ = 'github.com/arm61'
 from typing import List
 from typing import Tuple
 
-from easyreflectometry.sample.collections.base_element_collection import SIZE_DEFAULT_COLLECTION
 from easyreflectometry.sample.collections.base_element_collection import BaseElementCollection
 
 from .model import Model
 
+SIZE_DEFAULT_COLLECTION = 2
+
 
 class ModelCollection(BaseElementCollection):
-    # Added in super().__init__
-    models: list[Model]
-
     def __init__(
         self,
         *models: Tuple[Model],
@@ -43,13 +41,13 @@ class ModelCollection(BaseElementCollection):
         """
         self.append(new_model)
 
-    def remove_model(self, idx: int):
+    def remove_model(self, index: int):
         """
         Remove an model from the models.
 
-        :param idx: Index of the model to remove
+        :param index: Index of the model to remove
         """
-        del self[idx]
+        self.pop(index)
 
     def as_dict(self, skip: List[str] | None = None) -> dict:
         this_dict = super().as_dict(skip=skip)
