@@ -117,7 +117,7 @@ class Sample(BaseCollection):
     @property
     def subphase(self) -> Layer:
         """The subphase of the sample."""
-        # This assembly on got one layer
+        # This assembly only got one layer
         if self[-1].back_layer is None:
             return self[-1].front_layer
         else:
