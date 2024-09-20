@@ -5,8 +5,8 @@ __author__ = 'github.com/arm61'
 from typing import List
 from typing import Tuple
 
-from easyreflectometry.sample.base_element_collection import SIZE_DEFAULT_COLLECTION
-from easyreflectometry.sample.base_element_collection import BaseElementCollection
+from easyreflectometry.sample.collections.base_element_collection import SIZE_DEFAULT_COLLECTION
+from easyreflectometry.sample.collections.base_element_collection import BaseElementCollection
 
 from .model import Model
 

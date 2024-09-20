@@ -5,8 +5,8 @@ from typing import Optional
 from easyscience.Constraints import ObjConstraint
 from easyscience.Objects.new_variable import Parameter
 
+from ..collections.layer_collection import LayerCollection
 from ..elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
-from ..elements.layers.layer_collection import LayerCollection
 from ..elements.materials.material import Material
 from .base_assembly import BaseAssembly
 

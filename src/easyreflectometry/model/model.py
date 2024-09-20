@@ -14,8 +14,6 @@ from easyscience.Objects.ObjectClasses import BaseObj
 from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.parameter_utils import yaml_dump
 from easyreflectometry.sample import BaseAssembly
-from easyreflectometry.sample import Layer
-from easyreflectometry.sample import LayerCollection
 from easyreflectometry.sample import Sample
 
 from .resolution_functions import PercentageFhwm
@@ -93,51 +91,37 @@ class Model(BaseObj):
         # Must be set after resolution function
         self.interface = interface
 
-    def add_item(self, *assemblies: list[BaseAssembly]) -> None:
+    def add_assemblies(self, *assemblies: list[BaseAssembly]) -> None:
         """Add a layer or item to the model sample.
 
         :param assemblies: Assemblies to add to model sample.
         """
-        for arg in assemblies:
-            if issubclass(arg.__class__, BaseAssembly):
-                self.sample.append(arg)
+        for assembly in assemblies:
+            if issubclass(assembly.__class__, BaseAssembly):
+                self.sample.add_assembly(assembly)
                 if self.interface is not None:
-                    self.interface().add_item_to_model(arg.unique_name, self.unique_name)
+                    self.interface().add_item_to_model(assembly.unique_name, self.unique_name)
             else:
-                raise ValueError(f'Object {arg} is not a valid type, must be a child of BaseAssembly.')
+                raise ValueError(f'Object {assembly} is not a valid type, must be a child of BaseAssembly.')
 
-    def duplicate_item(self, idx: int) -> None:
+    def duplicate_assembly(self, index: int) -> None:
         """Duplicate a given item or layer in a sample.
 
         :param idx: Index of the item or layer to duplicate
         """
-        to_duplicate = self.sample[idx]
-        duplicate_layers = []
-        for i in to_duplicate.layers:
-            duplicate_layers.append(
-                Layer(
-                    material=i.material,
-                    thickness=i.thickness.value,
-                    roughness=i.roughness.value,
-                    name=i.name + ' duplicate',
-                    interface=i.interface,
-                )
-            )
-        duplicate = to_duplicate.__class__(
-            LayerCollection(*duplicate_layers, name=to_duplicate.layers.name + ' duplicate'),
-            name=to_duplicate.name + ' duplicate',
-        )
-        self.add_item(duplicate)
+        self.sample.duplicate_assembly(index)
+        if self.interface is not None:
+            self.interface().add_item_to_model(self.sample[-1].unique_name, self.unique_name)
 
-    def remove_item(self, idx: int) -> None:
-        """Remove an item from the model.
+    def remove_assembly(self, index: int) -> None:
+        """Remove an assembly from the model.
 
         :param idx: Index of the item to remove.
         """
-        item_unique_name = self.sample[idx].unique_name
-        del self.sample[idx]
+        assembly_unique_name = self.sample[index].unique_name
+        self.sample.remove_assembly(index)
         if self.interface is not None:
-            self.interface().remove_item_from_model(item_unique_name, self.unique_name)
+            self.interface().remove_item_from_model(assembly_unique_name, self.unique_name)
 
     @property
     def resolution_function(self) -> ResolutionFunction:

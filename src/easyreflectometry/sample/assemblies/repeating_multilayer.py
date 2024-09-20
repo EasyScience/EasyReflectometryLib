@@ -5,10 +5,10 @@ from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 
 from easyreflectometry.parameter_utils import get_as_parameter
-from easyreflectometry.sample.base_element_collection import SIZE_DEFAULT_COLLECTION
+from easyreflectometry.sample.collections.base_element_collection import SIZE_DEFAULT_COLLECTION
 
+from ..collections.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
-from ..elements.layers.layer_collection import LayerCollection
 from .multilayer import Multilayer
 
 DEFAULTS = {

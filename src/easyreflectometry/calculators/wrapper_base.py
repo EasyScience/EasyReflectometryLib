@@ -2,8 +2,8 @@ from abc import abstractmethod
 
 import numpy as np
 
-from easyreflectometry.experiment import PercentageFhwm
-from easyreflectometry.experiment import ResolutionFunction
+from easyreflectometry.model import PercentageFhwm
+from easyreflectometry.model import ResolutionFunction
 
 
 class WrapperBase:

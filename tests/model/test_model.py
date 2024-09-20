@@ -15,9 +15,9 @@ from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
 from easyreflectometry.calculators import CalculatorFactory
-from easyreflectometry.experiment import LinearSpline
-from easyreflectometry.experiment import Model
-from easyreflectometry.experiment import PercentageFhwm
+from easyreflectometry.model import LinearSpline
+from easyreflectometry.model import Model
+from easyreflectometry.model import PercentageFhwm
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerCollection
 from easyreflectometry.sample import Material
@@ -84,7 +84,7 @@ class TestModel(unittest.TestCase):
         assert mod._resolution_function.smearing([1]) == 2.0
         assert mod._resolution_function.smearing([100]) == 2.0
 
-    def test_add_item(self):
+    def test_add_assemblies(self):
         m1 = Material(6.908, -0.278, 'Boron')
         m2 = Material(0.487, 0.000, 'Potassium')
         l1 = Layer(m1, 5.0, 2.0, 'thinBoron')
@@ -99,24 +99,24 @@ class TestModel(unittest.TestCase):
         resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel')
         assert_equal(len(mod.sample), 1)
-        mod.add_item(o2)
+        mod.add_assemblies(o2)
         assert_equal(len(mod.sample), 2)
         assert_equal(mod.sample[1].name, 'oneLayerItem2')
         assert_equal(issubclass(mod.sample[1].__class__, RepeatingMultilayer), True)
-        mod.add_item(surfactant)
+        mod.add_assemblies(surfactant)
         assert_equal(len(mod.sample), 3)
-        mod.add_item(multilayer)
+        mod.add_assemblies(multilayer)
         assert_equal(len(mod.sample), 4)
 
-    def test_add_item_exception(self):
+    def test_add_assemblies_exception(self):
         # When
         mod = Model()
 
         # Then Expect
         with pytest.raises(ValueError):
-            mod.add_item('not an assembly')
+            mod.add_assemblies('not an assembly')
 
-    def test_add_item_with_interface_refnx(self):
+    def test_add_assemblies_with_interface_refnx(self):
         interface = CalculatorFactory()
         m1 = Material(6.908, -0.278, 'Boron')
         m2 = Material(0.487, 0.000, 'Potassium')
@@ -131,11 +131,11 @@ class TestModel(unittest.TestCase):
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
-        mod.add_item(o2)
+        mod.add_assemblies(o2)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
-    def test_add_item_with_interface_refl1d(self):
+    def test_add_assemblies_with_interface_refl1d(self):
         interface = CalculatorFactory()
         interface.switch('refl1d')
         m1 = Material(6.908, -0.278, 'Boron')
@@ -151,11 +151,11 @@ class TestModel(unittest.TestCase):
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
-        mod.add_item(o2)
+        mod.add_assemblies(o2)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
-    # def test_add_item_with_interface_bornagain(self):
+    # def test_add_assemblies_with_interface_bornagain(self):
     #     interface = CalculatorFactory()
     #     interface.switch('BornAgain')
     #     m1 = Material.from_pars(6.908, 0.278, 'Boron')
@@ -170,11 +170,11 @@ class TestModel(unittest.TestCase):
     #     mod = Model(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
-    #     mod.add_item(o2)
+    #     mod.add_assemblies(o2)
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
-    def test_duplicate_item(self):
+    def test_duplicate_assembly(self):
         m1 = Material(6.908, -0.278, 'Boron')
         m2 = Material(0.487, 0.000, 'Potassium')
         l1 = Layer(m1, 5.0, 2.0, 'thinBoron')
@@ -187,14 +187,14 @@ class TestModel(unittest.TestCase):
         resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel')
         assert_equal(len(mod.sample), 1)
-        mod.add_item(o2)
+        mod.add_assemblies(o2)
         assert_equal(len(mod.sample), 2)
-        mod.duplicate_item(1)
+        mod.duplicate_assembly(1)
         assert_equal(len(mod.sample), 3)
         assert_equal(mod.sample[2].name, 'oneLayerItem2 duplicate')
         assert_equal(issubclass(mod.sample[2].__class__, RepeatingMultilayer), True)
 
-    def test_duplicate_item_with_interface_refnx(self):
+    def test_duplicate_assembly_with_interface_refnx(self):
         interface = CalculatorFactory()
         m1 = Material(6.908, -0.278, 'Boron')
         m2 = Material(0.487, 0.000, 'Potassium')
@@ -208,12 +208,12 @@ class TestModel(unittest.TestCase):
         resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
-        mod.add_item(o2)
+        mod.add_assemblies(o2)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
-        mod.duplicate_item(1)
+        mod.duplicate_assembly(1)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 3)
 
-    def test_duplicate_item_with_interface_refl1d(self):
+    def test_duplicate_assembly_with_interface_refl1d(self):
         interface = CalculatorFactory()
         interface.switch('refl1d')
         m1 = Material(6.908, -0.278, 'Boron')
@@ -228,9 +228,9 @@ class TestModel(unittest.TestCase):
         resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
-        mod.add_item(o2)
+        mod.add_assemblies(o2)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
-        mod.duplicate_item(1)
+        mod.duplicate_assembly(1)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 3)
 
     # def test_duplicate_item_with_interface_bornagain(self):
@@ -246,13 +246,13 @@ class TestModel(unittest.TestCase):
     #     o2 = RepeatingMultilayer.from_pars(ls2, 1.0, 'oneLayerItem2')
     #     d = Sample.from_pars(o1, name='myModel')
     #     mod = Model(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
-    #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
-    #     mod.add_item(o2)
+    #     assert_equal(len(mod.interface()._wrapper.storage['assembly']), 1)
+    #     mod.add_assemblies(o2)
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
-    #     mod.duplicate_item(1)
+    #     mod.duplicate_assembly(1)
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 3)
 
-    def test_remove_item(self):
+    def test_remove_assembly(self):
         m1 = Material(6.908, -0.278, 'Boron')
         m2 = Material(0.487, 0.000, 'Potassium')
         l1 = Layer(m1, 5.0, 2.0, 'thinBoron')
@@ -265,12 +265,12 @@ class TestModel(unittest.TestCase):
         resolution_function = PercentageFhwm(2.0)
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel')
         assert_equal(len(mod.sample), 1)
-        mod.add_item(o2)
+        mod.add_assemblies(o2)
         assert_equal(len(mod.sample), 2)
-        mod.remove_item(0)
+        mod.remove_assembly(0)
         assert_equal(len(mod.sample), 1)
 
-    def test_remove_item_with_interface_refnx(self):
+    def test_remove_assembly_with_interface_refnx(self):
         interface = CalculatorFactory()
         m1 = Material(6.908, -0.278, 'Boron')
         m2 = Material(0.487, 0.000, 'Potassium')
@@ -285,14 +285,14 @@ class TestModel(unittest.TestCase):
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
-        mod.add_item(o2)
+        mod.add_assemblies(o2)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
-        mod.remove_item(0)
+        mod.remove_assembly(0)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
-    def test_remove_item_with_interface_refl1d(self):
+    def test_remove_assembly_with_interface_refl1d(self):
         interface = CalculatorFactory()
         interface.switch('refl1d')
         m1 = Material(6.908, -0.278, 'Boron')
@@ -308,14 +308,14 @@ class TestModel(unittest.TestCase):
         mod = Model(d, 2, 1e-5, resolution_function, 'newModel', interface=interface)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
-        mod.add_item(o2)
+        mod.add_assemblies(o2)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
-        mod.remove_item(0)
+        mod.remove_assembly(0)
         assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
         assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
-    # def test_remove_item_with_interface_bornagain(self):
+    # def test_remove_assembly_with_interface_bornagain(self):
     #     interface = CalculatorFactory()
     #     interface.switch('BornAgain')
     #     m1 = Material.from_pars(6.908, 0.278, 'Boron')
@@ -330,10 +330,10 @@ class TestModel(unittest.TestCase):
     #     mod = Model(d, 2, 1e-5, 2.0, 'newModel', interface=interface)
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
-    #     mod.add_item(o2)
+    #     mod.add_assemblies(o2)
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 2)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
-    #     mod.remove_item(0)
+    #     mod.remove_assembly(0)
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
@@ -401,7 +401,7 @@ def test_dict_round_trip(interface):
     model = Model(interface=interface)
     model.resolution_function = resolution_function
     for additional_layer in [SurfactantLayer(), Multilayer(), RepeatingMultilayer()]:
-        model.add_item(additional_layer)
+        model.add_assemblies(additional_layer)
     src_dict = model.as_dict()
     global_object.map._clear()
 

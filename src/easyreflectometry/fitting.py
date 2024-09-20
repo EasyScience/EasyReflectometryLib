@@ -5,7 +5,7 @@ import scipp as sc
 from easyscience.fitting import AvailableMinimizers
 from easyscience.fitting.multi_fitter import MultiFitter as easyFitter
 
-from easyreflectometry.experiment import Model
+from easyreflectometry.model import Model
 
 
 class Fitter:
