@@ -24,7 +24,7 @@ class TestMultilayer(unittest.TestCase):
         assert_equal(p.name, 'EasyMultilayer')
         assert_equal(p._type, 'Multi-layer')
         assert_equal(p.interface, None)
-        assert_equal(len(p.layers), 2)
+        assert_equal(len(p.layers), 1)
         assert_equal(p.layers.name, 'EasyLayerCollection')
 
     def test_default_empty(self):
@@ -158,7 +158,7 @@ class TestMultilayer(unittest.TestCase):
         p = Multilayer()
         assert (
             p.__repr__()
-            == 'EasyMultilayer:\n  EasyLayerCollection:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1/Å^2\n          isld: 0.000e-6 1/Å^2\n      thickness: 10.000 Å\n      roughness: 3.300 Å\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1/Å^2\n          isld: 0.000e-6 1/Å^2\n      thickness: 10.000 Å\n      roughness: 3.300 Å\n'  # noqa: E501
+            == 'EasyMultilayer:\n  EasyLayerCollection:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1/Å^2\n          isld: 0.000e-6 1/Å^2\n      thickness: 10.000 Å\n      roughness: 3.300 Å\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):

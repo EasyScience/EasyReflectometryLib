@@ -9,8 +9,6 @@ from easyreflectometry.sample.collections.base_element_collection import BaseEle
 
 from .model import Model
 
-SIZE_DEFAULT_COLLECTION = 2
-
 
 class ModelCollection(BaseElementCollection):
     def __init__(
@@ -23,7 +21,7 @@ class ModelCollection(BaseElementCollection):
     ):
         if not models:
             if populate_if_none:
-                models = [Model(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
+                models = [Model(interface=interface)]
             else:
                 models = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict

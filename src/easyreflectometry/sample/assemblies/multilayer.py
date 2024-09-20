@@ -7,8 +7,6 @@ from ..collections.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
 from .base_assembly import BaseAssembly
 
-DEFAULT_NR_LAYERS = 2
-
 
 class Multilayer(BaseAssembly):
     """A multi layer is build from a single or a list of `Layer` or `LayerCollection`.
@@ -38,7 +36,7 @@ class Multilayer(BaseAssembly):
         """
         if layers is None:
             if populate_if_none:
-                layers = LayerCollection([Layer(interface=interface) for _ in range(DEFAULT_NR_LAYERS)])
+                layers = LayerCollection([Layer(interface=interface)])
             else:
                 layers = LayerCollection()
         elif isinstance(layers, Layer):
@@ -90,8 +88,8 @@ class Multilayer(BaseAssembly):
     @property
     def _dict_repr(self) -> dict:
         """A simplified dict representation."""
-        if len(self.layers) == 1:
-            return self.front_layer._dict_repr
+        #        if len(self.layers) == 1:
+        #            return self.front_layer._dict_repr
         return {self.name: self.layers._dict_repr}
 
     @classmethod

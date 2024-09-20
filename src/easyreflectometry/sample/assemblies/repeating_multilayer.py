@@ -8,7 +8,6 @@ from easyreflectometry.parameter_utils import get_as_parameter
 
 from ..collections.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
-from .multilayer import DEFAULT_NR_LAYERS
 from .multilayer import Multilayer
 
 DEFAULTS = {
@@ -57,7 +56,7 @@ class RepeatingMultilayer(Multilayer):
 
         if layers is None:
             if populate_if_none:
-                layers = LayerCollection([Layer(interface=interface) for _ in range(DEFAULT_NR_LAYERS)])
+                layers = LayerCollection([Layer(interface=interface)])
             else:
                 layers = LayerCollection()
         elif isinstance(layers, Layer):
