@@ -273,22 +273,6 @@ class TestSample:
         assert_equal(d[0].name, 'twoLayerItem1')
         assert_equal(d[1].name, 'oneLayerItem2')
 
-    def test_from_pars_layers(self):
-        # When
-        m1 = Material(6.908, -0.278, 'Boron')
-        m2 = Material(0.487, 0.000, 'Potassium')
-        l1 = Layer(m1, 5.0, 2.0, 'thinBoron')
-        l2 = Layer(m2, 50.0, 1.0, 'thickPotassium')
-
-        # Then
-        d = Sample(l1, l2, name='myModel')
-
-        # Expect
-        assert_equal(d.name, 'myModel')
-        assert_equal(d.interface, None)
-        assert_equal(d[0].name, 'thinBoron')
-        assert_equal(d[1].name, 'thickPotassium')
-
     def test_from_pars_error(self):
         m1 = Material(6.908, -0.278, 'Boron')
 

@@ -2,7 +2,8 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
-from typing import Union
+from typing import List
+from typing import Optional
 
 from easyscience.Objects.Groups import BaseCollection
 
@@ -22,7 +23,7 @@ class Sample(BaseCollection):
 
     def __init__(
         self,
-        *list_assembly_like: list[Union[Layer, BaseAssembly]],
+        *list_assemblies: Optional[List[BaseAssembly]],
         name: str = 'EasySample',
         interface=None,
         populate_if_none: bool = True,
@@ -34,31 +35,28 @@ class Sample(BaseCollection):
         :param name: Name of the sample, defaults to 'EasySample'.
         :param interface: Calculator interface, defaults to `None`.
         """
-        assemblies = []
-        if not list_assembly_like:
+        if not list_assemblies:
             if populate_if_none:
-                list_assembly_like = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_ASSEMBLIES)]
+                list_assemblies = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_ASSEMBLIES)]
             else:
-                list_assembly_like = []
+                list_assemblies = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
         # Else collisions might occur in global_object.map
         self.populate_if_none = False
 
-        for assembly_like in list_assembly_like:
-            if issubclass(type(assembly_like), Layer):
-                assemblies.append(Multilayer(assembly_like, name=assembly_like.name))
-            elif issubclass(type(assembly_like), BaseAssembly):
-                assemblies.append(assembly_like)
-            else:
-                raise ValueError('The items must be either a Layer or an Assembly.')
-        super().__init__(name, *assemblies, **kwargs)
+        for assembly in list_assemblies:
+            if not issubclass(type(assembly), BaseAssembly):
+                raise ValueError('The elements must be an Assembly.')
+        super().__init__(name, *list_assemblies, **kwargs)
         self.interface = interface
 
-    def add_assembly(self, assembly: BaseAssembly):
+    def add_assembly(self, assembly: Optional[BaseAssembly] = None):
         """Add an assembly to the sample.
 
         :param assembly: Assembly to add.
         """
+        if assembly is None:
+            assembly = Multilayer(name='New EasyMultilayer', interface=self.interface)
         self._enable_changes_to_outermost_layers()
         self.append(assembly)
         self._disable_changes_to_outermost_layers()
@@ -119,7 +117,7 @@ class Sample(BaseCollection):
     @property
     def subphase(self) -> Layer:
         """The subphase of the sample."""
-        # This assembly on got one layer
+        # This assembly only got one layer
         if self[-1].back_layer is None:
             return self[-1].front_layer
         else:
