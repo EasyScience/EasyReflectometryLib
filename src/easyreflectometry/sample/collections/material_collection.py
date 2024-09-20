@@ -3,8 +3,13 @@ from typing import Optional
 from typing import Tuple
 
 from ..elements.materials.material import Material
-from .base_element_collection import SIZE_DEFAULT_COLLECTION
 from .base_element_collection import BaseElementCollection
+
+DEFAULT_COLLECTION = (
+    Material(sld=0.0, isld=0.0, name='Air'),
+    Material(sld=6.335, isld=0.0, name='D2O'),
+    Material(sld=2.074, isld=0.0, name='Si'),
+)
 
 
 class MaterialCollection(BaseElementCollection):
@@ -18,7 +23,7 @@ class MaterialCollection(BaseElementCollection):
     ):
         if not materials:  # Empty tuple if no materials are provided
             if populate_if_none:
-                materials = (Material(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION))
+                materials = DEFAULT_COLLECTION  # (Material(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION))
             else:
                 materials = ()
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
@@ -37,6 +42,8 @@ class MaterialCollection(BaseElementCollection):
 
         :param material: Material to add.
         """
+        if material is None:
+            material = Material(name='New EasyMaterial', interface=self.interface)
         self.append(material)
 
     def duplicate_material(self, index: int):
