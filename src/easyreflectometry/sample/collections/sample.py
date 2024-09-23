@@ -2,21 +2,16 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
-from copy import deepcopy
 from typing import List
 from typing import Optional
-
-from easyscience.Objects.Groups import BaseCollection
-
-from easyreflectometry.parameter_utils import yaml_dump
 
 from ..assemblies.base_assembly import BaseAssembly
 from ..assemblies.multilayer import Multilayer
 from ..assemblies.repeating_multilayer import RepeatingMultilayer
 from ..assemblies.surfactant_layer import SurfactantLayer
 from ..elements.layers.layer import Layer
+from .base_collection import BaseCollection
 
-# NR_DEFAULT_ASSEMBLIES = 2
 DEFAULT_COLLECTION = [Multilayer(), Multilayer()]
 
 
@@ -49,8 +44,7 @@ class Sample(BaseCollection):
         for assembly in assemblies:
             if not issubclass(type(assembly), BaseAssembly):
                 raise ValueError('The elements must be an Assembly.')
-        super().__init__(name, *assemblies, **kwargs)
-        self.interface = interface
+        super().__init__(name, interface, *assemblies, **kwargs)
 
     def add_assembly(self, assembly: Optional[BaseAssembly] = None):
         """Add an assembly to the sample.
@@ -144,15 +138,6 @@ class Sample(BaseCollection):
         self.subphase.thickness.enabled = False
 
     # Representation
-    @property
-    def _dict_repr(self) -> dict:
-        """A simplified dict representation."""
-        return {self.name: [i._dict_repr for i in self]}
-
-    def __repr__(self) -> str:
-        """String representation of the sample."""
-        return yaml_dump(self._dict_repr)
-
     def as_dict(self, skip: list = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
         The resulting dict matches the parameters in __init__
@@ -166,9 +151,3 @@ class Sample(BaseCollection):
             this_dict['data'][i] = assembly.as_dict(skip=skip)
         this_dict['populate_if_none'] = self.populate_if_none
         return this_dict
-
-    def _make_defalut_collection(self, default_collection: List, interface):
-        elements = deepcopy(default_collection)
-        for element in elements:
-            element.interface = interface
-        return elements
