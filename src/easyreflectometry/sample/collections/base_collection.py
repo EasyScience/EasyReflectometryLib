@@ -35,7 +35,7 @@ class BaseCollection(EasyBaseCollection):
         """
         return {self.name: [i._dict_repr for i in self]}
 
-    def _make_defalut_collection(self, default_collection: List, interface):
+    def _make_default_collection(self, default_collection: List, interface) -> List:
         elements = deepcopy(default_collection)
         for element in elements:
             element.interface = interface

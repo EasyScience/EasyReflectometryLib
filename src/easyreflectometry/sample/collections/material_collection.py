@@ -23,9 +23,9 @@ class MaterialCollection(BaseCollection):
     ):
         if not materials:  # Empty tuple if no materials are provided
             if populate_if_none:
-                materials = self._make_defalut_collection(DEFAULT_COLLECTION, interface)
+                materials = self._make_default_collection(DEFAULT_COLLECTION, interface)
             else:
-                materials = ()
+                materials = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
         # Else collisions might occur in global_object.map
         self.populate_if_none = False
