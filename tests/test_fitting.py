@@ -27,26 +27,26 @@ def test_fitting(minimizer):
     sio2 = Material(3.47, 0, 'SiO2')
     film = Material(2.0, 0, 'Film')
     d2o = Material(6.36, 0, 'D2O')
-    si_layer = Multilayer(Layer(si, 0, 0, 'Si layer'))
-    sio2_layer = Multilayer(Layer(sio2, 30, 3, 'SiO2 layer'))
-    film_layer = Multilayer(Layer(film, 250, 3, 'Film Layer'))
-    superphase = Multilayer(Layer(d2o, 0, 3, 'D2O Subphase'))
+    si_layer = Layer(si, 0, 0, 'Si layer')
+    sio2_layer = Layer(sio2, 30, 3, 'SiO2 layer')
+    film_layer = Layer(film, 250, 3, 'Film Layer')
+    superphase = Layer(d2o, 0, 3, 'D2O Subphase')
     sample = Sample(
-        si_layer,
-        sio2_layer,
-        film_layer,
-        superphase,
+        Multilayer(si_layer),
+        Multilayer(sio2_layer),
+        Multilayer(film_layer),
+        Multilayer(superphase),
         name='Film Structure',
     )
     resolution_function = PercentageFhwm(0.02)
     model = Model(sample, 1, 1e-6, resolution_function, 'Film Model')
     # Thicknesses
-    sio2_layer.layers[0].thickness.bounds = (15, 50)
-    film_layer.layers[0].thickness.bounds = (200, 300)
+    sio2_layer.thickness.bounds = (15, 50)
+    film_layer.thickness.bounds = (200, 300)
     # Roughnesses
-    sio2_layer.layers[0].roughness.bounds = (1, 15)
-    film_layer.layers[0].roughness.bounds = (1, 15)
-    superphase.layers[0].roughness.bounds = (1, 15)
+    sio2_layer.roughness.bounds = (1, 15)
+    film_layer.roughness.bounds = (1, 15)
+    superphase.roughness.bounds = (1, 15)
     # Scattering length density
     film.sld.bounds = (0.1, 3)
     # Background

@@ -88,8 +88,6 @@ class Multilayer(BaseAssembly):
     @property
     def _dict_repr(self) -> dict:
         """A simplified dict representation."""
-        #        if len(self.layers) == 1:
-        #            return self.front_layer._dict_repr
         return {self.name: self.layers._dict_repr}
 
     @classmethod
