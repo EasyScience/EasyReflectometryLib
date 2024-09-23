@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import List
 from typing import Optional
 
@@ -52,3 +53,9 @@ class BaseElementCollection(BaseCollection):
         for collection_element in self:
             this_dict['data'].append(collection_element.as_dict(skip=skip))
         return this_dict
+
+    def _make_defalut_collection(self, default_collection: List, interface):
+        elements = deepcopy(default_collection)
+        for element in elements:
+            element.interface = interface
+        return elements

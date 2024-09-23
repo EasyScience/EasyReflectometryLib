@@ -2,6 +2,7 @@ from __future__ import annotations
 
 __author__ = 'github.com/arm61'
 
+from copy import deepcopy
 from typing import List
 from typing import Optional
 
@@ -15,7 +16,8 @@ from ..assemblies.repeating_multilayer import RepeatingMultilayer
 from ..assemblies.surfactant_layer import SurfactantLayer
 from ..elements.layers.layer import Layer
 
-NR_DEFAULT_ASSEMBLIES = 2
+# NR_DEFAULT_ASSEMBLIES = 2
+DEFAULT_COLLECTION = [Multilayer(), Multilayer()]
 
 
 class Sample(BaseCollection):
@@ -23,7 +25,7 @@ class Sample(BaseCollection):
 
     def __init__(
         self,
-        *list_assemblies: Optional[List[BaseAssembly]],
+        *assemblies: Optional[List[BaseAssembly]],
         name: str = 'EasySample',
         interface=None,
         populate_if_none: bool = True,
@@ -35,19 +37,19 @@ class Sample(BaseCollection):
         :param name: Name of the sample, defaults to 'EasySample'.
         :param interface: Calculator interface, defaults to `None`.
         """
-        if not list_assemblies:
+        if not assemblies:
             if populate_if_none:
-                list_assemblies = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_ASSEMBLIES)]
+                assemblies = self._make_defalut_collection(DEFAULT_COLLECTION, interface)
             else:
-                list_assemblies = []
+                assemblies = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
         # Else collisions might occur in global_object.map
         self.populate_if_none = False
 
-        for assembly in list_assemblies:
+        for assembly in assemblies:
             if not issubclass(type(assembly), BaseAssembly):
                 raise ValueError('The elements must be an Assembly.')
-        super().__init__(name, *list_assemblies, **kwargs)
+        super().__init__(name, *assemblies, **kwargs)
         self.interface = interface
 
     def add_assembly(self, assembly: Optional[BaseAssembly] = None):
@@ -164,3 +166,9 @@ class Sample(BaseCollection):
             this_dict['data'][i] = assembly.as_dict(skip=skip)
         this_dict['populate_if_none'] = self.populate_if_none
         return this_dict
+
+    def _make_defalut_collection(self, default_collection: List, interface):
+        elements = deepcopy(default_collection)
+        for element in elements:
+            element.interface = interface
+        return elements

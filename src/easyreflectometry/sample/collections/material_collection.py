@@ -23,7 +23,7 @@ class MaterialCollection(BaseElementCollection):
     ):
         if not materials:  # Empty tuple if no materials are provided
             if populate_if_none:
-                materials = DEFAULT_COLLECTION
+                materials = self._make_defalut_collection(DEFAULT_COLLECTION, interface)
             else:
                 materials = ()
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
