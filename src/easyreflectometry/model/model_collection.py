@@ -5,12 +5,12 @@ __author__ = 'github.com/arm61'
 from typing import List
 from typing import Tuple
 
-from easyreflectometry.sample.collections.base_element_collection import BaseElementCollection
+from easyreflectometry.sample.collections.base_collection import BaseCollection
 
 from .model import Model
 
 
-class ModelCollection(BaseElementCollection):
+class ModelCollection(BaseCollection):
     def __init__(
         self,
         *models: Tuple[Model],
@@ -29,7 +29,6 @@ class ModelCollection(BaseElementCollection):
         self.populate_if_none = False
 
         super().__init__(name, interface, *models, **kwargs)
-        self.interface = interface
 
     def add_model(self, new_model: Model):
         """

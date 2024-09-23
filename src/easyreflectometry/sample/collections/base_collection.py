@@ -1,5 +1,6 @@
 from copy import deepcopy
 from typing import List
+from typing import Optional
 
 from easyscience.Objects.Groups import BaseCollection as EasyBaseCollection
 
@@ -39,3 +40,17 @@ class BaseCollection(EasyBaseCollection):
         for element in elements:
             element.interface = interface
         return elements
+
+    def as_dict(self, skip: Optional[List[str]] = None) -> dict:
+        """
+        Create a dictionary representation of the collection.
+
+        :return: A dictionary representation of the collection
+        """
+        if skip is None:
+            skip = []
+        this_dict = super().as_dict(skip=skip)
+        this_dict['data'] = []
+        for collection_element in self:
+            this_dict['data'].append(collection_element.as_dict(skip=skip))
+        return this_dict

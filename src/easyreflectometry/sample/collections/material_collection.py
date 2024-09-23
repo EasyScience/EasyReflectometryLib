@@ -3,7 +3,7 @@ from typing import Optional
 from typing import Tuple
 
 from ..elements.materials.material import Material
-from .base_element_collection import BaseElementCollection
+from .base_collection import BaseCollection
 
 DEFAULT_COLLECTION = (
     Material(sld=0.0, isld=0.0, name='Air'),
@@ -12,7 +12,7 @@ DEFAULT_COLLECTION = (
 )
 
 
-class MaterialCollection(BaseElementCollection):
+class MaterialCollection(BaseCollection):
     def __init__(
         self,
         *materials: Tuple[Material],
