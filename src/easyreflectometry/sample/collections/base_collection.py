@@ -27,6 +27,13 @@ class BaseCollection(EasyBaseCollection):
         return yaml_dump(self._dict_repr)
 
     @property
+    def names(self) -> list:
+        """
+        :returns: list of names for the elements in the collection.
+        """
+        return [i.name for i in self]
+
+    @property
     def _dict_repr(self) -> dict:
         """
         A simplified dict representation.
