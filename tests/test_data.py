@@ -10,11 +10,11 @@ from orsopy.fileio import Header
 from orsopy.fileio import load_orso
 
 import easyreflectometry
-from easyreflectometry.data import _load_orso
-from easyreflectometry.data import _load_txt
-from easyreflectometry.data import load
+from easyreflectometry.data.measurement import _load_orso
+from easyreflectometry.data.measurement import _load_txt
+from easyreflectometry.data.measurement import load
 
-PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests' , '_static')
+PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
 
 
 class TestData(unittest.TestCase):
