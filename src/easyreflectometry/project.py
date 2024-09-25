@@ -2,9 +2,11 @@ import datetime
 import json
 import os
 from pathlib import Path
+from typing import List
 
 from easyscience.fitting import AvailableMinimizers
 
+from easyreflectometry.data.data_store import DataSet1D
 from easyreflectometry.model import ModelCollection
 from easyreflectometry.sample import MaterialCollection
 
@@ -17,7 +19,7 @@ class Project:
         self._materials: MaterialCollection = None
         self._calculator = None
         self._minimizer: AvailableMinimizers = None
-        self._experiments = None
+        self._experiments: List[DataSet1D] = None
         self._report = None
 
         # Project flags
@@ -70,7 +72,7 @@ class Project:
 
         project_dict['colors'] = self.parent._model_proxy._colors
 
-    def _add_materials_not_in_model_dict(self, project_json: dict):
+    def _add_materials_not_in_model_dict(self, project_dict: dict):
         materials_in_model = []
         for model in self._models:
             for assembly in model.sample:
@@ -80,19 +82,19 @@ class Project:
         for material in self._materials:
             if material not in materials_in_model:
                 materials_not_in_model.append(material)
-        project_json['materials_not_in_model'] = MaterialCollection(materials_not_in_model).as_dict(skip=['interface'])
+        project_dict['materials_not_in_model'] = MaterialCollection(materials_not_in_model).as_dict(skip=['interface'])
 
-    def _add_experiments_to_dict(self, project_json: dict):
-        project_json['experiments'] = []
-        project_json['experiments_models'] = []
-        project_json['experiments_names'] = []
+    def _add_experiments_to_dict(self, project_dict: dict):
+        project_dict['experiments'] = []
+        project_dict['experiments_models'] = []
+        project_dict['experiments_names'] = []
         for experiment in self._experiments:
             if self._experiments[0].xe is not None:
-                project_json['experiments'].append([experiment.x, experiment.y, experiment.ye, experiment.xe])
+                project_dict['experiments'].append([experiment.x, experiment.y, experiment.ye, experiment.xe])
             else:
-                project_json['experiments'].append([experiment.x, experiment.y, experiment.ye])
-            project_json['experiments_models'].append(experiment.model.name)
-            project_json['experiments_names'].append(experiment.name)
+                project_dict['experiments'].append([experiment.x, experiment.y, experiment.ye])
+            project_dict['experiments_models'].append(experiment.model.name)
+            project_dict['experiments_names'].append(experiment.name)
 
     def _extract_project_dict(self, project_dict):
         self._models = ModelCollection.from_dict(project_dict['models'])
@@ -104,14 +106,17 @@ class Project:
             self._experiments = self._extract_experiments_from_dict(project_dict)
         self._materials = MaterialCollection.from_dict(project_dict['materials'])
 
-    def _extracy_experiments_from_dict(self, project_json: dict):
-        project_json['experiments'] = []
-        project_json['experiments_models'] = []
-        project_json['experiments_names'] = []
-        for experiment in self._experiments:
-            if self._experiments[0].xe is not None:
-                project_json['experiments'].append([experiment.x, experiment.y, experiment.ye, experiment.xe])
-            else:
-                project_json['experiments'].append([experiment.x, experiment.y, experiment.ye])
-            project_json['experiments_models'].append(experiment.model.name)
-            project_json['experiments_names'].append(experiment.name)
+    def _extract_experiments_from_dict(self, project_dict: dict):
+        self._experiments: List[DataSet1D] = []
+
+        for i in range(len(project_dict['experiments'])):
+            self._experiments.append(
+                DataSet1D(
+                    name=project_dict['experiments_names'][i],
+                    x=project_dict['experiments'][i][0],
+                    y=project_dict['experiments'][i][1],
+                    ye=project_dict['experiments'][i][2],
+                    xe=project_dict['experiments'][i][3],
+                    model=self._models[project_dict['experiments_models'][i]],
+                )
+            )
