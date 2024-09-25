@@ -3,13 +3,10 @@ __author__ = 'github.com/arm61'
 from typing import Optional
 
 from ..elements.layers.layer import Layer
-from .base_element_collection import BaseElementCollection
+from .base_collection import BaseCollection
 
 
-class LayerCollection(BaseElementCollection):
-    # Added in super().__init__
-    layers: list[Layer]
-
+class LayerCollection(BaseCollection):
     def __init__(
         self,
         *layers: Optional[list[Layer]],

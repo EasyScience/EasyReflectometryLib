@@ -283,7 +283,7 @@ class TestSample:
         p = Sample()
         assert (
             p.__repr__()
-            == 'EasySample:\n- EasyMultilayer:\n    EasyLayerCollection:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1/Å^2\n            isld: 0.000e-6 1/Å^2\n        thickness: 10.000 Å\n        roughness: 3.300 Å\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1/Å^2\n            isld: 0.000e-6 1/Å^2\n        thickness: 10.000 Å\n        roughness: 3.300 Å\n- EasyMultilayer:\n    EasyLayerCollection:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1/Å^2\n            isld: 0.000e-6 1/Å^2\n        thickness: 10.000 Å\n        roughness: 3.300 Å\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1/Å^2\n            isld: 0.000e-6 1/Å^2\n        thickness: 10.000 Å\n        roughness: 3.300 Å\n'  # noqa: E501
+            == 'EasySample:\n- EasyMultilayer:\n    EasyLayerCollection:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1/Å^2\n            isld: 0.000e-6 1/Å^2\n        thickness: 10.000 Å\n        roughness: 3.300 Å\n- EasyMultilayer:\n    EasyLayerCollection:\n    - EasyLayer:\n        material:\n          EasyMaterial:\n            sld: 4.186e-6 1/Å^2\n            isld: 0.000e-6 1/Å^2\n        thickness: 10.000 Å\n        roughness: 3.300 Å\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):

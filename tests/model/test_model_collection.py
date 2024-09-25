@@ -12,9 +12,8 @@ class TestModelCollection:
         # Expect
         assert collection.name == 'EasyModels'
         assert collection.interface is None
-        assert len(collection) == 2
+        assert len(collection) == 1
         assert collection[0].name == 'EasyModel'
-        assert collection[1].name == 'EasyModel'
 
     def test_from_pars(self):
         # When

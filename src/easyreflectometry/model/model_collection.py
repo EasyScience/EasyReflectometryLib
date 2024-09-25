@@ -5,16 +5,14 @@ __author__ = 'github.com/arm61'
 from typing import List
 from typing import Tuple
 
-from easyreflectometry.sample.collections.base_element_collection import SIZE_DEFAULT_COLLECTION
-from easyreflectometry.sample.collections.base_element_collection import BaseElementCollection
+from easyreflectometry.sample.collections.base_collection import BaseCollection
 
 from .model import Model
 
+DEFAULT_COLLECTION = [Model()]
 
-class ModelCollection(BaseElementCollection):
-    # Added in super().__init__
-    models: list[Model]
 
+class ModelCollection(BaseCollection):
     def __init__(
         self,
         *models: Tuple[Model],
@@ -25,7 +23,7 @@ class ModelCollection(BaseElementCollection):
     ):
         if not models:
             if populate_if_none:
-                models = [Model(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
+                models = self._make_default_collection(DEFAULT_COLLECTION, interface)
             else:
                 models = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
@@ -33,7 +31,6 @@ class ModelCollection(BaseElementCollection):
         self.populate_if_none = False
 
         super().__init__(name, interface, *models, **kwargs)
-        self.interface = interface
 
     def add_model(self, new_model: Model):
         """
@@ -43,13 +40,13 @@ class ModelCollection(BaseElementCollection):
         """
         self.append(new_model)
 
-    def remove_model(self, idx: int):
+    def remove_model(self, index: int):
         """
         Remove an model from the models.
 
-        :param idx: Index of the model to remove
+        :param index: Index of the model to remove
         """
-        del self[idx]
+        self.pop(index)
 
     def as_dict(self, skip: List[str] | None = None) -> dict:
         this_dict = super().as_dict(skip=skip)

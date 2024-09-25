@@ -337,6 +337,17 @@ class TestModel(unittest.TestCase):
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
+    def test_remove_all_assemblies(self):
+        # when
+        mod = Model()
+
+        # Then
+        mod.remove_assembly(0)
+        mod.remove_assembly(0)
+
+        # Expect
+        assert_equal(len(mod.sample), 0)
+
     def test_resolution_function(self):
         mock_resolution_function = MagicMock()
         interface = CalculatorFactory()
@@ -378,7 +389,7 @@ class TestModel(unittest.TestCase):
 
         assert (
             model.__repr__()
-            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n'  # noqa: E501
+            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: 5.0 %\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n'  # noqa: E501
         )
 
     def test_repr_resolution_function(self):
@@ -387,7 +398,7 @@ class TestModel(unittest.TestCase):
         model.resolution_function = resolution_function
         assert (
             model.__repr__()
-            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: function of Q\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n'  # noqa: E501
+            == 'EasyModel:\n  scale: 1.0\n  background: 1.0e-08\n  resolution: function of Q\n  sample:\n    EasySample:\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n    - EasyMultilayer:\n        EasyLayerCollection:\n        - EasyLayer:\n            material:\n              EasyMaterial:\n                sld: 4.186e-6 1/Å^2\n                isld: 0.000e-6 1/Å^2\n            thickness: 10.000 Å\n            roughness: 3.300 Å\n'  # noqa: E501
         )
 
 
