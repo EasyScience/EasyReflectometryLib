@@ -337,6 +337,17 @@ class TestModel(unittest.TestCase):
     #     assert_equal(len(mod.interface()._wrapper.storage['item']), 1)
     #     assert_equal(len(mod.interface()._wrapper.storage['layer']), 2)
 
+    def test_remove_all_assemblies(self):
+        # when
+        mod = Model()
+
+        # Then
+        mod.remove_assembly(0)
+        mod.remove_assembly(0)
+
+        # Expect
+        assert_equal(len(mod.sample), 0)
+
     def test_resolution_function(self):
         mock_resolution_function = MagicMock()
         interface = CalculatorFactory()

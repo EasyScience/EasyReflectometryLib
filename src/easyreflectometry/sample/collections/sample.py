@@ -124,18 +124,20 @@ class Sample(BaseCollection):
         Superphase can change thickness and roughness.
         Subphase can change thickness.
         """
-        self.superphase.thickness.enabled = True
-        self.superphase.roughness.enabled = True
-        self.subphase.thickness.enabled = True
+        if len(self) != 0:
+            self.superphase.thickness.enabled = True
+            self.superphase.roughness.enabled = True
+            self.subphase.thickness.enabled = True
 
     def _disable_changes_to_outermost_layers(self):
         """No allowed to change the outermost layers of the sample.
         Superphase can change thickness and roughness.
         Subphase can change thickness.
         """
-        self.superphase.thickness.enabled = False
-        self.superphase.roughness.enabled = False
-        self.subphase.thickness.enabled = False
+        if len(self) != 0:
+            self.superphase.thickness.enabled = False
+            self.superphase.roughness.enabled = False
+            self.subphase.thickness.enabled = False
 
     # Representation
     def as_dict(self, skip: Optional[List[str]] = None) -> dict:
