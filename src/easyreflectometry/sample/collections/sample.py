@@ -5,17 +5,14 @@ __author__ = 'github.com/arm61'
 from typing import List
 from typing import Optional
 
-from easyscience.Objects.Groups import BaseCollection
-
-from easyreflectometry.parameter_utils import yaml_dump
-
 from ..assemblies.base_assembly import BaseAssembly
 from ..assemblies.multilayer import Multilayer
 from ..assemblies.repeating_multilayer import RepeatingMultilayer
 from ..assemblies.surfactant_layer import SurfactantLayer
 from ..elements.layers.layer import Layer
+from .base_collection import BaseCollection
 
-NR_DEFAULT_ASSEMBLIES = 2
+DEFAULT_COLLECTION = [Multilayer(), Multilayer()]
 
 
 class Sample(BaseCollection):
@@ -23,7 +20,7 @@ class Sample(BaseCollection):
 
     def __init__(
         self,
-        *list_assemblies: Optional[List[BaseAssembly]],
+        *assemblies: Optional[List[BaseAssembly]],
         name: str = 'EasySample',
         interface=None,
         populate_if_none: bool = True,
@@ -35,20 +32,19 @@ class Sample(BaseCollection):
         :param name: Name of the sample, defaults to 'EasySample'.
         :param interface: Calculator interface, defaults to `None`.
         """
-        if not list_assemblies:
+        if not assemblies:
             if populate_if_none:
-                list_assemblies = [Multilayer(interface=interface) for _ in range(NR_DEFAULT_ASSEMBLIES)]
+                assemblies = self._make_default_collection(DEFAULT_COLLECTION, interface)
             else:
-                list_assemblies = []
+                assemblies = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
         # Else collisions might occur in global_object.map
         self.populate_if_none = False
 
-        for assembly in list_assemblies:
+        for assembly in assemblies:
             if not issubclass(type(assembly), BaseAssembly):
                 raise ValueError('The elements must be an Assembly.')
-        super().__init__(name, *list_assemblies, **kwargs)
-        self.interface = interface
+        super().__init__(name, interface, *assemblies, **kwargs)
 
     def add_assembly(self, assembly: Optional[BaseAssembly] = None):
         """Add an assembly to the sample.
@@ -142,25 +138,12 @@ class Sample(BaseCollection):
         self.subphase.thickness.enabled = False
 
     # Representation
-    @property
-    def _dict_repr(self) -> dict:
-        """A simplified dict representation."""
-        return {self.name: [i._dict_repr for i in self]}
-
-    def __repr__(self) -> str:
-        """String representation of the sample."""
-        return yaml_dump(self._dict_repr)
-
-    def as_dict(self, skip: list = None) -> dict:
+    def as_dict(self, skip: Optional[List[str]] = None) -> dict:
         """Produces a cleaned dict using a custom as_dict method to skip necessary things.
         The resulting dict matches the parameters in __init__
 
         :param skip: List of keys to skip, defaults to `None`.
         """
-        if skip is None:
-            skip = []
         this_dict = super().as_dict(skip=skip)
-        for i, assembly in enumerate(self.data):
-            this_dict['data'][i] = assembly.as_dict(skip=skip)
         this_dict['populate_if_none'] = self.populate_if_none
         return this_dict

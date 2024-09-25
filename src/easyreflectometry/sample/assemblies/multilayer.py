@@ -3,8 +3,6 @@ from __future__ import annotations
 from typing import Optional
 from typing import Union
 
-from easyreflectometry.sample.collections.base_element_collection import SIZE_DEFAULT_COLLECTION
-
 from ..collections.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
 from .base_assembly import BaseAssembly
@@ -38,7 +36,7 @@ class Multilayer(BaseAssembly):
         """
         if layers is None:
             if populate_if_none:
-                layers = LayerCollection([Layer(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)])
+                layers = LayerCollection([Layer(interface=interface)])
             else:
                 layers = LayerCollection()
         elif isinstance(layers, Layer):
@@ -90,8 +88,6 @@ class Multilayer(BaseAssembly):
     @property
     def _dict_repr(self) -> dict:
         """A simplified dict representation."""
-        if len(self.layers) == 1:
-            return self.front_layer._dict_repr
         return {self.name: self.layers._dict_repr}
 
     @classmethod

@@ -92,17 +92,22 @@ class Model(BaseObj):
         self.interface = interface
 
     def add_assemblies(self, *assemblies: list[BaseAssembly]) -> None:
-        """Add a layer or item to the model sample.
+        """Add assemblies to the model sample.
 
         :param assemblies: Assemblies to add to model sample.
         """
-        for assembly in assemblies:
-            if issubclass(assembly.__class__, BaseAssembly):
-                self.sample.add_assembly(assembly)
-                if self.interface is not None:
-                    self.interface().add_item_to_model(assembly.unique_name, self.unique_name)
-            else:
-                raise ValueError(f'Object {assembly} is not a valid type, must be a child of BaseAssembly.')
+        if not assemblies:
+            self.sample.add_assembly()
+            if self.interface is not None:
+                self.interface().add_item_to_model(self.sample[-1].unique_name, self.unique_name)
+        else:
+            for assembly in assemblies:
+                if issubclass(assembly.__class__, BaseAssembly):
+                    self.sample.add_assembly(assembly)
+                    if self.interface is not None:
+                        self.interface().add_item_to_model(self.sample[-1].unique_name, self.unique_name)
+                else:
+                    raise ValueError(f'Object {assembly} is not a valid type, must be a child of BaseAssembly.')
 
     def duplicate_assembly(self, index: int) -> None:
         """Duplicate a given item or layer in a sample.
