@@ -339,16 +339,6 @@ class TestModel(unittest.TestCase):
 
     def test_remove_all_assemblies(self):
         # when
-        # m1 = Material(6.908, -0.278, 'Boron')
-        # m2 = Material(0.487, 0.000, 'Potassium')
-        # l1 = Layer(m1, 5.0, 2.0, 'thinBoron')
-        # l2 = Layer(m2, 50.0, 1.0, 'thickPotassium')
-        # ls1 = LayerCollection(l1, l2, name='twoLayer1')
-        # ls2 = LayerCollection(l2, l1, name='twoLayer2')
-        # o1 = RepeatingMultilayer(ls1, 2.0, 'twoLayerItem1')
-        # o2 = RepeatingMultilayer(ls2, 1.0, 'oneLayerItem2')
-        # d = Sample(o1, o2, name='myModel')
-        # resolution_function = PercentageFhwm(2.0)
         mod = Model()
 
         # Then
