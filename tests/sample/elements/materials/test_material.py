@@ -5,9 +5,6 @@ Tests for Material class.
 __author__ = 'github.com/arm61'
 __version__ = '0.0.1'
 
-
-import unittest
-
 import numpy as np
 from easyscience import global_object
 
@@ -16,7 +13,7 @@ from easyreflectometry.sample.elements.materials.material import DEFAULTS
 from easyreflectometry.sample.elements.materials.material import Material
 
 
-class TestMaterial(unittest.TestCase):
+class TestMaterial:
     def test_no_arguments(self):
         p = Material()
         assert p.name == 'EasyMaterial'

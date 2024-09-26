@@ -60,6 +60,7 @@ class Model(BaseObj):
         background: Union[Parameter, Number, None] = None,
         resolution_function: Union[ResolutionFunction, None] = None,
         name: str = 'EasyModel',
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -83,6 +84,7 @@ class Model(BaseObj):
 
         super().__init__(
             name=name,
+            unique_name=unique_name,
             sample=sample,
             scale=scale,
             background=background,

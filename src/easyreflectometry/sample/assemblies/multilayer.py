@@ -23,6 +23,7 @@ class Multilayer(BaseAssembly):
         self,
         layers: Union[Layer, list[Layer], LayerCollection, None] = None,
         name: str = 'EasyMultilayer',
+        unique_name: Optional[str] = None,
         interface=None,
         type: str = 'Multi-layer',
         populate_if_none: Optional[bool] = True,
@@ -47,7 +48,7 @@ class Multilayer(BaseAssembly):
         # Else collisions might occur in global_object.map
         self.populate_if_none = False
 
-        super().__init__(name, layers=layers, type=type, interface=interface)
+        super().__init__(name, unique_name=unique_name, layers=layers, type=type, interface=interface)
 
     def add_layer(self, *layers: tuple[Layer]) -> None:
         """Add a layer to the multi layer.

@@ -42,12 +42,6 @@ class BaseCollection(EasyBaseCollection):
         """
         return {self.name: [i._dict_repr for i in self]}
 
-    def _make_default_collection(self, default_collection: List, interface) -> List:
-        elements = deepcopy(default_collection)
-        for element in elements:
-            element.interface = interface
-        return elements
-
     def as_dict(self, skip: Optional[List[str]] = None) -> dict:
         """
         Create a dictionary representation of the collection.
@@ -61,3 +55,6 @@ class BaseCollection(EasyBaseCollection):
         for collection_element in self:
             this_dict['data'].append(collection_element.as_dict(skip=skip))
         return this_dict
+
+    def __deepcopy__(self, memo):
+        return self.from_dict(self.as_dict(skip=['unique_name']))

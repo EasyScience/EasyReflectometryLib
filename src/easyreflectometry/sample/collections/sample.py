@@ -12,7 +12,13 @@ from ..assemblies.surfactant_layer import SurfactantLayer
 from ..elements.layers.layer import Layer
 from .base_collection import BaseCollection
 
-DEFAULT_COLLECTION = [Multilayer(), Multilayer()]
+
+# Needs to be a function, elements are added to the global_object.map
+def DEFAULT_ELEMENTS(interface):
+    return (
+        Multilayer(interface=interface),
+        Multilayer(interface=interface),
+    )
 
 
 class Sample(BaseCollection):
@@ -34,7 +40,7 @@ class Sample(BaseCollection):
         """
         if not assemblies:
             if populate_if_none:
-                assemblies = self._make_default_collection(DEFAULT_COLLECTION, interface)
+                assemblies = DEFAULT_ELEMENTS(interface)
             else:
                 assemblies = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
