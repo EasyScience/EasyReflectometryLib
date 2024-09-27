@@ -3,6 +3,7 @@ import json
 import os
 from pathlib import Path
 from typing import List
+from typing import Optional
 
 from easyscience.fitting import AvailableMinimizers
 
@@ -119,6 +120,17 @@ class Project:
                 file.write(project_json)
         except Exception as exception:
             print(exception)
+
+    def load_project_json(self, path: Optional[Path] = None):
+        if path is None:
+            path = self.path_project_json
+
+        if path.exists():
+            with open(path, 'r') as file:
+                project_dict = json.load(file)
+                self._extract_project_dict(project_dict)
+        else:
+            print(f'ERROR: File {path} does not exist')
 
     def _construct_project_dict(self, include_materials_not_in_model=False):
         project_dict = {}

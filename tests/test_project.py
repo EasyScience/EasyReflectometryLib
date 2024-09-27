@@ -318,3 +318,20 @@ class TestProject:
 
         # Expect
         assert project_path.exists()
+
+    def test_load_project(self):
+        # When
+        project = Project()
+        project._models.append(Model())
+        project._info['name'] = 'Test_Project'
+        project.save_project_json()
+
+        global_object.map._clear()
+        new_project = Project()
+
+        # Then
+        new_project.load_project_json(new_project._current_path / 'Test_Project' / 'project.json')
+
+        # Expect
+        assert len(new_project._models) == 1
+        assert new_project._info['name'] == 'Test_Project'
