@@ -21,6 +21,7 @@ class MaterialCollection(BaseCollection):
         *materials: Tuple[Material],
         name: str = 'EasyMaterials',
         interface=None,
+        unique_name: Optional[str] = None,
         populate_if_none: bool = True,
         **kwargs,
     ):
@@ -29,13 +30,11 @@ class MaterialCollection(BaseCollection):
                 materials = DEFAULT_ELEMENTS(interface)
             else:
                 materials = []
-        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
-        # Else collisions might occur in global_object.map
-        self.populate_if_none = False
 
         super().__init__(
             name,
             interface,
+            unique_name=unique_name,
             *materials,
             **kwargs,
         )

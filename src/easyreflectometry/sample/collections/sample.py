@@ -29,6 +29,7 @@ class Sample(BaseCollection):
         *assemblies: Optional[List[BaseAssembly]],
         name: str = 'EasySample',
         interface=None,
+        unique_name: Optional[str] = None,
         populate_if_none: bool = True,
         **kwargs,
     ):
@@ -43,14 +44,11 @@ class Sample(BaseCollection):
                 assemblies = DEFAULT_ELEMENTS(interface)
             else:
                 assemblies = []
-        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
-        # Else collisions might occur in global_object.map
-        self.populate_if_none = False
 
         for assembly in assemblies:
             if not issubclass(type(assembly), BaseAssembly):
                 raise ValueError('The elements must be an Assembly.')
-        super().__init__(name, interface, *assemblies, **kwargs)
+        super().__init__(name, interface, unique_name=unique_name, *assemblies, **kwargs)
 
     def add_assembly(self, assembly: Optional[BaseAssembly] = None):
         """Add an assembly to the sample.

@@ -9,14 +9,15 @@ from easyscience.fitting import AvailableMinimizers
 from easyreflectometry.data.data_store import DataSet1D
 from easyreflectometry.model import ModelCollection
 from easyreflectometry.sample import MaterialCollection
+from easyreflectometry.sample.collections.base_collection import BaseCollection
 
 
 class Project:
     def __init__(self):
         self._info = self._defalt_info()
         self._current_path = Path(os.path.expanduser('~'))
-        self._models = ModelCollection(populate_if_none=False)
-        self._materials = MaterialCollection(populate_if_none=False)
+        self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
+        self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
         self._calculator = None
         self._minimizer: AvailableMinimizers = None
         self._experiments: List[DataSet1D] = None
@@ -33,7 +34,7 @@ class Project:
 
     @models.setter
     def models(self, models: ModelCollection) -> None:
-        self._models = models
+        self._replace_collection(models, self._models)
         self._materials.extend(self._get_materials_in_models())
 
     @property
@@ -97,7 +98,7 @@ class Project:
         project_dict['project_with_experiments'] = self._project_with_experiments
         project_dict['project_created'] = self._project_created
         if self._models is not None:
-            project_dict['models'] = self._models.as_dict(skip=['interface', 'material'])
+            project_dict['models'] = self._models.as_dict(skip=['interface'])
         if include_materials_not_in_model:
             self._add_materials_not_in_model_dict(project_dict)
         if self._project_with_experiments:
@@ -115,7 +116,8 @@ class Project:
         for material in self._materials:
             if material not in self._get_materials_in_models():
                 materials_not_in_model.append(material)
-        project_dict['materials_not_in_model'] = MaterialCollection(materials_not_in_model).as_dict(skip=['interface'])
+        if len(materials_not_in_model) > 0:
+            project_dict['materials_not_in_model'] = MaterialCollection(materials_not_in_model).as_dict(skip=['interface'])
 
     def _add_experiments_to_dict(self, project_dict: dict):
         project_dict['experiments'] = []
@@ -134,11 +136,10 @@ class Project:
         self._info = project_dict['info']
         self._project_with_experiments = project_dict['project_with_experiments']
         if 'models' in keys:
+            self._models = None
             self._models = ModelCollection.from_dict(project_dict['models'])
-        else:
-            self._models = ModelCollection(populate_if_none=False)
 
-        self._materials = self._get_materials_in_models()
+        self._replace_collection(self._get_materials_in_models(), self._materials)
 
         if 'materials_not_in_model' in keys:
             self._materials.extend(MaterialCollection.from_dict(project_dict['materials_not_in_model']))
@@ -178,3 +179,11 @@ class Project:
                 for layer in assembly.layers:
                     materials_in_model.append(layer.material)
         return materials_in_model
+
+    def _replace_collection(self, src_collection: BaseCollection, dst_collection: BaseCollection) -> None:
+        # Clear the destination collection
+        for i in range(len(dst_collection)):
+            dst_collection.pop(0)
+
+        for element in src_collection:
+            dst_collection.append(element)

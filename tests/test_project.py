@@ -46,7 +46,11 @@ class TestProject:
         project.models = models
 
         # Expect
-        assert project.models == models
+        project_models_dict = project.models.as_dict(skip=['interface'])
+        models_dict = models.as_dict(skip=['interface'])
+        models_dict['unique_name'] = 'project_models'
+        assert project_models_dict == models_dict
+
         assert len(project._materials) == 3
         assert project._materials[0] == material
         assert project._materials[1] == models[0].sample[0].layers[0].material
@@ -153,7 +157,6 @@ class TestProject:
         keys.sort()
         assert keys == [
             'info',
-            'materials',
             'models',
             'project_created',
             'project_with_experiments',
@@ -165,7 +168,6 @@ class TestProject:
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
-        assert project_dict['materials']['data'] == []
         assert project_dict['models']['data'] == []
         assert project_dict['project_created'] is False
         assert project_dict['project_with_experiments'] is False
@@ -175,24 +177,14 @@ class TestProject:
         project = Project()
         models = ModelCollection(Model())
         project.models = models
-        # Then
-        project_dict = project._construct_project_dict()
-
-        # Expect
-        assert project_dict['models'] == models.as_dict()
-
-    def test_construct_project_dict_materials(self):
-        # When
-        project = Project()
-        models = ModelCollection(Model())
-        project.models = models
-        materials = project._get_materials_in_models()
 
         # Then
         project_dict = project._construct_project_dict()
 
         # Expect
-        assert project_dict['materials']['data'] == materials.as_dict(skip=['interface'])['data']
+        models_dict = models.as_dict(skip=['interface'])
+        models_dict['unique_name'] = 'project_models'
+        assert project_dict['models'] == models_dict
 
     def test_construct_project_dict_materials_not_in_model(self):
         # When
@@ -220,28 +212,60 @@ class TestProject:
         # Expect
         assert project_dict['minimizer'] == 'LMFit'
 
+    def test_replace_collection(self):
+        # When
+        project = Project()
+        material = Material()
+        project._materials.append(material)
+        new_material = Material()
+
+        # Then
+        project._replace_collection(MaterialCollection(new_material), project._materials)
+
+        # Expect
+        assert project._materials[0] == new_material
+        assert project._materials.unique_name == 'project_materials'
+
+    def test_get_materials_in_models(self):
+        # When
+        models = ModelCollection(Model())
+        project = Project()
+        project.models = models
+        material = Material(6.908, -0.278, 'Boron')
+        project.add_material(material)
+
+        # Then
+        materials = project._get_materials_in_models()
+
+        # Expect
+        assert len(materials) == 2
+        assert materials[0] == models[0].sample[0].layers[0].material
+        assert materials[1] == models[0].sample[1].layers[0].material
+
     def test_dict_round_trip(self):
         # When
-        new_project = Project()
+        global_object.map._clear()
         project = Project()
         models = ModelCollection(Model())
         project.models = models
-        material = Material()
+        material = Material(6.908, -0.278, 'Boron')
         project.add_material(material)
         minimizer = AvailableMinimizers.LMFit
         project.minimizer = minimizer
         project_dict = project._construct_project_dict(include_materials_not_in_model=True)
-        project_materials = project._materials.as_dict()
+        project_materials_dict = project._materials.as_dict()
 
+        del material
         global_object.map._clear()
 
         # Then
+        new_project = Project()
         new_project._extract_project_dict(project_dict)
-        new_project_dict = new_project._construct_project_dict()
-        new_project_materials = new_project._materials.as_dict()
+        new_project_dict = new_project._construct_project_dict(include_materials_not_in_model=True)
+        new_project_materials_dict = new_project._materials.as_dict()
 
         # Expect
         keys = list(project_dict.keys())
         for key in keys:
             assert project_dict[key] == new_project_dict[key]
-        assert project_materials == new_project_materials
+        assert project_materials_dict == new_project_materials_dict

@@ -12,9 +12,11 @@ class LayerCollection(BaseCollection):
         *layers: Optional[list[Layer]],
         name: str = 'EasyLayerCollection',
         interface=None,
+        unique_name: Optional[str] = None,
+        populate_if_none: bool = True,  # Needed to match as_dict signature from BaseCollection
         **kwargs,
     ):
         if not layers:
             layers = []
 
-        super().__init__(name, interface, *layers, **kwargs)
+        super().__init__(name, interface, unique_name=unique_name, *layers, **kwargs)
