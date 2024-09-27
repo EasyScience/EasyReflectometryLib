@@ -28,6 +28,23 @@ class Project:
         self._project_created = False
         self._project_with_experiments = False
 
+    def reset(self):
+        for i in range(len(self._models)):
+            self._models.pop(0)
+        for i in range(len(self._materials)):
+            self._materials.pop(0)
+
+        self._info = self._defalt_info()
+        self._calculator = None
+        self._minimizer = None
+        self._experiments = None
+        self._colors = None
+        self._report = None
+
+        # Project flags
+        self._project_created = False
+        self._project_with_experiments = False
+
     @property
     def models(self) -> ModelCollection:
         return self._models
