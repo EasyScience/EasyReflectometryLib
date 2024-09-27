@@ -305,3 +305,16 @@ class TestProject:
         for key in keys:
             assert project_dict[key] == new_project_dict[key]
         assert project_materials_dict == new_project_materials_dict
+
+    def test_save_project(self):
+        # When
+        project = Project()
+        project._models.append(Model())
+        project._info['name'] = 'Test_Project'
+        project.save_project_json()
+
+        # Then
+        project_path = project.path_project_json
+
+        # Expect
+        assert project_path.exists()

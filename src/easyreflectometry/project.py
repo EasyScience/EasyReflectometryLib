@@ -71,12 +71,12 @@ class Project:
         self._experiments = experiments
 
     @property
-    def project_path(self):
+    def path_project(self):
         return self._current_path / self._info['name']
 
     @property
-    def project_json(self):
-        return self.project_path / 'project.json'
+    def path_project_json(self):
+        return self.path_project / 'project.json'
 
     def add_material(self, material: MaterialCollection) -> None:
         if material in self._materials:
@@ -100,14 +100,25 @@ class Project:
         )
 
     def create_project_dir(self):
-        if not os.path.exists(self.project_path):
-            os.makedirs(self.project_path)
-            os.makedirs(self.project_path / 'experiments')
-            with open(self.project_json, 'w') as file:
-                project_dict = self._construct_project_dict()
-                file.write(json.dumps(project_dict, indent=4))
+        if not os.path.exists(self.path_project):
+            os.makedirs(self.path_project)
+            os.makedirs(self.path_project / 'experiments')
+        #            with open(self.path_project_json, 'w') as file:
+        #                project_dict = self._construct_project_dict()
+        #                file.write(json.dumps(project_dict, indent=4))
         else:
-            print(f'ERROR: Directory {self.project_path} already exists')
+            print(f'ERROR: Directory {self.path_project} already exists')
+
+    def save_project_json(self):
+        if self.path_project_json.exists():
+            print(f'File already exists {self.path_project_json}. Overwriting...')
+            self.path_project_json.unlink()
+        try:
+            project_json = json.dumps(self._construct_project_dict(include_materials_not_in_model=True), indent=4)
+            with open(self.path_project_json, 'w') as file:
+                file.write(project_json)
+        except Exception as exception:
+            print(exception)
 
     def _construct_project_dict(self, include_materials_not_in_model=False):
         project_dict = {}
