@@ -35,7 +35,7 @@ class Project:
         self._project_created = False
         self._project_with_experiments = False
 
-    def reset(self, only_models=False):
+    def reset(self):
         del self._models
         del self._materials
         global_object.map._clear()
@@ -43,18 +43,17 @@ class Project:
         self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
 
-        if not only_models:
-            self._info = self._defalt_info()
-            self._project_path = Path(os.path.expanduser('~'))
-            self._calculator = None
-            self._minimizer = None
-            self._experiments = None
-            self._colors = None
-            self._report = None
+        self._info = self._defalt_info()
+        self._project_path = Path(os.path.expanduser('~'))
+        self._calculator = None
+        self._minimizer = None
+        self._experiments = None
+        self._colors = None
+        self._report = None
 
-            # Project flags
-            self._project_created = False
-            self._project_with_experiments = False
+        # Project flags
+        self._project_created = False
+        self._project_with_experiments = False
 
     @property
     def project_path(self):
@@ -94,10 +93,7 @@ class Project:
         return self._project_path / 'project.json'
 
     def default_model(self):
-        self.reset(only_models=True)
-        materials = MaterialCollection()
-        for material in materials:
-            self._materials.append(material)
+        self._replace_collection(MaterialCollection(), self._materials)
 
         layers = [
             Layer(material=self._materials[0], thickness=0.0, roughness=0.0, name='Vacuum Layer'),
@@ -113,8 +109,7 @@ class Project:
         sample[0].layers[0].thickness.enabled = False
         sample[0].layers[0].roughness.enabled = False
         sample[-1].layers[-1].thickness.enabled = False
-
-        self._models.append(Model(sample=sample))
+        self._replace_collection([Model(sample=sample)], self._models)
 
     def add_material(self, material: MaterialCollection) -> None:
         if material in self._materials:
