@@ -109,7 +109,10 @@ class Project:
 
     def default(self):
         self.reset()
-        self._materials = MaterialCollection()
+        materials = MaterialCollection()
+        for material in materials:
+            self._materials.append(material)
+
         layers = [
             Layer(material=self._materials[0], thickness=0.0, roughness=0.0, name='Vacuum Layer'),
             Layer(material=self._materials[1], thickness=100.0, roughness=3.0, name='Multi-layer'),
