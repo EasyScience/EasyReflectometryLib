@@ -94,7 +94,7 @@ class Project:
         return self._project_path / 'project.json'
 
     def default_model(self):
-        self.reset()
+        self.reset(only_models=False)
         materials = MaterialCollection()
         for material in materials:
             self._materials.append(material)
