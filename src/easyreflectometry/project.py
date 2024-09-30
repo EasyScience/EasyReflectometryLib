@@ -135,9 +135,9 @@ class Project:
             print(exception)
 
     def load_project_json(self, path: Optional[Union[Path, str]] = None):
+        path = Path(path)
         if path is None:
-            path = Path(self.path_project_json)
-
+            path = self.path_project_json
         if path.exists():
             with open(path, 'r') as file:
                 project_dict = json.load(file)
