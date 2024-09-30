@@ -95,19 +95,7 @@ class Project:
     def path_project_json(self):
         return self.path_project / 'project.json'
 
-    def add_material(self, material: MaterialCollection) -> None:
-        if material in self._materials:
-            print(f'WARNING: Material {material} is already in material collection')
-        else:
-            self._materials.append(material)
-
-    def remove_material(self, index: int) -> None:
-        if self._materials[index] in self._get_materials_in_models():
-            print(f'ERROR: Material {self._materials[index]} is used in models')
-        else:
-            self._materials.pop(index)
-
-    def default(self):
+    def default_model(self):
         self.reset()
         materials = MaterialCollection()
         for material in materials:
@@ -129,6 +117,18 @@ class Project:
         sample[-1].layers[-1].thickness.enabled = False
 
         self._models.append(Model(sample=sample))
+
+    def add_material(self, material: MaterialCollection) -> None:
+        if material in self._materials:
+            print(f'WARNING: Material {material} is already in material collection')
+        else:
+            self._materials.append(material)
+
+    def remove_material(self, index: int) -> None:
+        if self._materials[index] in self._get_materials_in_models():
+            print(f'ERROR: Material {self._materials[index]} is used in models')
+        else:
+            self._materials.pop(index)
 
     def _defalt_info(self):
         return dict(

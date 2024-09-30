@@ -93,6 +93,19 @@ class TestProject:
         assert project._materials[1] == models[0].sample[0].layers[0].material
         assert project._materials[2] == models[0].sample[1].layers[0].material
 
+    def test_default_model(self):
+        # When
+        project = Project()
+
+        # Then
+        project.default_model()
+
+        # Expect
+        assert len(project._models) == 1
+        assert project._models[0].unique_name == 'Model_0'
+        assert len(project._models.data[0].sample) == 3
+        assert len(project._materials) == 3
+
     def test_minimizer(self):
         # When
         project = Project()
