@@ -10,8 +10,12 @@ from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
 
 from easyreflectometry.data.data_store import DataSet1D
+from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
+from easyreflectometry.sample import Layer
 from easyreflectometry.sample import MaterialCollection
+from easyreflectometry.sample import Multilayer
+from easyreflectometry.sample import Sample
 from easyreflectometry.sample.collections.base_collection import BaseCollection
 
 
@@ -102,6 +106,26 @@ class Project:
             print(f'ERROR: Material {self._materials[index]} is used in models')
         else:
             self._materials.pop(index)
+
+    def default(self):
+        self.reset()
+        self._materials = MaterialCollection()
+        layers = [
+            Layer(material=self._materials[0], thickness=0.0, roughness=0.0, name='Vacuum Layer'),
+            Layer(material=self._materials[1], thickness=100.0, roughness=3.0, name='Multi-layer'),
+            Layer(material=self._materials[2], thickness=0.0, roughness=1.2, name='Si Layer'),
+        ]
+        items = [
+            Multilayer(layers[0], name='Superphase'),
+            Multilayer(layers[1], name='Multi-layer'),
+            Multilayer(layers[2], name='Subphase'),
+        ]
+        sample = Sample(*items)
+        sample[0].layers[0].thickness.enabled = False
+        sample[0].layers[0].roughness.enabled = False
+        sample[-1].layers[-1].thickness.enabled = False
+
+        self._models.append(Model(sample=sample))
 
     def _defalt_info(self):
         return dict(
