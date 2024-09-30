@@ -60,17 +60,57 @@ class TestProject:
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
-        assert project._project_path == Path(os.path.expanduser('~'))
         assert project._models.unique_name == 'project_models'
         assert len(project._models) == 0
         assert project._materials.unique_name == 'project_materials'
         assert len(project._materials) == 0
+
+        assert project._project_path == Path(os.path.expanduser('~'))
         assert project._calculator is None
         assert project._minimizer is None
         assert project._experiments is None
         assert project._report is None
         assert project._project_created is False
         assert project._project_with_experiments is False
+        assert global_object.map.vertices() == ['project_models', 'project_materials']
+
+    def test_reset_only_models(self):
+        # When
+        project = Project()
+        project._info['name'] = 'Test Project'
+        project._materials.append(Material())
+        project._models.append(Model())
+        project._calculator = 'calculator'
+        project._minimizer = 'minimizer'
+        project._experiments = 'experiments'
+        project._report = 'report'
+        project._project_created = True
+        project._project_with_experiments = True
+        project._project_path = 'project_path'
+
+        # Then
+        project.reset(only_models=True)
+
+        # Expect
+        assert project._info == {
+            'name': 'Test Project',
+            'short_description': 'reflectometry, 1D',
+            'samples': 'None',
+            'experiments': 'None',
+            'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
+        }
+        assert project._models.unique_name == 'project_models'
+        assert len(project._models) == 0
+        assert project._materials.unique_name == 'project_materials'
+        assert len(project._materials) == 0
+
+        assert project._project_path == 'project_path'
+        assert project._calculator == 'calculator'
+        assert project._minimizer == 'minimizer'
+        assert project._experiments == 'experiments'
+        assert project._report == 'report'
+        assert project._project_created is True
+        assert project._project_with_experiments is True
         assert global_object.map.vertices() == ['project_models', 'project_materials']
 
     def test_models(self):
