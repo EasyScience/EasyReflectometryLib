@@ -22,7 +22,7 @@ from easyreflectometry.sample.collections.base_collection import BaseCollection
 class Project:
     def __init__(self):
         self._info = self._defalt_info()
-        self._current_path = Path(os.path.expanduser('~'))
+        self._project_path = Path(os.path.expanduser('~'))
         self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
         self._calculator = None
@@ -55,12 +55,12 @@ class Project:
         self._project_with_experiments = False
 
     @property
-    def current_path(self):
-        return self._current_path
+    def project_path(self):
+        return self._project_path
 
-    @current_path.setter
-    def current_path(self, path: Union[Path, str]):
-        self._current_path = Path(path)
+    @project_path.setter
+    def project_path(self, path: Union[Path, str]):
+        self._project_path = Path(path)
 
     @property
     def models(self) -> ModelCollection:
@@ -87,13 +87,13 @@ class Project:
     def experiments(self, experiments: List[DataSet1D]) -> None:
         self._experiments = experiments
 
-    @property
-    def path_project(self):
-        return self._current_path / self._info['name']
+    # @property
+    # def path_project(self):
+    #     return self._current_path / self._info['name']
 
     @property
-    def path_project_json(self):
-        return self.path_project / 'project.json'
+    def path_json(self):
+        return self._project_path / 'project.json'
 
     def default_model(self):
         self.reset()
@@ -140,23 +140,23 @@ class Project:
         )
 
     def create_project_dir(self):
-        if not os.path.exists(self.path_project):
-            os.makedirs(self.path_project)
-            os.makedirs(self.path_project / 'experiments')
+        if not os.path.exists(self._project_path):
+            os.makedirs(self._project_path)
+            os.makedirs(self._project_path / 'experiments')
         #            with open(self.path_project_json, 'w') as file:
         #                project_dict = self._construct_project_dict()
         #                file.write(json.dumps(project_dict, indent=4))
         else:
-            print(f'ERROR: Directory {self.path_project} already exists')
+            print(f'ERROR: Directory {self._project_path} already exists')
 
     def save_project_json(self, overwrite=False):
-        if self.path_project_json.exists() and not overwrite:
-            print(f'File already exists {self.path_project_json}. Overwriting...')
-            self.path_project_json.unlink()
+        if self.path_json.exists() and not overwrite:
+            print(f'File already exists {self.path_json}. Overwriting...')
+            self.path_json.unlink()
         try:
             project_json = json.dumps(self.as_dict(include_materials_not_in_model=True), indent=4)
-            self.path_project_json.parent.mkdir(exist_ok=True, parents=True)
-            with open(self.path_project_json, 'w') as file:
+            self.path_json.parent.mkdir(exist_ok=True, parents=True)
+            with open(self.path_json, 'w') as file:
                 file.write(project_json)
         except Exception as exception:
             print(exception)
@@ -164,7 +164,7 @@ class Project:
     def load_project_json(self, path: Optional[Union[Path, str]] = None):
         path = Path(path)
         if path is None:
-            path = self.path_project_json
+            path = self.path_json
         if path.exists():
             with open(path, 'r') as file:
                 project_dict = json.load(file)

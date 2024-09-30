@@ -25,7 +25,7 @@ class TestProject:
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
-        assert project._current_path == Path(os.path.expanduser('~'))
+        assert project._project_path == Path(os.path.expanduser('~'))
         assert len(project._materials) == 0
         assert len(project._models) == 0
         assert project._calculator is None
@@ -59,7 +59,7 @@ class TestProject:
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
-        assert project._current_path == Path(os.path.expanduser('~'))
+        assert project._project_path == Path(os.path.expanduser('~'))
         assert project._models.unique_name == 'project_models'
         assert len(project._models) == 0
         assert project._materials.unique_name == 'project_materials'
@@ -126,21 +126,22 @@ class TestProject:
         # Expect
         assert project.experiments == 'experiments'
 
-    def test_path_project(self):
+    # def test_path_project(self):
+    #     # When
+    #     project = Project()
+    #     project._info['name'] = 'Test Project'
+
+    #     # Then Expect
+    #     assert project.path_project == Path(os.path.expanduser('~')) / 'Test Project'
+
+    def test_path_json(self, tmp_path):
         # When
         project = Project()
-        project._info['name'] = 'Test Project'
+        project.project_path = tmp_path
+        #        project._info['name'] = 'Test Project'
 
         # Then Expect
-        assert project.path_project == Path(os.path.expanduser('~')) / 'Test Project'
-
-    def test_path_project_json(self):
-        # When
-        project = Project()
-        project._info['name'] = 'Test Project'
-
-        # Then Expect
-        assert project.path_project_json == Path(os.path.expanduser('~')) / 'Test Project' / 'project.json'
+        assert project.path_json == Path(tmp_path) / 'project.json'
 
     def test_add_material(self):
         # When
@@ -330,7 +331,7 @@ class TestProject:
         project.save_project_json(overwrite=True)
 
         # Then
-        project_path = project.path_project_json
+        project_path = project.path_json
 
         # Expect
         assert project_path.exists()
@@ -350,9 +351,9 @@ class TestProject:
         new_project.current_path = tmp_path
 
         # Then
-        new_project.load_project_json(new_project._current_path / 'Test Project' / 'project.json')
+        new_project.load_project_json(new_project._project_path / 'project.json')
         # Do it twice to ensure that potential global objects don't collide
-        new_project.load_project_json(new_project._current_path / 'Test Project' / 'project.json')
+        new_project.load_project_json(new_project._project_path / 'project.json')
 
         # Expect
         assert len(new_project._models) == 1
