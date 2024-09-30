@@ -87,10 +87,6 @@ class Project:
     def experiments(self, experiments: List[DataSet1D]) -> None:
         self._experiments = experiments
 
-    # @property
-    # def path_project(self):
-    #     return self._current_path / self._info['name']
-
     @property
     def path_json(self):
         return self._project_path / 'project.json'
@@ -143,9 +139,6 @@ class Project:
         if not os.path.exists(self._project_path):
             os.makedirs(self._project_path)
             os.makedirs(self._project_path / 'experiments')
-        #            with open(self.path_project_json, 'w') as file:
-        #                project_dict = self._construct_project_dict()
-        #                file.write(json.dumps(project_dict, indent=4))
         else:
             print(f'ERROR: Directory {self._project_path} already exists')
 
