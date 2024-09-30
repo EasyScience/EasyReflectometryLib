@@ -4,7 +4,9 @@ import os
 from pathlib import Path
 from typing import List
 from typing import Optional
+from typing import Union
 
+from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
 
 from easyreflectometry.data.data_store import DataSet1D
@@ -30,10 +32,12 @@ class Project:
         self._project_with_experiments = False
 
     def reset(self):
-        for i in range(len(self._models)):
-            self._models.pop(0)
-        for i in range(len(self._materials)):
-            self._materials.pop(0)
+        del self._models
+        del self._materials
+        global_object.map._clear()
+
+        self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
+        self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
 
         self._info = self._defalt_info()
         self._calculator = None
@@ -45,6 +49,14 @@ class Project:
         # Project flags
         self._project_created = False
         self._project_with_experiments = False
+
+    @property
+    def current_path(self):
+        return self._current_path
+
+    @current_path.setter
+    def current_path(self, path: Union[Path, str]):
+        self._current_path = Path(path)
 
     @property
     def models(self) -> ModelCollection:
@@ -110,12 +122,13 @@ class Project:
         else:
             print(f'ERROR: Directory {self.path_project} already exists')
 
-    def save_project_json(self):
-        if self.path_project_json.exists():
+    def save_project_json(self, overwrite=False):
+        if self.path_project_json.exists() and not overwrite:
             print(f'File already exists {self.path_project_json}. Overwriting...')
             self.path_project_json.unlink()
         try:
-            project_json = json.dumps(self._construct_project_dict(include_materials_not_in_model=True), indent=4)
+            project_json = json.dumps(self.as_dict(include_materials_not_in_model=True), indent=4)
+            self.path_project_json.parent.mkdir(exist_ok=True, parents=True)
             with open(self.path_project_json, 'w') as file:
                 file.write(project_json)
         except Exception as exception:
@@ -128,11 +141,12 @@ class Project:
         if path.exists():
             with open(path, 'r') as file:
                 project_dict = json.load(file)
-                self._extract_project_dict(project_dict)
+                self.reset()
+                self.from_dict(project_dict)
         else:
             print(f'ERROR: File {path} does not exist')
 
-    def _construct_project_dict(self, include_materials_not_in_model=False):
+    def as_dict(self, include_materials_not_in_model=False):
         project_dict = {}
         project_dict['info'] = self._info
         project_dict['project_with_experiments'] = self._project_with_experiments
@@ -140,9 +154,9 @@ class Project:
         if self._models is not None:
             project_dict['models'] = self._models.as_dict(skip=['interface'])
         if include_materials_not_in_model:
-            self._add_materials_not_in_model_dict(project_dict)
+            self._as_dict_add_materials_not_in_model_dict(project_dict)
         if self._project_with_experiments:
-            self._add_experiments_to_dict(project_dict)
+            self._as_dict_add_experiments(project_dict)
         if self._minimizer is not None:
             project_dict['minimizer'] = self._minimizer.name
         if self._calculator is not None:
@@ -151,7 +165,7 @@ class Project:
             project_dict['colors'] = self._colors
         return project_dict
 
-    def _add_materials_not_in_model_dict(self, project_dict: dict):
+    def _as_dict_add_materials_not_in_model_dict(self, project_dict: dict):
         materials_not_in_model = []
         for material in self._materials:
             if material not in self._get_materials_in_models():
@@ -159,7 +173,7 @@ class Project:
         if len(materials_not_in_model) > 0:
             project_dict['materials_not_in_model'] = MaterialCollection(materials_not_in_model).as_dict(skip=['interface'])
 
-    def _add_experiments_to_dict(self, project_dict: dict):
+    def _as_dict_add_experiments(self, project_dict: dict):
         project_dict['experiments'] = []
         project_dict['experiments_models'] = []
         project_dict['experiments_names'] = []
@@ -171,7 +185,7 @@ class Project:
             project_dict['experiments_models'].append(experiment.model.name)
             project_dict['experiments_names'].append(experiment.name)
 
-    def _extract_project_dict(self, project_dict: dict):
+    def from_dict(self, project_dict: dict):
         keys = list(project_dict.keys())
         self._info = project_dict['info']
         self._project_with_experiments = project_dict['project_with_experiments']
@@ -189,7 +203,7 @@ class Project:
         else:
             self._minimizer = None
         if 'experiments' in keys:
-            self._experiments = self._extract_experiments_from_dict(project_dict)
+            self._experiments = self._from_dict_extract_experiments(project_dict)
         else:
             self._experiments = None
         if 'calculator' in keys:
@@ -197,7 +211,7 @@ class Project:
         else:
             self._calculator = None
 
-    def _extract_experiments_from_dict(self, project_dict: dict):
+    def _from_dict_extract_experiments(self, project_dict: dict):
         self._experiments: List[DataSet1D] = []
 
         for i in range(len(project_dict['experiments'])):

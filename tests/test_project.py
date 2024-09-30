@@ -70,6 +70,7 @@ class TestProject:
         assert project._report is None
         assert project._project_created is False
         assert project._project_with_experiments is False
+        assert global_object.map.vertices() == ['project_models', 'project_materials']
 
     def test_models(self):
         # When
@@ -112,21 +113,21 @@ class TestProject:
         # Expect
         assert project.experiments == 'experiments'
 
-    def test_project_path(self):
+    def test_path_project(self):
         # When
         project = Project()
         project._info['name'] = 'Test Project'
 
         # Then Expect
-        assert project.project_path == Path(os.path.expanduser('~')) / 'Test Project'
+        assert project.path_project == Path(os.path.expanduser('~')) / 'Test Project'
 
-    def test_project_json(self):
+    def test_path_project_json(self):
         # When
         project = Project()
         project._info['name'] = 'Test Project'
 
         # Then Expect
-        assert project.project_json == Path(os.path.expanduser('~')) / 'Test Project' / 'project.json'
+        assert project.path_project_json == Path(os.path.expanduser('~')) / 'Test Project' / 'project.json'
 
     def test_add_material(self):
         # When
@@ -181,12 +182,12 @@ class TestProject:
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
 
-    def test_construct_project_dict(self):
+    def test_as_dict(self):
         # When
         project = Project()
 
         # Then
-        project_dict = project._construct_project_dict()
+        project_dict = project.as_dict()
 
         # Expect
         keys = list(project_dict.keys())
@@ -208,21 +209,21 @@ class TestProject:
         assert project_dict['project_created'] is False
         assert project_dict['project_with_experiments'] is False
 
-    def test_construct_project_dict_models(self):
+    def test_as_dict_models(self):
         # When
         project = Project()
         models = ModelCollection(Model())
         project.models = models
 
         # Then
-        project_dict = project._construct_project_dict()
+        project_dict = project.as_dict()
 
         # Expect
         models_dict = models.as_dict(skip=['interface'])
         models_dict['unique_name'] = 'project_models'
         assert project_dict['models'] == models_dict
 
-    def test_construct_project_dict_materials_not_in_model(self):
+    def test_as_dict_materials_not_in_model(self):
         # When
         project = Project()
         models = ModelCollection(Model())
@@ -231,19 +232,19 @@ class TestProject:
         project.add_material(material)
 
         # Then
-        project_dict = project._construct_project_dict(include_materials_not_in_model=True)
+        project_dict = project.as_dict(include_materials_not_in_model=True)
 
         # Expect
         assert project_dict['materials_not_in_model']['data'][0] == material.as_dict(skip=['interface'])
 
-    def test_construct_project_dict_minimizer(self):
+    def test_as_dict_minimizer(self):
         # When
         project = Project()
         minimizer = AvailableMinimizers.LMFit
         project.minimizer = minimizer
 
         # Then
-        project_dict = project._construct_project_dict()
+        project_dict = project.as_dict()
 
         # Expect
         assert project_dict['minimizer'] == 'LMFit'
@@ -288,7 +289,7 @@ class TestProject:
         project.add_material(material)
         minimizer = AvailableMinimizers.LMFit
         project.minimizer = minimizer
-        project_dict = project._construct_project_dict(include_materials_not_in_model=True)
+        project_dict = project.as_dict(include_materials_not_in_model=True)
         project_materials_dict = project._materials.as_dict()
 
         del material
@@ -296,8 +297,8 @@ class TestProject:
 
         # Then
         new_project = Project()
-        new_project._extract_project_dict(project_dict)
-        new_project_dict = new_project._construct_project_dict(include_materials_not_in_model=True)
+        new_project.from_dict(project_dict)
+        new_project_dict = new_project.as_dict(include_materials_not_in_model=True)
         new_project_materials_dict = new_project._materials.as_dict()
 
         # Expect
@@ -306,12 +307,14 @@ class TestProject:
             assert project_dict[key] == new_project_dict[key]
         assert project_materials_dict == new_project_materials_dict
 
-    def test_save_project(self):
+    def test_save_project(self, tmp_path):
         # When
+        global_object.map._clear()
         project = Project()
+        project.current_path = tmp_path
         project._models.append(Model())
-        project._info['name'] = 'Test_Project'
-        project.save_project_json()
+        project._info['name'] = 'Test Project'
+        project.save_project_json(overwrite=True)
 
         # Then
         project_path = project.path_project_json
@@ -319,19 +322,26 @@ class TestProject:
         # Expect
         assert project_path.exists()
 
-    def test_load_project(self):
+    def test_load_project(self, tmp_path):
         # When
+        global_object.map._clear()
         project = Project()
+        project.current_path = tmp_path
         project._models.append(Model())
-        project._info['name'] = 'Test_Project'
+        project._info['name'] = 'Test Project'
         project.save_project_json()
+        project_dict = project.as_dict()
 
         global_object.map._clear()
         new_project = Project()
+        new_project.current_path = tmp_path
 
         # Then
-        new_project.load_project_json(new_project._current_path / 'Test_Project' / 'project.json')
+        new_project.load_project_json(new_project._current_path / 'Test Project' / 'project.json')
+        # Do it twice to ensure that potential global objects don't collide
+        new_project.load_project_json(new_project._current_path / 'Test Project' / 'project.json')
 
         # Expect
         assert len(new_project._models) == 1
-        assert new_project._info['name'] == 'Test_Project'
+        assert new_project._info['name'] == 'Test Project'
+        assert new_project.as_dict() == project_dict
