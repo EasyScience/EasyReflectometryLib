@@ -134,9 +134,9 @@ class Project:
         except Exception as exception:
             print(exception)
 
-    def load_project_json(self, path: Optional[Path] = None):
+    def load_project_json(self, path: Optional[Union[Path, str]] = None):
         if path is None:
-            path = self.path_project_json
+            path = Path(self.path_project_json)
 
         if path.exists():
             with open(path, 'r') as file:
