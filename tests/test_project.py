@@ -129,14 +129,6 @@ class TestProject:
         # Expect
         assert project.experiments == 'experiments'
 
-    # def test_path_project(self):
-    #     # When
-    #     project = Project()
-    #     project._info['name'] = 'Test Project'
-
-    #     # Then Expect
-    #     assert project.path_project == Path(os.path.expanduser('~')) / 'Test Project'
-
     def test_path_json(self, tmp_path):
         # When
         project = Project()
