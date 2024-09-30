@@ -47,6 +47,7 @@ class TestProject:
         project._report = 'report'
         project._project_created = True
         project._project_with_experiments = True
+        project._project_path = 'project_path'
 
         # Then
         project.reset()

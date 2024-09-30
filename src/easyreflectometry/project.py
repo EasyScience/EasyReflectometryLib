@@ -44,6 +44,7 @@ class Project:
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
 
         self._info = self._defalt_info()
+        self._project_path = Path(os.path.expanduser('~'))
         self._calculator = None
         self._minimizer = None
         self._experiments = None
