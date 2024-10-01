@@ -30,6 +30,7 @@ class SurfactantLayer(BaseAssembly):
         tail_layer: Optional[LayerAreaPerMolecule] = None,
         head_layer: Optional[LayerAreaPerMolecule] = None,
         name: str = 'EasySurfactantLayer',
+        unique_name: Optional[str] = None,
         constrain_area_per_molecule: bool = False,
         conformal_roughness: bool = False,
         interface=None,
@@ -68,6 +69,7 @@ class SurfactantLayer(BaseAssembly):
         surfactant = LayerCollection(tail_layer, head_layer, name=name)
         super().__init__(
             name=name,
+            unique_name=unique_name,
             type='Surfactant Layer',
             layers=surfactant,
             interface=interface,

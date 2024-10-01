@@ -12,7 +12,13 @@ from ..assemblies.surfactant_layer import SurfactantLayer
 from ..elements.layers.layer import Layer
 from .base_collection import BaseCollection
 
-DEFAULT_COLLECTION = [Multilayer(), Multilayer()]
+
+# Needs to be a function, elements are added to the global_object.map
+def DEFAULT_ELEMENTS(interface):
+    return (
+        Multilayer(interface=interface),
+        Multilayer(interface=interface),
+    )
 
 
 class Sample(BaseCollection):
@@ -23,6 +29,7 @@ class Sample(BaseCollection):
         *assemblies: Optional[List[BaseAssembly]],
         name: str = 'EasySample',
         interface=None,
+        unique_name: Optional[str] = None,
         populate_if_none: bool = True,
         **kwargs,
     ):
@@ -34,17 +41,14 @@ class Sample(BaseCollection):
         """
         if not assemblies:
             if populate_if_none:
-                assemblies = self._make_default_collection(DEFAULT_COLLECTION, interface)
+                assemblies = DEFAULT_ELEMENTS(interface)
             else:
                 assemblies = []
-        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
-        # Else collisions might occur in global_object.map
-        self.populate_if_none = False
 
         for assembly in assemblies:
             if not issubclass(type(assembly), BaseAssembly):
                 raise ValueError('The elements must be an Assembly.')
-        super().__init__(name, interface, *assemblies, **kwargs)
+        super().__init__(name, interface, unique_name=unique_name, *assemblies, **kwargs)
 
     def add_assembly(self, assembly: Optional[BaseAssembly] = None):
         """Add an assembly to the sample.

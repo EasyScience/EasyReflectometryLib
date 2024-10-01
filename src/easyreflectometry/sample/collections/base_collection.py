@@ -1,4 +1,3 @@
-from copy import deepcopy
 from typing import List
 from typing import Optional
 
@@ -13,10 +12,15 @@ class BaseCollection(EasyBaseCollection):
         name: str,
         interface,
         *args,
+        unique_name: Optional[str] = None,
         **kwargs,
     ):
-        super().__init__(name, *args, **kwargs)
+        super().__init__(name, unique_name=unique_name, *args, **kwargs)
         self.interface = interface
+
+        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
+        # Else collisions might occur in global_object.map
+        self.populate_if_none = False
 
     def __repr__(self) -> str:
         """
@@ -42,12 +46,6 @@ class BaseCollection(EasyBaseCollection):
         """
         return {self.name: [i._dict_repr for i in self]}
 
-    def _make_default_collection(self, default_collection: List, interface) -> List:
-        elements = deepcopy(default_collection)
-        for element in elements:
-            element.interface = interface
-        return elements
-
     def as_dict(self, skip: Optional[List[str]] = None) -> dict:
         """
         Create a dictionary representation of the collection.
@@ -60,4 +58,8 @@ class BaseCollection(EasyBaseCollection):
         this_dict['data'] = []
         for collection_element in self:
             this_dict['data'].append(collection_element.as_dict(skip=skip))
+        this_dict['populate_if_none'] = self.populate_if_none
         return this_dict
+
+    def __deepcopy__(self, memo):
+        return self.from_dict(self.as_dict(skip=['unique_name']))

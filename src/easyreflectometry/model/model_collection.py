@@ -9,7 +9,10 @@ from easyreflectometry.sample.collections.base_collection import BaseCollection
 
 from .model import Model
 
-DEFAULT_COLLECTION = [Model()]
+
+# Needs to be a function, elements are added to the global_object.map
+def DEFAULT_ELEMENTS(interface):
+    return (Model(interface),)
 
 
 class ModelCollection(BaseCollection):
@@ -23,7 +26,7 @@ class ModelCollection(BaseCollection):
     ):
         if not models:
             if populate_if_none:
-                models = self._make_default_collection(DEFAULT_COLLECTION, interface)
+                models = DEFAULT_ELEMENTS(interface)
             else:
                 models = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict

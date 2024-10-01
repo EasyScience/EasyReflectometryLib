@@ -5,11 +5,14 @@ from typing import Tuple
 from ..elements.materials.material import Material
 from .base_collection import BaseCollection
 
-DEFAULT_COLLECTION = (
-    Material(sld=0.0, isld=0.0, name='Air'),
-    Material(sld=6.335, isld=0.0, name='D2O'),
-    Material(sld=2.074, isld=0.0, name='Si'),
-)
+
+# Needs to be a function, elements are added to the global_object.map
+def DEFAULT_ELEMENTS(interface):
+    return (
+        Material(sld=0.0, isld=0.0, name='Air', interface=interface),
+        Material(sld=6.335, isld=0.0, name='D2O', interface=interface),
+        Material(sld=2.074, isld=0.0, name='Si', interface=interface),
+    )
 
 
 class MaterialCollection(BaseCollection):
@@ -18,21 +21,20 @@ class MaterialCollection(BaseCollection):
         *materials: Tuple[Material],
         name: str = 'EasyMaterials',
         interface=None,
+        unique_name: Optional[str] = None,
         populate_if_none: bool = True,
         **kwargs,
     ):
         if not materials:  # Empty tuple if no materials are provided
             if populate_if_none:
-                materials = self._make_default_collection(DEFAULT_COLLECTION, interface)
+                materials = DEFAULT_ELEMENTS(interface)
             else:
                 materials = []
-        # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
-        # Else collisions might occur in global_object.map
-        self.populate_if_none = False
 
         super().__init__(
             name,
             interface,
+            unique_name=unique_name,
             *materials,
             **kwargs,
         )

@@ -63,19 +63,3 @@ class TestBaseCollection:
         assert p.as_dict()['name'] == 'name'
         assert len(p.as_dict()['data']) == 1
         assert p.as_dict()['data'][0]['name'] == 'layer'
-
-    def test_make_default_collection(self):
-        # When
-        elem_1 = Layer(name='layer_1')
-        mock_interface_1 = MagicMock()
-        elem_2 = Layer(name='layer_2')
-        mock_interface_2 = MagicMock()
-        p = BaseCollection('name', mock_interface_1, elem_1)
-
-        # Then
-        default_collection = p._make_default_collection([elem_2], mock_interface_2)
-
-        # Expect
-        assert default_collection[0] != elem_2
-        assert default_collection[0].name == 'layer_2'
-        assert default_collection[0].interface == mock_interface_2
