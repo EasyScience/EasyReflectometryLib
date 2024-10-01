@@ -179,7 +179,7 @@ class TestProject:
         project = Project()
 
         # Then
-        info = project._defalt_info()
+        info = project._default_info()
 
         # Expect
         assert info == {

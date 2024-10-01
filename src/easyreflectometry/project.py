@@ -21,7 +21,7 @@ from easyreflectometry.sample.collections.base_collection import BaseCollection
 
 class Project:
     def __init__(self):
-        self._info = self._defalt_info()
+        self._info = self._default_info()
         self._path = Path(os.path.expanduser('~'))
         self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
@@ -43,7 +43,7 @@ class Project:
         self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
 
-        self._info = self._defalt_info()
+        self._info = self._default_info()
         self._path = Path(os.path.expanduser('~'))
         self._calculator = None
         self._minimizer = None
@@ -123,7 +123,7 @@ class Project:
         else:
             self._materials.pop(index)
 
-    def _defalt_info(self):
+    def _default_info(self):
         return dict(
             name='Example Project',
             short_description='reflectometry, 1D',
