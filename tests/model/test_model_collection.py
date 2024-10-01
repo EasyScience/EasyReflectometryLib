@@ -15,6 +15,12 @@ class TestModelCollection:
         assert len(collection) == 1
         assert collection[0].name == 'EasyModel'
 
+    def test_dont_populate(self):
+        p = ModelCollection(populate_if_none=False)
+        assert p.name == 'EasyModels'
+        assert p.interface is None
+        assert len(p) == 0
+
     def test_from_pars(self):
         # When
         model_1 = Model(name='Model1')

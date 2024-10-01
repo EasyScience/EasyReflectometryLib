@@ -18,6 +18,12 @@ class TestMaterialCollection:
         assert p[1].name == 'D2O'
         assert p[2].name == 'Si'
 
+    def test_dont_populate(self):
+        p = MaterialCollection(populate_if_none=False)
+        assert p.name == 'EasyMaterials'
+        assert p.interface is None
+        assert len(p) == 0
+
     def test_from_pars(self):
         m = Material(6.908, -0.278, 'Boron')
         k = Material(0.487, 0.000, 'Potassium')

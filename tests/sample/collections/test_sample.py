@@ -31,6 +31,12 @@ class TestSample:
         assert_equal(p[0].name, 'EasyMultilayer')
         assert_equal(p[1].name, 'EasyMultilayer')
 
+    def test_dont_populate(self):
+        p = Sample(populate_if_none=False)
+        assert p.name == 'EasySample'
+        assert p.interface is None
+        assert len(p) == 0
+
     def test_add_assembly(self):
         # When
         p = Sample()
