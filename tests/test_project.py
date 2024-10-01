@@ -25,7 +25,7 @@ class TestProject:
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
-        assert project._project_path == Path(os.path.expanduser('~'))
+        assert project._path == Path(os.path.expanduser('~'))
         assert len(project._materials) == 0
         assert len(project._models) == 0
         assert project._calculator is None
@@ -47,7 +47,7 @@ class TestProject:
         project._report = 'report'
         project._project_created = True
         project._project_with_experiments = True
-        project._project_path = 'project_path'
+        project._path = 'project_path'
 
         # Then
         project.reset()
@@ -65,7 +65,7 @@ class TestProject:
         assert project._materials.unique_name == 'project_materials'
         assert len(project._materials) == 0
 
-        assert project._project_path == Path(os.path.expanduser('~'))
+        assert project._path == Path(os.path.expanduser('~'))
         assert project._calculator is None
         assert project._minimizer is None
         assert project._experiments is None
@@ -132,8 +132,7 @@ class TestProject:
     def test_path_json(self, tmp_path):
         # When
         project = Project()
-        project.project_path = tmp_path
-        #        project._info['name'] = 'Test Project'
+        project.path = tmp_path
 
         # Then Expect
         assert project.path_json == Path(tmp_path) / 'project.json'
@@ -346,9 +345,9 @@ class TestProject:
         new_project.current_path = tmp_path
 
         # Then
-        new_project.load_project_json(new_project._project_path / 'project.json')
+        new_project.load_project_json(new_project._path / 'project.json')
         # Do it twice to ensure that potential global objects don't collide
-        new_project.load_project_json(new_project._project_path / 'project.json')
+        new_project.load_project_json(new_project._path / 'project.json')
 
         # Expect
         assert len(new_project._models) == 1
