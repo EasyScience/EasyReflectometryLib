@@ -160,6 +160,7 @@ class Project:
                 project_dict = json.load(file)
                 self.reset()
                 self.from_dict(project_dict)
+            self._path = path.parent
         else:
             print(f'ERROR: File {path} does not exist')
 
