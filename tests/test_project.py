@@ -342,7 +342,7 @@ class TestProject:
         project.save_as_json(overwrite=True)
 
         # Expect
-        assert file_info != project.path_json.stat()
+        assert str(file_info) != str(project.path_json.stat())
 
     def test_save_as_json_dont_overwrite(self, tmp_path):
         # When
@@ -358,7 +358,7 @@ class TestProject:
         project.save_as_json()
 
         # Expect
-        assert file_info == project.path_json.stat()
+        assert str(file_info) == str(project.path_json.stat())
 
     def test_load_from_json(self, tmp_path):
         # When
