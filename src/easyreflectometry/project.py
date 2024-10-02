@@ -140,7 +140,7 @@ class Project:
             os.makedirs(self.path)
             os.makedirs(self.path / 'experiments')
             self._created = True
-            self._info = self._default_info()
+            self._timestamp_modification()
         else:
             print(f'ERROR: Directory {self.path} already exists')
 
@@ -264,3 +264,6 @@ class Project:
 
         for element in src_collection:
             dst_collection.append(element)
+
+    def _timestamp_modification(self):
+        self._info['modified'] = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')

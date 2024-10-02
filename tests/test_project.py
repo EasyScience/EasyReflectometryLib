@@ -356,17 +356,23 @@ class TestProject:
 
     def test_create(self, tmp_path):
         # When
-        #        global_object.map._clear()
         project = Project()
         project.set_root_path(tmp_path)
-        #        project._models.append(Model())
-        #        project._info['name'] = 'Test Project'
+        project._info['modified'] = 'modified'
+        project._info['name'] = 'Test Project'
 
         # Then
         project.create()
 
         # Expect
-        assert project.path == tmp_path / 'Example Project'
+        assert project.path == tmp_path / 'Test Project'
         assert project.path.exists()
         assert (project.path / 'experiments').exists()
         assert project.created is True
+        assert project._info == {
+            'name': 'Test Project',
+            'short_description': 'reflectometry, 1D',
+            'samples': 'None',
+            'experiments': 'None',
+            'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
+        }
