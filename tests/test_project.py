@@ -333,12 +333,12 @@ class TestProject:
         global_object.map._clear()
         project = Project()
         project.set_path_project_parent(tmp_path)
-        project._models.append(Model())
         project.save_as_json()
         file_info = project.path_json.stat()
 
         # Then
         project._info['short_description'] = 'short_description'
+        project._models.append(Model())
         project.save_as_json(overwrite=True)
 
         # Expect
@@ -349,12 +349,12 @@ class TestProject:
         global_object.map._clear()
         project = Project()
         project.set_path_project_parent(tmp_path)
-        project._models.append(Model())
         project.save_as_json()
         file_info = project.path_json.stat()
 
         # Then
         project._info['short_description'] = 'short_description'
+        project._models.append(Model())
         project.save_as_json()
 
         # Expect
