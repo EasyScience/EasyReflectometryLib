@@ -22,7 +22,7 @@ from easyreflectometry.sample.collections.base_collection import BaseCollection
 class Project:
     def __init__(self):
         self._info = self._default_info()
-        self._root_path = Path(os.path.expanduser('~'))
+        self._path_project_parent = Path(os.path.expanduser('~'))
         self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
         self._calculator = None
@@ -44,7 +44,7 @@ class Project:
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
 
         self._info = self._default_info()
-        self._root_path = Path(os.path.expanduser('~'))
+        self._path_project_parent = Path(os.path.expanduser('~'))
         self._calculator = None
         self._minimizer = None
         self._experiments = None
@@ -61,10 +61,10 @@ class Project:
 
     @property
     def path(self):
-        return self._root_path / self._info['name']
+        return self._path_project_parent / self._info['name']
 
-    def set_root_path(self, path: Union[Path, str]):
-        self._root_path = Path(path)
+    def set_path_project_parent(self, path: Union[Path, str]):
+        self._path_project_parent = Path(path)
 
     @property
     def models(self) -> ModelCollection:
@@ -145,13 +145,13 @@ class Project:
             print(f'ERROR: Directory {self.path} already exists')
 
     def save_as_json(self, overwrite=False):
-        if self.path_json.exists() and not overwrite:
+        if self.path_json.exists() and overwrite:
             print(f'File already exists {self.path_json}. Overwriting...')
             self.path_json.unlink()
         try:
             project_json = json.dumps(self.as_dict(include_materials_not_in_model=True), indent=4)
             self.path_json.parent.mkdir(exist_ok=True, parents=True)
-            with open(self.path_json, 'w') as file:
+            with open(self.path_json, mode='x') as file:
                 file.write(project_json)
         except Exception as exception:
             print(exception)
@@ -165,7 +165,7 @@ class Project:
                 project_dict = json.load(file)
                 self.reset()
                 self.from_dict(project_dict)
-            self._root_path = path.parents[1]
+            self._path_project_parent = path.parents[1]
             self._created = True
         else:
             print(f'ERROR: File {path} does not exist')
