@@ -144,7 +144,7 @@ class Project:
         else:
             print(f'ERROR: Directory {self.path} already exists')
 
-    def save_project_json(self, overwrite=False):
+    def save_as_json(self, overwrite=False):
         if self.path_json.exists() and not overwrite:
             print(f'File already exists {self.path_json}. Overwriting...')
             self.path_json.unlink()
@@ -156,7 +156,7 @@ class Project:
         except Exception as exception:
             print(exception)
 
-    def load_project_json(self, path: Optional[Union[Path, str]] = None):
+    def load_from_json(self, path: Optional[Union[Path, str]] = None):
         path = Path(path)
         if path is None:
             path = self.path_json

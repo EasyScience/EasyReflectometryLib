@@ -322,7 +322,7 @@ class TestProject:
         project.set_root_path(tmp_path)
         project._models.append(Model())
         project._info['name'] = 'Test Project'
-        project.save_project_json(overwrite=True)
+        project.save_as_json(overwrite=True)
 
         # Then
         project_path = project.path_json
@@ -337,16 +337,16 @@ class TestProject:
         project.set_root_path(tmp_path)
         project._models.append(Model())
         project._info['name'] = 'Test Project'
-        project.save_project_json()
+        project.save_as_json()
         project_dict = project.as_dict()
 
         global_object.map._clear()
         new_project = Project()
 
         # Then
-        new_project.load_project_json(tmp_path / 'Test Project' / 'project.json')
+        new_project.load_from_json(tmp_path / 'Test Project' / 'project.json')
         # Do it twice to ensure that potential global objects don't collide
-        new_project.load_project_json(tmp_path / 'Test Project' / 'project.json')
+        new_project.load_from_json(tmp_path / 'Test Project' / 'project.json')
 
         # Expect
         assert len(new_project._models) == 1
