@@ -166,14 +166,14 @@ class Project:
                 self.reset()
                 self.from_dict(project_dict)
             self._root_path = path.parents[1]
+            self._created = True
         else:
             print(f'ERROR: File {path} does not exist')
 
     def as_dict(self, include_materials_not_in_model=False):
         project_dict = {}
         project_dict['info'] = self._info
-        project_dict['project_with_experiments'] = self._with_experiments
-        project_dict['project_created'] = self._created
+        project_dict['with_experiments'] = self._with_experiments
         if self._models is not None:
             project_dict['models'] = self._models.as_dict(skip=['interface'])
         if include_materials_not_in_model:
@@ -211,7 +211,7 @@ class Project:
     def from_dict(self, project_dict: dict):
         keys = list(project_dict.keys())
         self._info = project_dict['info']
-        self._with_experiments = project_dict['project_with_experiments']
+        self._with_experiments = project_dict['with_experiments']
         if 'models' in keys:
             self._models = None
             self._models = ModelCollection.from_dict(project_dict['models'])

@@ -203,8 +203,7 @@ class TestProject:
         assert keys == [
             'info',
             'models',
-            'project_created',
-            'project_with_experiments',
+            'with_experiments',
         ]
         assert project_dict['info'] == {
             'name': 'Example Project',
@@ -214,8 +213,7 @@ class TestProject:
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
         assert project_dict['models']['data'] == []
-        assert project_dict['project_created'] is False
-        assert project_dict['project_with_experiments'] is False
+        assert project_dict['with_experiments'] is False
 
     def test_as_dict_models(self):
         # When
@@ -353,6 +351,7 @@ class TestProject:
         assert new_project._info['name'] == 'Test Project'
         assert new_project.as_dict() == project_dict
         assert new_project._root_path == tmp_path
+        assert new_project.created is True
 
     def test_create(self, tmp_path):
         # When
