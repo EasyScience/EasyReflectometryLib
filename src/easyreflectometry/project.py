@@ -22,7 +22,7 @@ from easyreflectometry.sample.collections.base_collection import BaseCollection
 class Project:
     def __init__(self):
         self._info = self._default_info()
-        self._path = Path(os.path.expanduser('~'))
+        self._root_path = Path(os.path.expanduser('~'))
         self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
         self._calculator = None
@@ -32,8 +32,8 @@ class Project:
         self._report = None
 
         # Project flags
-        self._project_created = False
-        self._project_with_experiments = False
+        self._created = False
+        self._with_experiments = False
 
     def reset(self):
         del self._models
@@ -44,7 +44,7 @@ class Project:
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
 
         self._info = self._default_info()
-        self._path = Path(os.path.expanduser('~'))
+        self._root_path = Path(os.path.expanduser('~'))
         self._calculator = None
         self._minimizer = None
         self._experiments = None
@@ -52,16 +52,19 @@ class Project:
         self._report = None
 
         # Project flags
-        self._project_created = False
-        self._project_with_experiments = False
+        self._created = False
+        self._with_experiments = False
+
+    @property
+    def created(self) -> bool:
+        return self._created
 
     @property
     def path(self):
-        return self._path
+        return self._root_path / self._info['name']
 
-    @path.setter
-    def path(self, path: Union[Path, str]):
-        self._path = Path(path)
+    def set_root_path(self, path: Union[Path, str]):
+        self._root_path = Path(path)
 
     @property
     def models(self) -> ModelCollection:
@@ -90,7 +93,7 @@ class Project:
 
     @property
     def path_json(self):
-        return self._path / 'project.json'
+        return self.path / 'project.json'
 
     def default_model(self):
         self._replace_collection(MaterialCollection(), self._materials)
@@ -132,12 +135,14 @@ class Project:
             modified=datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         )
 
-    def create_project_dir(self):
-        if not os.path.exists(self._path):
-            os.makedirs(self._path)
-            os.makedirs(self._path / 'experiments')
+    def create(self):
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+            os.makedirs(self.path / 'experiments')
+            self._created = True
+            self._info = self._default_info()
         else:
-            print(f'ERROR: Directory {self._path} already exists')
+            print(f'ERROR: Directory {self.path} already exists')
 
     def save_project_json(self, overwrite=False):
         if self.path_json.exists() and not overwrite:
@@ -160,20 +165,20 @@ class Project:
                 project_dict = json.load(file)
                 self.reset()
                 self.from_dict(project_dict)
-            self._path = path.parent
+            self._root_path = path.parents[1]
         else:
             print(f'ERROR: File {path} does not exist')
 
     def as_dict(self, include_materials_not_in_model=False):
         project_dict = {}
         project_dict['info'] = self._info
-        project_dict['project_with_experiments'] = self._project_with_experiments
-        project_dict['project_created'] = self._project_created
+        project_dict['project_with_experiments'] = self._with_experiments
+        project_dict['project_created'] = self._created
         if self._models is not None:
             project_dict['models'] = self._models.as_dict(skip=['interface'])
         if include_materials_not_in_model:
             self._as_dict_add_materials_not_in_model_dict(project_dict)
-        if self._project_with_experiments:
+        if self._with_experiments:
             self._as_dict_add_experiments(project_dict)
         if self._minimizer is not None:
             project_dict['minimizer'] = self._minimizer.name
@@ -206,7 +211,7 @@ class Project:
     def from_dict(self, project_dict: dict):
         keys = list(project_dict.keys())
         self._info = project_dict['info']
-        self._project_with_experiments = project_dict['project_with_experiments']
+        self._with_experiments = project_dict['project_with_experiments']
         if 'models' in keys:
             self._models = None
             self._models = ModelCollection.from_dict(project_dict['models'])
