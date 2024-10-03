@@ -3,6 +3,7 @@ from __future__ import annotations
 __author__ = 'github.com/arm61'
 
 from typing import List
+from typing import Optional
 from typing import Tuple
 
 from easyreflectometry.sample.collections.base_collection import BaseCollection
@@ -35,21 +36,24 @@ class ModelCollection(BaseCollection):
 
         super().__init__(name, interface, *models, **kwargs)
 
-    def add_model(self, new_model: Model):
-        """
-        Add a model to the models.
+    def add_model(self, model: Optional[Model] = None):
+        """Add a model to the collection.
 
-        :param new_model: New model to be added.
+        :param model: Model to add.
         """
-        self.append(new_model)
+        if model is None:
+            model = Model(name='Model new', interface=self.interface)
+        self.append(model)
 
-    def remove_model(self, index: int):
-        """
-        Remove an model from the models.
+    def duplicate_model(self, index: int):
+        """Duplicate a model in the collection.
 
-        :param index: Index of the model to remove
+        :param model: Assembly to add.
         """
-        self.pop(index)
+        to_be_duplicated = self[index]
+        duplicate = Model.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
+        duplicate.name = duplicate.name + ' duplicate'
+        self.append(duplicate)
 
     def as_dict(self, skip: List[str] | None = None) -> dict:
         this_dict = super().as_dict(skip=skip)

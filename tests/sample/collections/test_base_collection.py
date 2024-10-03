@@ -63,3 +63,96 @@ class TestBaseCollection:
         assert p.as_dict()['name'] == 'name'
         assert len(p.as_dict()['data']) == 1
         assert p.as_dict()['data'][0]['name'] == 'layer'
+
+    def test_move_up(self):
+        # When
+        elem_1 = Layer(name='layer_1')
+        elem_2 = Layer(name='layer_2')
+        elem_3 = Layer(name='layer_3')
+        mock_interface = MagicMock()
+
+        p = BaseCollection('name', mock_interface, elem_1, elem_2, elem_3)
+        p.append(Layer(name='layer_4'))
+
+        # Then
+        p.move_up(3)
+
+        # Expect
+        assert p[2].name == 'layer_4'
+        assert p[3].name == 'layer_3'
+
+    def test_move_up_to_top_and_further(self):
+        # When
+        elem_1 = Layer(name='layer_1')
+        elem_2 = Layer(name='layer_2')
+        elem_3 = Layer(name='layer_3')
+        mock_interface = MagicMock()
+
+        p = BaseCollection('name', mock_interface, elem_1, elem_2, elem_3)
+        p.append(Layer(name='layer_4'))
+
+        # Then
+        p.move_up(3)
+        p.move_up(2)
+        p.move_up(1)
+        p.move_up(0)
+
+        # Then
+        assert p[0].name == 'layer_4'
+        assert p[3].name == 'layer_3'
+
+    def test_move_down(self):
+        # When
+        elem_1 = Layer(name='layer_1')
+        elem_2 = Layer(name='layer_2')
+        elem_3 = Layer(name='layer_3')
+        mock_interface = MagicMock()
+
+        p = BaseCollection('name', mock_interface, elem_1, elem_2, elem_3)
+        p.append(Layer(name='layer_4'))
+
+        # Then
+        p.move_down(2)
+
+        # Expect
+        assert p[2].name == 'layer_4'
+        assert p[3].name == 'layer_3'
+
+    def test_move_down_to_bottom_and_further(self):
+        # When
+        elem_1 = Layer(name='layer_1')
+        elem_2 = Layer(name='layer_2')
+        elem_3 = Layer(name='layer_3')
+        mock_interface = MagicMock()
+
+        p = BaseCollection('name', mock_interface, elem_1, elem_2, elem_3)
+        p.append(Layer(name='layer_4'))
+        p.append(Layer(name='layer_5'))
+
+        # Then
+        p.move_down(3)
+        p.move_down(4)
+
+        # Then
+        assert p[0].name == 'layer_1'
+        assert p[3].name == 'layer_5'
+        assert p[4].name == 'layer_4'
+
+    def test_remove(self):
+        # When
+        elem_1 = Layer(name='layer_1')
+        elem_2 = Layer(name='layer_2')
+        elem_3 = Layer(name='layer_3')
+        mock_interface = MagicMock()
+
+        p = BaseCollection('name', mock_interface, elem_1, elem_2, elem_3)
+        p.append(Layer(name='layer_4'))
+
+        # Then
+        p.remove(1)
+
+        # Then
+        assert len(p) == 3
+        assert p[0].name == 'layer_1'
+        assert p[1].name == 'layer_3'
+        assert p[2].name == 'layer_4'

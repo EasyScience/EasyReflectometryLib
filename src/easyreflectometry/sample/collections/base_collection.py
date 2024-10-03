@@ -37,6 +37,32 @@ class BaseCollection(EasyBaseCollection):
         """
         return [i.name for i in self]
 
+    def move_up(self, index: int):
+        """Move the element at the given index up in the collection.
+
+        :param index: Index of the element to move up.
+        """
+        if index == 0:
+            return
+        self.insert(index - 1, self.pop(index))
+
+    def move_down(self, index: int):
+        """Move the element at the given index down in the collection.
+
+        :param index: Index of the element to move down.
+        """
+        if index == len(self) - 1:
+            return
+        self.insert(index + 1, self.pop(index))
+
+    def remove(self, index: int):
+        """
+        Remove an element from the elements.
+
+        :param index: Index of the element to remove
+        """
+        self.pop(index)
+
     @property
     def _dict_repr(self) -> dict:
         """
