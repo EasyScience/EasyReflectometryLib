@@ -25,15 +25,15 @@ class TestProject:
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
-        assert project._path == Path(os.path.expanduser('~'))
+        assert project._path_project_parent == Path(os.path.expanduser('~'))
         assert len(project._materials) == 0
         assert len(project._models) == 0
         assert project._calculator is None
         assert project._minimizer is None
         assert project._experiments is None
         assert project._report is None
-        assert project._project_created is False
-        assert project._project_with_experiments is False
+        assert project._created is False
+        assert project._with_experiments is False
 
     def test_reset(self):
         # When
@@ -45,9 +45,9 @@ class TestProject:
         project._minimizer = 'minimizer'
         project._experiments = 'experiments'
         project._report = 'report'
-        project._project_created = True
-        project._project_with_experiments = True
-        project._path = 'project_path'
+        project._created = True
+        project._with_experiments = True
+        project._path_project_parent = 'project_path'
 
         # Then
         project.reset()
@@ -65,13 +65,13 @@ class TestProject:
         assert project._materials.unique_name == 'project_materials'
         assert len(project._materials) == 0
 
-        assert project._path == Path(os.path.expanduser('~'))
+        assert project._path_project_parent == Path(os.path.expanduser('~'))
         assert project._calculator is None
         assert project._minimizer is None
         assert project._experiments is None
         assert project._report is None
-        assert project._project_created is False
-        assert project._project_with_experiments is False
+        assert project._created is False
+        assert project._with_experiments is False
         assert global_object.map.vertices() == ['project_models', 'project_materials']
 
     def test_models(self):
@@ -132,10 +132,10 @@ class TestProject:
     def test_path_json(self, tmp_path):
         # When
         project = Project()
-        project.path = tmp_path
+        project.set_path_project_parent(tmp_path)
 
         # Then Expect
-        assert project.path_json == Path(tmp_path) / 'project.json'
+        assert project.path_json == Path(tmp_path) / 'Example Project' / 'project.json'
 
     def test_add_material(self):
         # When
@@ -203,8 +203,7 @@ class TestProject:
         assert keys == [
             'info',
             'models',
-            'project_created',
-            'project_with_experiments',
+            'with_experiments',
         ]
         assert project_dict['info'] == {
             'name': 'Example Project',
@@ -214,8 +213,7 @@ class TestProject:
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
         assert project_dict['models']['data'] == []
-        assert project_dict['project_created'] is False
-        assert project_dict['project_with_experiments'] is False
+        assert project_dict['with_experiments'] is False
 
     def test_as_dict_models(self):
         # When
@@ -315,41 +313,104 @@ class TestProject:
             assert project_dict[key] == new_project_dict[key]
         assert project_materials_dict == new_project_materials_dict
 
-    def test_save_project(self, tmp_path):
+    def test_save_as_json(self, tmp_path):
         # When
         global_object.map._clear()
         project = Project()
-        project.path = tmp_path
+        project.set_path_project_parent(tmp_path)
         project._models.append(Model())
         project._info['name'] = 'Test Project'
-        project.save_project_json(overwrite=True)
 
         # Then
-        project_path = project.path_json
+        project.save_as_json()
+        project.path_json
 
         # Expect
-        assert project_path.exists()
+        assert project.path_json.exists()
 
-    def test_load_project(self, tmp_path):
+    def test_save_as_json_overwrite(self, tmp_path):
         # When
         global_object.map._clear()
         project = Project()
-        project.path = tmp_path
+        project.set_path_project_parent(tmp_path)
+        project.save_as_json()
+        file_info = project.path_json.stat()
+
+        # Then
+        project._info['short_description'] = 'short_description'
         project._models.append(Model())
-        project._info['name'] = 'Test Project'
-        project.save_project_json()
+        project.save_as_json(overwrite=True)
+
+        # Expect
+        assert str(file_info) != str(project.path_json.stat())
+
+    def test_save_as_json_dont_overwrite(self, tmp_path):
+        # When
+        global_object.map._clear()
+        project = Project()
+        project.set_path_project_parent(tmp_path)
+        project.save_as_json()
+        file_info = project.path_json.stat()
+
+        # Then
+        project._info['short_description'] = 'short_description'
+        project._models.append(Model())
+        project.save_as_json()
+
+        # Expect
+        assert str(file_info) == str(project.path_json.stat())
+
+    def test_load_from_json(self, tmp_path):
+        # When
+        global_object.map._clear()
+        project = Project()
+        project.set_path_project_parent(tmp_path)
+        project._models.append(Model())
+        project._info['name'] = 'name'
+        project._info['short_description'] = 'short_description'
+        project._info['samples'] = 'samples'
+        project._info['experiments'] = 'experiments'
+
+        project.save_as_json()
         project_dict = project.as_dict()
 
         global_object.map._clear()
         new_project = Project()
 
         # Then
-        new_project.load_project_json(tmp_path / 'project.json')
+        new_project.load_from_json(tmp_path / 'name' / 'project.json')
         # Do it twice to ensure that potential global objects don't collide
-        new_project.load_project_json(tmp_path / 'project.json')
+        new_project.load_from_json(tmp_path / 'name' / 'project.json')
 
         # Expect
         assert len(new_project._models) == 1
-        assert new_project._info['name'] == 'Test Project'
-        assert new_project.as_dict() == project_dict
-        assert new_project.path == tmp_path
+        assert new_project._info['name'] == 'name'
+        assert new_project._info['short_description'] == 'short_description'
+        assert new_project._info['samples'] == 'samples'
+        assert new_project._info['experiments'] == 'experiments'
+        assert project_dict == new_project.as_dict()
+        assert new_project._path_project_parent == tmp_path
+        assert new_project.created is True
+
+    def test_create(self, tmp_path):
+        # When
+        project = Project()
+        project.set_path_project_parent(tmp_path)
+        project._info['modified'] = 'modified'
+        project._info['name'] = 'Test Project'
+
+        # Then
+        project.create()
+
+        # Expect
+        assert project.path == tmp_path / 'Test Project'
+        assert project.path.exists()
+        assert (project.path / 'experiments').exists()
+        assert project.created is True
+        assert project._info == {
+            'name': 'Test Project',
+            'short_description': 'reflectometry, 1D',
+            'samples': 'None',
+            'experiments': 'None',
+            'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
+        }
