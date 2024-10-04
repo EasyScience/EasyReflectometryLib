@@ -45,14 +45,16 @@ class TestSample:
         surfactant = SurfactantLayer()
 
         # Then
+        p.add_assembly()
         p.add_assembly(surfactant)
 
         # Expect
         assert_equal(p[0].name, 'EasyMultilayer')
         assert_equal(p[1].name, 'EasyMultilayer')
-        assert_equal(p[2].name, 'EasySurfactantLayer')
-        p._enable_changes_to_outermost_layers.assert_called_once_with()
-        p._disable_changes_to_outermost_layers.assert_called_once_with()
+        assert_equal(p[2].name, 'New EasyMultilayer')
+        assert_equal(p[3].name, 'EasySurfactantLayer')
+        p._enable_changes_to_outermost_layers.assert_called()
+        p._disable_changes_to_outermost_layers.assert_called()
 
     # Problems with parameterized tests START
     def test_duplicate_assembly_multilayer(self):

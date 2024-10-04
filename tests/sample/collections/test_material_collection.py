@@ -75,24 +75,25 @@ class TestMaterialCollection:
         assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
     def test_add_material(self):
-        # Given
+        # When
         p = MaterialCollection()
         m = Material(6.908, -0.278, 'Boron')
 
-        # When
+        # Then
+        p.add_material()
         p.add_material(m)
 
-        # Then
-        assert p[3] == m
+        # Expect
+        assert p[4] == m
 
     def test_duplicate_material(self):
-        # Given
+        # When
         p = MaterialCollection()
         m = Material(6.908, -0.278, 'Boron')
         p.add_material(m)
 
-        # When
+        # Then
         p.duplicate_material(3)
 
-        # Then
+        # Expect
         assert p[4].name == 'Boron duplicate'

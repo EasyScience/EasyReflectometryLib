@@ -88,3 +88,27 @@ class TestLayerCollection(unittest.TestCase):
 
         # Expect
         assert sorted(r.as_data_dict()) == sorted(s.as_data_dict())
+
+    def test_add_layer(self):
+        # When
+        p = LayerCollection()
+        m = Layer(name='Layer m')
+
+        # Then
+        p.add_layer()
+        p.add_layer(m)
+
+        # Expect
+        assert p[1] == m
+
+    def test_duplicate_layer(self):
+        # When
+        p = LayerCollection()
+        m = Layer(name='Layer m')
+        p.add_layer(m)
+
+        # Then
+        p.duplicate_layer(0)
+
+        # Expect
+        assert p[1].name == 'Layer m duplicate'
