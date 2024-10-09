@@ -6,6 +6,7 @@ from typing import List
 from typing import Optional
 from typing import Union
 
+import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
 
@@ -34,6 +35,9 @@ class Project:
         # Project flags
         self._created = False
         self._with_experiments = False
+
+        self._xArrays = [np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])]
+        self._yCalcArrays = [np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])]
 
     def reset(self):
         del self._models
