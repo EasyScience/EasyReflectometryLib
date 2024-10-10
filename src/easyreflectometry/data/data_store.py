@@ -93,6 +93,9 @@ class DataSet1D(ComponentSerializer):
         if xe is None:
             xe = np.zeros_like(x)
 
+        if len(x) != len(y):
+            raise ValueError('x and y must be the same length')
+
         self.name = name
         if not isinstance(x, np.ndarray):
             x = np.array(x)
@@ -108,6 +111,10 @@ class DataSet1D(ComponentSerializer):
         self.y_label = y_label
 
         self._color = None
+
+    @property
+    def data_points(self) -> int:
+        return zip(self.x, self.y)
 
     @property
     def model(self) -> Model:
