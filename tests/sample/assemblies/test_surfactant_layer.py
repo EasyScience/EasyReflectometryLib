@@ -189,6 +189,8 @@ class TestSurfactantLayer:
 
 
 def test_dict_round_trip():
+    global_object.map._clear()
+
     # When
     solvent = Material(-0.561, 0, 'H2O')
     tail_layer = LayerAreaPerMolecule(
@@ -216,8 +218,12 @@ def test_dict_round_trip():
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
+    global_object.map._clear()
+
 
 def test_dict_round_trip_area_per_molecule_constraint_enabled():
+    global_object.map._clear()
+
     # When
     p = SurfactantLayer()
     p.constrain_area_per_molecule = True
@@ -230,11 +236,12 @@ def test_dict_round_trip_area_per_molecule_constraint_enabled():
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-    # Seems to be needed to due to the constraint
     global_object.map._clear()
 
 
 def test_dict_round_trip_area_per_molecule_constraint_disabled():
+    global_object.map._clear()
+
     # When
     p = SurfactantLayer()
     p.constrain_area_per_molecule = True
@@ -248,8 +255,12 @@ def test_dict_round_trip_area_per_molecule_constraint_disabled():
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
+    global_object.map._clear()
+
 
 def test_dict_round_trip_roughness_constraint_enabled():
+    global_object.map._clear()
+
     # When
     p = SurfactantLayer()
     p.conformal_roughness = True
@@ -262,11 +273,12 @@ def test_dict_round_trip_roughness_constraint_enabled():
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-    # Seems to be needed to due to the constraint
     global_object.map._clear()
 
 
 def test_dict_round_trip_roughness_constraint_disabled():
+    global_object.map._clear()
+
     # When
     p = SurfactantLayer()
     p.conformal_roughness = True
@@ -279,3 +291,5 @@ def test_dict_round_trip_roughness_constraint_disabled():
 
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
+
+    global_object.map._clear()
