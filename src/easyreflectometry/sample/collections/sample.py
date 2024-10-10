@@ -56,8 +56,10 @@ class Sample(BaseCollection):
         :param assembly: Assembly to add.
         """
         if assembly is None:
-            assembly = Multilayer(name='New EasyMultilayer')
-        assembly.interface = self.interface
+            assembly = Multilayer(
+                name='New EasyMultilayer',
+                interface=self.interface,
+            )
         self._enable_changes_to_outermost_layers()
         self.append(assembly)
         self._disable_changes_to_outermost_layers()
