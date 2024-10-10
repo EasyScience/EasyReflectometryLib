@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-__author__ = 'github.com/arm61'
-
 from typing import List
 from typing import Optional
 from typing import Tuple
@@ -48,7 +46,7 @@ class ModelCollection(BaseCollection):
     def duplicate_model(self, index: int):
         """Duplicate a model in the collection.
 
-        :param model: Assembly to add.
+        :param index: Model to duplicate.
         """
         to_be_duplicated = self[index]
         duplicate = Model.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
@@ -66,7 +64,6 @@ class ModelCollection(BaseCollection):
         Create an instance of a collection from a dictionary.
 
         :param data: The dictionary for the collection
-        :return: An instance of the collection
         """
         collection_dict = this_dict.copy()
         # We neeed to call from_dict on the base class to get the models
