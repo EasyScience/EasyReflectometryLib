@@ -98,8 +98,8 @@ class LayerAreaPerMolecule(Layer):
                 isld=0,
                 name='D2O',
                 unique_name=unique_name + 'MaterialSolvent',
+                interface=interface,
             )
-        solvent.interface = interface
 
         # Create the solvated molecule and corresponding constraints
         if molecular_formula is None:

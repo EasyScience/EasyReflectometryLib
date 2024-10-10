@@ -27,8 +27,10 @@ class LayerCollection(BaseCollection):
         :param layer: Layer to add.
         """
         if layer is None:
-            layer = Layer(name='New EasyLayer')
-        layer.interface = self.interface
+            layer = Layer(
+                name='New EasyLayer',
+                interface=self.interface,
+            )
         self.append(layer)
 
     def duplicate_layer(self, index: int):

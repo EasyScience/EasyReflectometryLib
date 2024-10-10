@@ -53,7 +53,7 @@ class SurfactantLayer(BaseAssembly):
                 sld=0,
                 isld=0,
                 name='Air',
-                unique_name=unique_name + 'Material',
+                unique_name=unique_name + 'MaterialTail',
                 interface=interface,
             )
             tail_layer = LayerAreaPerMolecule(
@@ -68,7 +68,13 @@ class SurfactantLayer(BaseAssembly):
                 interface=interface,
             )
         if head_layer is None:
-            d2o = Material(6.36, 0, 'D2O')
+            d2o = Material(
+                sld=6.36,
+                isld=0,
+                name='D2O',
+                unique_name=unique_name + 'MaterialHead',
+                interface=interface,
+            )
             head_layer = LayerAreaPerMolecule(
                 molecular_formula='C10H18NO8P',
                 thickness=10.0,
