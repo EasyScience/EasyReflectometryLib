@@ -99,6 +99,9 @@ class TestSurfactantLayer:
         assert p.head_layer.roughness.value == 4
         assert layer.roughness.value == 4
 
+        # Seems to be needed to due to the constraint
+        global_object.map._clear()
+
     def test_dict_repr(self):
         p = SurfactantLayer()
         assert p._dict_repr == {
@@ -227,6 +230,9 @@ def test_dict_round_trip_area_per_molecule_constraint_enabled():
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
+    # Seems to be needed to due to the constraint
+    global_object.map._clear()
+
 
 def test_dict_round_trip_area_per_molecule_constraint_disabled():
     # When
@@ -255,6 +261,9 @@ def test_dict_round_trip_roughness_constraint_enabled():
 
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
+
+    # Seems to be needed to due to the constraint
+    global_object.map._clear()
 
 
 def test_dict_round_trip_roughness_constraint_disabled():

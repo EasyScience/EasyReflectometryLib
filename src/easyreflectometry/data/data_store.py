@@ -81,7 +81,8 @@ class DataSet1D(ComponentSerializer):
         y_label: str = 'y',
     ):
         self._model = model
-        self._model.background = np.min(y)
+        if y is not None and model is not None:
+            self._model.background = np.min(y)
 
         if x is None:
             x = np.array([])
