@@ -10,7 +10,7 @@ import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
 
-from easyreflectometry.data.data_store import DataSet1D
+from easyreflectometry.data import DataSet1D
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
 from easyreflectometry.sample import Layer
@@ -18,6 +18,29 @@ from easyreflectometry.sample import MaterialCollection
 from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.sample.collections.base_collection import BaseCollection
+
+MODELS_SAMPLE_DATA = [
+    DataSet1D(
+        name='Sample Data 0',
+        x=np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+        y=np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+    )
+]
+MODELS_MODEL_DATA = [
+    DataSet1D(
+        name='Model Data 0',
+        x=np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+        y=np.array([1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5]),
+    )
+]
+EXPERIMENTAL_DATA = [
+    DataSet1D(
+        name='Example Data 0',
+        x=np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+        y=np.array([0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5]),
+        ye=np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]),
+    )
+]
 
 
 class Project:
@@ -35,9 +58,6 @@ class Project:
         # Project flags
         self._created = False
         self._with_experiments = False
-
-        self._xArrays = [np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])]
-        self._yCalcArrays = [np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])]
 
     def reset(self):
         del self._models
@@ -98,6 +118,15 @@ class Project:
     @property
     def path_json(self):
         return self.path / 'project.json'
+
+    def sample_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
+        return MODELS_SAMPLE_DATA[index]
+
+    def model_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
+        return MODELS_MODEL_DATA[index]
+
+    def experimental_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
+        return EXPERIMENTAL_DATA[index]
 
     def default_model(self):
         self._replace_collection(MaterialCollection(), self._materials)
