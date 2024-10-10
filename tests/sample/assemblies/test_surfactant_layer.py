@@ -100,7 +100,8 @@ class TestSurfactantLayer:
         assert layer.roughness.value == 4
 
         # Seems to be needed to due to the constraint
-        global_object.map._clear()
+
+    #        global_object.map._clear()
 
     def test_dict_repr(self):
         p = SurfactantLayer()
@@ -189,7 +190,7 @@ class TestSurfactantLayer:
 
 
 def test_dict_round_trip():
-    global_object.map._clear()
+    #    global_object.map._clear()
 
     # When
     solvent = Material(-0.561, 0, 'H2O')
@@ -218,11 +219,12 @@ def test_dict_round_trip():
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-    global_object.map._clear()
+
+#    global_object.map._clear()
 
 
 def test_dict_round_trip_area_per_molecule_constraint_enabled():
-    global_object.map._clear()
+    #    global_object.map._clear()
 
     # When
     p = SurfactantLayer()
@@ -236,11 +238,12 @@ def test_dict_round_trip_area_per_molecule_constraint_enabled():
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-    global_object.map._clear()
+
+#    global_object.map._clear()
 
 
 def test_dict_round_trip_area_per_molecule_constraint_disabled():
-    global_object.map._clear()
+    #    global_object.map._clear()
 
     # When
     p = SurfactantLayer()
@@ -255,11 +258,12 @@ def test_dict_round_trip_area_per_molecule_constraint_disabled():
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-    global_object.map._clear()
+
+#    global_object.map._clear()
 
 
 def test_dict_round_trip_roughness_constraint_enabled():
-    global_object.map._clear()
+    #    global_object.map._clear()
 
     # When
     p = SurfactantLayer()
@@ -273,11 +277,12 @@ def test_dict_round_trip_roughness_constraint_enabled():
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-    global_object.map._clear()
+
+#    global_object.map._clear()
 
 
 def test_dict_round_trip_roughness_constraint_disabled():
-    global_object.map._clear()
+    #    global_object.map._clear()
 
     # When
     p = SurfactantLayer()
@@ -292,4 +297,5 @@ def test_dict_round_trip_roughness_constraint_disabled():
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
-    global_object.map._clear()
+
+#    global_object.map._clear()

@@ -163,7 +163,7 @@ class TestLayerAreaPerMolecule(unittest.TestCase):
         }
 
     def test_dict_round_trip(self):
-        global_object.map._clear()
+        #        global_object.map._clear()
 
         # When
         solvent = Material(-0.561, 0, 'H2O')
