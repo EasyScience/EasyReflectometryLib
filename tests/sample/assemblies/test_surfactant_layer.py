@@ -99,10 +99,6 @@ class TestSurfactantLayer:
         assert p.head_layer.roughness.value == 4
         assert layer.roughness.value == 4
 
-        # Seems to be needed to due to the constraint
-
-    #        global_object.map._clear()
-
     def test_dict_repr(self):
         p = SurfactantLayer()
         assert p._dict_repr == {
@@ -190,8 +186,6 @@ class TestSurfactantLayer:
 
 
 def test_dict_round_trip():
-    #    global_object.map._clear()
-
     # When
     solvent = Material(-0.561, 0, 'H2O')
     tail_layer = LayerAreaPerMolecule(
@@ -220,12 +214,7 @@ def test_dict_round_trip():
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
 
-#    global_object.map._clear()
-
-
 def test_dict_round_trip_area_per_molecule_constraint_enabled():
-    #    global_object.map._clear()
-
     # When
     p = SurfactantLayer()
     p.constrain_area_per_molecule = True
@@ -239,12 +228,7 @@ def test_dict_round_trip_area_per_molecule_constraint_enabled():
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
 
-#    global_object.map._clear()
-
-
 def test_dict_round_trip_area_per_molecule_constraint_disabled():
-    #    global_object.map._clear()
-
     # When
     p = SurfactantLayer()
     p.constrain_area_per_molecule = True
@@ -259,12 +243,7 @@ def test_dict_round_trip_area_per_molecule_constraint_disabled():
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
 
-#    global_object.map._clear()
-
-
 def test_dict_round_trip_roughness_constraint_enabled():
-    #    global_object.map._clear()
-
     # When
     p = SurfactantLayer()
     p.conformal_roughness = True
@@ -278,12 +257,7 @@ def test_dict_round_trip_roughness_constraint_enabled():
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
 
 
-#    global_object.map._clear()
-
-
 def test_dict_round_trip_roughness_constraint_disabled():
-    #    global_object.map._clear()
-
     # When
     p = SurfactantLayer()
     p.conformal_roughness = True
@@ -296,6 +270,3 @@ def test_dict_round_trip_roughness_constraint_disabled():
 
     # Expect
     assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
-
-
-#    global_object.map._clear()

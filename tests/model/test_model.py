@@ -407,8 +407,6 @@ class TestModel(unittest.TestCase):
     [None, CalculatorFactory()],
 )
 def test_dict_round_trip(interface):
-    global_object.map._clear()
-
     # When
     resolution_function = LinearSpline([0, 10], [0, 10])
     model = Model(interface=interface)
