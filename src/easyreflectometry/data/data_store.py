@@ -113,10 +113,6 @@ class DataSet1D(ComponentSerializer):
         self._color = None
 
     @property
-    def data_points(self) -> int:
-        return zip(self.x, self.y)
-
-    @property
     def model(self) -> Model:
         return self._model
 
@@ -132,6 +128,9 @@ class DataSet1D(ComponentSerializer):
     @property
     def is_simulation(self) -> bool:
         return self._model is None
+
+    def data_points(self) -> int:
+        return zip(self.x, self.y)
 
     def __repr__(self) -> str:
         return "1D DataStore of '{:s}' Vs '{:s}' with {} data points".format(self.x_label, self.y_label, len(self.x))
