@@ -8,6 +8,7 @@ from typing import Optional
 from typing import Union
 
 import numpy as np
+from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 from easyscience.Objects.ObjectClasses import BaseObj
 
@@ -74,6 +75,8 @@ class Model(BaseObj):
         :param interface: Calculator interface, defaults to `None`.
 
         """
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
 
         if sample is None:
             sample = Sample(interface=interface)
@@ -92,6 +95,7 @@ class Model(BaseObj):
             background=background,
         )
         self.resolution_function = resolution_function
+
         # Must be set after resolution function
         self.interface = interface
 

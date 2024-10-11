@@ -10,35 +10,35 @@ import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
 
+from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.data import DataSet1D
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
+from easyreflectometry.model import PercentageFhwm
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import MaterialCollection
 from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.sample.collections.base_collection import BaseCollection
 
-MODELS_SAMPLE_DATA = [
-    DataSet1D(
-        name='Sample Data 0',
-        x=np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-        y=np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-    )
-]
+Q_MIN = 0.001
+Q_MAX = 0.3
+Q_STEP = 0.002
+Q = np.arange(Q_MIN, Q_MAX, Q_STEP)
+
 MODELS_MODEL_DATA = [
     DataSet1D(
         name='Model Data 0',
-        x=np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-        y=np.array([1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5]),
+        x=Q,  # np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+        y=2 * Q,  # np.array([1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5]),
     )
 ]
 EXPERIMENTAL_DATA = [
     DataSet1D(
         name='Example Data 0',
-        x=np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-        y=np.array([0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5]),
-        ye=np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]),
+        x=Q,  # np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+        y=3 * Q,  # np.array([0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5]),
+        ye=0.1 * Q,  # np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]),
     )
 ]
 
@@ -49,8 +49,8 @@ class Project:
         self._path_project_parent = Path(os.path.expanduser('~'))
         self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
-        self._calculator = None
-        self._minimizer: AvailableMinimizers = None
+        self._calculator = CalculatorFactory()
+        self._minimizer = AvailableMinimizers.LMFit_leastsq
         self._experiments: List[DataSet1D] = None
         self._colors = None
         self._report = None
@@ -69,8 +69,8 @@ class Project:
 
         self._info = self._default_info()
         self._path_project_parent = Path(os.path.expanduser('~'))
-        self._calculator = None
-        self._minimizer = None
+        self._calculator = CalculatorFactory()
+        self._minimizer = AvailableMinimizers.LMFit_leastsq
         self._experiments = None
         self._colors = None
         self._report = None
@@ -119,11 +119,24 @@ class Project:
     def path_json(self):
         return self.path / 'project.json'
 
-    def sample_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
-        return MODELS_SAMPLE_DATA[index]
+    def sample_data_for_model_at_index(self, index: int = 0, q_range: Optional[np.array] = None) -> DataSet1D:
+        original_resolution_function = self.models[index].resolution_function
+        self.models[index].resolution_function = PercentageFhwm(0)
+        reflectivity_data = self.model_data_for_model_at_index(index, q_range)
+        self.models[index].resolution_function = original_resolution_function
 
-    def model_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
-        return MODELS_MODEL_DATA[index]
+        return reflectivity_data
+
+    def model_data_for_model_at_index(self, index: int = 0, q_range: Optional[np.array] = None) -> DataSet1D:
+        if q_range is None:
+            q_range = np.arange(Q_MIN, Q_MAX, Q_STEP)
+        self.models[index].interface = self._calculator
+        reflectivity = self.models[index].interface().reflectity_profile(q_range, self._models[index].unique_name)
+        return DataSet1D(
+            name=f'Reflectivity for Model {index}',
+            x=q_range,
+            y=reflectivity,
+        )
 
     def experimental_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
         return EXPERIMENTAL_DATA[index]
@@ -132,20 +145,21 @@ class Project:
         self._replace_collection(MaterialCollection(), self._materials)
 
         layers = [
-            Layer(material=self._materials[0], thickness=0.0, roughness=0.0, name='Vacuum Layer'),
-            Layer(material=self._materials[1], thickness=100.0, roughness=3.0, name='Multi-layer'),
-            Layer(material=self._materials[2], thickness=0.0, roughness=1.2, name='Si Layer'),
+            Layer(material=self._materials[0], thickness=0.0, roughness=0.0, name='Vacuum Layer', interface=self._calculator),
+            Layer(material=self._materials[1], thickness=100.0, roughness=3.0, name='Multi-layer', interface=self._calculator),
+            Layer(material=self._materials[2], thickness=0.0, roughness=1.2, name='Si Layer', interface=self._calculator),
         ]
-        items = [
-            Multilayer(layers[0], name='Superphase'),
-            Multilayer(layers[1], name='Multi-layer'),
-            Multilayer(layers[2], name='Subphase'),
+        assemblies = [
+            Multilayer(layers[0], name='Superphase', interface=self._calculator),
+            Multilayer(layers[1], name='Multi-layer', interface=self._calculator),
+            Multilayer(layers[2], name='Subphase', interface=self._calculator),
         ]
-        sample = Sample(*items)
+        sample = Sample(*assemblies, interface=self._calculator)
         sample[0].layers[0].thickness.enabled = False
         sample[0].layers[0].roughness.enabled = False
         sample[-1].layers[-1].thickness.enabled = False
-        self._replace_collection([Model(sample=sample)], self._models)
+        model = Model(sample=sample, interface=self._calculator)
+        self._replace_collection([model], self._models)
 
     def add_material(self, material: MaterialCollection) -> None:
         if material in self._materials:
@@ -216,7 +230,7 @@ class Project:
         if self._minimizer is not None:
             project_dict['minimizer'] = self._minimizer.name
         if self._calculator is not None:
-            project_dict['calculator'] = [self._calculator.current_interface_name]
+            project_dict['calculator'] = self._calculator.current_interface_name
         if self._colors is not None:
             project_dict['colors'] = self._colors
         return project_dict
@@ -263,9 +277,7 @@ class Project:
         else:
             self._experiments = None
         if 'calculator' in keys:
-            self._calculator = project_dict['calculator']
-        else:
-            self._calculator = None
+            self._calculator.switch(project_dict['calculator'])
 
     def _from_dict_extract_experiments(self, project_dict: dict):
         self._experiments: List[DataSet1D] = []
