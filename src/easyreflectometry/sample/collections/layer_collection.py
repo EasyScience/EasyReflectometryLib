@@ -20,3 +20,25 @@ class LayerCollection(BaseCollection):
             layers = []
 
         super().__init__(name, interface, unique_name=unique_name, *layers, **kwargs)
+
+    def add_layer(self, layer: Optional[Layer] = None):
+        """Add a layer to the collection.
+
+        :param layer: Layer to add.
+        """
+        if layer is None:
+            layer = Layer(
+                name='New EasyLayer',
+                interface=self.interface,
+            )
+        self.append(layer)
+
+    def duplicate_layer(self, index: int):
+        """Duplicate a layer in the collection.
+
+        :param layer: Assembly to add.
+        """
+        to_be_duplicated = self[index]
+        duplicate = Layer.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
+        duplicate.name = duplicate.name + ' duplicate'
+        self.append(duplicate)

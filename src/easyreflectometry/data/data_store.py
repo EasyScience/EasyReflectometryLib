@@ -81,7 +81,8 @@ class DataSet1D(ComponentSerializer):
         y_label: str = 'y',
     ):
         self._model = model
-        self._model.background = np.min(y)
+        if y is not None and model is not None:
+            self._model.background = np.min(y)
 
         if x is None:
             x = np.array([])
@@ -91,6 +92,9 @@ class DataSet1D(ComponentSerializer):
             ye = np.zeros_like(x)
         if xe is None:
             xe = np.zeros_like(x)
+
+        if len(x) != len(y):
+            raise ValueError('x and y must be the same length')
 
         self.name = name
         if not isinstance(x, np.ndarray):
@@ -124,6 +128,9 @@ class DataSet1D(ComponentSerializer):
     @property
     def is_simulation(self) -> bool:
         return self._model is None
+
+    def data_points(self) -> int:
+        return zip(self.x, self.y)
 
     def __repr__(self) -> str:
         return "1D DataStore of '{:s}' Vs '{:s}' with {} data points".format(self.x_label, self.y_label, len(self.x))

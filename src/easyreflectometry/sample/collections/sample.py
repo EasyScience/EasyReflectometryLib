@@ -56,7 +56,10 @@ class Sample(BaseCollection):
         :param assembly: Assembly to add.
         """
         if assembly is None:
-            assembly = Multilayer(name='New EasyMultilayer', interface=self.interface)
+            assembly = Multilayer(
+                name='New EasyMultilayer',
+                interface=self.interface,
+            )
         self._enable_changes_to_outermost_layers()
         self.append(assembly)
         self._disable_changes_to_outermost_layers()
@@ -78,26 +81,22 @@ class Sample(BaseCollection):
         self.append(duplicate)
         self._disable_changes_to_outermost_layers()
 
-    def move_assembly_up(self, index: int):
+    def move_up(self, index: int):
         """Move the assembly at the given index up in the sample.
 
         :param index: Index of the assembly to move up.
         """
-        if index == 0:
-            return
         self._enable_changes_to_outermost_layers()
-        self.insert(index - 1, self.pop(index))
+        super().move_up(index)
         self._disable_changes_to_outermost_layers()
 
-    def move_assembly_down(self, index: int):
+    def move_down(self, index: int):
         """Move the assembly at the given index down in the sample.
 
         :param index: Index of the assembly to move down.
         """
-        if index == len(self) - 1:
-            return
         self._enable_changes_to_outermost_layers()
-        self.insert(index + 1, self.pop(index))
+        super().move_down(index)
         self._disable_changes_to_outermost_layers()
 
     def remove_assembly(self, index: int):

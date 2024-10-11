@@ -60,6 +60,7 @@ class Model(BaseObj):
         background: Union[Parameter, Number, None] = None,
         resolution_function: Union[ResolutionFunction, None] = None,
         name: str = 'EasyModel',
+        color: str = 'black',
         unique_name: Optional[str] = None,
         interface=None,
     ):
@@ -81,6 +82,7 @@ class Model(BaseObj):
 
         scale = get_as_parameter('scale', scale, DEFAULTS)
         background = get_as_parameter('background', background, DEFAULTS)
+        self.color = color
 
         super().__init__(
             name=name,
@@ -173,6 +175,7 @@ class Model(BaseObj):
                 'scale': float(self.scale.value),
                 'background': float(self.background.value),
                 'resolution': resolution,
+                'color': self.color,
                 'sample': self.sample._dict_repr,
             }
         }

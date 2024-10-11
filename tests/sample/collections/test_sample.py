@@ -45,14 +45,16 @@ class TestSample:
         surfactant = SurfactantLayer()
 
         # Then
+        p.add_assembly()
         p.add_assembly(surfactant)
 
         # Expect
         assert_equal(p[0].name, 'EasyMultilayer')
         assert_equal(p[1].name, 'EasyMultilayer')
-        assert_equal(p[2].name, 'EasySurfactantLayer')
-        p._enable_changes_to_outermost_layers.assert_called_once_with()
-        p._disable_changes_to_outermost_layers.assert_called_once_with()
+        assert_equal(p[2].name, 'New EasyMultilayer')
+        assert_equal(p[3].name, 'EasySurfactantLayer')
+        p._enable_changes_to_outermost_layers.assert_called()
+        p._disable_changes_to_outermost_layers.assert_called()
 
     # Problems with parameterized tests START
     def test_duplicate_assembly_multilayer(self):
@@ -123,7 +125,7 @@ class TestSample:
         p._disable_changes_to_outermost_layers = MagicMock()
 
         # Then
-        p.move_assembly_up(2)
+        p.move_up(2)
 
         # Expect
         assert_equal(p[0].name, 'EasyMultilayer')
@@ -141,14 +143,14 @@ class TestSample:
         p._disable_changes_to_outermost_layers = MagicMock()
 
         # Then
-        p.move_assembly_up(0)
+        p.move_up(0)
 
         # Expect
         assert_equal(p[0].name, 'EasyMultilayer')
         assert_equal(p[1].name, 'EasyMultilayer')
         assert_equal(p[2].name, surfactant.name)
-        p._enable_changes_to_outermost_layers.assert_not_called()
-        p._disable_changes_to_outermost_layers.assert_not_called()
+        p._enable_changes_to_outermost_layers.assert_called()
+        p._disable_changes_to_outermost_layers.assert_called()
 
     def test_move_assembly_down(self):
         # When
@@ -159,7 +161,7 @@ class TestSample:
         p._disable_changes_to_outermost_layers = MagicMock()
 
         # Then
-        p.move_assembly_down(1)
+        p.move_down(1)
 
         # Expect
         assert_equal(p[0].name, 'EasyMultilayer')
@@ -177,14 +179,14 @@ class TestSample:
         p._disable_changes_to_outermost_layers = MagicMock()
 
         # Then
-        p.move_assembly_down(2)
+        p.move_down(2)
 
         # Expect
         assert_equal(p[0].name, 'EasyMultilayer')
         assert_equal(p[1].name, 'EasyMultilayer')
         assert_equal(p[2].name, surfactant.name)
-        p._enable_changes_to_outermost_layers.assert_not_called()
-        p._disable_changes_to_outermost_layers.assert_not_called()
+        p._enable_changes_to_outermost_layers.assert_called()
+        p._disable_changes_to_outermost_layers.assert_called()
 
     def test_remove_assembly(self):
         # When
@@ -220,8 +222,8 @@ class TestSample:
         p = Sample()
         layer = Multilayer(Layer(name='new layer'))
         p.add_assembly(layer)
-        p.move_assembly_up(2)
-        p.move_assembly_up(1)
+        p.move_up(2)
+        p.move_up(1)
 
         # Then
         layer = p.superphase
