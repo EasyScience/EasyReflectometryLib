@@ -53,7 +53,7 @@ class SurfactantLayer(BaseAssembly):
                 sld=0,
                 isld=0,
                 name='Air',
-                unique_name=unique_name + 'MaterialTail',
+                unique_name=unique_name + '_MaterialTail',
                 interface=interface,
             )
             tail_layer = LayerAreaPerMolecule(
@@ -64,7 +64,7 @@ class SurfactantLayer(BaseAssembly):
                 area_per_molecule=48.2,
                 roughness=3,
                 name='DPPC Tail',
-                unique_name=unique_name + 'LayerAreaPerMoleculeTail',
+                unique_name=unique_name + '_LayerAreaPerMoleculeTail',
                 interface=interface,
             )
         if head_layer is None:
@@ -72,7 +72,7 @@ class SurfactantLayer(BaseAssembly):
                 sld=6.36,
                 isld=0,
                 name='D2O',
-                unique_name=unique_name + 'MaterialHead',
+                unique_name=unique_name + '_MaterialHead',
                 interface=interface,
             )
             head_layer = LayerAreaPerMolecule(
@@ -83,14 +83,14 @@ class SurfactantLayer(BaseAssembly):
                 area_per_molecule=48.2,
                 roughness=3.0,
                 name='DPPC Head',
-                unique_name=unique_name + 'LayerAreaPerMoleculeHead',
+                unique_name=unique_name + '_LayerAreaPerMoleculeHead',
                 interface=interface,
             )
         surfactant = LayerCollection(
             tail_layer,
             head_layer,
             name='Layers',
-            unique_name=unique_name + 'LayerCollection',
+            unique_name=unique_name + '_LayerCollection',
             interface=interface,
         )
         super().__init__(

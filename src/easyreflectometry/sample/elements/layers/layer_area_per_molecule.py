@@ -97,7 +97,7 @@ class LayerAreaPerMolecule(Layer):
                 sld=6.36,
                 isld=0,
                 name='D2O',
-                unique_name=unique_name + 'MaterialSolvent',
+                unique_name=unique_name + '_MaterialSolvent',
                 interface=interface,
             )
 
@@ -108,7 +108,7 @@ class LayerAreaPerMolecule(Layer):
             sld=0.0,
             isld=0.0,
             name=molecular_formula,
-            unique_name=unique_name + 'MaterialMolecule',
+            unique_name=unique_name + '_MaterialMolecule',
             interface=interface,
         )
 
@@ -161,7 +161,7 @@ class LayerAreaPerMolecule(Layer):
             material=molecule_material,
             solvent=solvent,
             solvent_fraction=solvent_fraction,
-            unique_name=unique_name + 'MaterialSolvated',
+            unique_name=unique_name + '_MaterialSolvated',
             interface=interface,
         )
         super().__init__(
