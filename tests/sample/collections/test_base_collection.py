@@ -78,6 +78,8 @@ class TestBaseCollection:
         p.move_up(3)
 
         # Expect
+        assert p[0].name == 'layer_1'
+        assert p[1].name == 'layer_2'
         assert p[2].name == 'layer_4'
         assert p[3].name == 'layer_3'
 
@@ -99,6 +101,8 @@ class TestBaseCollection:
 
         # Then
         assert p[0].name == 'layer_4'
+        assert p[1].name == 'layer_1'
+        assert p[2].name == 'layer_2'
         assert p[3].name == 'layer_3'
 
     def test_move_down(self):
@@ -115,6 +119,8 @@ class TestBaseCollection:
         p.move_down(2)
 
         # Expect
+        assert p[0].name == 'layer_1'
+        assert p[1].name == 'layer_2'
         assert p[2].name == 'layer_4'
         assert p[3].name == 'layer_3'
 
@@ -135,6 +141,8 @@ class TestBaseCollection:
 
         # Then
         assert p[0].name == 'layer_1'
+        assert p[1].name == 'layer_2'
+        assert p[2].name == 'layer_3'
         assert p[3].name == 'layer_5'
         assert p[4].name == 'layer_4'
 
