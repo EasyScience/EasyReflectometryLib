@@ -24,21 +24,22 @@ from easyreflectometry.sample.collections.base_collection import BaseCollection
 Q_MIN = 0.001
 Q_MAX = 0.3
 Q_STEP = 0.002
+
 Q = np.arange(Q_MIN, Q_MAX, Q_STEP)
 
 MODELS_MODEL_DATA = [
     DataSet1D(
         name='Model Data 0',
-        x=Q,  # np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-        y=2 * Q,  # np.array([1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5]),
+        x=Q,
+        y=2 * Q,
     )
 ]
 EXPERIMENTAL_DATA = [
     DataSet1D(
         name='Example Data 0',
-        x=Q,  # np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-        y=3 * Q,  # np.array([0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5]),
-        ye=0.1 * Q,  # np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]),
+        x=Q,
+        y=3 * Q,
+        ye=0.1 * Q,
     )
 ]
 
@@ -118,6 +119,15 @@ class Project:
     @property
     def path_json(self):
         return self.path / 'project.json'
+
+    def sld_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
+        self.models[index].interface = self._calculator
+        sld = self.models[index].interface().sld_profile(self._models[index].unique_name)
+        return DataSet1D(
+            name=f'SLD for Model {index}',
+            x=sld[0],
+            y=sld[1],
+        )
 
     def sample_data_for_model_at_index(self, index: int = 0, q_range: Optional[np.array] = None) -> DataSet1D:
         original_resolution_function = self.models[index].resolution_function

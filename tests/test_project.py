@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
+from numpy.testing import assert_almost_equal
 
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
@@ -110,9 +111,22 @@ class TestProject:
         assert len(project._models.data[0].sample) == 3
         assert len(project._materials) == 3
 
-    def test_sample_data_for_model_at_index(self):
-        from numpy.testing import assert_almost_equal
+    def test_sld_data_for_model_at_index(self):
+        # When
+        project = Project()
+        project.default_model()
 
+        # Then
+        sample_data = project.sld_data_for_model_at_index(0)
+
+        # Expect
+        assert len(sample_data.x) == 500
+        assert_almost_equal(
+            np.array([4.6119497e-08, 6.3189932e00, 6.3350000e00, 2.0740000e00]),
+            np.array([sample_data.y[0], sample_data.y[100], sample_data.y[300], sample_data.y[499]]),
+        )
+
+    def test_sample_data_for_model_at_index(self):
         # When
         project = Project()
         project.default_model()
@@ -128,8 +142,6 @@ class TestProject:
         )
 
     def test_model_data_for_model_at_index(self):
-        from numpy.testing import assert_almost_equal
-
         # When
         project = Project()
         project.default_model()
