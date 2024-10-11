@@ -26,14 +26,14 @@ class ResolutionFunction:
 
     @classmethod
     def from_dict(cls, data: dict) -> ResolutionFunction:
-        if data['smearing'] == 'PercentageFhwm':
-            return PercentageFhwm(data['constant'])
+        if data['smearing'] == 'PercentageFwhm':
+            return PercentageFwhm(data['constant'])
         if data['smearing'] == 'LinearSpline':
             return LinearSpline(data['q_data_points'], data['fwhm_values'])
         raise ValueError('Unknown resolution function type')
 
 
-class PercentageFhwm(ResolutionFunction):
+class PercentageFwhm(ResolutionFunction):
     def __init__(self, constant: Union[None, float] = None):
         if constant is None:
             constant = DEFAULT_RESOLUTION_FWHM_PERCENTAGE
@@ -45,7 +45,7 @@ class PercentageFhwm(ResolutionFunction):
     def as_dict(
         self, skip: Optional[List[str]] = None
     ) -> dict[str, str]:  # skip is kept for consistency of the as_dict signature
-        return {'smearing': 'PercentageFhwm', 'constant': self.constant}
+        return {'smearing': 'PercentageFwhm', 'constant': self.constant}
 
 
 class LinearSpline(ResolutionFunction):

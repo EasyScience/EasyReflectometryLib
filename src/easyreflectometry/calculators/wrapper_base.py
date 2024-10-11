@@ -2,7 +2,7 @@ from abc import abstractmethod
 
 import numpy as np
 
-from easyreflectometry.model import PercentageFhwm
+from easyreflectometry.model import PercentageFwhm
 from easyreflectometry.model import ResolutionFunction
 
 
@@ -16,7 +16,7 @@ class WrapperBase:
             'item': {},
             'model': {},
         }
-        self._resolution_function = PercentageFhwm()
+        self._resolution_function = PercentageFwhm()
 
     def reset_storage(self):
         """Reset the storage area to blank."""
