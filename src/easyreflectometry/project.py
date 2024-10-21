@@ -25,6 +25,8 @@ Q_MIN = 0.001
 Q_MAX = 0.3
 Q_ELEMENTS = 500
 
+DEFAULT_MINIZER = AvailableMinimizers.LMFit_leastsq
+
 EXPERIMENTAL_DATA = [
     DataSet1D(
         name='Example Data 0',
@@ -42,7 +44,7 @@ class Project:
         self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
         self._calculator = CalculatorFactory()
-        self._minimizer = AvailableMinimizers.LMFit_leastsq
+        self._minimizer = DEFAULT_MINIZER
         self._experiments: List[DataSet1D] = None
         self._colors = None
         self._report = None
@@ -62,7 +64,7 @@ class Project:
         self._info = self._default_info()
         self._path_project_parent = Path(os.path.expanduser('~'))
         self._calculator = CalculatorFactory()
-        self._minimizer = AvailableMinimizers.LMFit_leastsq
+        self._minimizer = DEFAULT_MINIZER
         self._experiments = None
         self._colors = None
         self._report = None
