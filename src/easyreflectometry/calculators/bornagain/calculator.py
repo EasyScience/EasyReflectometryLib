@@ -1,6 +1,5 @@
 __author__ = 'github.com/arm61'
 
-import numpy as np
 from easyscience.Objects.Inferface import ItemContainer
 
 from easyreflectometry.model import Model
@@ -180,22 +179,3 @@ class BornAgain(CalculatorBase):
         :type layer_id: int
         """
         self._wrapper.remove_item(item_id)
-
-    def fit_func(self, x_array: np.ndarray) -> np.ndarray:
-        """
-        Function to perform a fit
-        :param x_array: points to be calculated at
-        :type x_array: np.ndarray
-        :return: calculated points
-        :rtype: np.ndarray
-        """
-        return self._wrapper.calculate(x_array)
-
-    def sld_profile(self) -> tuple([np.ndarray, np.ndarray]):
-        """
-        Return the scattering length density profile.
-
-        :return: z and sld(z)
-        :rtype: tuple[np.ndarray, np.ndarray]
-        """
-        return self._wrapper.sld_profile()

@@ -1,6 +1,7 @@
 from typing import List
 from typing import Optional
 
+from easyscience import global_object
 from easyscience.Objects.Groups import BaseCollection as EasyBaseCollection
 
 from easyreflectometry.parameter_utils import yaml_dump
@@ -15,6 +16,9 @@ class BaseCollection(EasyBaseCollection):
         unique_name: Optional[str] = None,
         **kwargs,
     ):
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         super().__init__(name, unique_name=unique_name, *args, **kwargs)
         self.interface = interface
 

@@ -20,6 +20,7 @@ class ModelCollection(BaseCollection):
         *models: Tuple[Model],
         name: str = 'EasyModels',
         interface=None,
+        unique_name: Optional[str] = None,
         populate_if_none: bool = True,
         **kwargs,
     ):
@@ -32,7 +33,7 @@ class ModelCollection(BaseCollection):
         # Else collisions might occur in global_object.map
         self.populate_if_none = False
 
-        super().__init__(name, interface, *models, **kwargs)
+        super().__init__(name, interface, unique_name=unique_name, *models, **kwargs)
 
     def add_model(self, model: Optional[Model] = None):
         """Add a model to the collection.

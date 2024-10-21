@@ -45,6 +45,7 @@ class SurfactantLayer(BaseAssembly):
         :param conformal_roughness: Constrain the roughness to be the same for both layers, defaults to `False`.
         :param interface: Calculator interface, defaults to `None`.
         """
+        # We need to generate a unique name to create the nested objects
         if unique_name is None:
             unique_name = global_object.generate_unique_name(self.__class__.__name__)
 
