@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
-from numpy.testing import assert_almost_equal
+from numpy.testing import assert_allclose
 
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
@@ -121,7 +121,7 @@ class TestProject:
 
         # Expect
         assert len(sample_data.x) == 500
-        assert_almost_equal(
+        assert_allclose(
             np.array([4.6119497e-08, 6.3189932e00, 6.3350000e00, 2.0740000e00]),
             np.array([sample_data.y[0], sample_data.y[100], sample_data.y[300], sample_data.y[499]]),
         )
@@ -136,7 +136,7 @@ class TestProject:
 
         # Expect
         assert len(sample_data.y) == 4
-        assert_almost_equal(
+        assert_allclose(
             np.array([1.00000001e00, 1.74684509e-03, 1.66360864e-04, 1.73359103e-08]),
             sample_data.y,
         )
@@ -151,8 +151,8 @@ class TestProject:
 
         # Expect
         assert len(model_data.y) == 4
-        assert_almost_equal(
-            np.array([9.7387018e-01, 1.7678804e-03, 1.6581761e-04, 3.3280240e-08]),
+        assert_allclose(
+            np.array([0.9738701849233727, 0.0017678986451491123, 0.00016581714423990004, 3.3290653551465554e-08]),
             model_data.y,
         )
 
