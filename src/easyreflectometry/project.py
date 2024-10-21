@@ -23,9 +23,9 @@ from easyreflectometry.sample.collections.base_collection import BaseCollection
 
 Q_MIN = 0.001
 Q_MAX = 0.3
-Q_STEP = 0.002
+Q_ELEMENTS = 500
 
-Q = np.arange(Q_MIN, Q_MAX, Q_STEP)
+Q = np.linspace(Q_MIN, Q_MAX, Q_ELEMENTS)
 
 MODELS_MODEL_DATA = [
     DataSet1D(
@@ -139,7 +139,7 @@ class Project:
 
     def model_data_for_model_at_index(self, index: int = 0, q_range: Optional[np.array] = None) -> DataSet1D:
         if q_range is None:
-            q_range = np.arange(Q_MIN, Q_MAX, Q_STEP)
+            q_range = np.linspace(Q_MIN, Q_MAX, Q_ELEMENTS)
         self.models[index].interface = self._calculator
         reflectivity = self.models[index].interface().reflectity_profile(q_range, self._models[index].unique_name)
         return DataSet1D(
