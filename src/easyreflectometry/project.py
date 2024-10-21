@@ -25,21 +25,12 @@ Q_MIN = 0.001
 Q_MAX = 0.3
 Q_ELEMENTS = 500
 
-Q = np.linspace(Q_MIN, Q_MAX, Q_ELEMENTS)
-
-MODELS_MODEL_DATA = [
-    DataSet1D(
-        name='Model Data 0',
-        x=Q,
-        y=2 * Q,
-    )
-]
 EXPERIMENTAL_DATA = [
     DataSet1D(
         name='Example Data 0',
-        x=Q,
-        y=3 * Q,
-        ye=0.1 * Q,
+        x=np.linspace(Q_MIN, Q_MAX, Q_ELEMENTS),
+        y=3 * np.linspace(Q_MIN, Q_MAX, Q_ELEMENTS),
+        ye=0.1 * np.linspace(Q_MIN, Q_MAX, Q_ELEMENTS),
     )
 ]
 
