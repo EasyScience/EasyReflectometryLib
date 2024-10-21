@@ -1,6 +1,5 @@
 __author__ = 'github.com/arm61'
 
-import numpy as np
 from easyscience.Objects.Inferface import ItemContainer
 
 from easyreflectometry.model import Model
