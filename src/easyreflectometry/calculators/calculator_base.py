@@ -159,20 +159,12 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         self._wrapper.remove_item(item_id, model_id)
 
     def reflectity_profile(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
-        """Function to perform a fit.
+        """Determines the reflectivity profile for the given range and model.
 
         :param x_array: points to be calculated at
         :param model_id: The model id
         """
         return self._wrapper.calculate(x_array, model_id)
-
-    def fit_func(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
-        """Function to perform a fit.
-
-        :param x_array: points to be calculated at
-        :param model_id: The model id
-        """
-        return self.reflectity_profile(x_array, model_id)
 
     def sld_profile(self, model_id: str) -> tuple[np.ndarray, np.ndarray]:
         """
