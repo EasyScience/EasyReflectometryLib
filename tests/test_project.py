@@ -10,8 +10,10 @@ from scipp import DataGroup
 
 import easyreflectometry
 from easyreflectometry.data import DataSet1D
+from easyreflectometry.model import LinearSpline
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
+from easyreflectometry.model import PercentageFhwm
 from easyreflectometry.project import Project
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import MaterialCollection
@@ -37,7 +39,7 @@ class TestProject:
         assert len(project._models) == 0
         assert project._calculator.current_interface_name == 'refnx'
         assert project._minimizer == AvailableMinimizers.LMFit_leastsq
-        assert project._experiments is None
+        assert project._experiments == {}
         assert project._report is None
         assert project._created is False
         assert project._with_experiments is False
@@ -75,7 +77,7 @@ class TestProject:
         assert project._path_project_parent == Path(os.path.expanduser('~'))
         assert project._calculator.current_interface_name == 'refnx'
         assert project._minimizer == AvailableMinimizers.LMFit_leastsq
-        assert project._experiments is None
+        assert project._experiments == {}
         assert project._report is None
         assert project._created is False
         assert project._with_experiments is False
@@ -474,6 +476,7 @@ class TestProject:
     def test_load_experiment(self):
         # When
         project = Project()
+        project.models = ModelCollection(Model(), Model(), Model(), Model(), Model(), Model())
         fpath = os.path.join(PATH_STATIC, 'example.ort')
 
         # Then
@@ -482,13 +485,15 @@ class TestProject:
         # Expect
         assert list(project.experiments.keys()) == [5]
         assert isinstance(project.experiments[5], DataGroup)
+        assert isinstance(project.models[5].resolution_function, LinearSpline)
+        assert isinstance(project.models[4].resolution_function, PercentageFhwm)
 
     def test_experimental_data_at_index(self):
         # When
         project = Project()
+        project.models = ModelCollection(Model())
         fpath = os.path.join(PATH_STATIC, 'example.ort')
         project.load_experiment_for_model_at_index(fpath)
-        project.models = ModelCollection(Model())
 
         # Then
         data = project.experimental_data_for_model_at_index()

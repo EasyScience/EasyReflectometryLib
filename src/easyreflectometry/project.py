@@ -15,6 +15,7 @@ from scipp import DataGroup
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.data import DataSet1D
 from easyreflectometry.data import load
+from easyreflectometry.model import LinearSpline
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
 from easyreflectometry.model import PercentageFhwm
@@ -142,6 +143,13 @@ class Project:
 
     def load_experiment_for_model_at_index(self, path: Union[Path, str], index: Optional[int] = 0) -> None:
         self._experiments[index] = load(str(path))
+        # Set the resolution function if variance data is present
+        if sum(self._experiments[index]['coords']['Qz_0'].variances) != 0:
+            resolution_function = LinearSpline(
+                q_data_points=self._experiments[index]['coords']['Qz_0'].values,
+                fwhm_values=np.sqrt(self._experiments[index]['coords']['Qz_0'].variances),
+            )
+            self._models[index].resolution_function = resolution_function
 
     def sld_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
         self.models[index].interface = self._calculator
