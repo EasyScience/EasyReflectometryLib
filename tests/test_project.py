@@ -6,12 +6,17 @@ import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
 from numpy.testing import assert_allclose
+from scipp import DataGroup
 
+import easyreflectometry
+from easyreflectometry.data import DataSet1D
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
 from easyreflectometry.project import Project
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import MaterialCollection
+
+PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
 
 
 class TestProject:
@@ -465,3 +470,57 @@ class TestProject:
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
+
+    def test_load_experiment(self):
+        # When
+        project = Project()
+        fpath = os.path.join(PATH_STATIC, 'example.ort')
+
+        # Then
+        project.load_experiment_for_model_at_index(fpath, 5)
+
+        # Expect
+        assert list(project.experiments.keys()) == [5]
+        assert isinstance(project.experiments[5], DataGroup)
+
+    def test_experimental_data_at_index(self):
+        # When
+        project = Project()
+        fpath = os.path.join(PATH_STATIC, 'example.ort')
+        project.load_experiment_for_model_at_index(fpath)
+        project.models = ModelCollection(Model())
+
+        # Then
+        data = project.experimental_data_for_model_at_index()
+
+        # Expect
+        assert data.name == 'Experiment for Model 0'
+        assert data.is_experiment
+        assert isinstance(data, DataSet1D)
+        assert len(data.x) == 408
+        assert len(data.xe) == 408
+        assert len(data.y) == 408
+        assert len(data.ye) == 408
+
+    def test_q(self):
+        # When
+        project = Project()
+
+        # Then
+        q = project.q_min, project.q_max, project.q_elements
+
+        # Expect
+        assert q == (0.001, 0.3, 500)
+
+    def test_set_q(self):
+        # When
+        project = Project()
+
+        # Then
+        project.q_min = 1
+        project.q_max = 2
+        project.q_elements = 3
+
+        # Expect
+        q = project.q_min, project.q_max, project.q_elements
+        assert q == (1, 2, 3)
