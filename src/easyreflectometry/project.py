@@ -27,7 +27,7 @@ from easyreflectometry.sample.collections.base_collection import BaseCollection
 
 Q_MIN = 0.001
 Q_MAX = 0.3
-Q_ELEMENTS = 500
+Q_RESOLUTION = 500
 
 DEFAULT_MINIZER = AvailableMinimizers.LMFit_leastsq
 
@@ -45,7 +45,7 @@ class Project:
         self._report = None
         self._q_min = None
         self._q_max = None
-        self._q_elements = None
+        self._q_resolution = None
 
         # Project flags
         self._created = False
@@ -92,14 +92,14 @@ class Project:
         self._q_max = value
 
     @property
-    def q_elements(self):
-        if self._q_elements is None:
-            return Q_ELEMENTS
-        return self._q_elements
+    def q_resolution(self):
+        if self._q_resolution is None:
+            return Q_RESOLUTION
+        return self._q_resolution
 
-    @q_elements.setter
-    def q_elements(self, value: int) -> None:
-        self._q_elements = value
+    @q_resolution.setter
+    def q_resolution(self, value: int) -> None:
+        self._q_resolution = value
 
     @property
     def created(self) -> bool:
@@ -170,7 +170,7 @@ class Project:
 
     def model_data_for_model_at_index(self, index: int = 0, q_range: Optional[np.array] = None) -> DataSet1D:
         if q_range is None:
-            q_range = np.linspace(self.q_min, self.q_max, self.q_elements)
+            q_range = np.linspace(self.q_min, self.q_max, self.q_resolution)
         self.models[index].interface = self._calculator
         reflectivity = self.models[index].interface().reflectity_profile(q_range, self._models[index].unique_name)
         return DataSet1D(

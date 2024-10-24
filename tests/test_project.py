@@ -512,7 +512,7 @@ class TestProject:
         project = Project()
 
         # Then
-        q = project.q_min, project.q_max, project.q_elements
+        q = project.q_min, project.q_max, project.q_resolution
 
         # Expect
         assert q == (0.001, 0.3, 500)
@@ -524,8 +524,8 @@ class TestProject:
         # Then
         project.q_min = 1
         project.q_max = 2
-        project.q_elements = 3
+        project.q_resolution = 3
 
         # Expect
-        q = project.q_min, project.q_max, project.q_elements
+        q = project.q_min, project.q_max, project.q_resolution
         assert q == (1, 2, 3)
