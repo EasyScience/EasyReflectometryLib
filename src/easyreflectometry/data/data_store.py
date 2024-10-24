@@ -101,6 +101,10 @@ class DataSet1D(ComponentSerializer):
             x = np.array(x)
         if not isinstance(y, np.ndarray):
             y = np.array(y)
+        if not isinstance(ye, np.ndarray):
+            ye = np.array(ye)
+        if not isinstance(xe, np.ndarray):
+            xe = np.array(xe)
 
         self.x = x
         self.y = y
@@ -129,8 +133,8 @@ class DataSet1D(ComponentSerializer):
     def is_simulation(self) -> bool:
         return self._model is None
 
-    def data_points(self) -> int:
-        return zip(self.x, self.y)
+    def data_points(self) -> tuple[float, float, float, float]:
+        return zip(self.x, self.y, self.ye, self.xe)
 
     def __repr__(self) -> str:
         return "1D DataStore of '{:s}' Vs '{:s}' with {} data points".format(self.x_label, self.y_label, len(self.x))
