@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 from pathlib import Path
+from typing import Dict
 from typing import List
 from typing import Optional
 from typing import Union
@@ -9,9 +10,12 @@ from typing import Union
 import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
+from scipp import DataGroup
 
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.data import DataSet1D
+from easyreflectometry.data import load
+from easyreflectometry.model import LinearSpline
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
 from easyreflectometry.model import PercentageFhwm
@@ -23,18 +27,9 @@ from easyreflectometry.sample.collections.base_collection import BaseCollection
 
 Q_MIN = 0.001
 Q_MAX = 0.3
-Q_ELEMENTS = 500
+Q_RESOLUTION = 500
 
 DEFAULT_MINIZER = AvailableMinimizers.LMFit_leastsq
-
-EXPERIMENTAL_DATA = [
-    DataSet1D(
-        name='Example Data 0',
-        x=np.linspace(Q_MIN, Q_MAX, Q_ELEMENTS),
-        y=3 * np.linspace(Q_MIN, Q_MAX, Q_ELEMENTS),
-        ye=0.1 * np.linspace(Q_MIN, Q_MAX, Q_ELEMENTS),
-    )
-]
 
 
 class Project:
@@ -45,9 +40,12 @@ class Project:
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
         self._calculator = CalculatorFactory()
         self._minimizer = DEFAULT_MINIZER
-        self._experiments: List[DataSet1D] = None
+        self._experiments: Dict[DataGroup] = {}
         self._colors = None
         self._report = None
+        self._q_min = None
+        self._q_max = None
+        self._q_resolution = None
 
         # Project flags
         self._created = False
@@ -65,13 +63,43 @@ class Project:
         self._path_project_parent = Path(os.path.expanduser('~'))
         self._calculator = CalculatorFactory()
         self._minimizer = DEFAULT_MINIZER
-        self._experiments = None
+        self._experiments = {}
         self._colors = None
         self._report = None
 
         # Project flags
         self._created = False
         self._with_experiments = False
+
+    @property
+    def q_min(self):
+        if self._q_min is None:
+            return Q_MIN
+        return self._q_min
+
+    @q_min.setter
+    def q_min(self, value: float) -> None:
+        self._q_min = value
+
+    @property
+    def q_max(self):
+        if self._q_max is None:
+            return Q_MAX
+        return self._q_max
+
+    @q_max.setter
+    def q_max(self, value: float) -> None:
+        self._q_max = value
+
+    @property
+    def q_resolution(self):
+        if self._q_resolution is None:
+            return Q_RESOLUTION
+        return self._q_resolution
+
+    @q_resolution.setter
+    def q_resolution(self, value: int) -> None:
+        self._q_resolution = value
 
     @property
     def created(self) -> bool:
@@ -113,6 +141,16 @@ class Project:
     def path_json(self):
         return self.path / 'project.json'
 
+    def load_experiment_for_model_at_index(self, path: Union[Path, str], index: Optional[int] = 0) -> None:
+        self._experiments[index] = load(str(path))
+        # Set the resolution function if variance data is present
+        if sum(self._experiments[index]['coords']['Qz_0'].variances) != 0:
+            resolution_function = LinearSpline(
+                q_data_points=self._experiments[index]['coords']['Qz_0'].values,
+                fwhm_values=np.sqrt(self._experiments[index]['coords']['Qz_0'].variances),
+            )
+            self._models[index].resolution_function = resolution_function
+
     def sld_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
         self.models[index].interface = self._calculator
         sld = self.models[index].interface().sld_profile(self._models[index].unique_name)
@@ -132,7 +170,7 @@ class Project:
 
     def model_data_for_model_at_index(self, index: int = 0, q_range: Optional[np.array] = None) -> DataSet1D:
         if q_range is None:
-            q_range = np.linspace(Q_MIN, Q_MAX, Q_ELEMENTS)
+            q_range = np.linspace(self.q_min, self.q_max, self.q_resolution)
         self.models[index].interface = self._calculator
         reflectivity = self.models[index].interface().reflectity_profile(q_range, self._models[index].unique_name)
         return DataSet1D(
@@ -142,7 +180,17 @@ class Project:
         )
 
     def experimental_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
-        return EXPERIMENTAL_DATA[index]
+        if index in self._experiments.keys():
+            return DataSet1D(
+                name=f'Experiment for Model {index}',
+                x=self._experiments[index]['coords']['Qz_0'].values,
+                y=self._experiments[index]['data']['R_0'].values,
+                ye=self._experiments[index]['data']['R_0'].variances,
+                xe=self._experiments[index]['coords']['Qz_0'].variances,
+                model=self.models[index],
+            )
+        else:
+            raise IndexError(f'No experiment data for model at index {index}')
 
     def default_model(self):
         self._replace_collection(MaterialCollection(), self._materials)

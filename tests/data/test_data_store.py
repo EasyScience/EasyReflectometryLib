@@ -41,4 +41,4 @@ class TestDataStore:
         points = data.data_points()
 
         # Expect
-        assert list(points) == [(1, 4), (2, 5), (3, 6)]
+        assert list(points) == [(1, 4, 7, 10), (2, 5, 8, 11), (3, 6, 9, 12)]
