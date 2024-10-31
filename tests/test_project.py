@@ -1,6 +1,7 @@
 import datetime
 import os
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import numpy as np
 from easyscience import global_object
@@ -38,11 +39,15 @@ class TestProject:
         assert len(project._materials) == 0
         assert len(project._models) == 0
         assert project._calculator.current_interface_name == 'refnx'
-        assert project._minimizer == AvailableMinimizers.LMFit_leastsq
         assert project._experiments == {}
         assert project._report is None
         assert project._created is False
         assert project._with_experiments is False
+        assert project._fitter is None
+        assert project._current_model_index is None
+        assert project._q_min is None
+        assert project._q_max is None
+        assert project._q_resolution is None
 
     def test_reset(self):
         # When
@@ -51,13 +56,16 @@ class TestProject:
         project._materials.append(Material())
         project._models.append(Model())
         project._calculator = 'calculator'
-        project._minimizer = 'minimizer'
         project._experiments = 'experiments'
         project._report = 'report'
         project._created = True
         project._with_experiments = True
         project._path_project_parent = 'project_path'
-
+        project._fitter = 'fitter'
+        project._current_model_index = 10
+        project._q_min = 'q_min'
+        project._q_max = 'q_max'
+        project._q_resolution == 'q_resolution'
         # Then
         project.reset()
 
@@ -76,12 +84,16 @@ class TestProject:
 
         assert project._path_project_parent == Path(os.path.expanduser('~'))
         assert project._calculator.current_interface_name == 'refnx'
-        assert project._minimizer == AvailableMinimizers.LMFit_leastsq
         assert project._experiments == {}
         assert project._report is None
         assert project._created is False
         assert project._with_experiments is False
         assert global_object.map.vertices() == ['project_models', 'project_materials']
+        assert project._fitter is None
+        assert project._current_model_index is None
+        assert project._q_min is None
+        assert project._q_max is None
+        assert project._q_resolution is None
 
     def test_models(self):
         # When
@@ -103,6 +115,7 @@ class TestProject:
         assert project._materials[0] == material
         assert project._materials[1] == models[0].sample[0].layers[0].material
         assert project._materials[2] == models[0].sample[1].layers[0].material
+        assert project.models[0].interface == project._calculator
 
     def test_default_model(self):
         # When
@@ -167,11 +180,21 @@ class TestProject:
         # When
         project = Project()
 
+        # Then Expect
+        assert project.minimizer == AvailableMinimizers.LMFit_leastsq
+
+    def test_set_minimizer(self):
+        # When
+        project = Project()
+        project._fitter = MagicMock()
+        project._fitter.easy_science_multi_fitter = MagicMock()
+        project._fitter.easy_science_multi_fitter.switch_minimizer = MagicMock()
+
         # Then
         project.minimizer = 'minimizer'
 
         # Expect
-        assert project.minimizer == 'minimizer'
+        project._fitter.easy_science_multi_fitter.switch_minimizer.assert_called_once_with('minimizer')
 
     def test_experiments(self):
         # When
@@ -257,7 +280,6 @@ class TestProject:
         assert keys == [
             'calculator',
             'info',
-            'minimizer',
             'models',
             'with_experiments',
         ]
@@ -269,7 +291,6 @@ class TestProject:
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
         assert project_dict['calculator'] == 'refnx'
-        assert project_dict['minimizer'] == 'LMFit_leastsq'
         assert project_dict['models']['data'] == []
         assert project_dict['with_experiments'] is False
 
@@ -284,7 +305,7 @@ class TestProject:
 
         # Expect
         models_dict = models.as_dict(skip=['interface'])
-        models_dict['unique_name'] = 'project_models'
+        models_dict['unique_name'] = 'project_models_to_prevent_collisions_on_load'
         assert project_dict['models'] == models_dict
 
     def test_as_dict_materials_not_in_model(self):
@@ -304,14 +325,15 @@ class TestProject:
     def test_as_dict_minimizer(self):
         # When
         project = Project()
-        minimizer = AvailableMinimizers.LMFit
-        project.minimizer = minimizer
+        project._fitter = MagicMock()
+        project._fitter.easy_science_multi_fitter = MagicMock()
+        project._fitter.easy_science_multi_fitter.minimizer = AvailableMinimizers.LMFit
 
         # Then
         project_dict = project.as_dict()
 
         # Expect
-        assert project_dict['minimizer'] == 'LMFit'
+        assert project_dict['fitter_minimizer'] == 'LMFit'
 
     def test_replace_collection(self):
         # When
@@ -376,7 +398,7 @@ class TestProject:
         global_object.map._clear()
         project = Project()
         project.set_path_project_parent(tmp_path)
-        project._models.append(Model())
+        project.default_model()
         project._info['name'] = 'Test Project'
 
         # Then
@@ -396,7 +418,7 @@ class TestProject:
 
         # Then
         project._info['short_description'] = 'short_description'
-        project._models.append(Model())
+        project.default_model()
         project.save_as_json(overwrite=True)
 
         # Expect
@@ -412,7 +434,7 @@ class TestProject:
 
         # Then
         project._info['short_description'] = 'short_description'
-        project._models.append(Model())
+        project.default_model()
         project.save_as_json()
 
         # Expect
@@ -423,7 +445,7 @@ class TestProject:
         global_object.map._clear()
         project = Project()
         project.set_path_project_parent(tmp_path)
-        project._models.append(Model())
+        project.default_model()
         project._info['name'] = 'name'
         project._info['short_description'] = 'short_description'
         project._info['samples'] = 'samples'
@@ -529,3 +551,20 @@ class TestProject:
         # Expect
         q = project.q_min, project.q_max, project.q_resolution
         assert q == (1, 2, 3)
+
+    def test_calculator(self):
+        # When
+        project = Project()
+
+        # Then Expect
+        assert project.calculator == 'refnx'
+
+    def test_set_calculator(self):
+        # When
+        project = Project()
+
+        # Then
+        project.calculator = 'refl1d'
+
+        # Expect
+        assert project._calculator.current_interface_name == 'refl1d'

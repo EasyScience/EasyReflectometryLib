@@ -10,11 +10,13 @@ from typing import Union
 import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
+from easyscience.fitting.fitter import DEFAULT_MINIMIZER
 from scipp import DataGroup
 
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.data import DataSet1D
 from easyreflectometry.data import load
+from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.model import LinearSpline
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
@@ -39,13 +41,14 @@ class Project:
         self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
         self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
         self._calculator = CalculatorFactory()
-        self._minimizer = DEFAULT_MINIZER
         self._experiments: Dict[DataGroup] = {}
-        self._colors = None
+        self._fitter: MultiFitter = None
+        self._colors: list[str] = None
         self._report = None
-        self._q_min = None
-        self._q_max = None
-        self._q_resolution = None
+        self._q_min: float = None
+        self._q_max: float = None
+        self._q_resolution: int = None
+        self._current_model_index: int = None
 
         # Project flags
         self._created = False
@@ -56,20 +59,7 @@ class Project:
         del self._materials
         global_object.map._clear()
 
-        self._models = ModelCollection(populate_if_none=False, unique_name='project_models')
-        self._materials = MaterialCollection(populate_if_none=False, unique_name='project_materials')
-
-        self._info = self._default_info()
-        self._path_project_parent = Path(os.path.expanduser('~'))
-        self._calculator = CalculatorFactory()
-        self._minimizer = DEFAULT_MINIZER
-        self._experiments = {}
-        self._colors = None
-        self._report = None
-
-        # Project flags
-        self._created = False
-        self._with_experiments = False
+        self.__init__()
 
     @property
     def q_min(self):
@@ -102,6 +92,16 @@ class Project:
         self._q_resolution = value
 
     @property
+    def current_model_index(self) -> Optional[int]:
+        return self._current_model_index
+
+    @current_model_index.setter
+    def current_model_index(self, value: int) -> None:
+        if value < 0 or value >= len(self._models):
+            raise ValueError(f'Index {value} out of range')
+        self._current_model_index = value
+
+    @property
     def created(self) -> bool:
         return self._created
 
@@ -119,15 +119,30 @@ class Project:
     @models.setter
     def models(self, models: ModelCollection) -> None:
         self._replace_collection(models, self._models)
+        self._current_model_index = 0
         self._materials.extend(self._get_materials_in_models())
+        for model in self._models:
+            model.interface = self._calculator
+        self._fitter = MultiFitter(self._models[self._current_model_index])
+
+    @property
+    def calculator(self) -> str:
+        return self._calculator.current_interface_name
+
+    @calculator.setter
+    def calculator(self, calculator: str) -> None:
+        self._calculator.switch(calculator)
 
     @property
     def minimizer(self) -> AvailableMinimizers:
-        return self._minimizer
+        if self._fitter is not None:
+            return self._fitter.easy_science_multi_fitter.minimizer
+        return DEFAULT_MINIMIZER
 
     @minimizer.setter
     def minimizer(self, minimizer: AvailableMinimizers) -> None:
-        self._minimizer = minimizer
+        if self._fitter is not None:
+            self._fitter.easy_science_multi_fitter.switch_minimizer(minimizer)
 
     @property
     def experiments(self) -> List[DataSet1D]:
@@ -196,21 +211,21 @@ class Project:
         self._replace_collection(MaterialCollection(), self._materials)
 
         layers = [
-            Layer(material=self._materials[0], thickness=0.0, roughness=0.0, name='Vacuum Layer', interface=self._calculator),
-            Layer(material=self._materials[1], thickness=100.0, roughness=3.0, name='Multi-layer', interface=self._calculator),
-            Layer(material=self._materials[2], thickness=0.0, roughness=1.2, name='Si Layer', interface=self._calculator),
+            Layer(material=self._materials[0], thickness=0.0, roughness=0.0, name='Vacuum Layer'),
+            Layer(material=self._materials[1], thickness=100.0, roughness=3.0, name='Multi-layer'),
+            Layer(material=self._materials[2], thickness=0.0, roughness=1.2, name='Si Layer'),
         ]
         assemblies = [
-            Multilayer(layers[0], name='Superphase', interface=self._calculator),
-            Multilayer(layers[1], name='Multi-layer', interface=self._calculator),
-            Multilayer(layers[2], name='Subphase', interface=self._calculator),
+            Multilayer(layers[0], name='Superphase'),
+            Multilayer(layers[1], name='Multi-layer'),
+            Multilayer(layers[2], name='Subphase'),
         ]
-        sample = Sample(*assemblies, interface=self._calculator)
+        sample = Sample(*assemblies)
         sample[0].layers[0].thickness.enabled = False
         sample[0].layers[0].roughness.enabled = False
         sample[-1].layers[-1].thickness.enabled = False
-        model = Model(sample=sample, interface=self._calculator)
-        self._replace_collection([model], self._models)
+        model = Model(sample=sample)
+        self.models = ModelCollection([model])
 
     def add_material(self, material: MaterialCollection) -> None:
         if material in self._materials:
@@ -274,12 +289,13 @@ class Project:
         project_dict['with_experiments'] = self._with_experiments
         if self._models is not None:
             project_dict['models'] = self._models.as_dict(skip=['interface'])
+            project_dict['models']['unique_name'] = project_dict['models']['unique_name'] + '_to_prevent_collisions_on_load'
         if include_materials_not_in_model:
             self._as_dict_add_materials_not_in_model_dict(project_dict)
         if self._with_experiments:
             self._as_dict_add_experiments(project_dict)
-        if self._minimizer is not None:
-            project_dict['minimizer'] = self._minimizer.name
+        if self._fitter is not None:
+            project_dict['fitter_minimizer'] = self._fitter.easy_science_multi_fitter.minimizer.name
         if self._calculator is not None:
             project_dict['calculator'] = self._calculator.current_interface_name
         if self._colors is not None:
@@ -310,25 +326,21 @@ class Project:
         keys = list(project_dict.keys())
         self._info = project_dict['info']
         self._with_experiments = project_dict['with_experiments']
+        if 'calculator' in keys:
+            self._calculator.switch(project_dict['calculator'])
         if 'models' in keys:
-            self._models = None
-            self._models = ModelCollection.from_dict(project_dict['models'])
-
+            self.models = ModelCollection.from_dict(project_dict['models'])
         self._replace_collection(self._get_materials_in_models(), self._materials)
-
         if 'materials_not_in_model' in keys:
             self._materials.extend(MaterialCollection.from_dict(project_dict['materials_not_in_model']))
-
-        if 'minimizer' in keys:
-            self._minimizer = AvailableMinimizers[project_dict['minimizer']]
+        if 'fitter_minimizer' in keys:
+            self._fitter.easy_science_multi_fitter.switch_minimizer(AvailableMinimizers[project_dict['fitter_minimizer']])
         else:
-            self._minimizer = None
+            self._fitter = None
         if 'experiments' in keys:
             self._experiments = self._from_dict_extract_experiments(project_dict)
         else:
             self._experiments = None
-        if 'calculator' in keys:
-            self._calculator.switch(project_dict['calculator'])
 
     def _from_dict_extract_experiments(self, project_dict: dict):
         self._experiments: List[DataSet1D] = []
