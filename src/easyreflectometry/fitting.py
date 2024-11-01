@@ -63,7 +63,7 @@ class MultiFitter:
         :param data: DataGroup to be fitted to and populated
         :param method: Optimisation method
         """
-        return self.easy_science_multi_fitter.fit(data.x, data.y, weights=data.ye)
+        return self.easy_science_multi_fitter.fit(x=[data.x], y=[data.y], weights=[data.ye])[0]
 
     def switch_minimizer(self, minimizer: AvailableMinimizers) -> None:
         """
