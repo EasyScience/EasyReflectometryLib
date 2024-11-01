@@ -4,7 +4,9 @@ import numpy as np
 import scipp as sc
 from easyscience.fitting import AvailableMinimizers
 from easyscience.fitting.multi_fitter import MultiFitter as EasyScienceMultiFitter
+from easyscience.fitting import FitResults
 
+from easyreflectometry.data import DataSet1D
 from easyreflectometry.model import Model
 
 
@@ -53,6 +55,15 @@ class MultiFitter:
                 dims=[f'z_{id}'], values=sld_profile[0], unit=(1 / new_data['coords'][f'Qz_{id}'].unit).unit
             )
         return new_data
+
+    def fit_data_set_1d(self, data: DataSet1D) -> FitResults:
+        """
+        Perform the fitting and populate the DataGroups with the result.
+
+        :param data: DataGroup to be fitted to and populated
+        :param method: Optimisation method
+        """
+        return self.easy_science_multi_fitter.fit(data.x, data.y, weights=data.ye)
 
     def switch_minimizer(self, minimizer: AvailableMinimizers) -> None:
         """
