@@ -56,7 +56,7 @@ class MultiFitter:
             )
         return new_data
 
-    def fit_data_set_1d(self, data: DataSet1D) -> FitResults:
+    def fit_single_data_set_1d(self, data: DataSet1D) -> FitResults:
         """
         Perform the fitting and populate the DataGroups with the result.
 
