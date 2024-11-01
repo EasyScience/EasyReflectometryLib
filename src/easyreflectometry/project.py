@@ -11,6 +11,7 @@ import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
 from easyscience.fitting.fitter import DEFAULT_MINIMIZER
+from easyscience.Objects.new_variable import Parameter
 from scipp import DataGroup
 
 from easyreflectometry.calculators import CalculatorFactory
@@ -60,6 +61,15 @@ class Project:
         global_object.map._clear()
 
         self.__init__()
+
+    @property
+    def parameters(self) -> List[Parameter]:
+        parameters = []
+        for vertice_str in global_object.map.vertices():
+            vertice_obj = global_object.map.get_item_by_key(vertice_str)
+            if isinstance(vertice_obj, Parameter):
+                parameters.append(vertice_obj)
+        return parameters
 
     @property
     def q_min(self):

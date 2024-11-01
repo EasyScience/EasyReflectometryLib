@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
+from easyscience.Objects.new_variable import Parameter
 from numpy.testing import assert_allclose
 from scipp import DataGroup
 
@@ -568,3 +569,15 @@ class TestProject:
 
         # Expect
         assert project._calculator.current_interface_name == 'refl1d'
+
+    def test_parameters(self):
+        # When
+        project = Project()
+        project.default_model()
+
+        # Then
+        parameters = project.parameters
+
+        # Expect
+        assert len(parameters) == 14
+        assert isinstance(parameters[0], Parameter)
