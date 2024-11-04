@@ -157,7 +157,8 @@ class Project:
     @models.setter
     def models(self, models: ModelCollection) -> None:
         self._replace_collection(models, self._models)
-        self._current_model_index = 0
+        # Use setter to update indicies for current model, assembly and layer
+        self.current_model_index = 0
         self._materials.extend(self._get_materials_in_models())
         for model in self._models:
             model.interface = self._calculator
