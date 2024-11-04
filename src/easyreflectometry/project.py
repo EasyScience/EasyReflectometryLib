@@ -49,6 +49,7 @@ class Project:
         self._q_min: float = None
         self._q_max: float = None
         self._q_resolution: int = None
+        self._current_material_index: int = None
         self._current_model_index: int = None
         self._current_assembly_index: int = None
         self._current_layer_index: int = None
@@ -102,6 +103,17 @@ class Project:
     @q_resolution.setter
     def q_resolution(self, value: int) -> None:
         self._q_resolution = value
+
+    @property
+    def current_material_index(self) -> Optional[int]:
+        return self._current_material_index
+
+    @current_material_index.setter
+    def current_material_index(self, value: int) -> None:
+        if value < 0 or value >= len(self._materials):
+            raise ValueError(f'Index {value} out of range')
+        if self._current_material_index != value:
+            self._current_material_index = value
 
     @property
     def current_model_index(self) -> Optional[int]:
