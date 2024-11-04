@@ -50,6 +50,8 @@ class Project:
         self._q_max: float = None
         self._q_resolution: int = None
         self._current_model_index: int = None
+        self._current_assembly_index: int = None
+        self._current_layer_index: int = None
 
         # Project flags
         self._created = False
@@ -109,7 +111,33 @@ class Project:
     def current_model_index(self, value: int) -> None:
         if value < 0 or value >= len(self._models):
             raise ValueError(f'Index {value} out of range')
-        self._current_model_index = value
+        if self._current_model_index != value:
+            self._current_model_index = value
+            self._current_assembly_index = 0
+            self._current_layer_index = 0
+
+    @property
+    def current_assembly_index(self) -> Optional[int]:
+        return self._current_assembly_index
+
+    @current_model_index.setter
+    def current_model_index(self, value: int) -> None:
+        if value < 0 or value >= len(self._models[self._current_model_index]):
+            raise ValueError(f'Index {value} out of range')
+        if self._current_assembly_index != value:
+            self._current_assembly_index = value
+            self._current_layer_index = 0
+
+    @property
+    def current_layer_index(self) -> Optional[int]:
+        return self._current_layer_index
+
+    @current_model_index.setter
+    def current_model_index(self, value: int) -> None:
+        if value < 0 or value >= len(self._models[self._current_model_index][self._current_assembly_index]):
+            raise ValueError(f'Index {value} out of range')
+        if self._current_layer_index != value:
+            self._current_layer_index = value
 
     @property
     def created(self) -> bool:
