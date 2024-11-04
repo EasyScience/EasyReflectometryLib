@@ -122,7 +122,7 @@ class Project:
 
     @current_assembly_index.setter
     def current_assembly_index(self, value: int) -> None:
-        if value < 0 or value >= len(self._models[self._current_model_index]):
+        if value < 0 or value >= len(self._models[self._current_model_index].sample):
             raise ValueError(f'Index {value} out of range')
         if self._current_assembly_index != value:
             self._current_assembly_index = value
@@ -134,7 +134,7 @@ class Project:
 
     @current_layer_index.setter
     def current_layer_index(self, value: int) -> None:
-        if value < 0 or value >= len(self._models[self._current_model_index][self._current_assembly_index]):
+        if value < 0 or value >= len(self._models[self._current_model_index][self._current_assembly_index].layers):
             raise ValueError(f'Index {value} out of range')
         if self._current_layer_index != value:
             self._current_layer_index = value
