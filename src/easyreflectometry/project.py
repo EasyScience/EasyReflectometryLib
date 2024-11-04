@@ -120,8 +120,8 @@ class Project:
     def current_assembly_index(self) -> Optional[int]:
         return self._current_assembly_index
 
-    @current_model_index.setter
-    def current_model_index(self, value: int) -> None:
+    @current_assembly_index.setter
+    def current_assembly_index(self, value: int) -> None:
         if value < 0 or value >= len(self._models[self._current_model_index]):
             raise ValueError(f'Index {value} out of range')
         if self._current_assembly_index != value:
@@ -132,8 +132,8 @@ class Project:
     def current_layer_index(self) -> Optional[int]:
         return self._current_layer_index
 
-    @current_model_index.setter
-    def current_model_index(self, value: int) -> None:
+    @current_layer_index.setter
+    def current_layer_index(self, value: int) -> None:
         if value < 0 or value >= len(self._models[self._current_model_index][self._current_assembly_index]):
             raise ValueError(f'Index {value} out of range')
         if self._current_layer_index != value:
