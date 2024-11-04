@@ -3,8 +3,8 @@ __author__ = 'github.com/arm61'
 import numpy as np
 import scipp as sc
 from easyscience.fitting import AvailableMinimizers
-from easyscience.fitting.multi_fitter import MultiFitter as EasyScienceMultiFitter
 from easyscience.fitting import FitResults
+from easyscience.fitting.multi_fitter import MultiFitter as EasyScienceMultiFitter
 
 from easyreflectometry.data import DataSet1D
 from easyreflectometry.model import Model
