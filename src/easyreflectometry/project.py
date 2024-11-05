@@ -49,10 +49,10 @@ class Project:
         self._q_min: float = None
         self._q_max: float = None
         self._q_resolution: int = None
-        self._current_material_index: int = None
-        self._current_model_index: int = None
-        self._current_assembly_index: int = None
-        self._current_layer_index: int = None
+        self._current_material_index = 0
+        self._current_model_index = 0
+        self._current_assembly_index = 0
+        self._current_layer_index = 0
 
         # Project flags
         self._created = False
