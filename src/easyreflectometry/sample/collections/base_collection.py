@@ -4,7 +4,7 @@ from typing import Optional
 from easyscience import global_object
 from easyscience.Objects.Groups import BaseCollection as EasyBaseCollection
 
-from easyreflectometry.parameter_utils import yaml_dump
+from easyreflectometry.utils import yaml_dump
 
 
 class BaseCollection(EasyBaseCollection):

@@ -4,7 +4,7 @@ from typing import Union
 from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 
-from easyreflectometry.parameter_utils import get_as_parameter
+from easyreflectometry.utils import get_as_parameter
 
 from .material import Material
 from .material_mixture import MaterialMixture

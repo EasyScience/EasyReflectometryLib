@@ -44,8 +44,11 @@ class TestProject:
         assert project._report is None
         assert project._created is False
         assert project._with_experiments is False
+        assert project._current_material_index == 0
+        assert project._current_model_index == 0
+        assert project._current_assembly_index == 0
+        assert project._current_layer_index == 0
         assert project._fitter is None
-        assert project._current_model_index is None
         assert project._q_min is None
         assert project._q_max is None
         assert project._q_resolution is None
@@ -63,7 +66,10 @@ class TestProject:
         project._with_experiments = True
         project._path_project_parent = 'project_path'
         project._fitter = 'fitter'
+        project._current_material_index = 10
         project._current_model_index = 10
+        project._current_assembly_index = 10
+        project._current_layer_index = 10
         project._q_min = 'q_min'
         project._q_max = 'q_max'
         project._q_resolution == 'q_resolution'
@@ -91,7 +97,10 @@ class TestProject:
         assert project._with_experiments is False
         assert global_object.map.vertices() == ['project_models', 'project_materials']
         assert project._fitter is None
-        assert project._current_model_index is None
+        assert project._current_material_index == 0
+        assert project._current_model_index == 0
+        assert project._current_assembly_index == 0
+        assert project._current_layer_index == 0
         assert project._q_min is None
         assert project._q_max is None
         assert project._q_resolution is None

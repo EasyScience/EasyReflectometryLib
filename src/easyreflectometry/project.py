@@ -27,6 +27,7 @@ from easyreflectometry.sample import MaterialCollection
 from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.sample.collections.base_collection import BaseCollection
+from easyreflectometry.utils import collect_unique_names_from_dict
 
 Q_MIN = 0.001
 Q_MAX = 0.3
@@ -67,10 +68,11 @@ class Project:
 
     @property
     def parameters(self) -> List[Parameter]:
+        unique_names_in_project = collect_unique_names_from_dict(self.as_dict())
         parameters = []
         for vertice_str in global_object.map.vertices():
             vertice_obj = global_object.map.get_item_by_key(vertice_str)
-            if isinstance(vertice_obj, Parameter):
+            if isinstance(vertice_obj, Parameter) and vertice_str in unique_names_in_project:
                 parameters.append(vertice_obj)
         return parameters
 

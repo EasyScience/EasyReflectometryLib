@@ -13,7 +13,7 @@ from numpy.testing import assert_almost_equal
 from numpy.testing import assert_equal
 
 from easyreflectometry.calculators.factory import CalculatorFactory
-from easyreflectometry.parameter_utils import get_as_parameter
+from easyreflectometry.utils import get_as_parameter
 from easyreflectometry.sample.elements.layers.layer import DEFAULTS
 from easyreflectometry.sample.elements.layers.layer import Layer
 from easyreflectometry.sample.elements.materials.material import Material

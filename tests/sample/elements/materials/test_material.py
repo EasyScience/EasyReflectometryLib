@@ -8,7 +8,7 @@ __version__ = '0.0.1'
 import numpy as np
 from easyscience import global_object
 
-from easyreflectometry.parameter_utils import get_as_parameter
+from easyreflectometry.utils import get_as_parameter
 from easyreflectometry.sample.elements.materials.material import DEFAULTS
 from easyreflectometry.sample.elements.materials.material import Material
 
