@@ -16,7 +16,7 @@ from scipp import DataGroup
 
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.data import DataSet1D
-from easyreflectometry.data import load
+from easyreflectometry.data import load_as_dataset
 from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.model import LinearSpline
 from easyreflectometry.model import Model
@@ -198,11 +198,11 @@ class Project:
             self._fitter.easy_science_multi_fitter.switch_minimizer(minimizer)
 
     @property
-    def experiments(self) -> List[DataSet1D]:
+    def experiments(self) -> Dict[int, DataSet1D]:
         return self._experiments
 
     @experiments.setter
-    def experiments(self, experiments: List[DataSet1D]) -> None:
+    def experiments(self, experiments: Dict[int, DataSet1D]) -> None:
         self._experiments = experiments
 
     @property
@@ -210,12 +210,17 @@ class Project:
         return self.path / 'project.json'
 
     def load_experiment_for_model_at_index(self, path: Union[Path, str], index: Optional[int] = 0) -> None:
-        self._experiments[index] = load(str(path))
+        self._experiments[index] = load_as_dataset(str(path))
+        self._experiments[index].name = f'Experiment for Model {index}'
+        self._experiments[index].model = self.models[index]
+
+        self._with_experiments = True
+
         # Set the resolution function if variance data is present
-        if sum(self._experiments[index]['coords']['Qz_0'].variances) != 0:
+        if sum(self._experiments[index].ye) != 0:
             resolution_function = LinearSpline(
-                q_data_points=self._experiments[index]['coords']['Qz_0'].values,
-                fwhm_values=np.sqrt(self._experiments[index]['coords']['Qz_0'].variances),
+                q_data_points=self._experiments[index].y,
+                fwhm_values=np.sqrt(self._experiments[index].ye),
             )
             self._models[index].resolution_function = resolution_function
 
@@ -249,14 +254,7 @@ class Project:
 
     def experimental_data_for_model_at_index(self, index: int = 0) -> DataSet1D:
         if index in self._experiments.keys():
-            return DataSet1D(
-                name=f'Experiment for Model {index}',
-                x=self._experiments[index]['coords']['Qz_0'].values,
-                y=self._experiments[index]['data']['R_0'].values,
-                ye=self._experiments[index]['data']['R_0'].variances,
-                xe=self._experiments[index]['coords']['Qz_0'].variances,
-                model=self.models[index],
-            )
+            return self._experiments[index]
         else:
             raise IndexError(f'No experiment data for model at index {index}')
 
@@ -364,16 +362,16 @@ class Project:
             project_dict['materials_not_in_model'] = MaterialCollection(materials_not_in_model).as_dict(skip=['interface'])
 
     def _as_dict_add_experiments(self, project_dict: dict):
-        project_dict['experiments'] = []
-        project_dict['experiments_models'] = []
-        project_dict['experiments_names'] = []
-        for experiment in self._experiments:
-            if self._experiments[0].xe is not None:
-                project_dict['experiments'].append([experiment.x, experiment.y, experiment.ye, experiment.xe])
-            else:
-                project_dict['experiments'].append([experiment.x, experiment.y, experiment.ye])
-            project_dict['experiments_models'].append(experiment.model.name)
-            project_dict['experiments_names'].append(experiment.name)
+        project_dict['experiments'] = {}
+        project_dict['experiments_models'] = {}
+        project_dict['experiments_names'] = {}
+
+        for key, experiment in self._experiments.items():
+            project_dict['experiments'][key] = [list(experiment.x), list(experiment.y), list(experiment.ye)]
+            if experiment.xe is not None:
+                project_dict['experiments'][key].append(list(experiment.xe))
+                project_dict['experiments_models'][key] = experiment.model.name
+                project_dict['experiments_names'][key] = experiment.name
 
     def from_dict(self, project_dict: dict):
         keys = list(project_dict.keys())
@@ -395,20 +393,18 @@ class Project:
         else:
             self._experiments = None
 
-    def _from_dict_extract_experiments(self, project_dict: dict):
-        self._experiments: List[DataSet1D] = []
-
-        for i in range(len(project_dict['experiments'])):
-            self._experiments.append(
-                DataSet1D(
-                    name=project_dict['experiments_names'][i],
-                    x=project_dict['experiments'][i][0],
-                    y=project_dict['experiments'][i][1],
-                    ye=project_dict['experiments'][i][2],
-                    xe=project_dict['experiments'][i][3],
-                    model=self._models[project_dict['experiments_models'][i]],
-                )
+    def _from_dict_extract_experiments(self, project_dict: dict) -> Dict[int, DataSet1D]:
+        experiments = {}
+        for key in project_dict['experiments'].keys():
+            experiments[key] = DataSet1D(
+                name=project_dict['experiments_names'][key],
+                x=project_dict['experiments'][key][0],
+                y=project_dict['experiments'][key][1],
+                ye=project_dict['experiments'][key][2],
+                xe=project_dict['experiments'][key][3],
+                model=self._models[project_dict['experiments_models'][key]],
             )
+        return experiments
 
     def _get_materials_in_models(self) -> MaterialCollection:
         materials_in_model = MaterialCollection(populate_if_none=False)

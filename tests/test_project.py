@@ -385,6 +385,8 @@ class TestProject:
         project.add_material(material)
         minimizer = AvailableMinimizers.LMFit
         project.minimizer = minimizer
+        fpath = os.path.join(PATH_STATIC, 'example.ort')
+        project.load_experiment_for_model_at_index(fpath)
         project_dict = project.as_dict(include_materials_not_in_model=True)
         project_materials_dict = project._materials.as_dict()
 
@@ -411,9 +413,11 @@ class TestProject:
         project.default_model()
         project._info['name'] = 'Test Project'
 
+        fpath = os.path.join(PATH_STATIC, 'example.ort')
+        project.load_experiment_for_model_at_index(fpath)
+
         # Then
         project.save_as_json()
-        project.path_json
 
         # Expect
         assert project.path_json.exists()
@@ -508,7 +512,8 @@ class TestProject:
     def test_load_experiment(self):
         # When
         project = Project()
-        project.models = ModelCollection(Model(), Model(), Model(), Model(), Model(), Model())
+        model_5 = Model()
+        project.models = ModelCollection(Model(), Model(), Model(), Model(), Model(), model_5)
         fpath = os.path.join(PATH_STATIC, 'example.ort')
 
         # Then
@@ -516,7 +521,9 @@ class TestProject:
 
         # Expect
         assert list(project.experiments.keys()) == [5]
-        assert isinstance(project.experiments[5], DataGroup)
+        assert isinstance(project.experiments[5], DataSet1D)
+        assert project.experiments[5].name == 'Experiment for Model 5'
+        assert project.experiments[5].model == model_5
         assert isinstance(project.models[5].resolution_function, LinearSpline)
         assert isinstance(project.models[4].resolution_function, PercentageFhwm)
 
