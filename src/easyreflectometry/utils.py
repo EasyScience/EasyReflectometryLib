@@ -61,13 +61,13 @@ def collect_unique_names_from_dict(structure_dict: dict, unique_names: Optional[
     if unique_names is None:
         unique_names = []
 
-    for key, value in structure_dict.items():
-        if isinstance(value, dict):
-            collect_unique_names_from_dict(value, unique_names)
-        elif isinstance(value, list):
-            for element in value:
-                if isinstance(value, dict):
+    if isinstance(structure_dict, dict):
+        for key, value in structure_dict.items():
+            if isinstance(value, dict):
+                collect_unique_names_from_dict(value, unique_names)
+            elif isinstance(value, list):
+                for element in value:
                     collect_unique_names_from_dict(element, unique_names)
-        if key == 'unique_name':
-            unique_names.append(value)
+            if key == 'unique_name':
+                unique_names.append(value)
     return unique_names

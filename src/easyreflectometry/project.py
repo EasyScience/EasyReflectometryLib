@@ -396,7 +396,7 @@ class Project:
     def _from_dict_extract_experiments(self, project_dict: dict) -> Dict[int, DataSet1D]:
         experiments = {}
         for key in project_dict['experiments'].keys():
-            experiments[key] = DataSet1D(
+            experiments[int(key)] = DataSet1D(
                 name=project_dict['experiments_names'][key],
                 x=project_dict['experiments'][key][0],
                 y=project_dict['experiments'][key][1],
