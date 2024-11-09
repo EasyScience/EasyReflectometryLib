@@ -66,7 +66,8 @@ def collect_unique_names_from_dict(structure_dict: dict, unique_names: Optional[
             collect_unique_names_from_dict(value, unique_names)
         elif isinstance(value, list):
             for element in value:
-                collect_unique_names_from_dict(element, unique_names)
+                if isinstance(value, dict):
+                    collect_unique_names_from_dict(element, unique_names)
         if key == 'unique_name':
             unique_names.append(value)
     return unique_names
