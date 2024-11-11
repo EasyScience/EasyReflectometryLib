@@ -391,7 +391,7 @@ class Project:
         if 'experiments' in keys:
             self._experiments = self._from_dict_extract_experiments(project_dict)
         else:
-            self._experiments = None
+            self._experiments = {}
 
     def _from_dict_extract_experiments(self, project_dict: dict) -> Dict[int, DataSet1D]:
         experiments = {}
