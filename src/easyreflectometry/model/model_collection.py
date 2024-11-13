@@ -41,7 +41,7 @@ class ModelCollection(BaseCollection):
         :param model: Model to add.
         """
         if model is None:
-            model = Model(name='Model new', interface=self.interface)
+            model = Model(name='EasyModel new', interface=self.interface)
         self.append(model)
 
     def duplicate_model(self, index: int):
