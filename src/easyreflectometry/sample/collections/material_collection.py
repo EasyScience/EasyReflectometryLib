@@ -45,7 +45,7 @@ class MaterialCollection(BaseCollection):
         :param material: Material to add.
         """
         if material is None:
-            material = Material(sld=2.074, isld=0.000, name='Si new')
+            material = Material(sld=2.074, isld=0.000, name='Material added')
         material.interface = self.interface
         self.append(material)
 

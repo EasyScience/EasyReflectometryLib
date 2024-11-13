@@ -57,7 +57,7 @@ class Sample(BaseCollection):
         """
         if assembly is None:
             assembly = Multilayer(
-                name='New EasyMultilayer',
+                name='EasyMultilayer added',
                 interface=self.interface,
             )
         self._enable_changes_to_outermost_layers()
