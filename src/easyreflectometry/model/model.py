@@ -12,10 +12,10 @@ from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 from easyscience.Objects.ObjectClasses import BaseObj
 
-from easyreflectometry.utils import get_as_parameter
-from easyreflectometry.utils import yaml_dump
 from easyreflectometry.sample import BaseAssembly
 from easyreflectometry.sample import Sample
+from easyreflectometry.utils import get_as_parameter
+from easyreflectometry.utils import yaml_dump
 
 from .resolution_functions import PercentageFhwm
 from .resolution_functions import ResolutionFunction

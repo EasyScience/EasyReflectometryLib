@@ -6,9 +6,9 @@ from easyscience import global_object
 from easyscience.Constraints import FunctionalConstraint
 from easyscience.Objects.new_variable import Parameter
 
-from easyreflectometry.utils import get_as_parameter
 from easyreflectometry.special.calculations import area_per_molecule_to_scattering_length_density
 from easyreflectometry.special.calculations import neutron_scattering_length
+from easyreflectometry.utils import get_as_parameter
 
 from ..materials.material import Material
 from ..materials.material_solvated import DEFAULTS as MATERIAL_SOLVATED_DEFAULTS

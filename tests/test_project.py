@@ -8,7 +8,6 @@ from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
 from easyscience.Objects.new_variable import Parameter
 from numpy.testing import assert_allclose
-from scipp import DataGroup
 
 import easyreflectometry
 from easyreflectometry.data import DataSet1D
