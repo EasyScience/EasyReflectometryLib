@@ -30,8 +30,8 @@ class TestProject:
 
         # Expect
         assert project._info == {
-            'name': 'Example Project',
-            'short_description': 'reflectometry, 1D',
+            'name': 'ExampleProject',
+            'short_description': 'Reflectometry, 1D',
             'samples': 'None',
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
@@ -78,8 +78,8 @@ class TestProject:
 
         # Expect
         assert project._info == {
-            'name': 'Example Project',
-            'short_description': 'reflectometry, 1D',
+            'name': 'ExampleProject',
+            'short_description': 'Reflectometry, 1D',
             'samples': 'None',
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
@@ -222,7 +222,7 @@ class TestProject:
         project.set_path_project_parent(tmp_path)
 
         # Then Expect
-        assert project.path_json == Path(tmp_path) / 'Example Project' / 'project.json'
+        assert project.path_json == Path(tmp_path) / 'ExampleProject' / 'project.json'
 
     def test_add_material(self):
         # When
@@ -270,8 +270,8 @@ class TestProject:
 
         # Expect
         assert info == {
-            'name': 'Example Project',
-            'short_description': 'reflectometry, 1D',
+            'name': 'ExampleProject',
+            'short_description': 'Reflectometry, 1D',
             'samples': 'None',
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
@@ -294,8 +294,8 @@ class TestProject:
             'with_experiments',
         ]
         assert project_dict['info'] == {
-            'name': 'Example Project',
-            'short_description': 'reflectometry, 1D',
+            'name': 'ExampleProject',
+            'short_description': 'Reflectometry, 1D',
             'samples': 'None',
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
@@ -491,19 +491,19 @@ class TestProject:
         project = Project()
         project.set_path_project_parent(tmp_path)
         project._info['modified'] = 'modified'
-        project._info['name'] = 'Test Project'
+        project._info['name'] = 'TestProject'
 
         # Then
         project.create()
 
         # Expect
-        assert project.path == tmp_path / 'Test Project'
+        assert project.path == tmp_path / 'TestProject'
         assert project.path.exists()
         assert (project.path / 'experiments').exists()
         assert project.created is True
         assert project._info == {
-            'name': 'Test Project',
-            'short_description': 'reflectometry, 1D',
+            'name': 'TestProject',
+            'short_description': 'Reflectometry, 1D',
             'samples': 'None',
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),

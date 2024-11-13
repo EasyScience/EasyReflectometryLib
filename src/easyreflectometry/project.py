@@ -23,8 +23,8 @@ from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
 from easyreflectometry.model import PercentageFhwm
 from easyreflectometry.sample import Layer
-from easyreflectometry.sample import MaterialCollection
 from easyreflectometry.sample import Material
+from easyreflectometry.sample import MaterialCollection
 from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.sample.collections.base_collection import BaseCollection
@@ -284,18 +284,15 @@ class Project:
 
         layers = [
             Layer(material=self._materials[0], thickness=0.0, roughness=0.0, name='Vacuum Layer'),
-            Layer(material=self._materials[1], thickness=100.0, roughness=3.0, name='Multi-layer'),
+            Layer(material=self._materials[1], thickness=100.0, roughness=3.0, name='D2O Layer'),
             Layer(material=self._materials[2], thickness=0.0, roughness=1.2, name='Si Layer'),
         ]
         assemblies = [
             Multilayer(layers[0], name='Superphase'),
-            Multilayer(layers[1], name='Multi-layer'),
+            Multilayer(layers[1], name='D2O'),
             Multilayer(layers[2], name='Subphase'),
         ]
         sample = Sample(*assemblies)
-        sample[0].layers[0].thickness.enabled = False
-        sample[0].layers[0].roughness.enabled = False
-        sample[-1].layers[-1].thickness.enabled = False
         model = Model(sample=sample)
         self.models = ModelCollection([model])
 

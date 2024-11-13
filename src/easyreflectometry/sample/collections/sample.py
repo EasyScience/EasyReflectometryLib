@@ -49,6 +49,7 @@ class Sample(BaseCollection):
             if not issubclass(type(assembly), BaseAssembly):
                 raise ValueError('The elements must be an Assembly.')
         super().__init__(name, interface, unique_name=unique_name, *assemblies, **kwargs)
+        self._disable_changes_to_outermost_layers()
 
     def add_assembly(self, assembly: Optional[BaseAssembly] = None):
         """Add an assembly to the sample.
