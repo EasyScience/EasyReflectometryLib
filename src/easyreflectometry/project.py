@@ -209,6 +209,26 @@ class Project:
     def path_json(self):
         return self.path / 'project.json'
 
+    def get_index_air(self) -> int:
+        if 'Air' not in [material.name for material in self._materials]:
+            self._materials.add_material('Air', 0.0, 0.0)
+        return [material.name for material in self._materials].index('Air')
+
+    def get_index_si(self) -> int:
+        if 'Si' not in [material.name for material in self._materials]:
+            self._materials.add_material('Si', 2.07, 0.0)
+        return [material.name for material in self._materials].index('Si')
+
+    def get_index_sio2(self) -> int:
+        if 'SiO2' not in [material.name for material in self._materials]:
+            self._materials.add_material('SiO2', 3.47, 0.0)
+        return [material.name for material in self._materials].index('SiO2')
+
+    def get_index_d2o(self) -> int:
+        if 'D2O' not in [material.name for material in self._materials]:
+            self._materials.add_material('D2O', 6.36, 0.0)
+        return [material.name for material in self._materials].index('D2O')
+
     def load_experiment_for_model_at_index(self, path: Union[Path, str], index: Optional[int] = 0) -> None:
         self._experiments[index] = load_as_dataset(str(path))
         self._experiments[index].name = f'Experiment for Model {index}'
