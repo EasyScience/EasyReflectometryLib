@@ -292,8 +292,8 @@ class Project:
 
     def _default_info(self):
         return dict(
-            name='Example Project',
-            short_description='reflectometry, 1D',
+            name='ExampleProject',
+            short_description='Reflectometry, 1D',
             samples='None',
             experiments='None',
             modified=datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
