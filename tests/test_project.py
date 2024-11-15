@@ -1,15 +1,17 @@
 import datetime
 import os
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import numpy as np
 from easyscience import global_object
 from easyscience.fitting import AvailableMinimizers
+from easyscience.Objects.new_variable import Parameter
 from numpy.testing import assert_allclose
-from scipp import DataGroup
 
 import easyreflectometry
 from easyreflectometry.data import DataSet1D
+from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.model import LinearSpline
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
@@ -28,8 +30,8 @@ class TestProject:
 
         # Expect
         assert project._info == {
-            'name': 'Example Project',
-            'short_description': 'reflectometry, 1D',
+            'name': 'ExampleProject',
+            'short_description': 'Reflectometry, 1D',
             'samples': 'None',
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
@@ -38,11 +40,19 @@ class TestProject:
         assert len(project._materials) == 0
         assert len(project._models) == 0
         assert project._calculator.current_interface_name == 'refnx'
-        assert project._minimizer == AvailableMinimizers.LMFit_leastsq
         assert project._experiments == {}
         assert project._report is None
         assert project._created is False
         assert project._with_experiments is False
+        assert project._current_material_index == 0
+        assert project._current_model_index == 0
+        assert project._current_assembly_index == 0
+        assert project._current_layer_index == 0
+        assert project._fitter_model_index is None
+        assert project._fitter is None
+        assert project._q_min is None
+        assert project._q_max is None
+        assert project._q_resolution is None
 
     def test_reset(self):
         # When
@@ -51,20 +61,27 @@ class TestProject:
         project._materials.append(Material())
         project._models.append(Model())
         project._calculator = 'calculator'
-        project._minimizer = 'minimizer'
         project._experiments = 'experiments'
         project._report = 'report'
         project._created = True
         project._with_experiments = True
         project._path_project_parent = 'project_path'
-
+        project._fitter = 'fitter'
+        project._current_material_index = 10
+        project._current_model_index = 10
+        project._current_assembly_index = 10
+        project._current_layer_index = 10
+        project._fitter_model_index = 10
+        project._q_min = 'q_min'
+        project._q_max = 'q_max'
+        project._q_resolution == 'q_resolution'
         # Then
         project.reset()
 
         # Expect
         assert project._info == {
-            'name': 'Example Project',
-            'short_description': 'reflectometry, 1D',
+            'name': 'ExampleProject',
+            'short_description': 'Reflectometry, 1D',
             'samples': 'None',
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
@@ -76,12 +93,20 @@ class TestProject:
 
         assert project._path_project_parent == Path(os.path.expanduser('~'))
         assert project._calculator.current_interface_name == 'refnx'
-        assert project._minimizer == AvailableMinimizers.LMFit_leastsq
         assert project._experiments == {}
         assert project._report is None
         assert project._created is False
         assert project._with_experiments is False
         assert global_object.map.vertices() == ['project_models', 'project_materials']
+        assert project._fitter is None
+        assert project._current_material_index == 0
+        assert project._current_model_index == 0
+        assert project._current_assembly_index == 0
+        assert project._current_layer_index == 0
+        assert project._fitter_model_index is None
+        assert project._q_min is None
+        assert project._q_max is None
+        assert project._q_resolution is None
 
     def test_models(self):
         # When
@@ -103,6 +128,7 @@ class TestProject:
         assert project._materials[0] == material
         assert project._materials[1] == models[0].sample[0].layers[0].material
         assert project._materials[2] == models[0].sample[1].layers[0].material
+        assert project.models[0].interface == project._calculator
 
     def test_default_model(self):
         # When
@@ -167,11 +193,65 @@ class TestProject:
         # When
         project = Project()
 
+        # Then Expect
+        assert project.minimizer == AvailableMinimizers.LMFit_leastsq
+
+    def test_set_minimizer(self):
+        # When
+        project = Project()
+        project._fitter = MagicMock()
+        project._fitter.easy_science_multi_fitter = MagicMock()
+        project._fitter.easy_science_multi_fitter.switch_minimizer = MagicMock()
+
         # Then
         project.minimizer = 'minimizer'
 
         # Expect
-        assert project.minimizer == 'minimizer'
+        project._fitter.easy_science_multi_fitter.switch_minimizer.assert_called_once_with('minimizer')
+
+    def test_fitter_none(self):
+        # When
+        project = Project()
+
+        # Then Expect
+        assert project.fitter is None
+
+    def test_fitter_model(self):
+        # When
+        project = Project()
+        project.default_model()
+
+        # Then Expect
+        assert isinstance(project.fitter, MultiFitter)
+
+    def test_fitter_same_model_index(self):
+        # When
+        project = Project()
+        project.default_model()
+        fitter_0 = project.fitter
+        project._models.append(Model())
+
+        # Then
+        fitter_1 = project.fitter
+
+        # Expect
+        assert fitter_0 is fitter_1
+
+    def test_fitter_new_model_index(self):
+        # When
+        project = Project()
+        project.default_model()
+        fitter_0 = project.fitter
+        model = Model()
+        project._models.append(model)
+        project._models[1].interface = project._models[0].interface
+        project._current_model_index = 1
+
+        # Then
+        fitter_1 = project.fitter
+
+        # Expect
+        assert fitter_0 is not fitter_1
 
     def test_experiments(self):
         # When
@@ -189,7 +269,7 @@ class TestProject:
         project.set_path_project_parent(tmp_path)
 
         # Then Expect
-        assert project.path_json == Path(tmp_path) / 'Example Project' / 'project.json'
+        assert project.path_json == Path(tmp_path) / 'ExampleProject' / 'project.json'
 
     def test_add_material(self):
         # When
@@ -237,8 +317,8 @@ class TestProject:
 
         # Expect
         assert info == {
-            'name': 'Example Project',
-            'short_description': 'reflectometry, 1D',
+            'name': 'ExampleProject',
+            'short_description': 'Reflectometry, 1D',
             'samples': 'None',
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
@@ -257,19 +337,17 @@ class TestProject:
         assert keys == [
             'calculator',
             'info',
-            'minimizer',
             'models',
             'with_experiments',
         ]
         assert project_dict['info'] == {
-            'name': 'Example Project',
-            'short_description': 'reflectometry, 1D',
+            'name': 'ExampleProject',
+            'short_description': 'Reflectometry, 1D',
             'samples': 'None',
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
         assert project_dict['calculator'] == 'refnx'
-        assert project_dict['minimizer'] == 'LMFit_leastsq'
         assert project_dict['models']['data'] == []
         assert project_dict['with_experiments'] is False
 
@@ -284,7 +362,7 @@ class TestProject:
 
         # Expect
         models_dict = models.as_dict(skip=['interface'])
-        models_dict['unique_name'] = 'project_models'
+        models_dict['unique_name'] = 'project_models_to_prevent_collisions_on_load'
         assert project_dict['models'] == models_dict
 
     def test_as_dict_materials_not_in_model(self):
@@ -304,14 +382,15 @@ class TestProject:
     def test_as_dict_minimizer(self):
         # When
         project = Project()
-        minimizer = AvailableMinimizers.LMFit
-        project.minimizer = minimizer
+        project._fitter = MagicMock()
+        project._fitter.easy_science_multi_fitter = MagicMock()
+        project._fitter.easy_science_multi_fitter.minimizer = AvailableMinimizers.LMFit
 
         # Then
         project_dict = project.as_dict()
 
         # Expect
-        assert project_dict['minimizer'] == 'LMFit'
+        assert project_dict['fitter_minimizer'] == 'LMFit'
 
     def test_replace_collection(self):
         # When
@@ -353,6 +432,8 @@ class TestProject:
         project.add_material(material)
         minimizer = AvailableMinimizers.LMFit
         project.minimizer = minimizer
+        fpath = os.path.join(PATH_STATIC, 'example.ort')
+        project.load_experiment_for_model_at_index(fpath)
         project_dict = project.as_dict(include_materials_not_in_model=True)
         project_materials_dict = project._materials.as_dict()
 
@@ -376,12 +457,14 @@ class TestProject:
         global_object.map._clear()
         project = Project()
         project.set_path_project_parent(tmp_path)
-        project._models.append(Model())
+        project.default_model()
         project._info['name'] = 'Test Project'
+
+        fpath = os.path.join(PATH_STATIC, 'example.ort')
+        project.load_experiment_for_model_at_index(fpath)
 
         # Then
         project.save_as_json()
-        project.path_json
 
         # Expect
         assert project.path_json.exists()
@@ -396,7 +479,7 @@ class TestProject:
 
         # Then
         project._info['short_description'] = 'short_description'
-        project._models.append(Model())
+        project.default_model()
         project.save_as_json(overwrite=True)
 
         # Expect
@@ -412,7 +495,7 @@ class TestProject:
 
         # Then
         project._info['short_description'] = 'short_description'
-        project._models.append(Model())
+        project.default_model()
         project.save_as_json()
 
         # Expect
@@ -423,7 +506,7 @@ class TestProject:
         global_object.map._clear()
         project = Project()
         project.set_path_project_parent(tmp_path)
-        project._models.append(Model())
+        project.default_model()
         project._info['name'] = 'name'
         project._info['short_description'] = 'short_description'
         project._info['samples'] = 'samples'
@@ -455,19 +538,19 @@ class TestProject:
         project = Project()
         project.set_path_project_parent(tmp_path)
         project._info['modified'] = 'modified'
-        project._info['name'] = 'Test Project'
+        project._info['name'] = 'TestProject'
 
         # Then
         project.create()
 
         # Expect
-        assert project.path == tmp_path / 'Test Project'
+        assert project.path == tmp_path / 'TestProject'
         assert project.path.exists()
         assert (project.path / 'experiments').exists()
         assert project.created is True
         assert project._info == {
-            'name': 'Test Project',
-            'short_description': 'reflectometry, 1D',
+            'name': 'TestProject',
+            'short_description': 'Reflectometry, 1D',
             'samples': 'None',
             'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
@@ -476,7 +559,8 @@ class TestProject:
     def test_load_experiment(self):
         # When
         project = Project()
-        project.models = ModelCollection(Model(), Model(), Model(), Model(), Model(), Model())
+        model_5 = Model()
+        project.models = ModelCollection(Model(), Model(), Model(), Model(), Model(), model_5)
         fpath = os.path.join(PATH_STATIC, 'example.ort')
 
         # Then
@@ -484,7 +568,9 @@ class TestProject:
 
         # Expect
         assert list(project.experiments.keys()) == [5]
-        assert isinstance(project.experiments[5], DataGroup)
+        assert isinstance(project.experiments[5], DataSet1D)
+        assert project.experiments[5].name == 'Experiment for Model 5'
+        assert project.experiments[5].model == model_5
         assert isinstance(project.models[5].resolution_function, LinearSpline)
         assert isinstance(project.models[4].resolution_function, PercentageFhwm)
 
@@ -529,3 +615,32 @@ class TestProject:
         # Expect
         q = project.q_min, project.q_max, project.q_resolution
         assert q == (1, 2, 3)
+
+    def test_calculator(self):
+        # When
+        project = Project()
+
+        # Then Expect
+        assert project.calculator == 'refnx'
+
+    def test_set_calculator(self):
+        # When
+        project = Project()
+
+        # Then
+        project.calculator = 'refl1d'
+
+        # Expect
+        assert project._calculator.current_interface_name == 'refl1d'
+
+    def test_parameters(self):
+        # When
+        project = Project()
+        project.default_model()
+
+        # Then
+        parameters = project.parameters
+
+        # Expect
+        assert len(parameters) == 14
+        assert isinstance(parameters[0], Parameter)
