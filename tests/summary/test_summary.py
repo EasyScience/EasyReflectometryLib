@@ -43,3 +43,18 @@ class TestSummary:
             html
             == '\n<tr>\n    <td><h3>Project information</h3></td>\n</tr>\n\n<tr></tr>\n\n<tr>\n    <th>Title</th>\n    <th>Example Project</th>\n</tr>\n<tr>\n    <td>Description</td>\n    <td>reflectometry, 1D</td>\n</tr>\n<tr>\n    <td>No. of experiments</td>\n    <td>0</td>\n</tr>\n\n<tr></tr>\n'
         )
+
+    def test_set_fitting_section(self, project: Project) -> None:
+        # When
+        project._created = True
+        summary = Summary(project)
+        html = 'refinement_section'
+
+        # Then
+        html = summary._set_refinement_section(html)
+
+        # Expect
+        assert (
+            html
+            == '\n<tr>\n    <td><h3>Refinement</h3></td>\n</tr>\n\n<tr></tr>\n\n<tr>\n    <td>Calculation engine</td>\n    <td>refnx</td>\n</tr>\n<tr>\n    <td>Minimization engine</td>\n    <td>LMFit_leastsq</td>\n</tr>\n<tr>\n    <td>Goodness-of-fit: reduced <i>&chi;</i><sup>2</sup></td>\n    <td>goodness_of_fit</td>\n</tr>\n<tr>\n    <td>No. of parameters: total, free, fixed</td>\n    <td>3, 1, 2</td>\n</tr>\n<tr>\n    <td>No. of constraints</td>\n    <td>num_constriants</td>\n</tr>\n\n<tr></tr>\n'
+        )

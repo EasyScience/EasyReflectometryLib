@@ -51,34 +51,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <!-- Analysis -->
 
-    <tr>
-        <td><h3>Refinement</h3></td>
-    </tr>
-
-    <tr></tr>
-
-    <tr>
-        <td>Calculation engine</td>
-        <td>calculation_engine &mdash; https://www.cryspy.fr</td>
-    </tr>
-    <tr>
-        <td>Minimization engine</td>
-        <td>minimization_engine &mdash; https://lmfit.github.io/lmfit-py</td>
-    </tr>
-    <tr>
-        <td>Goodness-of-fit: reduced <i>&chi;</i><sup>2</sup></td>
-        <td>goodness_of_fit</td>
-    </tr>
-    <tr>
-        <td>No. of parameters: total, free, fixed</td>
-        <td>num_total_params,&nbsp;&nbsp;num_free_params,&nbsp;&nbsp;num_fixed_params</td>
-    </tr>
-    <tr>
-        <td>No. of constraints</td>
-        <td>0</td>
-    </tr>
-
-    <tr></tr>
+    refinement_section
 
     </table>
 
@@ -151,6 +124,37 @@ HTML_DATA_COLLECTION_TEMPLATE = """
 <tr>
     <td>No. of data points</td>
     <td>num_data_points</td>
+</tr>
+
+<tr></tr>
+"""
+
+HTML_REFINEMENT_TEMPLATE = """
+<tr>
+    <td><h3>Refinement</h3></td>
+</tr>
+
+<tr></tr>
+
+<tr>
+    <td>Calculation engine</td>
+    <td>calculation_engine</td>
+</tr>
+<tr>
+    <td>Minimization engine</td>
+    <td>minimization_engine</td>
+</tr>
+<tr>
+    <td>Goodness-of-fit: reduced <i>&chi;</i><sup>2</sup></td>
+    <td>goodness_of_fit</td>
+</tr>
+<tr>
+    <td>No. of parameters: total, free, fixed</td>
+    <td>num_total_params, num_free_params, num_fixed_params</td>
+</tr>
+<tr>
+    <td>No. of constraints</td>
+    <td>num_constriants</td>
 </tr>
 
 <tr></tr>

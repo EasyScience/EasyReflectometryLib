@@ -3,6 +3,7 @@ from easyreflectometry import Project
 from .html_templates import HTML_CRYSTAL_DATA_TEMPLATE
 from .html_templates import HTML_DATA_COLLECTION_TEMPLATE
 from .html_templates import HTML_PROJECT_INFORMATION_TEMPLATE
+from .html_templates import HTML_REFINEMENT_TEMPLATE
 from .html_templates import HTML_TEMPLATE
 
 
@@ -21,14 +22,13 @@ class Summary:
     def _set_project_information_section(self, html: str) -> None:
         html_project = ''
         if self._project.created:
+            html_project = HTML_PROJECT_INFORMATION_TEMPLATE
             name = self._project._info['name']
             short_description = self._project._info['short_description']
-            html_project = HTML_PROJECT_INFORMATION_TEMPLATE
             html_project = html_project.replace('project_title', f'{name}')
             html_project = html_project.replace('project_description', f'{short_description}')
             #            html_project = html_project.replace('num_phases', f'{self._project.status.phaseCount}')
             html_project = html_project.replace('num_experiments', f'{len(self._project.experiments)}')
-
         return html.replace('project_information_section', html_project)
 
     def _set_crystal_data_section(self, html: str) -> None:
@@ -101,15 +101,37 @@ class Summary:
         html = html.replace('data_collection_section', '\n'.join(html_experiments))
 
     def _set_refinement_section(self, html: str) -> None:
-        num_free_params = self._project.fittables.freeParamsCount
-        num_fixed_params = self._project.fittables.fixedParamsCount
+        html_refinement = HTML_REFINEMENT_TEMPLATE
+        num_free_params = 1  # count_free_parameters(self._project)
+        num_fixed_params = 2  # count_fixed_parameters(self._project)
         num_params = num_free_params + num_fixed_params
-        goodness_of_fit = self._project.status.goodnessOfFit
-        goodness_of_fit = goodness_of_fit.split(' → ')[-1]
+        #        goodness_of_fit = self._project.status.goodnessOfFit
+        #        goodness_of_fit = goodness_of_fit.split(' → ')[-1]
+        num_constraints = 0
 
-        html = html.replace('calculation_engine', f'{self._project.status.calculator}')
-        html = html.replace('minimization_engine', f'{self._project.status.minimizer}')
-        html = html.replace('goodness_of_fit', f'{goodness_of_fit}')
-        html = html.replace('num_total_params', f'{num_params}')
-        html = html.replace('num_free_params', f'{num_free_params}')
-        html = html.replace('num_fixed_params', f'{num_fixed_params}')
+        html_refinement = html_refinement.replace('calculation_engine', f'{self._project._calculator.current_interface_name}')
+        html_refinement = html_refinement.replace('minimization_engine', f'{self._project._minimizer.name}')
+        #        html = html.replace('goodness_of_fit', f'{goodness_of_fit}')
+        html_refinement = html_refinement.replace('num_total_params', f'{num_params}')
+        html_refinement = html_refinement.replace('num_free_params', f'{num_free_params}')
+        html_refinement = html_refinement.replace('num_fixed_params', f'{num_fixed_params}')
+        html_refinement = html_refinement.replace('num_constraints', f'{num_constraints}')
+        return html.replace('refinement_section', html_refinement)
+
+
+def count_free_parameters(project: Project) -> int:
+    count = 0
+    parameters = project.parameters
+    for parameter in parameters:
+        if parameter.free:
+            count = count + 1
+    return count
+
+
+def count_fixed_parameters(project: Project) -> int:
+    count = 0
+    parameters = project.parameters
+    for parameter in parameters:
+        if not parameter.free:
+            count = count + 1
+    return count
