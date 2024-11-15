@@ -44,7 +44,7 @@ class TestSummary:
             == '\n<tr>\n    <td><h3>Project information</h3></td>\n</tr>\n\n<tr></tr>\n\n<tr>\n    <th>Title</th>\n    <th>Example Project</th>\n</tr>\n<tr>\n    <td>Description</td>\n    <td>reflectometry, 1D</td>\n</tr>\n<tr>\n    <td>No. of experiments</td>\n    <td>0</td>\n</tr>\n\n<tr></tr>\n'
         )
 
-    def test_set_fitting_section(self, project: Project) -> None:
+    def test_set_refinement_section(self, project: Project) -> None:
         # When
         project._created = True
         summary = Summary(project)
