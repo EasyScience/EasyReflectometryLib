@@ -11,6 +11,7 @@ from numpy.testing import assert_allclose
 
 import easyreflectometry
 from easyreflectometry.data import DataSet1D
+from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.model import LinearSpline
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
@@ -47,6 +48,7 @@ class TestProject:
         assert project._current_model_index == 0
         assert project._current_assembly_index == 0
         assert project._current_layer_index == 0
+        assert project._fitter_model_index is None
         assert project._fitter is None
         assert project._q_min is None
         assert project._q_max is None
@@ -69,6 +71,7 @@ class TestProject:
         project._current_model_index = 10
         project._current_assembly_index = 10
         project._current_layer_index = 10
+        project._fitter_model_index = 10
         project._q_min = 'q_min'
         project._q_max = 'q_max'
         project._q_resolution == 'q_resolution'
@@ -100,6 +103,7 @@ class TestProject:
         assert project._current_model_index == 0
         assert project._current_assembly_index == 0
         assert project._current_layer_index == 0
+        assert project._fitter_model_index is None
         assert project._q_min is None
         assert project._q_max is None
         assert project._q_resolution is None
@@ -204,6 +208,50 @@ class TestProject:
 
         # Expect
         project._fitter.easy_science_multi_fitter.switch_minimizer.assert_called_once_with('minimizer')
+
+    def test_fitter_none(self):
+        # When
+        project = Project()
+
+        # Then Expect
+        assert project.fitter is None
+
+    def test_fitter_model(self):
+        # When
+        project = Project()
+        project.default_model()
+
+        # Then Expect
+        assert isinstance(project.fitter, MultiFitter)
+
+    def test_fitter_same_model_index(self):
+        # When
+        project = Project()
+        project.default_model()
+        fitter_0 = project.fitter
+        project._models.append(Model())
+
+        # Then
+        fitter_1 = project.fitter
+
+        # Expect
+        assert fitter_0 is fitter_1
+
+    def test_fitter_new_model_index(self):
+        # When
+        project = Project()
+        project.default_model()
+        fitter_0 = project.fitter
+        model = Model()
+        project._models.append(model)
+        project._models[1].interface = project._models[0].interface
+        project._current_model_index = 1
+
+        # Then
+        fitter_1 = project.fitter
+
+        # Expect
+        assert fitter_0 is not fitter_1
 
     def test_experiments(self):
         # When

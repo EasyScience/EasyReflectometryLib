@@ -183,7 +183,9 @@ class Project:
     def fitter(self) -> MultiFitter:
         if len(self._models):
             if (self._fitter is None) or (self._fitter_model_index != self._current_model_index):
+                minimizer = self.minimizer
                 self._fitter = MultiFitter(self._models[self._current_model_index])
+                self.minimizer = minimizer
                 self._fitter_model_index = self._current_model_index
         return self._fitter
 
@@ -197,14 +199,14 @@ class Project:
 
     @property
     def minimizer(self) -> AvailableMinimizers:
-        if self.fitter is not None:
-            return self.fitter.easy_science_multi_fitter.minimizer
+        if self._fitter is not None:
+            return self._fitter.easy_science_multi_fitter.minimizer.enum
         return DEFAULT_MINIMIZER
 
     @minimizer.setter
     def minimizer(self, minimizer: AvailableMinimizers) -> None:
-        if self.fitter is not None:
-            self.fitter.easy_science_multi_fitter.switch_minimizer(minimizer)
+        if self._fitter is not None:
+            self._fitter.easy_science_multi_fitter.switch_minimizer(minimizer)
 
     @property
     def experiments(self) -> Dict[int, DataSet1D]:
