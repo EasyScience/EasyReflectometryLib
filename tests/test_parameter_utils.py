@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_equal
 
-from easyreflectometry.parameter_utils import get_as_parameter
+from easyreflectometry.utils import get_as_parameter
 
 PARAMETER_DETAILS = {
     'test_parameter': {
