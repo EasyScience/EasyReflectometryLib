@@ -71,3 +71,21 @@ def collect_unique_names_from_dict(structure_dict: dict, unique_names: Optional[
             if key == 'unique_name':
                 unique_names.append(value)
     return unique_names
+
+
+def count_free_parameters(project) -> int:
+    count = 0
+    parameters = project.parameters
+    for parameter in parameters:
+        if parameter.free:
+            count = count + 1
+    return count
+
+
+def count_fixed_parameters(project) -> int:
+    count = 0
+    parameters = project.parameters
+    for parameter in parameters:
+        if not parameter.free:
+            count = count + 1
+    return count

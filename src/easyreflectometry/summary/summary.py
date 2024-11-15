@@ -1,4 +1,6 @@
 from easyreflectometry import Project
+from easyreflectometry.utils import count_fixed_parameters
+from easyreflectometry.utils import count_free_parameters
 
 from .html_templates import HTML_CRYSTAL_DATA_TEMPLATE
 from .html_templates import HTML_DATA_COLLECTION_TEMPLATE
@@ -14,8 +16,8 @@ class Summary:
     def compile_html_summary(self):
         html = HTML_TEMPLATE
         self._set_project_information_section(html)
-        self._set_crystal_data_section(html)
-        self._set_data_collection_section(html)
+        self._set_sample_section(html)
+        self._set_experiments_section(html)
         self._set_refinement_section(html)
         return html
 
@@ -31,7 +33,7 @@ class Summary:
             html_project = html_project.replace('num_experiments', f'{len(self._project.experiments)}')
         return html.replace('project_information_section', html_project)
 
-    def _set_crystal_data_section(self, html: str) -> None:
+    def _set_sample_section(self, html: str) -> None:
         html_phases = []
 
         for phase in self._project.dataBlocks:
@@ -59,38 +61,44 @@ class Summary:
 
         html = html.replace('crystal_data_section', '\n'.join(html_phases))
 
-    def _set_data_collection_section(self, html: str) -> None:
+    def _set_experiments_section(self, html: str) -> None:
         html_experiments = []
 
-        for idx, experiment in enumerate(self._project.experiment.dataBlocksNoMeas):
-            experiment_name = experiment['name']['value']
-            radiation_probe = experiment['params']['_diffrn_radiation']['probe']['value']
-            radiation_type = experiment['params']['_diffrn_radiation']['type']['value']
-            radiation_type = radiation_type.replace('cwl', 'constant wavelength')
-            radiation_type = radiation_type.replace('tof', 'time-of-flight')
-            num_data_points = len(self._project.experiment._yMeasArrays[idx])
-            if '_pd_meas' in experiment['params']:
-                if 'tof_range_min' in experiment['params']['_pd_meas']:  # pd-tof
-                    range_min = experiment['params']['_pd_meas']['tof_range_min']['value']
-                    range_max = experiment['params']['_pd_meas']['tof_range_max']['value']
-                    range_inc = experiment['params']['_pd_meas']['tof_range_inc']['value']
-                    range_units = '&micro;s'
-                elif '2theta_range_min' in experiment['params']['_pd_meas']:  # pd-cwl
-                    range_min = experiment['params']['_pd_meas']['2theta_range_min']['value']
-                    range_max = experiment['params']['_pd_meas']['2theta_range_max']['value']
-                    range_inc = experiment['params']['_pd_meas']['2theta_range_inc']['value']
-                    range_units = '&deg;'
-            elif '_exptl_crystal' in experiment['loops']:  # sg-cwl
-                cryspy_block_name = f'diffrn_{experiment_name}'
-                range_min = self._project.data._cryspyInOutDict[cryspy_block_name]['sthovl'].min()
-                range_max = self._project.data._cryspyInOutDict[cryspy_block_name]['sthovl'].max()
-                range_inc = '-'
-                range_units = 'Å⁻¹'
+        for idx, experiment in self._project.experiments.items():
+            experiment_name = experiment.name
+
+            #            radiation_probe = experiment['params']['_diffrn_radiation']['probe']['value']
+            #            radiation_type = experiment['params']['_diffrn_radiation']['type']['value']
+            #            radiation_type = radiation_type.replace('cwl', 'constant wavelength')
+            #            radiation_type = radiation_type.replace('tof', 'time-of-flight')
+            num_data_points = len(experiment.x)
+            resolution_functions = experiment.ye
+            range_min = min(experiment.y)
+            range_max = max(experiment.y)
+            range_units = 'Å⁻¹'
+
+            # if '_pd_meas' in experiment['params']:
+            #     if 'tof_range_min' in experiment['params']['_pd_meas']:  # pd-tof
+            #         range_min = experiment['params']['_pd_meas']['tof_range_min']['value']
+            #         range_max = experiment['params']['_pd_meas']['tof_range_max']['value']
+            #         range_inc = experiment['params']['_pd_meas']['tof_range_inc']['value']
+            #         range_units = '&micro;s'
+            #     elif '2theta_range_min' in experiment['params']['_pd_meas']:  # pd-cwl
+            #         range_min = experiment['params']['_pd_meas']['2theta_range_min']['value']
+            #         range_max = experiment['params']['_pd_meas']['2theta_range_max']['value']
+            #         range_inc = experiment['params']['_pd_meas']['2theta_range_inc']['value']
+            #         range_units = '&deg;'
+            # elif '_exptl_crystal' in experiment['loops']:  # sg-cwl
+            #     cryspy_block_name = f'diffrn_{experiment_name}'
+            #     range_min = self._project.data._cryspyInOutDict[cryspy_block_name]['sthovl'].min()
+            #     range_max = self._project.data._cryspyInOutDict[cryspy_block_name]['sthovl'].max()
+            #     range_inc = '-'
+            #     range_units = 'Å⁻¹'
 
             html_experiment = HTML_DATA_COLLECTION_TEMPLATE
             html_experiment = html_experiment.replace('experiment_name', f'{experiment_name}')
-            html_experiment = html_experiment.replace('radiation_probe', f'{radiation_probe}')
-            html_experiment = html_experiment.replace('radiation_type', f'{radiation_type}')
+            #            html_experiment = html_experiment.replace('radiation_probe', f'{radiation_probe}')
+            #            html_experiment = html_experiment.replace('radiation_type', f'{radiation_type}')
             html_experiment = html_experiment.replace('range_min', f'{range_min}')
             html_experiment = html_experiment.replace('range_max', f'{range_max}')
             html_experiment = html_experiment.replace('range_inc', f'{range_inc}')
@@ -98,40 +106,22 @@ class Summary:
             html_experiment = html_experiment.replace('num_data_points', f'{num_data_points}')
             html_experiments.append(html_experiment)
 
-        html = html.replace('data_collection_section', '\n'.join(html_experiments))
+        html = html.replace('experiments_section', '\n'.join(html_experiments))
 
     def _set_refinement_section(self, html: str) -> None:
         html_refinement = HTML_REFINEMENT_TEMPLATE
-        num_free_params = 1  # count_free_parameters(self._project)
-        num_fixed_params = 2  # count_fixed_parameters(self._project)
+        num_free_params = count_free_parameters(self._project)
+        num_fixed_params = count_fixed_parameters(self._project)
         num_params = num_free_params + num_fixed_params
         #        goodness_of_fit = self._project.status.goodnessOfFit
         #        goodness_of_fit = goodness_of_fit.split(' → ')[-1]
         num_constraints = 0
 
         html_refinement = html_refinement.replace('calculation_engine', f'{self._project._calculator.current_interface_name}')
-        html_refinement = html_refinement.replace('minimization_engine', f'{self._project._minimizer.name}')
+        html_refinement = html_refinement.replace('minimization_engine', f'{self._project.minimizer.name}')
         #        html = html.replace('goodness_of_fit', f'{goodness_of_fit}')
         html_refinement = html_refinement.replace('num_total_params', f'{num_params}')
         html_refinement = html_refinement.replace('num_free_params', f'{num_free_params}')
         html_refinement = html_refinement.replace('num_fixed_params', f'{num_fixed_params}')
         html_refinement = html_refinement.replace('num_constraints', f'{num_constraints}')
         return html.replace('refinement_section', html_refinement)
-
-
-def count_free_parameters(project: Project) -> int:
-    count = 0
-    parameters = project.parameters
-    for parameter in parameters:
-        if parameter.free:
-            count = count + 1
-    return count
-
-
-def count_fixed_parameters(project: Project) -> int:
-    count = 0
-    parameters = project.parameters
-    for parameter in parameters:
-        if not parameter.free:
-            count = count + 1
-    return count

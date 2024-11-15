@@ -42,12 +42,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <!-- Experiments -->
 
     <tr>
-        <td><h3>Data collection</h3></td>
+        <td><h3>Experiments</h3></td>
     </tr>
 
     <tr></tr>
 
-    data_collection_section
+    experiments_section
 
     <!-- Analysis -->
 
