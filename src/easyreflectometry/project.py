@@ -55,6 +55,7 @@ class Project:
         self._current_model_index = 0
         self._current_assembly_index = 0
         self._current_layer_index = 0
+        self._fitter_model_index = None
 
         # Project flags
         self._created = False
@@ -177,7 +178,14 @@ class Project:
         self._materials.extend(self._get_materials_in_models())
         for model in self._models:
             model.interface = self._calculator
-        self._fitter = MultiFitter(self._models[self._current_model_index])
+
+    @property
+    def fitter(self) -> MultiFitter:
+        if len(self._models):
+            if (self._fitter is None) or (self._fitter_model_index != self._current_model_index):
+                self._fitter = MultiFitter(self._models[self._current_model_index])
+                self._fitter_model_index = self._current_model_index
+        return self._fitter
 
     @property
     def calculator(self) -> str:
@@ -189,14 +197,14 @@ class Project:
 
     @property
     def minimizer(self) -> AvailableMinimizers:
-        if self._fitter is not None:
-            return self._fitter.easy_science_multi_fitter.minimizer
+        if self.fitter is not None:
+            return self.fitter.easy_science_multi_fitter.minimizer
         return DEFAULT_MINIMIZER
 
     @minimizer.setter
     def minimizer(self, minimizer: AvailableMinimizers) -> None:
-        if self._fitter is not None:
-            self._fitter.easy_science_multi_fitter.switch_minimizer(minimizer)
+        if self.fitter is not None:
+            self.fitter.easy_science_multi_fitter.switch_minimizer(minimizer)
 
     @property
     def experiments(self) -> Dict[int, DataSet1D]:
@@ -363,8 +371,8 @@ class Project:
             self._as_dict_add_materials_not_in_model_dict(project_dict)
         if self._with_experiments:
             self._as_dict_add_experiments(project_dict)
-        if self._fitter is not None:
-            project_dict['fitter_minimizer'] = self._fitter.easy_science_multi_fitter.minimizer.name
+        if self.fitter is not None:
+            project_dict['fitter_minimizer'] = self.fitter.easy_science_multi_fitter.minimizer.name
         if self._calculator is not None:
             project_dict['calculator'] = self._calculator.current_interface_name
         if self._colors is not None:
@@ -403,7 +411,7 @@ class Project:
         if 'materials_not_in_model' in keys:
             self._materials.extend(MaterialCollection.from_dict(project_dict['materials_not_in_model']))
         if 'fitter_minimizer' in keys:
-            self._fitter.easy_science_multi_fitter.switch_minimizer(AvailableMinimizers[project_dict['fitter_minimizer']])
+            self.fitter.easy_science_multi_fitter.switch_minimizer(AvailableMinimizers[project_dict['fitter_minimizer']])
         else:
             self._fitter = None
         if 'experiments' in keys:
