@@ -32,12 +32,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <!-- Phases -->
 
     <tr>
-        <td><h3>Crystal data</h3></td>
+        <td><h3>Sample</h3></td>
     </tr>
 
     <tr></tr>
 
-    crystal_data_section
+    sample_section
 
     <!-- Experiments -->
 
