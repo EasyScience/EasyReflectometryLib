@@ -29,7 +29,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     project_information_section
 
-    <!-- Phases -->
+    <tr></tr>
+    
+    <!-- Sample -->
 
     <tr>
         <td><h3>Sample</h3></td>
@@ -38,6 +40,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <tr></tr>
 
     sample_section
+
+    <tr></tr>
 
     <!-- Experiments -->
 
@@ -48,6 +52,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <tr></tr>
 
     experiments_section
+
+    <tr></tr>
 
     <!-- Analysis -->
 
@@ -79,8 +85,6 @@ HTML_PROJECT_INFORMATION_TEMPLATE = """
     <td>No. of experiments</td>
     <td>num_experiments</td>
 </tr>
-
-<tr></tr>
 """
 
 HTML_PARAMETER_TEMPLATE = """
@@ -113,8 +117,6 @@ HTML_DATA_COLLECTION_TEMPLATE = """
     <td>No. of data points</td>
     <td>num_data_points</td>
 </tr>
-
-<tr></tr>
 """
 
 HTML_REFINEMENT_TEMPLATE = """
@@ -144,6 +146,4 @@ HTML_REFINEMENT_TEMPLATE = """
     <td>No. of constraints</td>
     <td>num_constriants</td>
 </tr>
-
-<tr></tr>
 """

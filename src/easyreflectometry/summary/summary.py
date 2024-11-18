@@ -15,13 +15,20 @@ class Summary:
 
     def compile_html_summary(self):
         html = HTML_TEMPLATE
-        html = html.replace('project_information_section', self._project_information_section())
+        project_information_section = self._project_information_section()
+        if project_information_section == '':  # no project information
+            project_information_section = '<tr><td>No project information</td></tr>'
+        html = html.replace('project_information_section', project_information_section)
+
         html = html.replace('sample_section', self._sample_section())
+
         experiments_section = self._experiments_section()
         if experiments_section == '':  # no experiments
             experiments_section = '<tr><td>No experiments</td></tr>'
         html = html.replace('experiments_section', experiments_section)
+
         html = html.replace('refinement_section', self._refinement_section())
+
         return html
 
     def _project_information_section(self) -> None:
@@ -40,10 +47,10 @@ class Summary:
         html_parameters = []
 
         html_parameter = HTML_PARAMETER_TEMPLATE
-        html_parameter = html_parameter.replace('parameter_name', 'name')
-        html_parameter = html_parameter.replace('parameter_value', 'value')
-        html_parameter = html_parameter.replace('parameter_unit', 'unit')
-        html_parameter = html_parameter.replace('parameter_error', 'error')
+        html_parameter = html_parameter.replace('parameter_name', '<th>Name</th>')
+        html_parameter = html_parameter.replace('parameter_value', '<th>Value</th>')
+        html_parameter = html_parameter.replace('parameter_unit', '<th>Unit</th>')
+        html_parameter = html_parameter.replace('parameter_error', '<th>Error</th>')
         html_parameters.append(html_parameter)
 
         for parameter in self._project.parameters:
@@ -80,6 +87,7 @@ class Summary:
             # html_phase = html_phase.replace('angle_beta', f'{angle_beta}')
             # html_phase = html_phase.replace('angle_gamma', f'{angle_gamma}')
 
+        html_parameters.append('/n<tr></tr>')
         html_parameters_str = '\n'.join(html_parameters)
 
         return html_parameters_str
