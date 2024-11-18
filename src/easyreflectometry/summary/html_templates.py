@@ -109,6 +109,11 @@ HTML_DATA_COLLECTION_TEMPLATE = """
     <td>No. of data points</td>
     <td>num_data_points</td>
 </tr>
+<tr>
+    <td>Resolution function</td>
+    <td>resolution_function</td>
+</tr>
+
 """
 
 HTML_REFINEMENT_TEMPLATE = """

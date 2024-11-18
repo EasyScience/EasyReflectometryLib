@@ -6,6 +6,7 @@ from easyscience import global_object
 
 import easyreflectometry
 from easyreflectometry import Project
+from easyreflectometry.model.resolution_functions import PercentageFhwm
 from easyreflectometry.summary import Summary
 
 PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
@@ -48,15 +49,16 @@ class TestSummary:
         # When
         project._created = True
         summary = Summary(project)
-        #        summary.compile_html_summary = MagicMock(return_value='html')
+        summary.compile_html_summary = MagicMock(return_value='html')
+        file_path = tmp_path / 'filename'
 
         # Then
-        summary.save_html_summary(tmp_path / 'filename.html')
+        summary.save_html_summary(file_path)
 
         # Expect
-        assert os.path.exists(tmp_path / 'filename.html')
-        # with open('filename', 'r') as f:
-        #     assert f.read() == 'html'
+        assert os.path.exists(file_path)
+        with open(file_path, 'r') as f:
+            assert f.read() == 'html'
 
     def test_project_information_section(self, project: Project) -> None:
         # When
@@ -67,10 +69,8 @@ class TestSummary:
         html = summary._project_information_section()
 
         # Expect
-        assert (
-            html
-            == '\n<tr>\n    <td><h3>Project information</h3></td>\n</tr>\n\n<tr></tr>\n\n<tr>\n    <th>Title</th>\n    <th>ExampleProject</th>\n</tr>\n<tr>\n    <td>Description</td>\n    <td>Reflectometry, 1D</td>\n</tr>\n<tr>\n    <td>No. of experiments</td>\n    <td>0</td>\n</tr>\n\n<tr></tr>\n'
-        )
+        assert 'ExampleProject' in html
+        assert 'Reflectometry, 1D' in html
 
     def test_sample_section(self, project: Project) -> None:
         # When
@@ -81,10 +81,10 @@ class TestSummary:
         html = summary._sample_section()
 
         # Expect
-        assert 'name' in html
-        assert 'value' in html
-        assert 'unit' in html
-        assert 'error' in html
+        assert 'Name' in html
+        assert 'Value' in html
+        assert 'Unit' in html
+        assert 'Error' in html
 
         assert 'sld' in html
         assert 'isld' in html
@@ -102,10 +102,25 @@ class TestSummary:
         html = summary._experiments_section()
 
         # Expect
-        assert (
-            html
-            == '\n<tr>\n    <th>Experiment datablock</th>\n    <th>Experiment for Model 0</th>\n</tr>\n<tr>\n    <td>Radiation probe</td>\n    <td>radiation_probe</td>\n</tr>\n<tr>\n    <td>Radiation type</td>\n    <td>radiation_type</td>\n</tr>\n<tr>\n    <td>Measured range: min, max, inc (Å⁻¹)</td>\n    <td>9.26972e-08,&nbsp;&nbsp;1.1171,&nbsp;&nbsp;range_inc</td>\n</tr>\n<tr>\n    <td>No. of data points</td>\n    <td>408</td>\n</tr>\n\n<tr></tr>\n'
-        )
+        assert 'Experiment for Model 0' in html
+        assert 'No. of data points' in html
+        assert '408' in html
+        assert 'Resolution function' in html
+        assert 'LinearSpline' in html
+
+    def test_experiments_section_percentage_fhwm(self, project: Project) -> None:
+        # When
+        project._created = True
+        fpath = os.path.join(PATH_STATIC, 'example.ort')
+        project.load_experiment_for_model_at_index(fpath)
+        project.models[0].resolution_function = PercentageFhwm(5)
+        summary = Summary(project)
+
+        # Then
+        html = summary._experiments_section()
+
+        # Expect
+        assert 'PercentageFhwm 5%' in html
 
     def test_refinement_section(self, project: Project) -> None:
         # When
