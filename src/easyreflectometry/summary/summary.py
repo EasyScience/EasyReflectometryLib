@@ -1,4 +1,5 @@
 from easyscience import global_object
+from xhtml2pdf import pisa
 
 from easyreflectometry import Project
 from easyreflectometry.utils import count_fixed_parameters
@@ -39,6 +40,18 @@ class Summary:
         html = self.compile_html_summary()
         with open(filename, 'w') as f:
             f.write(html)
+
+    def save_pdf_summary(self, filename: str) -> None:
+        html = self.compile_html_summary()
+
+        with open(filename, 'w+b') as result_file:
+            pisa_status = pisa.CreatePDF(
+                html,  # page data
+                dest=result_file,  # destination file
+            )
+
+            if pisa_status.err:
+                print('An error occured when generating PDF summary!')
 
     def _project_information_section(self) -> None:
         html_project = ''

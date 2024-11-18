@@ -51,6 +51,7 @@ class TestSummary:
         summary = Summary(project)
         summary.compile_html_summary = MagicMock(return_value='html')
         file_path = tmp_path / 'filename'
+        file_path = file_path.with_suffix('.html')
 
         # Then
         summary.save_html_summary(file_path)
@@ -59,6 +60,20 @@ class TestSummary:
         assert os.path.exists(file_path)
         with open(file_path, 'r') as f:
             assert f.read() == 'html'
+
+    def test_save_pdf_summary(self, project: Project, tmp_path) -> None:
+        # When
+        project._created = True
+        summary = Summary(project)
+        summary.compile_html_summary = MagicMock(return_value='html')
+        file_path = tmp_path / 'filename'
+        file_path = file_path.with_suffix('.pdf')
+
+        # Then
+        summary.save_pdf_summary(file_path)
+
+        # Expect
+        assert os.path.exists(file_path)
 
     def test_project_information_section(self, project: Project) -> None:
         # When
