@@ -1,6 +1,9 @@
+from easyscience import global_object
+
 from easyreflectometry import Project
 from easyreflectometry.utils import count_fixed_parameters
 from easyreflectometry.utils import count_free_parameters
+from easyreflectometry.utils import count_parameter_user_constraints
 
 from .html_templates import HTML_DATA_COLLECTION_TEMPLATE
 from .html_templates import HTML_PARAMETER_HEADER_TEMPLATE
@@ -45,7 +48,6 @@ class Summary:
             short_description = self._project._info['short_description']
             html_project = html_project.replace('project_title', f'{name}')
             html_project = html_project.replace('project_description', f'{short_description}')
-            #            html_project = html_project.replace('num_phases', f'{self._project.status.phaseCount}')
             html_project = html_project.replace('num_experiments', f'{len(self._project.experiments)}')
         return html_project
 
@@ -60,7 +62,13 @@ class Summary:
         html_parameters.append(html_parameter)
 
         for parameter in self._project.parameters:
-            name = parameter.name
+            path = global_object.map.find_path(
+                self._project._models[self._project.current_model_index].unique_name, parameter.unique_name
+            )
+            if 0 < len(path):
+                name = f'{global_object.map.get_item_by_key(path[-2]).name} {global_object.map.get_item_by_key(path[-1]).name}'
+            else:
+                name = parameter.name
             value = parameter.value
             unit = parameter.unit
             error = parameter.error
@@ -157,7 +165,7 @@ class Summary:
         num_params = num_free_params + num_fixed_params
         #        goodness_of_fit = self._project.status.goodnessOfFit
         #        goodness_of_fit = goodness_of_fit.split(' → ')[-1]
-        num_constraints = 0
+        num_constraints = count_parameter_user_constraints(self._project)
 
         html_refinement = html_refinement.replace('calculation_engine', f'{self._project._calculator.current_interface_name}')
         html_refinement = html_refinement.replace('minimization_engine', f'{self._project.minimizer.name}')

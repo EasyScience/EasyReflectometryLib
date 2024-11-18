@@ -13,6 +13,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <body>
         <table>
+
             <!-- Summary title -->
             <tr>
                 <td><h1>Summary</h1></td>
@@ -25,7 +26,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
             <!-- Sample -->
             <tr>
-                <td><h3>Sample</h3></td>
+                <td><h2>Sample</h2></td>
             </tr>
             sample_section
 
@@ -33,7 +34,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
             <!-- Experiments -->
             <tr>
-                <td><h3>Experiments</h3></td>
+                <td><h2>Experiments</h2></td>
             </tr>
             experiments_section
 
@@ -41,7 +42,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             
             <!-- Analysis -->
             <tr>
-                <td><h3>Refinement</h3></td>
+                <td><h2>Refinement</h2></td>
             </tr>
             refinement_section
 
@@ -101,8 +102,8 @@ HTML_DATA_COLLECTION_TEMPLATE = """
     <td>radiation_type</td>
 </tr>
 <tr>
-    <td>Measured range: min, max, inc (range_units)</td>
-    <td>range_min,&nbsp;&nbsp;range_max,&nbsp;&nbsp;range_inc</td>
+    <td>Measured range: min, max</td>
+    <td>range_min,&nbsp;&nbsp;range_max,&nbsp;&nbsp</td>
 </tr>
 <tr>
     <td>No. of data points</td>
@@ -119,10 +120,10 @@ HTML_REFINEMENT_TEMPLATE = """
     <td>Minimization engine</td>
     <td>minimization_engine</td>
 </tr>
-<tr>
-    <td>Goodness-of-fit: reduced <i>&chi;</i><sup>2</sup></td>
-    <td>goodness_of_fit</td>
-</tr>
+<!-- <tr> -->
+<!--     <td>Goodness-of-fit: reduced <i>&chi;</i><sup>2</sup></td> -->
+<!--     <td>goodness_of_fit</td> -->
+<!-- </tr> -->
 <tr>
     <td>No. of parameters: total, free, fixed</td>
     <td>num_total_params, num_free_params, num_fixed_params</td>

@@ -89,3 +89,12 @@ def count_fixed_parameters(project) -> int:
         if not parameter.free:
             count = count + 1
     return count
+
+
+def count_parameter_user_constraints(project) -> int:
+    count = 0
+    parameters = project.parameters
+    for parameter in parameters:
+        if parameter.constraint:
+            count = count + len(parameter.user_constraints.keys())
+    return count
