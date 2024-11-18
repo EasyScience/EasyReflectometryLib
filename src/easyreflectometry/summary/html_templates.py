@@ -20,12 +20,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
             <!-- Project -->
             project_information_section
-            
+
+            <tr></tr>
+
             <!-- Sample -->
             <tr>
                 <td><h3>Sample</h3></td>
             </tr>
             sample_section
+
+            <tr></tr>
 
             <!-- Experiments -->
             <tr>
@@ -33,6 +37,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             </tr>
             experiments_section
 
+            <tr></tr>
+            
             <!-- Analysis -->
             <tr>
                 <td><h3>Refinement</h3></td>
