@@ -1,4 +1,5 @@
 import os
+from unittest.mock import MagicMock
 
 import pytest
 from easyscience import global_object
@@ -24,6 +25,24 @@ class TestSummary:
 
         # Expect
         assert result._project == project
+
+    def test_compile_html_summary(self, project: Project) -> None:
+        # When
+        project._created = True
+        summary = Summary(project)
+        summary._project_information_section = MagicMock(return_value='project result')
+        summary._sample_section = MagicMock(return_value='sample result')
+        summary._experiments_section = MagicMock(return_value='_experiments results')
+        summary._refinement_section = MagicMock(return_value='refinement result')
+
+        # Then
+        result = summary.compile_html_summary()
+
+        # Expect
+        assert (
+            result
+            == '<!DOCTYPE html>\n\n<html>\n\n<style>\n    th, td {\n        padding-right: 18px;\n    }\n    th {\n        text-align: left;\n    }\n</style>\n\n<body>\n\n    <table>\n\n    <tr></tr>\n\n    <!-- Summary title -->\n\n    <tr>\n        <td><h1>Summary</h1></td>\n    </tr>\n\n    <tr></tr>\n\n    <!-- Project -->\n\n    project result\n\n    <!-- Phases -->\n\n    <tr>\n        <td><h3>Crystal data</h3></td>\n    </tr>\n\n    <tr></tr>\n\n    crystal_data_section\n\n    <!-- Experiments -->\n\n    <tr>\n        <td><h3>Experiments</h3></td>\n    </tr>\n\n    <tr></tr>\n\n    _experiments results\n\n    <!-- Analysis -->\n\n    refinement result\n\n    </table>\n\n</body>\n\n</html>'
+        )
 
     # def test_compile_html_summary(self, project: Project) -> None:
     #     # When

@@ -15,10 +15,10 @@ class Summary:
 
     def compile_html_summary(self):
         html = HTML_TEMPLATE
-        html.replace('project_information_section', self._project_information_section())
-        html.replace('sample_section', self._sample_section())
-        html.replace('experiments_section', self._experiments_section())
-        html.replace('refinement_section', self._refinement_section())
+        html = html.replace('project_information_section', self._project_information_section())
+        html = html.replace('sample_section', self._sample_section())
+        html = html.replace('experiments_section', self._experiments_section())
+        html = html.replace('refinement_section', self._refinement_section())
         return html
 
     def _project_information_section(self) -> None:
