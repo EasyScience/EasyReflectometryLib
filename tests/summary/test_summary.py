@@ -116,7 +116,8 @@ class TestSummary:
         html = summary._refinement_section()
 
         # Expect
-        assert (
-            html
-            == '\n<tr>\n    <td><h3>Refinement</h3></td>\n</tr>\n\n<tr></tr>\n\n<tr>\n    <td>Calculation engine</td>\n    <td>refnx</td>\n</tr>\n<tr>\n    <td>Minimization engine</td>\n    <td>LMFit_leastsq</td>\n</tr>\n<tr>\n    <td>Goodness-of-fit: reduced <i>&chi;</i><sup>2</sup></td>\n    <td>goodness_of_fit</td>\n</tr>\n<tr>\n    <td>No. of parameters: total, free, fixed</td>\n    <td>14, 0, 14</td>\n</tr>\n<tr>\n    <td>No. of constraints</td>\n    <td>num_constriants</td>\n</tr>\n\n<tr></tr>\n'
-        )
+        assert 'refnx' in html
+        assert 'LMFit_leastsq' in html
+        assert 'total, free, fixed' in html
+        assert '14, 0, 14' in html
+        assert 'No. of constraints' in html

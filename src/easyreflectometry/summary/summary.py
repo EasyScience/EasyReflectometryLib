@@ -173,5 +173,5 @@ class Summary:
         html_refinement = html_refinement.replace('num_total_params', f'{num_params}')
         html_refinement = html_refinement.replace('num_free_params', f'{num_free_params}')
         html_refinement = html_refinement.replace('num_fixed_params', f'{num_fixed_params}')
-        html_refinement = html_refinement.replace('num_constraints', f'{num_constraints}')
+        html_refinement = html_refinement.replace('num_constriants', f'{num_constraints}')
         return html_refinement
