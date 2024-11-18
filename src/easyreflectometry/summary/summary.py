@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+import numpy as np
 from easyscience import global_object
 from xhtml2pdf import pisa
 
@@ -34,6 +36,12 @@ class Summary:
 
         html = html.replace('refinement_section', self._refinement_section())
 
+        self.save_sld_plot(self._project.path / 'sld_plot.jpg')
+        self.save_fit_experiment_plot(self._project.path / 'fit_experiment_plot.jpg')
+
+        html = html.replace('path_sld_plot', str(self._project.path / 'sld_plot.jpg'))
+        html = html.replace('path_fit_experiment_plot', str(self._project.path / 'fit_experiment_plot.jpg'))
+
         return html
 
     def save_html_summary(self, filename: str) -> None:
@@ -52,6 +60,34 @@ class Summary:
 
             if pisa_status.err:
                 print('An error occured when generating PDF summary!')
+
+    def save_sld_plot(self, filename: str) -> None:
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+
+        sld = self._project.sld_data_for_model_at_index(0)
+        ax.plot(sld.x, sld.y)
+
+        ax.set_xlabel('z (Å)')
+        ax.set_ylabel('SLD (Å⁻²)')
+        fig.savefig(filename, dpi=300)
+
+    def save_fit_experiment_plot(self, filename: str) -> None:
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+
+        model = self._project.model_data_for_model_at_index(0)
+        ax.plot(model.x, np.log10(model.y), color='blue')
+
+        try:
+            experiment = self._project.experimental_data_for_model_at_index(0)
+            ax.plot(experiment.x, np.log10(experiment.y), color='red')
+        except IndexError:
+            pass
+
+        ax.set_xlabel('Q (Å⁻¹)')
+        ax.set_ylabel('Reflectivity')
+        fig.savefig(filename, dpi=300)
 
     def _project_information_section(self) -> None:
         html_project = ''

@@ -154,3 +154,31 @@ class TestSummary:
         assert 'No. of free parameters:' in html
         assert '0' in html
         assert 'No. of constraints' in html
+
+    def test_save_sld_plot(self, project: Project, tmp_path) -> None:
+        # When
+        project._created = True
+        summary = Summary(project)
+        file_path = tmp_path / 'filename'
+        file_path = file_path.with_suffix('.jpg')
+
+        # Then
+        summary.save_sld_plot(file_path)
+
+        # Expect
+        assert os.path.exists(file_path)
+
+    def test_save_fit_experiment_plot(self, project: Project, tmp_path) -> None:
+        # When
+        project._created = True
+        summary = Summary(project)
+        file_path = tmp_path / 'filename'
+        file_path = file_path.with_suffix('.jpg')
+        fpath = os.path.join(PATH_STATIC, 'example.ort')
+        project.load_experiment_for_model_at_index(fpath)
+
+        # Then
+        summary.save_fit_experiment_plot(file_path)
+
+        # Expect
+        assert os.path.exists(file_path)

@@ -47,6 +47,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             refinement_section
 
         </table>
+
+        <img src="path_sld_plot" alt="SLD plot" width="640" height="480">
+        <br>
+        <img src="path_fit_experiment_plot" alt="Fit experiment plot" width="640" height="480">
+        
     </body>
 </html>"""
 
@@ -94,8 +99,8 @@ HTML_DATA_COLLECTION_TEMPLATE = """
     <th>experiment_name</th>
 </tr>
 <tr>
-    <td>Measured range: min, max</td>
-    <td>range_min,&nbsp;&nbsp;range_max,&nbsp;&nbsp</td>
+    <td>Measured intensity range:</td>
+    <td>[range_min, range_max]</td>
 </tr>
 <tr>
     <td>No. of data points</td>
