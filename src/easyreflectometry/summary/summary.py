@@ -46,8 +46,8 @@ class Summary:
 
         with open(filename, 'w+b') as result_file:
             pisa_status = pisa.CreatePDF(
-                html,  # page data
-                dest=result_file,  # destination file
+                html,
+                dest=result_file,
             )
 
             if pisa_status.err:
