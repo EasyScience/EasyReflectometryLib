@@ -94,14 +94,6 @@ HTML_DATA_COLLECTION_TEMPLATE = """
     <th>experiment_name</th>
 </tr>
 <tr>
-    <td>Radiation probe</td>
-    <td>radiation_probe</td>
-</tr>
-<tr>
-    <td>Radiation type</td>
-    <td>radiation_type</td>
-</tr>
-<tr>
     <td>Measured range: min, max</td>
     <td>range_min,&nbsp;&nbsp;range_max,&nbsp;&nbsp</td>
 </tr>

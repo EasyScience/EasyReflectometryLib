@@ -69,7 +69,7 @@ class TestSummary:
         html = summary._project_information_section()
 
         # Expect
-        assert 'ExampleProject' in html
+        assert 'DefaultEasyReflectometryProject' in html
         assert 'Reflectometry, 1D' in html
 
     def test_sample_section(self, project: Project) -> None:

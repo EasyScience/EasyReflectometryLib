@@ -320,10 +320,8 @@ class Project:
 
     def _default_info(self):
         return dict(
-            name='ExampleProject',
+            name='DefaultEasyReflectometryProject',
             short_description='Reflectometry, 1D',
-            samples='None',
-            experiments='None',
             modified=datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         )
 

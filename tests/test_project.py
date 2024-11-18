@@ -30,10 +30,8 @@ class TestProject:
 
         # Expect
         assert project._info == {
-            'name': 'ExampleProject',
+            'name': 'DefaultEasyReflectometryProject',
             'short_description': 'Reflectometry, 1D',
-            'samples': 'None',
-            'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
         assert project._path_project_parent == Path(os.path.expanduser('~'))
@@ -80,10 +78,8 @@ class TestProject:
 
         # Expect
         assert project._info == {
-            'name': 'ExampleProject',
+            'name': 'DefaultEasyReflectometryProject',
             'short_description': 'Reflectometry, 1D',
-            'samples': 'None',
-            'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
         assert project._models.unique_name == 'project_models'
@@ -269,7 +265,7 @@ class TestProject:
         project.set_path_project_parent(tmp_path)
 
         # Then Expect
-        assert project.path_json == Path(tmp_path) / 'ExampleProject' / 'project.json'
+        assert project.path_json == Path(tmp_path) / 'DefaultEasyReflectometryProject' / 'project.json'
 
     def test_add_material(self):
         # When
@@ -317,10 +313,8 @@ class TestProject:
 
         # Expect
         assert info == {
-            'name': 'ExampleProject',
+            'name': 'DefaultEasyReflectometryProject',
             'short_description': 'Reflectometry, 1D',
-            'samples': 'None',
-            'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
 
@@ -341,10 +335,8 @@ class TestProject:
             'with_experiments',
         ]
         assert project_dict['info'] == {
-            'name': 'ExampleProject',
+            'name': 'DefaultEasyReflectometryProject',
             'short_description': 'Reflectometry, 1D',
-            'samples': 'None',
-            'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
         assert project_dict['calculator'] == 'refnx'
@@ -551,8 +543,6 @@ class TestProject:
         assert project._info == {
             'name': 'TestProject',
             'short_description': 'Reflectometry, 1D',
-            'samples': 'None',
-            'experiments': 'None',
             'modified': datetime.datetime.now().strftime('%d.%m.%Y %H:%M'),
         }
 
