@@ -15,13 +15,13 @@ class Summary:
 
     def compile_html_summary(self):
         html = HTML_TEMPLATE
-        self._set_project_information_section(html)
-        self._set_sample_section(html)
-        self._set_experiments_section(html)
-        self._set_refinement_section(html)
+        html.replace('project_information_section', self._project_information_section())
+        html.replace('sample_section', self._sample_section())
+        html.replace('experiments_section', self._experiments_section())
+        html.replace('refinement_section', self._refinement_section())
         return html
 
-    def _set_project_information_section(self, html: str) -> None:
+    def _project_information_section(self) -> None:
         html_project = ''
         if self._project.created:
             html_project = HTML_PROJECT_INFORMATION_TEMPLATE
@@ -31,9 +31,9 @@ class Summary:
             html_project = html_project.replace('project_description', f'{short_description}')
             #            html_project = html_project.replace('num_phases', f'{self._project.status.phaseCount}')
             html_project = html_project.replace('num_experiments', f'{len(self._project.experiments)}')
-        return html.replace('project_information_section', html_project)
+        return html_project
 
-    def _set_sample_section(self, html: str) -> None:
+    def _sample_section(self) -> None:
         html_phases = []
 
         for phase in self._project.dataBlocks:
@@ -59,9 +59,11 @@ class Summary:
             html_phase = html_phase.replace('angle_gamma', f'{angle_gamma}')
             html_phases.append(html_phase)
 
-        html = html.replace('crystal_data_section', '\n'.join(html_phases))
+        html_phases_str = '\n'.join(html_phases)
 
-    def _set_experiments_section(self, html: str) -> None:
+        return html_phases_str
+
+    def _experiments_section(self) -> None:
         html_experiments = []
 
         for idx, experiment in self._project.experiments.items():
@@ -72,7 +74,9 @@ class Summary:
             #            radiation_type = radiation_type.replace('cwl', 'constant wavelength')
             #            radiation_type = radiation_type.replace('tof', 'time-of-flight')
             num_data_points = len(experiment.x)
-            resolution_functions = experiment.ye
+            resolution_function = self._project.models[idx].resolution_function.as_dict()['smearing']
+            if resolution_function == 'PercentageFhwm':
+                resolution_function = resolution_function + self._project.models[idx].resolution_function.as_dict()['constant']
             range_min = min(experiment.y)
             range_max = max(experiment.y)
             range_units = 'Å⁻¹'
@@ -101,14 +105,18 @@ class Summary:
             #            html_experiment = html_experiment.replace('radiation_type', f'{radiation_type}')
             html_experiment = html_experiment.replace('range_min', f'{range_min}')
             html_experiment = html_experiment.replace('range_max', f'{range_max}')
-            html_experiment = html_experiment.replace('range_inc', f'{range_inc}')
+            #            html_experiment = html_experiment.replace('range_inc', f'{range_inc}')
             html_experiment = html_experiment.replace('range_units', f'{range_units}')
             html_experiment = html_experiment.replace('num_data_points', f'{num_data_points}')
             html_experiments.append(html_experiment)
 
-        html = html.replace('experiments_section', '\n'.join(html_experiments))
+        html_experiments_str = '\n'.join(html_experiments)
 
-    def _set_refinement_section(self, html: str) -> None:
+        return html_experiments_str
+
+    def _refinement_section(
+        self,
+    ) -> None:
         html_refinement = HTML_REFINEMENT_TEMPLATE
         num_free_params = count_free_parameters(self._project)
         num_fixed_params = count_fixed_parameters(self._project)
@@ -124,4 +132,4 @@ class Summary:
         html_refinement = html_refinement.replace('num_free_params', f'{num_free_params}')
         html_refinement = html_refinement.replace('num_fixed_params', f'{num_fixed_params}')
         html_refinement = html_refinement.replace('num_constraints', f'{num_constraints}')
-        return html.replace('refinement_section', html_refinement)
+        return html_refinement

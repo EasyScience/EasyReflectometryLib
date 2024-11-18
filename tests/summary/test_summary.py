@@ -6,7 +6,6 @@ from easyscience import global_object
 import easyreflectometry
 from easyreflectometry import Project
 from easyreflectometry.summary import Summary
-from easyreflectometry.summary.html_templates import HTML_TEMPLATE
 
 PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
 
@@ -40,10 +39,9 @@ class TestSummary:
         # When
         project._created = True
         summary = Summary(project)
-        html = 'project_information_section'
 
         # Then
-        html = summary._set_project_information_section(html)
+        html = summary._project_information_section()
 
         # Expect
         assert (
@@ -57,22 +55,23 @@ class TestSummary:
         fpath = os.path.join(PATH_STATIC, 'example.ort')
         project.load_experiment_for_model_at_index(fpath)
         summary = Summary(project)
-        html = 'experiment_section'
 
         # Then
-        html = summary._set_experiments_section(html)
+        html = summary._experiments_section()
 
         # Expect
-        assert html == ''
+        assert (
+            html
+            == '\n<tr>\n    <th>Experiment datablock</th>\n    <th>Experiment for Model 0</th>\n</tr>\n<tr>\n    <td>Radiation probe</td>\n    <td>radiation_probe</td>\n</tr>\n<tr>\n    <td>Radiation type</td>\n    <td>radiation_type</td>\n</tr>\n<tr>\n    <td>Measured range: min, max, inc (Å⁻¹)</td>\n    <td>9.26972e-08,&nbsp;&nbsp;1.1171,&nbsp;&nbsp;range_inc</td>\n</tr>\n<tr>\n    <td>No. of data points</td>\n    <td>408</td>\n</tr>\n\n<tr></tr>\n'
+        )
 
     def test_set_refinement_section(self, project: Project) -> None:
         # When
         project._created = True
         summary = Summary(project)
-        html = 'refinement_section'
 
         # Then
-        html = summary._set_refinement_section(html)
+        html = summary._refinement_section()
 
         # Expect
         assert (
