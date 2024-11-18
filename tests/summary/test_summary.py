@@ -44,6 +44,20 @@ class TestSummary:
         assert 'experiments results html' in result
         assert 'refinement result html' in result
 
+    def test_save_html_summary(self, project: Project, tmp_path) -> None:
+        # When
+        project._created = True
+        summary = Summary(project)
+        #        summary.compile_html_summary = MagicMock(return_value='html')
+
+        # Then
+        summary.save_html_summary(tmp_path / 'filename.html')
+
+        # Expect
+        assert os.path.exists(tmp_path / 'filename.html')
+        # with open('filename', 'r') as f:
+        #     assert f.read() == 'html'
+
     def test_project_information_section(self, project: Project) -> None:
         # When
         project._created = True

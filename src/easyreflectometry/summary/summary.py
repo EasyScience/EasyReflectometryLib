@@ -3,6 +3,7 @@ from easyreflectometry.utils import count_fixed_parameters
 from easyreflectometry.utils import count_free_parameters
 
 from .html_templates import HTML_DATA_COLLECTION_TEMPLATE
+from .html_templates import HTML_PARAMETER_HEADER_TEMPLATE
 from .html_templates import HTML_PARAMETER_TEMPLATE
 from .html_templates import HTML_PROJECT_INFORMATION_TEMPLATE
 from .html_templates import HTML_REFINEMENT_TEMPLATE
@@ -17,19 +18,24 @@ class Summary:
         html = HTML_TEMPLATE
         project_information_section = self._project_information_section()
         if project_information_section == '':  # no project information
-            project_information_section = '<tr><td>No project information</td></tr>'
+            project_information_section = '<td>No project information</td>'
         html = html.replace('project_information_section', project_information_section)
 
         html = html.replace('sample_section', self._sample_section())
 
         experiments_section = self._experiments_section()
         if experiments_section == '':  # no experiments
-            experiments_section = '<tr><td>No experiments</td></tr>'
+            experiments_section = '<td>No experiments</td>'
         html = html.replace('experiments_section', experiments_section)
 
         html = html.replace('refinement_section', self._refinement_section())
 
         return html
+
+    def save_html_summary(self, filename: str) -> None:
+        html = self.compile_html_summary()
+        with open(filename, 'w') as f:
+            f.write(html)
 
     def _project_information_section(self) -> None:
         html_project = ''
@@ -46,11 +52,11 @@ class Summary:
     def _sample_section(self) -> None:
         html_parameters = []
 
-        html_parameter = HTML_PARAMETER_TEMPLATE
-        html_parameter = html_parameter.replace('parameter_name', '<th>Name</th>')
-        html_parameter = html_parameter.replace('parameter_value', '<th>Value</th>')
-        html_parameter = html_parameter.replace('parameter_unit', '<th>Unit</th>')
-        html_parameter = html_parameter.replace('parameter_error', '<th>Error</th>')
+        html_parameter = HTML_PARAMETER_HEADER_TEMPLATE
+        html_parameter = html_parameter.replace('parameter_name', 'Name')
+        html_parameter = html_parameter.replace('parameter_value', 'Value')
+        html_parameter = html_parameter.replace('parameter_unit', 'Unit')
+        html_parameter = html_parameter.replace('parameter_error', 'Error')
         html_parameters.append(html_parameter)
 
         for parameter in self._project.parameters:
@@ -87,7 +93,6 @@ class Summary:
             # html_phase = html_phase.replace('angle_beta', f'{angle_beta}')
             # html_phase = html_phase.replace('angle_gamma', f'{angle_gamma}')
 
-        html_parameters.append('/n<tr></tr>')
         html_parameters_str = '\n'.join(html_parameters)
 
         return html_parameters_str

@@ -2,67 +2,45 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 <html>
 
-<style>
-    th, td {
-        padding-right: 18px;
-    }
-    th {
-        text-align: left;
-    }
-</style>
+    <style>
+        th, td {
+            padding-right: 18px;
+        }
+        th {
+            text-align: left;
+        }
+    </style>
 
-<body>
+    <body>
+        <table>
+            <!-- Summary title -->
+            <tr>
+                <td><h1>Summary</h1></td>
+            </tr>
 
-    <table>
+            <!-- Project -->
+            project_information_section
+            
+            <!-- Sample -->
+            <tr>
+                <td><h3>Sample</h3></td>
+            </tr>
+            sample_section
 
-    <tr></tr>
+            <!-- Experiments -->
+            <tr>
+                <td><h3>Experiments</h3></td>
+            </tr>
+            experiments_section
 
-    <!-- Summary title -->
+            <!-- Analysis -->
+            <tr>
+                <td><h3>Refinement</h3></td>
+            </tr>
+            refinement_section
 
-    <tr>
-        <td><h1>Summary</h1></td>
-    </tr>
-
-    <tr></tr>
-
-    <!-- Project -->
-
-    project_information_section
-
-    <tr></tr>
-    
-    <!-- Sample -->
-
-    <tr>
-        <td><h3>Sample</h3></td>
-    </tr>
-
-    <tr></tr>
-
-    sample_section
-
-    <tr></tr>
-
-    <!-- Experiments -->
-
-    <tr>
-        <td><h3>Experiments</h3></td>
-    </tr>
-
-    <tr></tr>
-
-    experiments_section
-
-    <tr></tr>
-
-    <!-- Analysis -->
-
-    refinement_section
-
-    </table>
-
-</body>
-
+        </table>
+    </body>
 </html>"""
 
 
@@ -70,8 +48,6 @@ HTML_PROJECT_INFORMATION_TEMPLATE = """
 <tr>
     <td><h3>Project information</h3></td>
 </tr>
-
-<tr></tr>
 
 <tr>
     <th>Title</th>
@@ -84,6 +60,15 @@ HTML_PROJECT_INFORMATION_TEMPLATE = """
 <tr>
     <td>No. of experiments</td>
     <td>num_experiments</td>
+</tr>
+"""
+
+HTML_PARAMETER_HEADER_TEMPLATE = """
+<tr>
+    <th>parameter_name</th> 
+    <th>parameter_value</th>
+    <th>parameter_unit</th> 
+    <th>parameter_error</th>
 </tr>
 """
 
@@ -120,12 +105,6 @@ HTML_DATA_COLLECTION_TEMPLATE = """
 """
 
 HTML_REFINEMENT_TEMPLATE = """
-<tr>
-    <td><h3>Refinement</h3></td>
-</tr>
-
-<tr></tr>
-
 <tr>
     <td>Calculation engine</td>
     <td>calculation_engine</td>
