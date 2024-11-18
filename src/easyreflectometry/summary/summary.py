@@ -17,7 +17,10 @@ class Summary:
         html = HTML_TEMPLATE
         html = html.replace('project_information_section', self._project_information_section())
         html = html.replace('sample_section', self._sample_section())
-        html = html.replace('experiments_section', self._experiments_section())
+        experiments_section = self._experiments_section()
+        if experiments_section == '':  # no experiments
+            experiments_section = '<tr><td>No experiments</td></tr>'
+        html = html.replace('experiments_section', experiments_section)
         html = html.replace('refinement_section', self._refinement_section())
         return html
 
@@ -36,6 +39,13 @@ class Summary:
     def _sample_section(self) -> None:
         html_parameters = []
 
+        html_parameter = HTML_PARAMETER_TEMPLATE
+        html_parameter = html_parameter.replace('parameter_name', 'name')
+        html_parameter = html_parameter.replace('parameter_value', 'value')
+        html_parameter = html_parameter.replace('parameter_unit', 'unit')
+        html_parameter = html_parameter.replace('parameter_error', 'error')
+        html_parameters.append(html_parameter)
+
         for parameter in self._project.parameters:
             name = parameter.name
             value = parameter.value
@@ -43,11 +53,11 @@ class Summary:
             error = parameter.error
 
             html_parameter = HTML_PARAMETER_TEMPLATE
-
             html_parameter = html_parameter.replace('parameter_name', f'{name}')
             html_parameter = html_parameter.replace('parameter_value', f'{value}')
             html_parameter = html_parameter.replace('parameter_unit', f'{unit}')
             html_parameter = html_parameter.replace('parameter_error', f'{error}')
+            html_parameters.append(html_parameter)
 
             # phase_name = phase['name']['value']
             # crystal_system = phase['params']['_space_group']['crystal_system']['value']
@@ -69,7 +79,6 @@ class Summary:
             # html_phase = html_phase.replace('angle_alpha', f'{angle_alpha}')
             # html_phase = html_phase.replace('angle_beta', f'{angle_beta}')
             # html_phase = html_phase.replace('angle_gamma', f'{angle_gamma}')
-            html_parameters.append(html_parameter)
 
         html_parameters_str = '\n'.join(html_parameters)
 

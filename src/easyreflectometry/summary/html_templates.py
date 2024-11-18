@@ -85,7 +85,10 @@ HTML_PROJECT_INFORMATION_TEMPLATE = """
 
 HTML_PARAMETER_TEMPLATE = """
 <tr>
-    <th>parameter_name parameter_value parameter_unit parameter_error</th>
+    <td>parameter_name</td> 
+    <td>parameter_value</td>
+    <td>parameter_unit</td> 
+    <td>parameter_error</td>
 </tr>
 """
 

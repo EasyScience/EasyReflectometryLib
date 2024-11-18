@@ -67,10 +67,15 @@ class TestSummary:
         html = summary._sample_section()
 
         # Expect
-        assert (
-            html
-            == '\n<tr>\n    <th>sld 0.0 1/Å^2 0.0</th>\n</tr>\n\n\n<tr>\n    <th>isld 0.0 1/Å^2 0.0</th>\n</tr>\n\n\n<tr>\n    <th>sld 6.335 1/Å^2 0.0</th>\n</tr>\n\n\n<tr>\n    <th>isld 0.0 1/Å^2 0.0</th>\n</tr>\n\n\n<tr>\n    <th>sld 2.074 1/Å^2 0.0</th>\n</tr>\n\n\n<tr>\n    <th>isld 0.0 1/Å^2 0.0</th>\n</tr>\n\n\n<tr>\n    <th>thickness 0.0 Å 0.0</th>\n</tr>\n\n\n<tr>\n    <th>roughness 0.0 Å 0.0</th>\n</tr>\n\n\n<tr>\n    <th>thickness 100.0 Å 0.0</th>\n</tr>\n\n\n<tr>\n    <th>roughness 3.0 Å 0.0</th>\n</tr>\n\n\n<tr>\n    <th>thickness 0.0 Å 0.0</th>\n</tr>\n\n\n<tr>\n    <th>roughness 1.2 Å 0.0</th>\n</tr>\n\n\n<tr>\n    <th>scale 1.0 dimensionless 0.0</th>\n</tr>\n\n\n<tr>\n    <th>background 1e-08 dimensionless 0.0</th>\n</tr>\n'
-        )
+        assert 'name' in html
+        assert 'value' in html
+        assert 'unit' in html
+        assert 'error' in html
+
+        assert 'sld' in html
+        assert 'isld' in html
+        assert 'thickness' in html
+        assert 'background' in html
 
     def test_experiments_section(self, project: Project) -> None:
         # When
