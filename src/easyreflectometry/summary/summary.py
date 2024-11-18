@@ -2,8 +2,8 @@ from easyreflectometry import Project
 from easyreflectometry.utils import count_fixed_parameters
 from easyreflectometry.utils import count_free_parameters
 
-from .html_templates import HTML_CRYSTAL_DATA_TEMPLATE
 from .html_templates import HTML_DATA_COLLECTION_TEMPLATE
+from .html_templates import HTML_PARAMETER_TEMPLATE
 from .html_templates import HTML_PROJECT_INFORMATION_TEMPLATE
 from .html_templates import HTML_REFINEMENT_TEMPLATE
 from .html_templates import HTML_TEMPLATE
@@ -34,34 +34,46 @@ class Summary:
         return html_project
 
     def _sample_section(self) -> None:
-        html_phases = []
+        html_parameters = []
 
-        for phase in self._project.dataBlocks:
-            phase_name = phase['name']['value']
-            crystal_system = phase['params']['_space_group']['crystal_system']['value']
-            name_H_M_alt = phase['params']['_space_group']['name_H-M_alt']['value']
-            length_a = phase['params']['_cell']['length_a']['value']
-            length_b = phase['params']['_cell']['length_b']['value']
-            length_c = phase['params']['_cell']['length_c']['value']
-            angle_alpha = phase['params']['_cell']['angle_alpha']['value']
-            angle_beta = phase['params']['_cell']['angle_beta']['value']
-            angle_gamma = phase['params']['_cell']['angle_gamma']['value']
+        for parameter in self._project.parameters:
+            name = parameter.name
+            value = parameter.value
+            unit = parameter.unit
+            error = parameter.error
 
-            html_phase = HTML_CRYSTAL_DATA_TEMPLATE
-            html_phase = html_phase.replace('phase_name', f'{phase_name}')
-            html_phase = html_phase.replace('crystal_system', f'{crystal_system}')
-            html_phase = html_phase.replace('name_H_M_alt', f'{name_H_M_alt}')
-            html_phase = html_phase.replace('length_a', f'{length_a}')
-            html_phase = html_phase.replace('length_b', f'{length_b}')
-            html_phase = html_phase.replace('length_c', f'{length_c}')
-            html_phase = html_phase.replace('angle_alpha', f'{angle_alpha}')
-            html_phase = html_phase.replace('angle_beta', f'{angle_beta}')
-            html_phase = html_phase.replace('angle_gamma', f'{angle_gamma}')
-            html_phases.append(html_phase)
+            html_parameter = HTML_PARAMETER_TEMPLATE
 
-        html_phases_str = '\n'.join(html_phases)
+            html_parameter = html_parameter.replace('parameter_name', f'{name}')
+            html_parameter = html_parameter.replace('parameter_value', f'{value}')
+            html_parameter = html_parameter.replace('parameter_unit', f'{unit}')
+            html_parameter = html_parameter.replace('parameter_error', f'{error}')
 
-        return html_phases_str
+            # phase_name = phase['name']['value']
+            # crystal_system = phase['params']['_space_group']['crystal_system']['value']
+            # name_H_M_alt = phase['params']['_space_group']['name_H-M_alt']['value']
+            # length_a = phase['params']['_cell']['length_a']['value']
+            # length_b = phase['params']['_cell']['length_b']['value']
+            # length_c = phase['params']['_cell']['length_c']['value']
+            # angle_alpha = phase['params']['_cell']['angle_alpha']['value']
+            # angle_beta = phase['params']['_cell']['angle_beta']['value']
+            # angle_gamma = phase['params']['_cell']['angle_gamma']['value']
+
+            # html_phase = HTML_CRYSTAL_DATA_TEMPLATE
+            # html_phase = html_phase.replace('phase_name', f'{phase_name}')
+            # html_phase = html_phase.replace('crystal_system', f'{crystal_system}')
+            # html_phase = html_phase.replace('name_H_M_alt', f'{name_H_M_alt}')
+            # html_phase = html_phase.replace('length_a', f'{length_a}')
+            # html_phase = html_phase.replace('length_b', f'{length_b}')
+            # html_phase = html_phase.replace('length_c', f'{length_c}')
+            # html_phase = html_phase.replace('angle_alpha', f'{angle_alpha}')
+            # html_phase = html_phase.replace('angle_beta', f'{angle_beta}')
+            # html_phase = html_phase.replace('angle_gamma', f'{angle_gamma}')
+            html_parameters.append(html_parameter)
+
+        html_parameters_str = '\n'.join(html_parameters)
+
+        return html_parameters_str
 
     def _experiments_section(self) -> None:
         html_experiments = []

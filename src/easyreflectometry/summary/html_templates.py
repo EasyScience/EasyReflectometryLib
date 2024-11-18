@@ -83,25 +83,10 @@ HTML_PROJECT_INFORMATION_TEMPLATE = """
 <tr></tr>
 """
 
-HTML_CRYSTAL_DATA_TEMPLATE = """
+HTML_PARAMETER_TEMPLATE = """
 <tr>
-    <th>Phase datablock</th>
-    <th>phase_name</th>
+    <th>parameter_name parameter_value parameter_unit parameter_error</th>
 </tr>
-<tr>
-    <td>Crystal system, space group</td>
-    <td>crystal_system,&nbsp;&nbsp;<i>name_H_M_alt</i></td>
-</tr>
-<tr>
-    <td>Cell lengths: <i>a</i>, <i>b</i>, <i>c</i> (&#8491;)</td>
-    <td>length_a,&nbsp;&nbsp;length_b,&nbsp;&nbsp;length_c</td>
-</tr>
-<tr>
-    <td>Cell angles: <i>&#593;</i>, <i>&beta;</i>, <i>&#611;</i> (&deg;)</td>
-    <td>angle_alpha,&nbsp;&nbsp;angle_beta,&nbsp;&nbsp;angle_gamma</td>
-</tr>
-
-<tr></tr>
 """
 
 HTML_DATA_COLLECTION_TEMPLATE = """
