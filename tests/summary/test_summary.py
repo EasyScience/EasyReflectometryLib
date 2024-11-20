@@ -35,15 +35,34 @@ class TestSummary:
         summary._sample_section = MagicMock(return_value='sample result html')
         summary._experiments_section = MagicMock(return_value='experiments results html')
         summary._refinement_section = MagicMock(return_value='refinement result html')
+        summary._figures_section = MagicMock()
 
         # Then
         result = summary.compile_html_summary()
 
         # Expect
+        summary._figures_section.assert_not_called()
         assert 'project result html' in result
         assert 'sample result html' in result
         assert 'experiments results html' in result
         assert 'refinement result html' in result
+        assert 'figures_section' not in result
+
+    def test_compile_html_summary_with_figures(self, project: Project) -> None:
+        # When
+        project._created = True
+        summary = Summary(project)
+        summary._project_information_section = MagicMock(return_value='project result html')
+        summary._sample_section = MagicMock(return_value='sample result html')
+        summary._experiments_section = MagicMock(return_value='experiments results html')
+        summary._refinement_section = MagicMock(return_value='refinement result html')
+        summary._figures_section = MagicMock(return_value='figures result html')
+
+        # Then
+        result = summary.compile_html_summary(figures=True)
+
+        # Expect
+        assert 'figures result html' in result
 
     def test_save_html_summary(self, project: Project, tmp_path) -> None:
         # When
@@ -182,3 +201,19 @@ class TestSummary:
 
         # Expect
         assert os.path.exists(file_path)
+
+    def test_figures_section(self, project: Project) -> None:
+        # When
+        project._created = True
+        summary = Summary(project)
+        summary.save_sld_plot = MagicMock()
+        summary.save_fit_experiment_plot = MagicMock()
+
+        # Then
+        html = summary._figures_section()
+
+        # Expect
+        summary.save_sld_plot.assert_called_once()
+        summary.save_fit_experiment_plot.assert_called_once()
+        assert 'sld_plot' in html
+        assert 'fit_experiment_plot' in html

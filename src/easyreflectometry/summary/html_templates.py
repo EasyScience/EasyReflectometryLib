@@ -48,9 +48,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
         </table>
 
-        <img src="path_sld_plot" alt="SLD plot" width="640" height="480">
-        <br>
-        <img src="path_fit_experiment_plot" alt="Fit experiment plot" width="640" height="480">
+        figures_section
         
     </body>
 </html>"""
@@ -142,4 +140,10 @@ HTML_REFINEMENT_TEMPLATE = """
     <td>No. of constraints</td>
     <td>num_constriants</td>
 </tr>
+"""
+
+HTML_FIGURES_TEMPLATE = """
+<img src="path_sld_plot" alt="SLD plot" width="640" height="480">
+<br>
+<img src="path_fit_experiment_plot" alt="Fit experiment plot" width="640" height="480">
 """

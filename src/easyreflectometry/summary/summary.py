@@ -9,6 +9,7 @@ from easyreflectometry.utils import count_free_parameters
 from easyreflectometry.utils import count_parameter_user_constraints
 
 from .html_templates import HTML_DATA_COLLECTION_TEMPLATE
+from .html_templates import HTML_FIGURES_TEMPLATE
 from .html_templates import HTML_PARAMETER_HEADER_TEMPLATE
 from .html_templates import HTML_PARAMETER_TEMPLATE
 from .html_templates import HTML_PROJECT_INFORMATION_TEMPLATE
@@ -20,7 +21,7 @@ class Summary:
     def __init__(self, project: Project):
         self._project = project
 
-    def compile_html_summary(self):
+    def compile_html_summary(self, figures: bool = False) -> str:
         html = HTML_TEMPLATE
         project_information_section = self._project_information_section()
         if project_information_section == '':  # no project information
@@ -36,21 +37,20 @@ class Summary:
 
         html = html.replace('refinement_section', self._refinement_section())
 
-        self.save_sld_plot(self._project.path / 'sld_plot.jpg')
-        self.save_fit_experiment_plot(self._project.path / 'fit_experiment_plot.jpg')
-
-        html = html.replace('path_sld_plot', str(self._project.path / 'sld_plot.jpg'))
-        html = html.replace('path_fit_experiment_plot', str(self._project.path / 'fit_experiment_plot.jpg'))
+        if figures:
+            html = html.replace('figures_section', self._figures_section())
+        else:
+            html = html.replace('figures_section', '')
 
         return html
 
     def save_html_summary(self, filename: str) -> None:
-        html = self.compile_html_summary()
+        html = self.compile_html_summary(figures=True)
         with open(filename, 'w') as f:
             f.write(html)
 
     def save_pdf_summary(self, filename: str) -> None:
-        html = self.compile_html_summary()
+        html = self.compile_html_summary(figures=True)
 
         with open(filename, 'w+b') as result_file:
             pisa_status = pisa.CreatePDF(
@@ -71,6 +71,7 @@ class Summary:
         ax.set_xlabel('z (Å)')
         ax.set_ylabel('SLD (Å⁻²)')
         fig.savefig(filename, dpi=300)
+        plt.close()
 
     def save_fit_experiment_plot(self, filename: str) -> None:
         fig = plt.figure()
@@ -88,8 +89,9 @@ class Summary:
         ax.set_xlabel('Q (Å⁻¹)')
         ax.set_ylabel('Reflectivity')
         fig.savefig(filename, dpi=300)
+        plt.close()
 
-    def _project_information_section(self) -> None:
+    def _project_information_section(self) -> str:
         html_project = ''
         if self._project.created:
             html_project = HTML_PROJECT_INFORMATION_TEMPLATE
@@ -100,7 +102,7 @@ class Summary:
             html_project = html_project.replace('num_experiments', f'{len(self._project.experiments)}')
         return html_project
 
-    def _sample_section(self) -> None:
+    def _sample_section(self) -> str:
         html_parameters = []
 
         html_parameter = HTML_PARAMETER_HEADER_TEMPLATE
@@ -133,7 +135,7 @@ class Summary:
 
         return html_parameters_str
 
-    def _experiments_section(self) -> None:
+    def _experiments_section(self) -> str:
         html_experiments = []
 
         for idx, experiment in self._project.experiments.items():
@@ -159,9 +161,7 @@ class Summary:
 
         return html_experiments_str
 
-    def _refinement_section(
-        self,
-    ) -> None:
+    def _refinement_section(self) -> str:
         html_refinement = HTML_REFINEMENT_TEMPLATE
         num_free_params = count_free_parameters(self._project)
         num_fixed_params = count_fixed_parameters(self._project)
@@ -178,3 +178,12 @@ class Summary:
         html_refinement = html_refinement.replace('num_fixed_params', f'{num_fixed_params}')
         html_refinement = html_refinement.replace('num_constriants', f'{num_constraints}')
         return html_refinement
+
+    def _figures_section(self) -> None:
+        html_figures = HTML_FIGURES_TEMPLATE
+        self.save_sld_plot(self._project.path / 'sld_plot.jpg')
+        self.save_fit_experiment_plot(self._project.path / 'fit_experiment_plot.jpg')
+
+        html_figures = html_figures.replace('path_sld_plot', str(self._project.path / 'sld_plot.jpg'))
+        html_figures = html_figures.replace('path_fit_experiment_plot', str(self._project.path / 'fit_experiment_plot.jpg'))
+        return html_figures
