@@ -186,8 +186,8 @@ class Summary:
 
     def _figures_section(self) -> None:
         html_figures = HTML_FIGURES_TEMPLATE
-        path_sld = self._project.path / 'sld_plot.eps'
-        path_fit_experiment = self._project.path / 'fit_experiment_plot.eps'
+        path_sld = self._project.path / 'sld_plot.jpg'
+        path_fit_experiment = self._project.path / 'fit_experiment_plot.jpg'
 
         self.save_sld_plot(path_sld)
         self.save_fit_experiment_plot(path_fit_experiment)
