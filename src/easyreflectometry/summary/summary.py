@@ -66,29 +66,34 @@ class Summary:
         ax = fig.add_subplot(1, 1, 1)
 
         sld = self._project.sld_data_for_model_at_index(0)
-        ax.plot(sld.x, sld.y)
+        ax.plot(sld.x, sld.y, color='blue')
 
         ax.set_xlabel('z (Å)')
         ax.set_ylabel('SLD (Å⁻²)')
-        fig.savefig(filename, dpi=300)
+        fig.legend(['SLD'])
+        fig.savefig(filename, dpi=600)
         plt.close()
 
     def save_fit_experiment_plot(self, filename: str) -> None:
         fig = plt.figure()
         ax = fig.add_subplot(1, 1, 1)
+        legends = []
 
         model = self._project.model_data_for_model_at_index(0)
         ax.plot(model.x, np.log10(model.y), color='blue')
+        legends.append('Model')
 
         try:
             experiment = self._project.experimental_data_for_model_at_index(0)
             ax.plot(experiment.x, np.log10(experiment.y), color='red')
+            legends.append('Experiment')
         except IndexError:
             pass
 
         ax.set_xlabel('Q (Å⁻¹)')
         ax.set_ylabel('Reflectivity')
-        fig.savefig(filename, dpi=300)
+        fig.legend(legends)
+        fig.savefig(filename, dpi=600)
         plt.close()
 
     def _project_information_section(self) -> str:
@@ -181,9 +186,12 @@ class Summary:
 
     def _figures_section(self) -> None:
         html_figures = HTML_FIGURES_TEMPLATE
-        self.save_sld_plot(self._project.path / 'sld_plot.jpg')
-        self.save_fit_experiment_plot(self._project.path / 'fit_experiment_plot.jpg')
+        path_sld = self._project.path / 'sld_plot.eps'
+        path_fit_experiment = self._project.path / 'fit_experiment_plot.eps'
 
-        html_figures = html_figures.replace('path_sld_plot', str(self._project.path / 'sld_plot.jpg'))
-        html_figures = html_figures.replace('path_fit_experiment_plot', str(self._project.path / 'fit_experiment_plot.jpg'))
+        self.save_sld_plot(path_sld)
+        self.save_fit_experiment_plot(path_fit_experiment)
+
+        html_figures = html_figures.replace('path_sld_plot', str(path_sld))
+        html_figures = html_figures.replace('path_fit_experiment_plot', str(path_fit_experiment))
         return html_figures
