@@ -454,8 +454,8 @@ class Project:
     def free_parameters_count(self) -> int:
         count = 0
         for parameter in self.parameters:
-            if parameter:
-                count = count + 1
+            #            if parameter:
+            count = count + 1
         return count
 
     #     return sum(1 for parameter in self.parameters if parameter.free)
