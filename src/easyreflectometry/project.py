@@ -79,6 +79,22 @@ class Project:
         return parameters
 
     @property
+    def count_free_parameters(self) -> int:
+        return sum(1 for parameter in self.parameters if parameter.free)
+
+    @property
+    def count_fixed_parameters(self) -> int:
+        return sum(1 for parameter in self.parameters if not parameter.free)
+
+    @property
+    def count_parameter_user_constraints(self) -> int:
+        count = 0
+        parameters = self.parameters
+        for parameter in parameters:
+            count = count + len(parameter.user_constraints.keys())
+        return count
+
+    @property
     def q_min(self):
         if self._q_min is None:
             return Q_MIN

@@ -4,9 +4,6 @@ from easyscience import global_object
 from xhtml2pdf import pisa
 
 from easyreflectometry import Project
-from easyreflectometry.utils import count_fixed_parameters
-from easyreflectometry.utils import count_free_parameters
-from easyreflectometry.utils import count_parameter_user_constraints
 
 from .html_templates import HTML_DATA_COLLECTION_TEMPLATE
 from .html_templates import HTML_FIGURES_TEMPLATE
@@ -23,10 +20,8 @@ class Summary:
 
     def compile_html_summary(self, figures: bool = False) -> str:
         html = HTML_TEMPLATE
-        project_information_section = self._project_information_section()
-        if project_information_section == '':  # no project information
-            project_information_section = '<td>No project information</td>'
-        html = html.replace('project_information_section', project_information_section)
+
+        html = html.replace('project_information_section', self._project_information_section())
 
         html = html.replace('sample_section', self._sample_section())
 
@@ -167,12 +162,12 @@ class Summary:
 
     def _refinement_section(self) -> str:
         html_refinement = HTML_REFINEMENT_TEMPLATE
-        num_free_params = count_free_parameters(self._project)
-        num_fixed_params = count_fixed_parameters(self._project)
+        num_free_params = self._project.count_free_parameters
+        num_fixed_params = self._project.count_fixed_parameters
         num_params = num_free_params + num_fixed_params
         #        goodness_of_fit = self._project.status.goodnessOfFit
         #        goodness_of_fit = goodness_of_fit.split(' → ')[-1]
-        num_constraints = count_parameter_user_constraints(self._project)
+        num_constraints = self._project.count_parameter_user_constraints
 
         html_refinement = html_refinement.replace('calculation_engine', f'{self._project._calculator.current_interface_name}')
         html_refinement = html_refinement.replace('minimization_engine', f'{self._project.minimizer.name}')
