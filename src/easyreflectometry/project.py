@@ -79,7 +79,11 @@ class Project:
         return parameters
 
     def free_parameters_count(self) -> int:
-        return 1
+        count = 0
+        for parameter in self.parameters:
+            if parameter.free:
+                count += 1
+        return count
 
     #     return sum(1 for parameter in self.parameters if parameter.free)
 
