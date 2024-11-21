@@ -634,39 +634,3 @@ class TestProject:
         # Expect
         assert len(parameters) == 14
         assert isinstance(parameters[0], Parameter)
-
-    def test_count_free_parameters(self):
-        # When
-        project = Project()
-        project.default_model()
-        project.parameters[0].free = True
-
-        # Then
-        count = project.free_parameters_count()
-
-        # Expect
-        assert count == 1
-
-    def test_count_fixed_parameters(self):
-        # When
-        project = Project()
-        project.default_model()
-        project.parameters[0].free = True
-
-        # Then
-        count = project.fixed_parameters_count()
-
-        # Expect
-        assert count == 13
-
-    def test_count_parameter_user_constraints(self):
-        # When
-        project = Project()
-        project.default_model()
-        project.parameters[0].user_constraints['name_other_parameter'] = 'constraint'
-
-        # Then
-        count = project.parameter_user_constraints_count()
-
-        # Expect
-        assert count == 1

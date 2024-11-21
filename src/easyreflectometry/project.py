@@ -450,24 +450,3 @@ class Project:
 
     def _timestamp_modification(self):
         self._info['modified'] = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')
-
-    def free_parameters_count(self) -> int:
-        count = 0
-        #        parameters = self.parameters
-        #        no_parameters = len(self.parameters)
-        for i in range(len(self.parameters)):
-            if not self.parameters[i]._fixed:
-                count = count + 1
-        #        parameters[0].free
-        #        for parameter in parameters:
-        #            #            if not parameter._fixed:
-        #            count = count + 1
-        return count
-
-    #     return sum(1 for parameter in self.parameters if parameter.free)
-
-    # def fixed_parameters_count(self) -> int:
-    #     return sum(1 for parameter in self.parameters if not parameter.free)
-
-    # def parameter_user_constraints_count(self) -> int:
-    #     return sum(len(parameter.user_constraints.keys()) for parameter in self.parameters if not parameter.free)
