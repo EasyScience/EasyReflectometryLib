@@ -16,27 +16,30 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
     <script src="../../_static/documentation_options.js?v=c73c0f3e"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
@@ -54,6 +57,7 @@
     <link rel="prev" title="Investigation of a surfactant monolayer" href="monolayer.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.2.0" />
   </head>
   
   
@@ -69,19 +73,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -89,7 +82,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -97,8 +89,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -114,7 +106,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -144,21 +137,17 @@
     
     
     <img src="../../_static/logo.png" class="logo__image only-light" alt="EasyReflectometry  documentation - Home"/>
-    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="EasyReflectometry  documentation - Home"/>`);</script>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="EasyReflectometry  documentation - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
@@ -187,8 +176,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/api.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../api/model.html"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/sample.html"><code class="docutils literal notranslate"><span class="pre">Sample</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/assemblies/multilayer.html"><code class="docutils literal notranslate"><span class="pre">Multilayer</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/assemblies/repeating_multilayer.html"><code class="docutils literal notranslate"><span class="pre">RepeatingMultilayer</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/assemblies/surfactant_layer.html"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a></li>
@@ -199,7 +186,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/elements/material_density.html"><code class="docutils literal notranslate"><span class="pre">MaterialDensity</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/elements/material_mixture.html"><code class="docutils literal notranslate"><span class="pre">MaterialMixture</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/elements/material_solvated.html"><code class="docutils literal notranslate"><span class="pre">MaterialSolvated</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/data.html"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -309,24 +295,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -371,8 +349,8 @@ document.write(`
 <p>In the use of neutron reflectometry, it is common to use multiple isotopic contrasts of experimental data to analyse a system in a constrained fashion. That is to say, that we have data from multiple different species (where isotopic substitution has been used to produce data with different scattering length density) that share the same structure. In this tutorial we will look at how <code class="docutils literal notranslate"><span class="pre">easyreflectometry</span></code> can be used to fit multiple contrasts of data from a <a class="reference internal" href="monolayer.html"><span class="doc">surfactant
 monolayer</span></a> system, if you haven’t looked at the tutorial for a single contrast of surfactant monolayer data it is suggested that you as this tutorial will build on it.</p>
 <p>First configure matplotlib to place figures in notebook and import needed modules</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
@@ -387,10 +365,11 @@ monolayer</span></a> system, if you haven’t looked at the tutorial for a singl
 <span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">SurfactantLayer</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Layer</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Multilayer</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">LayerAreaPerMolecule</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
-<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">PercentageFhwm</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.model</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.model</span> <span class="kn">import</span> <span class="n">PercentageFhwm</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.fitting</span> <span class="kn">import</span> <span class="n">Fitter</span>
 <span class="kn">from</span> <span class="nn">easyscience.fitting</span> <span class="kn">import</span> <span class="n">AvailableMinimizers</span>
@@ -400,19 +379,10 @@ monolayer</span></a> system, if you haven’t looked at the tutorial for a singl
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-easyreflectometry: 1.1.1
-refnx: 0.1.48
-</pre></div></div>
-</div>
 <section id="Reading-in-the-experimental-data">
 <h2>Reading in the experimental data<a class="headerlink" href="#Reading-in-the-experimental-data" title="Link to this heading">#</a></h2>
 <p>We load in three different isotopic contrast that are stored in a single <code class="docutils literal notranslate"><span class="pre">.ort</span></code> file. This <code class="docutils literal notranslate"><span class="pre">.ort</span></code> file uses the <a class="reference external" href="https://github.com/reflectivity/file_format/blob/master/specification.md#multiple-data-sets">mutliple data set syntax</a> to indicate that different measurements are present in a single file. We use <code class="docutils literal notranslate"><span class="pre">pooch</span></code> to fetch the file from the repository.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
@@ -425,45 +395,21 @@ refnx: 0.1.48
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-Downloading data from &#39;https://raw.githubusercontent.com/EasyScience/EasyReflectometryLib/master/docs/src/tutorials/sample/multiple.ort&#39; to file &#39;/home/runner/.cache/pooch/14e53c019def90deab6565306d5c3891-multiple.ort&#39;.
-</pre></div></div>
-</div>
 <p>We can plot the data and return the dimensions of the data to see the contrasts that are present.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-()
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/tutorials_sample_multi_contrast_7_0.png" src="../../_images/tutorials_sample_multi_contrast_7_0.png" />
 </div>
 </div>
 </section>
@@ -637,22 +583,13 @@ Downloading data from &#39;https://raw.githubusercontent.com/EasyScience/EasyRef
 </div>
 </div>
 <p>We can check this constraint as worked as follows.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d70d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d83acmw</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">value</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(12.0, 12.0, 12.0)
-</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
@@ -662,34 +599,25 @@ Downloading data from &#39;https://raw.githubusercontent.com/EasyScience/EasyRef
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d70d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d83acmw</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">value</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(10.0, 10.0, 10.0)
-</pre></div></div>
-</div>
 <p>Even through only as single value (that for the d13-DSPC head thickness) was changed, all three values changed.</p>
 <p>Having constructed each of the surfactant layer object and implemented the constraints, we can now build Samples and models.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resolution_function</span> <span class="o">=</span> <span class="n">PercentageFhwm</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 
-<span class="n">d13d2o_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">air_layer</span><span class="p">,</span> <span class="n">d13d2o</span><span class="p">,</span> <span class="n">d2o_layer</span><span class="p">)</span>
-<span class="n">d70d2o_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">air_layer</span><span class="p">,</span> <span class="n">d70d2o</span><span class="p">,</span> <span class="n">d2o_layer</span><span class="p">)</span>
-<span class="n">d83acmw_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">air_layer</span><span class="p">,</span> <span class="n">d83acmw</span><span class="p">,</span> <span class="n">acmw_layer</span><span class="p">)</span>
+<span class="n">d13d2o_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">Multilayer</span><span class="p">(</span><span class="n">air_layer</span><span class="p">),</span> <span class="n">d13d2o</span><span class="p">,</span> <span class="n">Multilayer</span><span class="p">(</span><span class="n">d2o_layer</span><span class="p">))</span>
+<span class="n">d70d2o_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">Multilayer</span><span class="p">(</span><span class="n">air_layer</span><span class="p">),</span> <span class="n">d70d2o</span><span class="p">,</span> <span class="n">Multilayer</span><span class="p">(</span><span class="n">d2o_layer</span><span class="p">))</span>
+<span class="n">d83acmw_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">Multilayer</span><span class="p">(</span><span class="n">air_layer</span><span class="p">),</span> <span class="n">d83acmw</span><span class="p">,</span> <span class="n">Multilayer</span><span class="p">(</span><span class="n">acmw_layer</span><span class="p">))</span>
 <span class="n">d13d2o_model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
     <span class="n">sample</span><span class="o">=</span><span class="n">d13d2o_sample</span><span class="p">,</span>
     <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
@@ -716,7 +644,7 @@ Downloading data from &#39;https://raw.githubusercontent.com/EasyScience/EasyRef
 <h2>Setting varying parameters<a class="headerlink" href="#Setting-varying-parameters" title="Link to this heading">#</a></h2>
 <p>For this analysis, we want the scale and background for each model to vary and then some of the structural parameters. Since the structural parameters are constrained, we only need to define the bounds once. In the case on the <code class="docutils literal notranslate"><span class="pre">d13d2o</span></code> object, as this is the basis for the constraints.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o_model</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
@@ -738,7 +666,7 @@ Downloading data from &#39;https://raw.githubusercontent.com/EasyScience/EasyRef
 <h2>Creating interfaces and performing the fitting<a class="headerlink" href="#Creating-interfaces-and-performing-the-fitting" title="Link to this heading">#</a></h2>
 <p>The model has been created and the parameters defined, so the fitting process can begin. First, we should create a unique interface for each of the models.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o_model</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">CalculatorFactory</span><span class="p">()</span>
@@ -749,7 +677,7 @@ Downloading data from &#39;https://raw.githubusercontent.com/EasyScience/EasyRef
 </div>
 <p>The models and the interface fit functions are then passed to the <code class="docutils literal notranslate"><span class="pre">Fitter</span></code> object, which is capable of performed the multiple dataset fitting process.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fitter</span> <span class="o">=</span> <span class="n">Fitter</span><span class="p">(</span><span class="n">d13d2o_model</span><span class="p">,</span> <span class="n">d70d2o_model</span><span class="p">,</span> <span class="n">d83acmw_model</span><span class="p">)</span>
@@ -758,7 +686,7 @@ Downloading data from &#39;https://raw.githubusercontent.com/EasyScience/EasyRef
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analysed</span> <span class="o">=</span> <span class="n">fitter</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -766,36 +694,20 @@ Downloading data from &#39;https://raw.githubusercontent.com/EasyScience/EasyRef
 </div>
 </div>
 <p>Once the fitting is complete, we can probe a given value to check that the constraints have been respected or plot the results.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d13d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="p">,</span> <span class="n">d70d2o</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span><span class="p">,</span> <span class="n">d83acmw</span><span class="o">.</span><span class="n">head_layer</span><span class="o">.</span><span class="n">area_per_molecule</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(44.51664709456701, 44.51664709456701, 44.51664709456701)
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">analysed</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/tutorials_sample_multi_contrast_41_0.png" src="../../_images/tutorials_sample_multi_contrast_41_0.png" />
 </div>
 </div>
 </section>
@@ -837,7 +749,8 @@ Downloading data from &#39;https://raw.githubusercontent.com/EasyScience/EasyRef
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -899,8 +812,8 @@ By EasyReflectometry
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -16,27 +16,30 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
     <script src="../../_static/documentation_options.js?v=c73c0f3e"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
@@ -54,6 +57,7 @@
     <link rel="prev" title="A multilayer fitting model" href="../fitting/repeating.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.2.0" />
   </head>
   
   
@@ -69,19 +73,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -89,7 +82,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -97,8 +89,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -114,7 +106,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -144,21 +137,17 @@
     
     
     <img src="../../_static/logo.png" class="logo__image only-light" alt="EasyReflectometry  documentation - Home"/>
-    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="EasyReflectometry  documentation - Home"/>`);</script>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="EasyReflectometry  documentation - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
@@ -187,8 +176,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/api.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../api/model.html"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/sample.html"><code class="docutils literal notranslate"><span class="pre">Sample</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/assemblies/multilayer.html"><code class="docutils literal notranslate"><span class="pre">Multilayer</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/assemblies/repeating_multilayer.html"><code class="docutils literal notranslate"><span class="pre">RepeatingMultilayer</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/assemblies/surfactant_layer.html"><code class="docutils literal notranslate"><span class="pre">SurfactantLayer</span></code></a></li>
@@ -199,7 +186,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/elements/material_density.html"><code class="docutils literal notranslate"><span class="pre">MaterialDensity</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/elements/material_mixture.html"><code class="docutils literal notranslate"><span class="pre">MaterialMixture</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/elements/material_solvated.html"><code class="docutils literal notranslate"><span class="pre">MaterialSolvated</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/data.html"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -309,24 +295,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -388,8 +366,8 @@ polymer with some D2O intercalated. Therefore, if, for example, the surface cove
 <span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Material</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">MaterialSolvated</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Multilayer</span>
-<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">PercentageFhwm</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.model</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.model</span> <span class="kn">import</span> <span class="n">PercentageFhwm</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.fitting</span> <span class="kn">import</span> <span class="n">Fitter</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.plot</span> <span class="kn">import</span> <span class="n">plot</span>
@@ -397,8 +375,8 @@ polymer with some D2O intercalated. Therefore, if, for example, the surface cove
 </div>
 </div>
 <p>Showing the version of specific softare for reproducibility</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;numpy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -407,17 +385,6 @@ polymer with some D2O intercalated. Therefore, if, for example, the surface cove
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;refnx: </span><span class="si">{</span><span class="n">refnx</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-numpy: 1.26.0
-scipp: 24.02.0
-easyreflectometry: 1.1.1
-refnx: 0.1.48
-</pre></div></div>
 </div>
 <p>For information about the data being read in and the details of the model see <a class="reference internal" href="../fitting/simple_fitting.html"><span class="doc">the previous tutorial</span></a>. We will gloss over these details here. We use <code class="docutils literal notranslate"><span class="pre">pooch</span></code> to fetch the file from the repository.</p>
 <div class="nbinput nblast docutils container">
@@ -452,7 +419,7 @@ refnx: 0.1.48
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solvated_film</span> <span class="o">=</span> <span class="n">MaterialSolvated</span><span class="p">(</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solvated_film_material</span> <span class="o">=</span> <span class="n">MaterialSolvated</span><span class="p">(</span>
     <span class="n">material</span><span class="o">=</span><span class="n">film</span><span class="p">,</span>
     <span class="n">solvent</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span>
     <span class="n">solvent_fraction</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
@@ -465,33 +432,13 @@ refnx: 0.1.48
 <div class="math">
 <p><span class="math">\rho_{\mathrm{solv film}} = (1-\phi)\rho_{\mathrm{film}} + \phi\rho_{\mathrm{D}_2\mathrm{O}},</span></p>
 </div><p>where the scattering length densities are given with <span class="math">\rho</span> and the coverage with <span class="math">\phi</span>. This means that when we investigate the <code class="docutils literal notranslate"><span class="pre">solvated_film</span></code> object, the scattering length density will be 3.09e-6 Å-2</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solvated_film</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solvated_film_material</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Solvated Film:
-  solvent_fraction: 0.250 dimensionless
-  sld: 3.090e-6 1/Å^2
-  isld: 0.000e-6 1/Å^2
-  material:
-    Film:
-      sld: 2.000e-6 1/Å^2
-      isld: 0.000e-6 1/Å^2
-  solvent:
-    D2O:
-      sld: 6.360e-6 1/Å^2
-      isld: 0.000e-6 1/Å^2
-</pre></div></div>
 </div>
 <p>Now, we can construct our layers, sample and model.</p>
 <div class="nbinput nblast docutils container">
@@ -502,12 +449,12 @@ Solvated Film:
 <span class="n">sio2_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">sio2</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;SiO2 layer&#39;</span><span class="p">)</span>
 <span class="n">superphase</span> <span class="o">=</span> <span class="n">Multilayer</span><span class="p">([</span><span class="n">si_layer</span><span class="p">,</span> <span class="n">sio2_layer</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Si/SiO2 Superphase&#39;</span><span class="p">)</span>
 
-<span class="n">solvated_film_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">solvated_film</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Film Layer&#39;</span><span class="p">)</span>
+<span class="n">solvated_film</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">solvated_film_material</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Film Layer&#39;</span><span class="p">)</span>
 
 <span class="n">subphase</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;D2O Subphase&#39;</span><span class="p">)</span>
 
 <span class="n">resolution_function</span> <span class="o">=</span> <span class="n">PercentageFhwm</span><span class="p">(</span><span class="mf">0.02</span><span class="p">)</span>
-<span class="n">sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">superphase</span><span class="p">,</span> <span class="n">solvated_film_layer</span><span class="p">,</span> <span class="n">subphase</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Film Structure&#39;</span><span class="p">)</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="n">superphase</span><span class="p">,</span> <span class="n">Multilayer</span><span class="p">(</span><span class="n">solvated_film</span><span class="p">),</span> <span class="n">Multilayer</span><span class="p">(</span><span class="n">subphase</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Film Structure&#39;</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
     <span class="n">sample</span><span class="o">=</span><span class="n">sample</span><span class="p">,</span>
     <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -530,57 +477,41 @@ Solvated Film:
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">solvated_film_layer</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">sld</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">solvated_film</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">sld</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-3.09
-</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">film</span><span class="o">.</span><span class="n">sld</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mf">2.5</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">solvated_film_layer</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">sld</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">solvated_film</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">sld</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-3.465
-</pre></div></div>
 </div>
 <p>The parameter bounds are then set as follows.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Thicknesses</span>
 <span class="n">sio2_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-<span class="n">solvated_film_layer</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">solvated_film</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
 <span class="c1"># Roughnesses</span>
 <span class="n">sio2_layer</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
-<span class="n">solvated_film_layer</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">solvated_film</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 <span class="n">subphase</span><span class="o">.</span><span class="n">roughness</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 <span class="c1"># Scattering length density</span>
 <span class="n">film</span><span class="o">.</span><span class="n">sld</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
@@ -596,7 +527,7 @@ Solvated Film:
 <h2>Perform the fitting<a class="headerlink" href="#Perform-the-fitting" title="Link to this heading">#</a></h2>
 <p>Having constructed the model and set the relevant varying parameters, we run the analysis (using the default <a class="reference external" href="https://refnx.readthedocs.io/">refnx engine</a>).</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interface</span> <span class="o">=</span> <span class="n">CalculatorFactory</span><span class="p">()</span>
@@ -607,49 +538,22 @@ Solvated Film:
 </div>
 </div>
 <p>The model fits well to the data.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">analysed</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/tutorials_sample_material_solvated_25_0.png" src="../../_images/tutorials_sample_material_solvated_25_0.png" />
-</div>
-</div>
 <p>We can probe the <code class="docutils literal notranslate"><span class="pre">MaterialSolvated</span></code> object to investigate the scattering length density of the polymer film alone.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solvated_film</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solvated_film_material</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Solvated Film:
-  solvent_fraction: 0.250 dimensionless
-  sld: 2.360e-6 1/Å^2
-  isld: 0.000e-6 1/Å^2
-  material:
-    Film:
-      sld: 1.026e-6 1/Å^2
-      isld: 0.000e-6 1/Å^2
-  solvent:
-    D2O:
-      sld: 6.360e-6 1/Å^2
-      isld: 0.000e-6 1/Å^2
-</pre></div></div>
 </div>
 <p>The fit reproducing the measured reflectivity curve yields that the scattering length density (SLD) of the layer is 2.36E-6 Å-2. Remember this layer is composed of 75% of the polymer film layer (SLD of 1.026E-6 Å-2 fitted) and 25% of D2O (SLD of 6.36E-6 Å-2 known) making (0.75 * 1.026 + 0.25 * 6.36)E-6 = 2.36E-6 Å-2. This is the same as the result from the <a class="reference internal" href="../fitting/simple_fitting.html"><span class="doc">previous tutorial</span></a>.</p>
 </section>
@@ -691,7 +595,8 @@ Solvated Film:
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -751,8 +656,8 @@ By EasyReflectometry
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>

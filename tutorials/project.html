@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Experiment &#8212; EasyReflectometry  documentation</title>
+    <title>Project &#8212; EasyReflectometry  documentation</title>
   
   
   
@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
@@ -47,13 +48,11 @@
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'experiment/experiment';</script>
-    <link rel="canonical" href="https://docs.easyreflectometry.org/experiment/experiment.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/project';</script>
+    <link rel="canonical" href="https://docs.easyreflectometry.org/tutorials/project.html" />
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Tutorials" href="../tutorials/tutorials.html" />
-    <link rel="prev" title="Calculators &amp; Optimisation" href="../calculators.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="1.2.0" />
@@ -105,6 +104,8 @@
       
       
       
+        
+      
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
@@ -150,7 +151,7 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../sample/sample.html">Sample</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -160,15 +161,15 @@
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../calculators.html">Calculators &amp; Optimisation</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Experiment</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/fitting/simple_fitting.html">Fitting a simple slab model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/fitting/repeating.html">A multilayer fitting model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/sample/material_solvated.html">Using the MaterialSolvated</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/sample/monolayer.html">Investigation of a surfactant monolayer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/sample/multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/sample/resolution_functions.html">Resolution functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/magnetism.html">Magnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../experiment/experiment.html">Experiment</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="fitting/simple_fitting.html">Fitting a simple slab model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fitting/repeating.html">A multilayer fitting model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample/material_solvated.html">Using the MaterialSolvated</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample/monolayer.html">Investigation of a surfactant monolayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample/multi_contrast.html">Analysis of multiple isotopic contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample/resolution_functions.html">Resolution functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magnetism.html">Magnetism</a></li>
 
 </ul>
 </details></li>
@@ -241,7 +242,7 @@
       
       
       
-      <li><a href="../_sources/experiment/experiment.rst" target="_blank"
+      <li><a href="../_sources/tutorials/project.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -251,7 +252,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.rst</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
 </li>
       
@@ -317,7 +318,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Experiment</h1>
+    <h1>Project</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -327,8 +328,8 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resolution-functions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">resolution_functions</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Project-object">Project object</a></li>
 </ul>
             </nav>
         </div>
@@ -340,73 +341,233 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="experiment">
-<h1>Experiment<a class="headerlink" href="#experiment" title="Link to this heading">#</a></h1>
-<p>The main component of an experiment in <code class="xref py py-mod docutils literal notranslate"><span class="pre">easyreflectometry</span></code> is the <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code>.
-This is a description of the <code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code> and the environment in which the experiment is performed.
-The <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code> is used to calculate the reflectivity of the <code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code> at a given set of angles (Q-points).
-The <code class="xref py py-func docutils literal notranslate"><span class="pre">resolution_functions()</span></code> are used to quantify the experimental uncertainties in wavelength and angle, allowing the <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code> to accurately describe the data.</p>
-<section id="model">
-<h2><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code><a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
-<p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code> instance contains a <code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code> and variables describing experimental settings.
-To be able to compute reflectivities it is also necessary to have a <code class="xref py py-class docutils literal notranslate"><span class="pre">Calculator</span></code> (interface).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.calculators</span> <span class="kn">import</span> <span class="n">CalculatorFactory</span>
-<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
-
-<span class="n">default_sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">()</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
-   <span class="n">sample</span><span class="o">=</span><span class="n">default_sample</span><span class="p">,</span>
-   <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-   <span class="n">background</span><span class="o">=</span><span class="mf">1e-6</span>
-<span class="p">)</span>
-
-<span class="n">interface</span> <span class="o">=</span> <span class="n">CalculatorFactory</span><span class="p">()</span>
-<span class="n">model</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span>
+  <section id="Project">
+<h1>Project<a class="headerlink" href="#Project" title="Link to this heading">#</a></h1>
+<p>This notebook serves to demonstrate some of the functionality of the Project object.</p>
+<section id="Setup">
+<h2>Setup<a class="headerlink" href="#Setup" title="Link to this heading">#</a></h2>
+<p>First configure matplotlib to place figures in notebook and import needed modules.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<p>This will create a <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code> instance with the <code class="xref py py-attr docutils literal notranslate"><span class="pre">default_sample</span></code> and the environment variables <code class="xref py py-attr docutils literal notranslate"><span class="pre">scale</span></code> factor set to 1.0 and a <code class="xref py py-attr docutils literal notranslate"><span class="pre">background</span></code> of 1e-6.
-Following the <code class="xref py py-attr docutils literal notranslate"><span class="pre">interface</span></code> is set to the default calculator that is <code class="xref py py-class docutils literal notranslate"><span class="pre">Refnx</span></code>.</p>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry</span> <span class="kn">import</span> <span class="n">Project</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.summary</span> <span class="kn">import</span> <span class="n">Summary</span>
+</pre></div>
+</div>
+</div>
 </section>
-<section id="resolution-functions">
-<h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">resolution_functions</span></code><a class="headerlink" href="#resolution-functions" title="Link to this heading">#</a></h2>
-<p>A resolution function enables the <code class="xref py py-mod docutils literal notranslate"><span class="pre">easyreflectometry</span></code> model to incorporate the experimental uncertainties in wavelength and incident angle into the model.
-In its essence the resolution function controls the smearing to apply when determing the reflectivtiy at a given Q-point.
-For a given Q-point the smearing to apply is given as a weighted average of the neighboring Q-point, which weigths are by a normal distribution.
-This normal distribution is then defined by a Q-point dependent Full Width at the Half Maximum (FWHM) that is given by the resolution function.</p>
-<p><code class="xref py py-func docutils literal notranslate"><span class="pre">percentage_fhwm_resolution_function()</span></code>
-Often we rely on a resolution function that has a simple functional dependecy of the Q-point.
-By this is understood that the applied smearing in an Q-point has a FWHM that is simply a percentage of the value of the Q-point.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">percentage_fhwm_resolution_function</span>
-
-<span class="n">resolution_function</span> <span class="o">=</span> <span class="n">percentage_fhwm_resolution_function</span><span class="p">(</span><span class="mf">1.1</span><span class="p">)</span>
-
-<span class="n">m</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
-   <span class="n">resolution_function</span><span class="o">=</span><span class="n">resolution_function</span>
-<span class="p">)</span>
+<section id="Project-object">
+<h2>Project object<a class="headerlink" href="#Project-object" title="Link to this heading">#</a></h2>
+<p>First we will create a <code class="docutils literal notranslate"><span class="pre">Project</span></code> object. There should only be one such object. The project is follwoing set to have the current folder at its root and the we give it the name: <code class="docutils literal notranslate"><span class="pre">MyNewProject</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<p>This will create a <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code> instance where the resolution function is defined as 1.1% of the Q-point value, which again is the FWHM for the smearing.</p>
-<p><code class="xref py py-func docutils literal notranslate"><span class="pre">linear_spline_resolution_function()</span></code>
-Alternatively the FWHM value might be determined and declared directly for each measured Q-point.
-When this is the case the provided Q-points and the corresponding FWHM values can be used to declare a linear spline function
-and thereby enable a determination of the reflectivity at an arbitrary point within the provided range of discrete Q-points.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">easyreflectometry.experiment</span> <span class="kn">import</span> <span class="n">linear_spline_resolution_function</span>
-
-<span class="n">m</span> <span class="o">=</span> <span class="n">Model</span><span class="p">()</span>
-
-<span class="n">resolution_function</span> <span class="o">=</span> <span class="n">linear_spline_resolution_function</span><span class="p">(</span>
-   <span class="n">q_points</span><span class="o">=</span><span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.31</span><span class="p">],</span>
-   <span class="n">fwhm_values</span><span class="o">=</span><span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.043</span><span class="p">,</span> <span class="mf">0.026</span><span class="p">]</span>
-<span class="p">)</span>
-
-<span class="n">m</span><span class="o">.</span><span class="n">resolution_function</span> <span class="o">=</span> <span class="n">resolution_function</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">project</span> <span class="o">=</span> <span class="n">Project</span><span class="p">()</span>
+<span class="n">project</span><span class="o">.</span><span class="n">set_path_project_parent</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">project</span><span class="o">.</span><span class="n">_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;MyNewProject&#39;</span>
 </pre></div>
 </div>
-<p>This will create a <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code> instance where the resolution function defining the FWHM is determined from a linear interpolation.
-In the present case the provided data Q-points are (<cite>[0.01, 0.2, 0.31]</cite>) and the corresponding FWHM function values are (<cite>[0.001, 0.043, 0.026]</cite>).</p>
+</div>
+<p>We will then populate this <code class="docutils literal notranslate"><span class="pre">Project</span></code> with the default model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">project</span><span class="o">.</span><span class="n">default_model</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+EasyModels:
+- EasyModel:
+    scale: 1.0
+    background: 1.0e-08
+    resolution: 5.0 %
+    color: black
+    sample:
+      EasySample:
+      - Superphase:
+          Vacuum Layer:
+          - Vacuum Layer:
+              material:
+                Air:
+                  sld: 0.000e-6 1/Å^2
+                  isld: 0.000e-6 1/Å^2
+              thickness: 0.000 Å
+              roughness: 0.000 Å
+      - D2O:
+          D2O Layer:
+          - D2O Layer:
+              material:
+                D2O:
+                  sld: 6.335e-6 1/Å^2
+                  isld: 0.000e-6 1/Å^2
+              thickness: 100.000 Å
+              roughness: 3.000 Å
+      - Subphase:
+          Si Layer:
+          - Si Layer:
+              material:
+                Si:
+                  sld: 2.074e-6 1/Å^2
+                  isld: 0.000e-6 1/Å^2
+              thickness: 0.000 Å
+              roughness: 1.200 Å
+
+</pre></div></div>
+</div>
+<p>We can also see which materials that are defined in the <code class="docutils literal notranslate"><span class="pre">Project</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">_materials</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+EasyMaterials:
+- Air:
+    sld: 0.000e-6 1/Å^2
+    isld: 0.000e-6 1/Å^2
+- D2O:
+    sld: 6.335e-6 1/Å^2
+    isld: 0.000e-6 1/Å^2
+- Si:
+    sld: 2.074e-6 1/Å^2
+    isld: 0.000e-6 1/Å^2
+
+</pre></div></div>
+</div>
+<p>It is possible to save a <code class="docutils literal notranslate"><span class="pre">Project</span></code> object. It will be place in the project folder and the state will be save in the file name <code class="docutils literal notranslate"><span class="pre">project.json</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">project</span><span class="o">.</span><span class="n">save_as_json</span><span class="p">(</span><span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We can also generate a summary of the project. We are also going to store the PDF and HTML files with the summary in the project folder.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summary</span> <span class="o">=</span> <span class="n">Summary</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
+<span class="n">summary</span><span class="o">.</span><span class="n">save_pdf_summary</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s1">&#39;summary.pdf&#39;</span><span class="p">))</span>
+<span class="n">summary</span><span class="o">.</span><span class="n">save_html_summary</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s1">&#39;summary.html&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WindowsPath(&#39;MyNewProject/summary.pdf&#39;)
+</pre></div></div>
+</div>
+<p><a class="reference external" href="MyNewProject/summary.pdf">Link to PDF summary</a> in <code class="docutils literal notranslate"><span class="pre">MyNewProject/summary.pdf</span></code></p>
+<p>We can reset the project to a blank state.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">project</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">_materials</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+EasyModels: []
+
+EasyMaterials: []
+
+</pre></div></div>
+</div>
+<p>Then let us try to load the state we saved above.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">project</span><span class="o">.</span><span class="n">set_path_project_parent</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">project</span><span class="o">.</span><span class="n">_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;MyNewProject&#39;</span>
+<span class="n">project</span><span class="o">.</span><span class="n">load_from_json</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">_materials</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+EasyModels:
+- EasyModel:
+    scale: 1.0
+    background: 1.0e-08
+    resolution: 5.0 %
+    color: black
+    sample:
+      EasySample:
+      - Superphase:
+          EasyLayerCollection:
+          - Vacuum Layer:
+              material:
+                Air:
+                  sld: 0.000e-6 1/Å^2
+                  isld: 0.000e-6 1/Å^2
+              thickness: 0.000 Å
+              roughness: 0.000 Å
+      - D2O:
+          EasyLayerCollection:
+          - D2O Layer:
+              material:
+                D2O:
+                  sld: 6.335e-6 1/Å^2
+                  isld: 0.000e-6 1/Å^2
+              thickness: 100.000 Å
+              roughness: 3.000 Å
+      - Subphase:
+          EasyLayerCollection:
+          - Si Layer:
+              material:
+                Si:
+                  sld: 2.074e-6 1/Å^2
+                  isld: 0.000e-6 1/Å^2
+              thickness: 0.000 Å
+              roughness: 1.200 Å
+
+EasyMaterials:
+- Air:
+    sld: 0.000e-6 1/Å^2
+    isld: 0.000e-6 1/Å^2
+- D2O:
+    sld: 6.335e-6 1/Å^2
+    isld: 0.000e-6 1/Å^2
+- Si:
+    sld: 2.074e-6 1/Å^2
+    isld: 0.000e-6 1/Å^2
+
+</pre></div></div>
+</div>
 </section>
 </section>
 
@@ -421,24 +582,6 @@ In the present case the provided data Q-points are (<cite>[0.01, 0.2, 0.31]</cit
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="../calculators.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Calculators &amp; Optimisation</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../tutorials/tutorials.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Tutorials</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -456,8 +599,8 @@ In the present case the provided data Q-points are (<cite>[0.01, 0.2, 0.31]</cit
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resolution-functions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">resolution_functions</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Project-object">Project object</a></li>
 </ul>
   </nav></div>
 
