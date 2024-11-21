@@ -80,11 +80,19 @@ class Project:
 
     @property
     def count_free_parameters(self) -> int:
-        return sum(1 for parameter in self.parameters if parameter.free)
+        count = 0
+        for parameter in self.parameters:
+            if parameter.free:
+                count += 1
+        return count
 
     @property
     def count_fixed_parameters(self) -> int:
-        return sum(1 for parameter in self.parameters if not parameter.free)
+        count = 0
+        for parameter in self.parameters:
+            if not parameter.free:
+                count += 1
+        return count
 
     @property
     def count_parameter_user_constraints(self) -> int:
