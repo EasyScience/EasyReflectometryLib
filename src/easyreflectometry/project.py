@@ -455,8 +455,7 @@ class Project:
         count = 0
         parameters = self.parameters
         for parameter in parameters:
-            if parameter.free:
-                count = count + 1
+            count = count + 1
         return count
 
     #     return sum(1 for parameter in self.parameters if parameter.free)
