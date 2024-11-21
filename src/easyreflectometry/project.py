@@ -78,21 +78,6 @@ class Project:
                 parameters.append(vertice_obj)
         return parameters
 
-    def free_parameters_count(self) -> int:
-        count = 0
-        for parameter in self.parameters:
-            if parameter.free:
-                count += 1
-        return count
-
-    #     return sum(1 for parameter in self.parameters if parameter.free)
-
-    # def fixed_parameters_count(self) -> int:
-    #     return sum(1 for parameter in self.parameters if not parameter.free)
-
-    # def parameter_user_constraints_count(self) -> int:
-    #     return sum(len(parameter.user_constraints.keys()) for parameter in self.parameters if not parameter.free)
-
     @property
     def q_min(self):
         if self._q_min is None:
@@ -465,3 +450,18 @@ class Project:
 
     def _timestamp_modification(self):
         self._info['modified'] = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')
+
+    def free_parameters_count(self) -> int:
+        count = 0
+        for parameter in self.parameters:
+            if parameter.free:
+                count += 1
+        return count
+
+    #     return sum(1 for parameter in self.parameters if parameter.free)
+
+    # def fixed_parameters_count(self) -> int:
+    #     return sum(1 for parameter in self.parameters if not parameter.free)
+
+    # def parameter_user_constraints_count(self) -> int:
+    #     return sum(len(parameter.user_constraints.keys()) for parameter in self.parameters if not parameter.free)
