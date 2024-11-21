@@ -97,14 +97,13 @@ class Summary:
         plt.close()
 
     def _project_information_section(self) -> str:
-        html_project = ''
-        if self._project.created:
-            html_project = HTML_PROJECT_INFORMATION_TEMPLATE
-            name = self._project._info['name']
-            short_description = self._project._info['short_description']
-            html_project = html_project.replace('project_title', f'{name}')
-            html_project = html_project.replace('project_description', f'{short_description}')
-            html_project = html_project.replace('num_experiments', f'{len(self._project.experiments)}')
+        html_project = HTML_PROJECT_INFORMATION_TEMPLATE
+
+        name = self._project._info['name']
+        short_description = self._project._info['short_description']
+        html_project = html_project.replace('project_title', f'{name}')
+        html_project = html_project.replace('project_description', f'{short_description}')
+        html_project = html_project.replace('num_experiments', f'{len(self._project.experiments)}')
         return html_project
 
     def _sample_section(self) -> str:

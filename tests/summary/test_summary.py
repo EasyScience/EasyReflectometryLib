@@ -29,7 +29,6 @@ class TestSummary:
 
     def test_compile_html_summary(self, project: Project) -> None:
         # When
-        project._created = True
         summary = Summary(project)
         summary._project_information_section = MagicMock(return_value='project result html')
         summary._sample_section = MagicMock(return_value='sample result html')
@@ -50,7 +49,6 @@ class TestSummary:
 
     def test_compile_html_summary_with_figures(self, project: Project) -> None:
         # When
-        project._created = True
         summary = Summary(project)
         summary._project_information_section = MagicMock(return_value='project result html')
         summary._sample_section = MagicMock(return_value='sample result html')
@@ -66,7 +64,6 @@ class TestSummary:
 
     def test_save_html_summary(self, project: Project, tmp_path) -> None:
         # When
-        project._created = True
         summary = Summary(project)
         summary.compile_html_summary = MagicMock(return_value='html')
         file_path = tmp_path / 'filename'
@@ -82,7 +79,6 @@ class TestSummary:
 
     def test_save_pdf_summary(self, project: Project, tmp_path) -> None:
         # When
-        project._created = True
         summary = Summary(project)
         summary.compile_html_summary = MagicMock(return_value='html')
         file_path = tmp_path / 'filename'
@@ -96,7 +92,6 @@ class TestSummary:
 
     def test_project_information_section(self, project: Project) -> None:
         # When
-        project._created = True
         summary = Summary(project)
 
         # Then
@@ -108,7 +103,6 @@ class TestSummary:
 
     def test_sample_section(self, project: Project) -> None:
         # When
-        project._created = True
         summary = Summary(project)
 
         # Then
@@ -127,7 +121,6 @@ class TestSummary:
 
     def test_experiments_section(self, project: Project) -> None:
         # When
-        project._created = True
         fpath = os.path.join(PATH_STATIC, 'example.ort')
         project.load_experiment_for_model_at_index(fpath)
         summary = Summary(project)
@@ -144,7 +137,6 @@ class TestSummary:
 
     def test_experiments_section_percentage_fhwm(self, project: Project) -> None:
         # When
-        project._created = True
         fpath = os.path.join(PATH_STATIC, 'example.ort')
         project.load_experiment_for_model_at_index(fpath)
         project.models[0].resolution_function = PercentageFhwm(5)
@@ -158,7 +150,6 @@ class TestSummary:
 
     def test_refinement_section(self, project: Project) -> None:
         # When
-        project._created = True
         summary = Summary(project)
 
         # Then
@@ -176,7 +167,6 @@ class TestSummary:
 
     def test_save_sld_plot(self, project: Project, tmp_path) -> None:
         # When
-        project._created = True
         summary = Summary(project)
         file_path = tmp_path / 'filename'
         file_path = file_path.with_suffix('.jpg')
@@ -189,7 +179,6 @@ class TestSummary:
 
     def test_save_fit_experiment_plot(self, project: Project, tmp_path) -> None:
         # When
-        project._created = True
         summary = Summary(project)
         file_path = tmp_path / 'filename'
         file_path = file_path.with_suffix('.jpg')
@@ -204,7 +193,6 @@ class TestSummary:
 
     def test_figures_section(self, project: Project) -> None:
         # When
-        project._created = True
         summary = Summary(project)
         summary.save_sld_plot = MagicMock()
         summary.save_fit_experiment_plot = MagicMock()
