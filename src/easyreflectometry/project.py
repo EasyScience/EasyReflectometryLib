@@ -21,7 +21,7 @@ from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.model import LinearSpline
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
-from easyreflectometry.model import PercentageFhwm
+from easyreflectometry.model import PercentageFwhm
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import MaterialCollection
@@ -266,7 +266,7 @@ class Project:
 
     def sample_data_for_model_at_index(self, index: int = 0, q_range: Optional[np.array] = None) -> DataSet1D:
         original_resolution_function = self.models[index].resolution_function
-        self.models[index].resolution_function = PercentageFhwm(0)
+        self.models[index].resolution_function = PercentageFwhm(0)
         reflectivity_data = self.model_data_for_model_at_index(index, q_range)
         self.models[index].resolution_function = original_resolution_function
 
