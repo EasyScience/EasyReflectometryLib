@@ -78,13 +78,13 @@ class Project:
                 parameters.append(vertice_obj)
         return parameters
 
-    def count_free_parameters(self) -> int:
+    def free_parameters_count(self) -> int:
         return sum(1 for parameter in self.parameters if parameter.free)
 
-    def count_fixed_parameters(self) -> int:
+    def fixed_parameters_count(self) -> int:
         return sum(1 for parameter in self.parameters if not parameter.free)
 
-    def count_parameter_user_constraints(self) -> int:
+    def parameter_user_constraints_count(self) -> int:
         return sum(len(parameter.user_constraints.keys()) for parameter in self.parameters if not parameter.free)
 
     @property
