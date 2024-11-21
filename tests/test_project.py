@@ -642,7 +642,7 @@ class TestProject:
         project.parameters[0].free = True
 
         # Then
-        count = project.count_free_parameters
+        count = project.count_free_parameters()
 
         # Expect
         assert count == 1
@@ -654,7 +654,7 @@ class TestProject:
         project.parameters[0].free = True
 
         # Then
-        count = project.count_fixed_parameters
+        count = project.count_fixed_parameters()
 
         # Expect
         assert count == 13
@@ -666,7 +666,7 @@ class TestProject:
         project.parameters[0].user_constraints['name_other_parameter'] = 'constraint'
 
         # Then
-        count = project.count_parameter_user_constraints
+        count = project.count_parameter_user_constraints()
 
         # Expect
         assert count == 1

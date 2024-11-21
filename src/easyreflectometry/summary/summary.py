@@ -162,12 +162,12 @@ class Summary:
 
     def _refinement_section(self) -> str:
         html_refinement = HTML_REFINEMENT_TEMPLATE
-        num_free_params = self._project.count_free_parameters
-        num_fixed_params = self._project.count_fixed_parameters
+        num_free_params = self._project.count_free_parameters()
+        num_fixed_params = self._project.count_fixed_parameters()
         num_params = num_free_params + num_fixed_params
         #        goodness_of_fit = self._project.status.goodnessOfFit
         #        goodness_of_fit = goodness_of_fit.split(' → ')[-1]
-        num_constraints = self._project.count_parameter_user_constraints
+        num_constraints = self._project.count_parameter_user_constraints()
 
         html_refinement = html_refinement.replace('calculation_engine', f'{self._project._calculator.current_interface_name}')
         html_refinement = html_refinement.replace('minimization_engine', f'{self._project.minimizer.name}')
