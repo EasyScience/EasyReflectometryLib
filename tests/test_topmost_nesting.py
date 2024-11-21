@@ -8,8 +8,8 @@ from copy import copy
 from numpy.testing import assert_almost_equal
 
 from easyreflectometry.calculators import CalculatorFactory
-from easyreflectometry.experiment import LinearSpline
-from easyreflectometry.experiment import Model
+from easyreflectometry.model import LinearSpline
+from easyreflectometry.model import Model
 from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import RepeatingMultilayer
 from easyreflectometry.sample import SurfactantLayer
@@ -20,8 +20,7 @@ def test_dict_skip_unique_name():
     resolution_function = LinearSpline([0, 10], [0, 10])
     model = Model(interface=CalculatorFactory())
     model.resolution_function = resolution_function
-    for additional_layer in [SurfactantLayer(), Multilayer(), RepeatingMultilayer()]:
-        model.add_item(additional_layer)
+    model.add_assemblies(SurfactantLayer(), Multilayer(), RepeatingMultilayer())
 
     # Then
     dict_no_unique_name = model.as_dict(skip=['unique_name'])
@@ -35,8 +34,7 @@ def test_copy():
     resolution_function = LinearSpline([0, 10], [0, 10])
     model = Model(interface=CalculatorFactory())
     model.resolution_function = resolution_function
-    for additional_layer in [SurfactantLayer(), Multilayer(), RepeatingMultilayer()]:
-        model.add_item(additional_layer)
+    model.add_assemblies(SurfactantLayer(), Multilayer(), RepeatingMultilayer())
 
     # Then
     model_copy = copy(model)
@@ -46,8 +44,8 @@ def test_copy():
     assert model._resolution_function.smearing(5.5) == model_copy._resolution_function.smearing(5.5)
     assert model.interface().name == model_copy.interface().name
     assert_almost_equal(
-        model.interface().fit_func([0.3], model.unique_name),
-        model_copy.interface().fit_func([0.3], model_copy.unique_name),
+        model.interface().reflectity_profile([0.3], model.unique_name),
+        model_copy.interface().reflectity_profile([0.3], model_copy.unique_name),
     )
     assert model.unique_name != model_copy.unique_name
     assert model.name == model_copy.name

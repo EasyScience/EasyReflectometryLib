@@ -3,10 +3,8 @@ from __future__ import annotations
 from typing import Optional
 from typing import Union
 
-from easyreflectometry.sample.base_element_collection import SIZE_DEFAULT_COLLECTION
-
+from ..collections.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
-from ..elements.layers.layer_collection import LayerCollection
 from .base_assembly import BaseAssembly
 
 
@@ -25,6 +23,7 @@ class Multilayer(BaseAssembly):
         self,
         layers: Union[Layer, list[Layer], LayerCollection, None] = None,
         name: str = 'EasyMultilayer',
+        unique_name: Optional[str] = None,
         interface=None,
         type: str = 'Multi-layer',
         populate_if_none: Optional[bool] = True,
@@ -38,7 +37,7 @@ class Multilayer(BaseAssembly):
         """
         if layers is None:
             if populate_if_none:
-                layers = LayerCollection([Layer(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)])
+                layers = LayerCollection([Layer(interface=interface)])
             else:
                 layers = LayerCollection()
         elif isinstance(layers, Layer):
@@ -49,7 +48,7 @@ class Multilayer(BaseAssembly):
         # Else collisions might occur in global_object.map
         self.populate_if_none = False
 
-        super().__init__(name, layers=layers, type=type, interface=interface)
+        super().__init__(name, unique_name=unique_name, layers=layers, type=type, interface=interface)
 
     def add_layer(self, *layers: tuple[Layer]) -> None:
         """Add a layer to the multi layer.
@@ -90,8 +89,6 @@ class Multilayer(BaseAssembly):
     @property
     def _dict_repr(self) -> dict:
         """A simplified dict representation."""
-        if len(self.layers) == 1:
-            return self.front_layer._dict_repr
         return {self.name: self.layers._dict_repr}
 
     @classmethod
@@ -103,7 +100,4 @@ class Multilayer(BaseAssembly):
         :return: Multilayer
         """
         multilayer = super().from_dict(data)
-        # Remove the default materials
-        for i in range(SIZE_DEFAULT_COLLECTION):
-            del multilayer.layers[0]
         return multilayer

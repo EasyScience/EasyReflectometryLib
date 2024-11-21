@@ -2,25 +2,27 @@
 Tests for LayerCollection class.
 """
 
-__author__ = 'github.com/arm61'
-__version__ = '0.0.1'
-
-import unittest
-
 from easyscience import global_object
 
+from easyreflectometry.sample.collections.material_collection import MaterialCollection
 from easyreflectometry.sample.elements.materials.material import Material
-from easyreflectometry.sample.elements.materials.material_collection import MaterialCollection
 
 
-class TestMaterialCollection(unittest.TestCase):
+class TestMaterialCollection:
     def test_default(self):
         p = MaterialCollection()
         assert p.name == 'EasyMaterials'
         assert p.interface is None
-        assert len(p) == 2
-        assert p[0].name == 'EasyMaterial'
-        assert p[1].name == 'EasyMaterial'
+        assert len(p) == 3
+        assert p[0].name == 'Air'
+        assert p[1].name == 'D2O'
+        assert p[2].name == 'Si'
+
+    def test_dont_populate(self):
+        p = MaterialCollection(populate_if_none=False)
+        assert p.name == 'EasyMaterials'
+        assert p.interface is None
+        assert len(p) == 0
 
     def test_from_pars(self):
         m = Material(6.908, -0.278, 'Boron')
@@ -42,8 +44,9 @@ class TestMaterialCollection(unittest.TestCase):
         p = MaterialCollection()
         assert p._dict_repr == {
             'EasyMaterials': [
-                {'EasyMaterial': {'isld': '0.000e-6 1/Å^2', 'sld': '4.186e-6 1/Å^2'}},
-                {'EasyMaterial': {'isld': '0.000e-6 1/Å^2', 'sld': '4.186e-6 1/Å^2'}},
+                {'Air': {'isld': '0.000e-6 1/Å^2', 'sld': '0.000e-6 1/Å^2'}},
+                {'D2O': {'isld': '0.000e-6 1/Å^2', 'sld': '6.335e-6 1/Å^2'}},
+                {'Si': {'isld': '0.000e-6 1/Å^2', 'sld': '2.074e-6 1/Å^2'}},
             ]
         }
 
@@ -52,7 +55,7 @@ class TestMaterialCollection(unittest.TestCase):
         p.__repr__()
         assert (
             p.__repr__()
-            == 'EasyMaterials:\n- EasyMaterial:\n    sld: 4.186e-6 1/Å^2\n    isld: 0.000e-6 1/Å^2\n- EasyMaterial:\n    sld: 4.186e-6 1/Å^2\n    isld: 0.000e-6 1/Å^2\n'  # noqa: E501
+            == 'EasyMaterials:\n- Air:\n    sld: 0.000e-6 1/Å^2\n    isld: 0.000e-6 1/Å^2\n- D2O:\n    sld: 6.335e-6 1/Å^2\n    isld: 0.000e-6 1/Å^2\n- Si:\n    sld: 2.074e-6 1/Å^2\n    isld: 0.000e-6 1/Å^2\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):
@@ -61,7 +64,7 @@ class TestMaterialCollection(unittest.TestCase):
         k = Material(0.487, 0.000, 'Potassium')
         p = MaterialCollection()
         p.insert(0, m)
-        p.append(k)
+        p.add_material(k)
         p_dict = p.as_dict()
         global_object.map._clear()
 
@@ -70,3 +73,27 @@ class TestMaterialCollection(unittest.TestCase):
 
         # Expect
         assert sorted(p.as_data_dict()) == sorted(q.as_data_dict())
+
+    def test_add_material(self):
+        # When
+        p = MaterialCollection()
+        m = Material(6.908, -0.278, 'Boron')
+
+        # Then
+        p.add_material()
+        p.add_material(m)
+
+        # Expect
+        assert p[4] == m
+
+    def test_duplicate_material(self):
+        # When
+        p = MaterialCollection()
+        m = Material(6.908, -0.278, 'Boron')
+        p.add_material(m)
+
+        # Then
+        p.duplicate_material(3)
+
+        # Expect
+        assert p[4].name == 'Boron duplicate'

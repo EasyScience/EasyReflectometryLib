@@ -7,7 +7,7 @@ import numpy as np
 from easyscience.Objects.core import ComponentSerializer
 from easyscience.Objects.Inferface import ItemContainer
 
-from easyreflectometry.experiment import Model
+from easyreflectometry.model import Model
 from easyreflectometry.sample import BaseAssembly
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
@@ -158,8 +158,8 @@ class CalculatorBase(ComponentSerializer, metaclass=ABCMeta):
         """
         self._wrapper.remove_item(item_id, model_id)
 
-    def fit_func(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
-        """Function to perform a fit.
+    def reflectity_profile(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
+        """Determines the reflectivity profile for the given range and model.
 
         :param x_array: points to be calculated at
         :param model_id: The model id

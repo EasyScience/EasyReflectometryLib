@@ -2,11 +2,12 @@ from __future__ import annotations
 
 from typing import Optional
 
+from easyscience import global_object
 from easyscience.Constraints import ObjConstraint
 from easyscience.Objects.new_variable import Parameter
 
+from ..collections.layer_collection import LayerCollection
 from ..elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
-from ..elements.layers.layer_collection import LayerCollection
 from ..elements.materials.material import Material
 from .base_assembly import BaseAssembly
 
@@ -30,6 +31,7 @@ class SurfactantLayer(BaseAssembly):
         tail_layer: Optional[LayerAreaPerMolecule] = None,
         head_layer: Optional[LayerAreaPerMolecule] = None,
         name: str = 'EasySurfactantLayer',
+        unique_name: Optional[str] = None,
         constrain_area_per_molecule: bool = False,
         conformal_roughness: bool = False,
         interface=None,
@@ -43,8 +45,18 @@ class SurfactantLayer(BaseAssembly):
         :param conformal_roughness: Constrain the roughness to be the same for both layers, defaults to `False`.
         :param interface: Calculator interface, defaults to `None`.
         """
+        # We need to generate a unique name to create the nested objects
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
         if tail_layer is None:
-            air = Material(0, 0, 'Air')
+            air = Material(
+                sld=0,
+                isld=0,
+                name='Air',
+                unique_name=unique_name + '_MaterialTail',
+                interface=interface,
+            )
             tail_layer = LayerAreaPerMolecule(
                 molecular_formula='C32D64',
                 thickness=16,
@@ -53,9 +65,17 @@ class SurfactantLayer(BaseAssembly):
                 area_per_molecule=48.2,
                 roughness=3,
                 name='DPPC Tail',
+                unique_name=unique_name + '_LayerAreaPerMoleculeTail',
+                interface=interface,
             )
         if head_layer is None:
-            d2o = Material(6.36, 0, 'D2O')
+            d2o = Material(
+                sld=6.36,
+                isld=0,
+                name='D2O',
+                unique_name=unique_name + '_MaterialHead',
+                interface=interface,
+            )
             head_layer = LayerAreaPerMolecule(
                 molecular_formula='C10H18NO8P',
                 thickness=10.0,
@@ -64,10 +84,19 @@ class SurfactantLayer(BaseAssembly):
                 area_per_molecule=48.2,
                 roughness=3.0,
                 name='DPPC Head',
+                unique_name=unique_name + '_LayerAreaPerMoleculeHead',
+                interface=interface,
             )
-        surfactant = LayerCollection(tail_layer, head_layer, name=name)
+        surfactant = LayerCollection(
+            tail_layer,
+            head_layer,
+            name='Layers',
+            unique_name=unique_name + '_LayerCollection',
+            interface=interface,
+        )
         super().__init__(
             name=name,
+            unique_name=unique_name,
             type='Surfactant Layer',
             layers=surfactant,
             interface=interface,

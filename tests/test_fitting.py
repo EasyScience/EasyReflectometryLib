@@ -7,12 +7,13 @@ from easyscience.fitting.minimizers.factory import AvailableMinimizers
 
 import easyreflectometry
 from easyreflectometry.calculators import CalculatorFactory
-from easyreflectometry.data import load
-from easyreflectometry.experiment import Model
-from easyreflectometry.experiment import PercentageFhwm
-from easyreflectometry.fitting import Fitter
+from easyreflectometry.data.measurement import load
+from easyreflectometry.fitting import MultiFitter
+from easyreflectometry.model import Model
+from easyreflectometry.model import PercentageFhwm
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
+from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import Sample
 
 PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
@@ -31,10 +32,10 @@ def test_fitting(minimizer):
     film_layer = Layer(film, 250, 3, 'Film Layer')
     superphase = Layer(d2o, 0, 3, 'D2O Subphase')
     sample = Sample(
-        si_layer,
-        sio2_layer,
-        film_layer,
-        superphase,
+        Multilayer(si_layer),
+        Multilayer(sio2_layer),
+        Multilayer(film_layer),
+        Multilayer(superphase),
         name='Film Structure',
     )
     resolution_function = PercentageFhwm(0.02)
@@ -54,8 +55,8 @@ def test_fitting(minimizer):
     model.scale.bounds = (0.5, 1.5)
     interface = CalculatorFactory()
     model.interface = interface
-    fitter = Fitter(model)
-    fitter.easy_f.switch_minimizer(minimizer)
+    fitter = MultiFitter(model)
+    fitter.easy_science_multi_fitter.switch_minimizer(minimizer)
     analysed = fitter.fit(data)
     assert 'R_0_model' in analysed.keys()
     assert 'SLD_0' in analysed.keys()

@@ -1,55 +1,58 @@
 from __future__ import annotations
 
-__author__ = 'github.com/arm61'
-
 from typing import List
+from typing import Optional
 from typing import Tuple
 
-from easyreflectometry.sample.base_element_collection import SIZE_DEFAULT_COLLECTION
-from easyreflectometry.sample.base_element_collection import BaseElementCollection
+from easyreflectometry.sample.collections.base_collection import BaseCollection
 
 from .model import Model
 
 
-class ModelCollection(BaseElementCollection):
-    # Added in super().__init__
-    models: list[Model]
+# Needs to be a function, elements are added to the global_object.map
+def DEFAULT_ELEMENTS(interface):
+    return (Model(interface),)
 
+
+class ModelCollection(BaseCollection):
     def __init__(
         self,
         *models: Tuple[Model],
         name: str = 'EasyModels',
         interface=None,
+        unique_name: Optional[str] = None,
         populate_if_none: bool = True,
         **kwargs,
     ):
         if not models:
             if populate_if_none:
-                models = [Model(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)]
+                models = DEFAULT_ELEMENTS(interface)
             else:
                 models = []
         # Needed to ensure an empty list is created when saving and instatiating the object as_dict -> from_dict
         # Else collisions might occur in global_object.map
         self.populate_if_none = False
 
-        super().__init__(name, interface, *models, **kwargs)
-        self.interface = interface
+        super().__init__(name, interface, unique_name=unique_name, *models, **kwargs)
 
-    def add_model(self, new_model: Model):
-        """
-        Add a model to the models.
+    def add_model(self, model: Optional[Model] = None):
+        """Add a model to the collection.
 
-        :param new_model: New model to be added.
+        :param model: Model to add.
         """
-        self.append(new_model)
+        if model is None:
+            model = Model(name='EasyModel added', interface=self.interface)
+        self.append(model)
 
-    def remove_model(self, idx: int):
-        """
-        Remove an model from the models.
+    def duplicate_model(self, index: int):
+        """Duplicate a model in the collection.
 
-        :param idx: Index of the model to remove
+        :param index: Model to duplicate.
         """
-        del self[idx]
+        to_be_duplicated = self[index]
+        duplicate = Model.from_dict(to_be_duplicated.as_dict(skip=['unique_name']))
+        duplicate.name = duplicate.name + ' duplicate'
+        self.append(duplicate)
 
     def as_dict(self, skip: List[str] | None = None) -> dict:
         this_dict = super().as_dict(skip=skip)
@@ -62,7 +65,6 @@ class ModelCollection(BaseElementCollection):
         Create an instance of a collection from a dictionary.
 
         :param data: The dictionary for the collection
-        :return: An instance of the collection
         """
         collection_dict = this_dict.copy()
         # We neeed to call from_dict on the base class to get the models

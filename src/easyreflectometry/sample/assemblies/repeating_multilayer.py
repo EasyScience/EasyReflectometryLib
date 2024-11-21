@@ -4,11 +4,10 @@ from typing import Union
 from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 
-from easyreflectometry.parameter_utils import get_as_parameter
-from easyreflectometry.sample.base_element_collection import SIZE_DEFAULT_COLLECTION
+from easyreflectometry.utils import get_as_parameter
 
+from ..collections.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
-from ..elements.layers.layer_collection import LayerCollection
 from .multilayer import Multilayer
 
 DEFAULTS = {
@@ -57,7 +56,7 @@ class RepeatingMultilayer(Multilayer):
 
         if layers is None:
             if populate_if_none:
-                layers = LayerCollection([Layer(interface=interface) for _ in range(SIZE_DEFAULT_COLLECTION)])
+                layers = LayerCollection([Layer(interface=interface)])
             else:
                 layers = LayerCollection()
         elif isinstance(layers, Layer):

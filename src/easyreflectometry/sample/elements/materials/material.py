@@ -7,7 +7,7 @@ import numpy as np
 from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 
-from easyreflectometry.parameter_utils import get_as_parameter
+from easyreflectometry.utils import get_as_parameter
 
 from ...base_core import BaseCore
 
@@ -69,7 +69,13 @@ class Material(BaseCore):
             unique_name_prefix=f'{unique_name}_Isld',
         )
 
-        super().__init__(name=name, sld=sld, isld=isld, interface=interface)
+        super().__init__(
+            name=name,
+            sld=sld,
+            isld=isld,
+            interface=interface,
+            unique_name=unique_name,
+        )
 
     # Representation
     @property

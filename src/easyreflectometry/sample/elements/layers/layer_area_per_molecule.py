@@ -6,9 +6,9 @@ from easyscience import global_object
 from easyscience.Constraints import FunctionalConstraint
 from easyscience.Objects.new_variable import Parameter
 
-from easyreflectometry.parameter_utils import get_as_parameter
 from easyreflectometry.special.calculations import area_per_molecule_to_scattering_length_density
 from easyreflectometry.special.calculations import neutron_scattering_length
+from easyreflectometry.utils import get_as_parameter
 
 from ..materials.material import Material
 from ..materials.material_solvated import DEFAULTS as MATERIAL_SOLVATED_DEFAULTS
@@ -89,11 +89,17 @@ class LayerAreaPerMolecule(Layer):
         :param name: Name of the layer, defaults to "EasyLayerAreaPerMolecule"
         :param interface: Interface object, defaults to `None`
         """
-        if solvent is None:
-            solvent = Material(6.36, 0, 'D2O', interface=interface)
-
         if unique_name is None:
             unique_name = global_object.generate_unique_name(self.__class__.__name__)
+
+        if solvent is None:
+            solvent = Material(
+                sld=6.36,
+                isld=0,
+                name='D2O',
+                unique_name=unique_name + '_MaterialSolvent',
+                interface=interface,
+            )
 
         # Create the solvated molecule and corresponding constraints
         if molecular_formula is None:
@@ -102,8 +108,8 @@ class LayerAreaPerMolecule(Layer):
             sld=0.0,
             isld=0.0,
             name=molecular_formula,
+            unique_name=unique_name + '_MaterialMolecule',
             interface=interface,
-            unique_name=unique_name + 'Material',
         )
 
         thickness = get_as_parameter(
@@ -155,14 +161,15 @@ class LayerAreaPerMolecule(Layer):
             material=molecule_material,
             solvent=solvent,
             solvent_fraction=solvent_fraction,
+            unique_name=unique_name + '_MaterialSolvated',
             interface=interface,
-            unique_name=unique_name + 'MaterialSolvated',
         )
         super().__init__(
             material=solvated_molecule_material,
             thickness=thickness,
             roughness=roughness,
             name=name,
+            unique_name=unique_name,
             interface=interface,
         )
         self._add_component('_scattering_length_real', _scattering_length_real)

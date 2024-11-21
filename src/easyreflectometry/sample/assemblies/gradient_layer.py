@@ -3,8 +3,8 @@ from typing import Optional
 from easyscience import global_object
 from numpy import arange
 
+from ..collections.layer_collection import LayerCollection
 from ..elements.layers.layer import Layer
-from ..elements.layers.layer_collection import LayerCollection
 from ..elements.materials.material import Material
 from .base_assembly import BaseAssembly
 
@@ -23,6 +23,7 @@ class GradientLayer(BaseAssembly):
         roughness: Optional[float] = 0.2,
         discretisation_elements: int = 10,
         name: str = 'EasyGradienLayer',
+        unique_name: Optional[str] = None,
         interface=None,
     ):
         """Constructor.
@@ -58,6 +59,7 @@ class GradientLayer(BaseAssembly):
         super().__init__(
             layers=gradient_layers,
             name=name,
+            unique_name=unique_name,
             interface=interface,
             type='Gradient-layer',
         )

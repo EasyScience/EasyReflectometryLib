@@ -14,8 +14,8 @@ from numpy.testing import assert_raises
 
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.sample.assemblies.repeating_multilayer import RepeatingMultilayer
+from easyreflectometry.sample.collections.layer_collection import LayerCollection
 from easyreflectometry.sample.elements.layers.layer import Layer
-from easyreflectometry.sample.elements.layers.layer_collection import LayerCollection
 from easyreflectometry.sample.elements.materials.material import Material
 
 
@@ -25,7 +25,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         assert_equal(p.name, 'EasyRepeatingMultilayer')
         assert_equal(p._type, 'Repeating Multi-layer')
         assert_equal(p.interface, None)
-        assert_equal(len(p.layers), 2)
+        assert_equal(len(p.layers), 1)
         assert_equal(p.repetitions.display_name, 'repetitions')
         assert_equal(str(p.repetitions.unit), 'dimensionless')
         assert_equal(p.repetitions.value, 1.0)
@@ -186,7 +186,7 @@ class TestRepeatingMultilayer(unittest.TestCase):
         p = RepeatingMultilayer(populate_if_none=True)
         assert (
             p.__repr__()
-            == 'EasyRepeatingMultilayer:\n  EasyLayerCollection:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1/Å^2\n          isld: 0.000e-6 1/Å^2\n      thickness: 10.000 Å\n      roughness: 3.300 Å\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1/Å^2\n          isld: 0.000e-6 1/Å^2\n      thickness: 10.000 Å\n      roughness: 3.300 Å\n  repetitions: 1.0\n'  # noqa: E501
+            == 'EasyRepeatingMultilayer:\n  EasyLayerCollection:\n  - EasyLayer:\n      material:\n        EasyMaterial:\n          sld: 4.186e-6 1/Å^2\n          isld: 0.000e-6 1/Å^2\n      thickness: 10.000 Å\n      roughness: 3.300 Å\n  repetitions: 1.0\n'  # noqa: E501
         )
 
     def test_dict_round_trip(self):

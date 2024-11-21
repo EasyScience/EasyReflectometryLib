@@ -16,8 +16,8 @@ from numpy.testing import assert_equal
 from refnx import reflect
 
 from easyreflectometry.calculators.refnx.wrapper import RefnxWrapper
-from easyreflectometry.experiment import LinearSpline
-from easyreflectometry.experiment import PercentageFhwm
+from easyreflectometry.model import LinearSpline
+from easyreflectometry.model import PercentageFhwm
 
 
 class TestRefnx(unittest.TestCase):

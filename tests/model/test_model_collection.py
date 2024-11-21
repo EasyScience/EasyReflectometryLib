@@ -1,7 +1,7 @@
 from easyscience import global_object
 
-from easyreflectometry.experiment.model import Model
-from easyreflectometry.experiment.model_collection import ModelCollection
+from easyreflectometry.model.model import Model
+from easyreflectometry.model.model_collection import ModelCollection
 
 
 class TestModelCollection:
@@ -12,9 +12,14 @@ class TestModelCollection:
         # Expect
         assert collection.name == 'EasyModels'
         assert collection.interface is None
-        assert len(collection) == 2
+        assert len(collection) == 1
         assert collection[0].name == 'EasyModel'
-        assert collection[1].name == 'EasyModel'
+
+    def test_dont_populate(self):
+        p = ModelCollection(populate_if_none=False)
+        assert p.name == 'EasyModels'
+        assert p.interface is None
+        assert len(p) == 0
 
     def test_from_pars(self):
         # When
@@ -54,7 +59,7 @@ class TestModelCollection:
 
         # Then
         collection = ModelCollection(model_1, model_2)
-        collection.remove_model(0)
+        collection.remove(0)
 
         # Expect
         assert len(collection) == 1

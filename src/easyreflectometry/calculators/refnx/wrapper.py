@@ -5,7 +5,7 @@ from typing import Tuple
 import numpy as np
 from refnx import reflect
 
-from easyreflectometry.experiment.resolution_functions import PercentageFhwm
+from easyreflectometry.model import PercentageFhwm
 
 from ..wrapper_base import WrapperBase
 

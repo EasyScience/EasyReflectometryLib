@@ -52,3 +52,34 @@ def get_as_parameter(
 
 def yaml_dump(dict_repr: dict) -> str:
     return yaml.dump(dict_repr, sort_keys=False, allow_unicode=True)
+
+
+def collect_unique_names_from_dict(structure_dict: dict, unique_names: Optional[list[str]] = None) -> dict:
+    """
+    This function returns a list with the 'unique_name' found the input dictionary.
+    """
+    if unique_names is None:
+        unique_names = []
+
+    if isinstance(structure_dict, dict):
+        for key, value in structure_dict.items():
+            if isinstance(value, dict):
+                collect_unique_names_from_dict(value, unique_names)
+            elif isinstance(value, list):
+                for element in value:
+                    collect_unique_names_from_dict(element, unique_names)
+            if key == 'unique_name':
+                unique_names.append(value)
+    return unique_names
+
+
+def count_free_parameters(project) -> int:
+    return sum(1 for parameter in project.parameters if parameter.free)
+
+
+def count_fixed_parameters(project) -> int:
+    return sum(1 for parameter in project.parameters if not parameter.free)
+
+
+def count_parameter_user_constraints(project) -> int:
+    return sum(len(parameter.user_constraints.keys()) for parameter in project.parameters if not parameter.free)
