@@ -85,11 +85,7 @@ class Project:
         return sum(1 for parameter in self.parameters if not parameter.free)
 
     def count_parameter_user_constraints(self) -> int:
-        count = 0
-        parameters = self.parameters
-        for parameter in parameters:
-            count = count + len(parameter.user_constraints.keys())
-        return count
+        return sum(len(parameter.user_constraints.keys()) for parameter in self.parameters if not parameter.free)
 
     @property
     def q_min(self):
