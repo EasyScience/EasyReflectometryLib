@@ -78,13 +78,13 @@ class Project:
                 parameters.append(vertice_obj)
         return parameters
 
-    @property
-    def count_free_parameters(self) -> int:
-        count = 0
-        for parameter in self.parameters:
-            if parameter.free:
-                count = count + 1
-        return count
+    # @property
+    # def count_free_parameters(self) -> int:
+    #     count = 0
+    #     for parameter in self.parameters:
+    #         if parameter.free:
+    #             count = count + 1
+    #     return count
 
     # @property
     # def count_fixed_parameters(self) -> int:
