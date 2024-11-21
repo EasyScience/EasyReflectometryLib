@@ -28,7 +28,7 @@ class LayerCollection(BaseCollection):
         """
         if layer is None:
             layer = Layer(
-                name='New EasyLayer',
+                name='EasyLayer added',
                 interface=self.interface,
             )
         self.append(layer)

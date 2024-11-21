@@ -2,7 +2,7 @@ from abc import abstractmethod
 
 from easyscience.Objects.ObjectClasses import BaseObj
 
-from easyreflectometry.parameter_utils import yaml_dump
+from easyreflectometry.utils import yaml_dump
 
 
 class BaseCore(BaseObj):

@@ -8,13 +8,14 @@ from typing import Optional
 from typing import Union
 
 import numpy as np
+from easyscience import global_object
 from easyscience.Objects.new_variable import Parameter
 from easyscience.Objects.ObjectClasses import BaseObj
 
-from easyreflectometry.parameter_utils import get_as_parameter
-from easyreflectometry.parameter_utils import yaml_dump
 from easyreflectometry.sample import BaseAssembly
 from easyreflectometry.sample import Sample
+from easyreflectometry.utils import get_as_parameter
+from easyreflectometry.utils import yaml_dump
 
 from .resolution_functions import PercentageFwhm
 from .resolution_functions import ResolutionFunction
@@ -74,6 +75,8 @@ class Model(BaseObj):
         :param interface: Calculator interface, defaults to `None`.
 
         """
+        if unique_name is None:
+            unique_name = global_object.generate_unique_name(self.__class__.__name__)
 
         if sample is None:
             sample = Sample(interface=interface)
@@ -92,6 +95,7 @@ class Model(BaseObj):
             background=background,
         )
         self.resolution_function = resolution_function
+
         # Must be set after resolution function
         self.interface = interface
 

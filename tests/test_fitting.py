@@ -8,7 +8,7 @@ from easyscience.fitting.minimizers.factory import AvailableMinimizers
 import easyreflectometry
 from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.data.measurement import load
-from easyreflectometry.fitting import Fitter
+from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.model import Model
 from easyreflectometry.model import PercentageFwhm
 from easyreflectometry.sample import Layer
@@ -55,8 +55,8 @@ def test_fitting(minimizer):
     model.scale.bounds = (0.5, 1.5)
     interface = CalculatorFactory()
     model.interface = interface
-    fitter = Fitter(model)
-    fitter.easy_f.switch_minimizer(minimizer)
+    fitter = MultiFitter(model)
+    fitter.easy_science_multi_fitter.switch_minimizer(minimizer)
     analysed = fitter.fit(data)
     assert 'R_0_model' in analysed.keys()
     assert 'SLD_0' in analysed.keys()

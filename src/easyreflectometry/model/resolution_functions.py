@@ -59,4 +59,4 @@ class LinearSpline(ResolutionFunction):
     def as_dict(
         self, skip: Optional[List[str]] = None
     ) -> dict[str, str]:  # skip is kept for consistency of the as_dict signature
-        return {'smearing': 'LinearSpline', 'q_data_points': self.q_data_points, 'fwhm_values': self.fwhm_values}
+        return {'smearing': 'LinearSpline', 'q_data_points': list(self.q_data_points), 'fwhm_values': list(self.fwhm_values)}
