@@ -74,7 +74,7 @@ class TestModelCollection:
         dict_repr = collection.as_dict()
 
         # Expect
-        assert dict_repr['data'][0]['resolution_function'] == {'smearing': 'PercentageFhwm', 'constant': 5.0}
+        assert dict_repr['data'][0]['resolution_function'] == {'smearing': 'PercentageFwhm', 'constant': 5.0}
 
     def test_dict_round_trip(self):
         # When
