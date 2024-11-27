@@ -9,7 +9,7 @@
    usage
    sample/sample
    calculators
-   experiment/experiment
+   model/model
    tutorials/tutorials
    dictionary
    contributing
