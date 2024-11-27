@@ -17,7 +17,7 @@ from easyreflectometry.sample import Sample
 from easyreflectometry.utils import get_as_parameter
 from easyreflectometry.utils import yaml_dump
 
-from .resolution_functions import PercentageFhwm
+from .resolution_functions import PercentageFwhm
 from .resolution_functions import ResolutionFunction
 
 DEFAULTS = {
@@ -71,7 +71,7 @@ class Model(BaseObj):
         :param scale: Scaling factor of profile.
         :param background: Linear background magnitude.
         :param name: Name of the model, defaults to 'EasyModel'.
-        :param resolution_function: Resolution function, defaults to PercentageFhwm.
+        :param resolution_function: Resolution function, defaults to PercentageFwhm.
         :param interface: Calculator interface, defaults to `None`.
 
         """
@@ -81,7 +81,7 @@ class Model(BaseObj):
         if sample is None:
             sample = Sample(interface=interface)
         if resolution_function is None:
-            resolution_function = PercentageFhwm(DEFAULTS['resolution']['value'])
+            resolution_function = PercentageFwhm(DEFAULTS['resolution']['value'])
 
         scale = get_as_parameter('scale', scale, DEFAULTS)
         background = get_as_parameter('background', background, DEFAULTS)
@@ -168,7 +168,7 @@ class Model(BaseObj):
     @property
     def _dict_repr(self) -> dict[str, dict[str, str]]:
         """A simplified dict representation."""
-        if isinstance(self._resolution_function, PercentageFhwm):
+        if isinstance(self._resolution_function, PercentageFwhm):
             resolution_value = self._resolution_function.as_dict()['constant']
             resolution = f'{resolution_value} %'
         else:

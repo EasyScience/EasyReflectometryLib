@@ -6,7 +6,7 @@ from easyscience import global_object
 
 import easyreflectometry
 from easyreflectometry import Project
-from easyreflectometry.model.resolution_functions import PercentageFhwm
+from easyreflectometry.model.resolution_functions import PercentageFwhm
 from easyreflectometry.summary import Summary
 
 PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
@@ -139,14 +139,14 @@ class TestSummary:
         # When
         fpath = os.path.join(PATH_STATIC, 'example.ort')
         project.load_experiment_for_model_at_index(fpath)
-        project.models[0].resolution_function = PercentageFhwm(5)
+        project.models[0].resolution_function = PercentageFwhm(5)
         summary = Summary(project)
 
         # Then
         html = summary._experiments_section()
 
         # Expect
-        assert 'PercentageFhwm 5%' in html
+        assert 'PercentageFwhm 5%' in html
 
     def test_refinement_section(self, project: Project) -> None:
         # When

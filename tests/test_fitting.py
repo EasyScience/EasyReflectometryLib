@@ -10,7 +10,7 @@ from easyreflectometry.calculators import CalculatorFactory
 from easyreflectometry.data.measurement import load
 from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.model import Model
-from easyreflectometry.model import PercentageFhwm
+from easyreflectometry.model import PercentageFwhm
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import Multilayer
@@ -38,7 +38,7 @@ def test_fitting(minimizer):
         Multilayer(superphase),
         name='Film Structure',
     )
-    resolution_function = PercentageFhwm(0.02)
+    resolution_function = PercentageFwhm(0.02)
     model = Model(sample, 1, 1e-6, resolution_function, 'Film Model')
     # Thicknesses
     sio2_layer.thickness.bounds = (15, 50)

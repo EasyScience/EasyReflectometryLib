@@ -4,14 +4,14 @@ import numpy as np
 
 from easyreflectometry.model.resolution_functions import DEFAULT_RESOLUTION_FWHM_PERCENTAGE
 from easyreflectometry.model.resolution_functions import LinearSpline
-from easyreflectometry.model.resolution_functions import PercentageFhwm
+from easyreflectometry.model.resolution_functions import PercentageFwhm
 from easyreflectometry.model.resolution_functions import ResolutionFunction
 
 
-class TestPercentageFhwm(unittest.TestCase):
+class TestPercentageFwhm(unittest.TestCase):
     def test_constructor(self):
         # When
-        resolution_function = PercentageFhwm(1.0)
+        resolution_function = PercentageFwhm(1.0)
 
         # Then Expect
         assert np.all(resolution_function.smearing([0, 2.5]) == np.array([1.0, 1.0]))
@@ -20,7 +20,7 @@ class TestPercentageFhwm(unittest.TestCase):
 
     def test_constructor_none(self):
         # When
-        resolution_function = PercentageFhwm()
+        resolution_function = PercentageFwhm()
 
         # Then Expect
         assert np.all(
@@ -31,14 +31,14 @@ class TestPercentageFhwm(unittest.TestCase):
 
     def test_as_dict(self):
         # When
-        resolution_function = PercentageFhwm(1.0)
+        resolution_function = PercentageFwhm(1.0)
 
         # Then Expect
-        resolution_function.as_dict() == {'smearing': 'PercentageFhwm', 'constant': 1.0}
+        resolution_function.as_dict() == {'smearing': 'PercentageFwhm', 'constant': 1.0}
 
     def test_dict_round_trip(self):
         # When
-        expected_resolution_function = PercentageFhwm(1.0)
+        expected_resolution_function = PercentageFwhm(1.0)
         res_dict = expected_resolution_function.as_dict()
 
         # Then

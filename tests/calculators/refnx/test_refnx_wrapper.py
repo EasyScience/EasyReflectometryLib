@@ -17,7 +17,7 @@ from refnx import reflect
 
 from easyreflectometry.calculators.refnx.wrapper import RefnxWrapper
 from easyreflectometry.model import LinearSpline
-from easyreflectometry.model import PercentageFhwm
+from easyreflectometry.model import PercentageFwhm
 
 
 class TestRefnx(unittest.TestCase):
@@ -325,7 +325,7 @@ class TestRefnx(unittest.TestCase):
         p.add_item('Item2', 'MyModel')
         p.add_item('Item3', 'MyModel')
         p.add_item('Item4', 'MyModel')
-        p.set_resolution_function(PercentageFhwm(0))
+        p.set_resolution_function(PercentageFwhm(0))
         p.update_model('MyModel', bkg=0)
         q = np.array(
             [
@@ -363,7 +363,7 @@ class TestRefnx(unittest.TestCase):
         p.add_layer_to_item('Layer2', 'Item2')
         p.add_item('Item1', 'MyModel')
         p.add_item('Item2', 'MyModel')
-        p.set_resolution_function(PercentageFhwm(0))
+        p.set_resolution_function(PercentageFwhm(0))
         p.update_model('MyModel', bkg=0)
         q = np.array(
             [
@@ -417,7 +417,7 @@ class TestRefnx(unittest.TestCase):
         p.add_item('Item2', 'MyModel')
         p.add_item('Item3', 'MyModel')
         p.add_item('Item4', 'MyModel')
-        p.set_resolution_function(PercentageFhwm(5))
+        p.set_resolution_function(PercentageFwhm(5))
         p.update_model('MyModel', bkg=0)
         assert_allclose(p.calculate(test4_dat[:, 0], 'MyModel'), test4_dat[:, 1], rtol=0.03)
 
@@ -456,8 +456,8 @@ class TestRefnx(unittest.TestCase):
         p.add_item('Item3', 'MyModel')
         p.add_item('Item4', 'MyModel')
         p.update_model('MyModel', bkg=0)
-        sigma_to_fhwm = 2.355
-        p.set_resolution_function(LinearSpline(test4_dat[:, 0], sigma_to_fhwm * test4_dat[:, 3]))
+        sigma_to_fwhm = 2.355
+        p.set_resolution_function(LinearSpline(test4_dat[:, 0], sigma_to_fwhm * test4_dat[:, 3]))
         assert_allclose(p.calculate(test4_dat[:, 0], 'MyModel'), test4_dat[:, 1], rtol=0.03)
 
 

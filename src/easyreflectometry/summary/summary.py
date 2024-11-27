@@ -144,7 +144,7 @@ class Summary:
             experiment_name = experiment.name
             num_data_points = len(experiment.x)
             resolution_function = self._project.models[idx].resolution_function.as_dict()['smearing']
-            if resolution_function == 'PercentageFhwm':
+            if resolution_function == 'PercentageFwhm':
                 precentage = self._project.models[idx].resolution_function.as_dict()['constant']
                 resolution_function = f'{resolution_function} {precentage}%'
             range_min = min(experiment.y)
