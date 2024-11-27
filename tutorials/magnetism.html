@@ -389,8 +389,8 @@
 </div>
 </div>
 <p>For reference we fetch the version of the software packages we are using.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;numpy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -399,6 +399,17 @@
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;refl1d: </span><span class="si">{</span><span class="n">refl1d</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+numpy: 1.26.0
+scipp: 24.02.0
+easyreflectometry: 1.3.0
+refl1d: 0.8.16
+</pre></div></div>
 </div>
 </section>
 <section id="Building-our-model">
@@ -500,8 +511,8 @@
 <section id="Refl1d-and-EasyReflectometry-without-magnetism">
 <h3>Refl1d and EasyReflectometry without magnetism<a class="headerlink" href="#Refl1d-and-EasyReflectometry-without-magnetism" title="Link to this heading">#</a></h3>
 <p>First we will ensure that the Refl1d calculator is correctly implemented in EasyReflectometry when no magnetic effects are present.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Refl1d</span>
@@ -532,12 +543,19 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_magnetism_16_0.png" src="../_images/tutorials_magnetism_16_0.png" />
+</div>
+</div>
 </section>
 <section id="EasyReflectometry-with-and-without-magnetic-layers">
 <h3>EasyReflectometry with and without magnetic layers<a class="headerlink" href="#EasyReflectometry-with-and-without-magnetic-layers" title="Link to this heading">#</a></h3>
 <p>We have now reached the point where we can do sa simulation for a sample with magnetic layers. For this sample we should see a difference in the determined reflectivity.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Without magnetic layers</span>
@@ -568,13 +586,20 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_magnetism_18_0.png" src="../_images/tutorials_magnetism_18_0.png" />
+</div>
+</div>
 <p>As expected do we see a difference in the reflectivity profile for a sample with and without magnetic layers.</p>
 </section>
 <section id="EasyReflectometry-and-Refl1d-with-magnetism">
 <h3>EasyReflectometry and Refl1d with magnetism<a class="headerlink" href="#EasyReflectometry-and-Refl1d-with-magnetism" title="Link to this heading">#</a></h3>
 <p>The final comparison is to confirm that that we are able to reproduce the raw Refl1d reflectometry in EasyReflectometry when acocunting for magnetism.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Refl1d model is inverted as compared to EasyReflectometry, so the order of the layers is reversed</span>
@@ -614,14 +639,29 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_magnetism_21_0.png" src="../_images/tutorials_magnetism_21_0.png" />
+</div>
+</div>
 <p>The two models agree when the magnetic parameters are the same.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">model_data_magnetism_easy</span> <span class="o">-</span> <span class="n">model_data_magnetism_ref1d</span><span class="p">)))</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0
+</pre></div></div>
 </div>
 </section>
 </section>
@@ -632,8 +672,8 @@
 <section id="Refl1d-polarized-probe-for-a-single-layer-sample">
 <h2>Refl1d polarized probe for a single layer sample<a class="headerlink" href="#Refl1d-polarized-probe-for-a-single-layer-sample" title="Link to this heading">#</a></h2>
 <p>This study is done with magnetism to show the results for polarized probe.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The magnetism is set to 8.</span>
@@ -688,12 +728,19 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_magnetism_26_0.png" src="../_images/tutorials_magnetism_26_0.png" />
+</div>
+</div>
 </section>
 <section id="Refl1-and-Refnx-in-EasyReflectometry.">
 <h2>Refl1 and Refnx in EasyReflectometry.<a class="headerlink" href="#Refl1-and-Refnx-in-EasyReflectometry." title="Link to this heading">#</a></h2>
 <p>This study is done without magnetism as Refnx does not support this yet.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Refnx</span>
@@ -720,12 +767,19 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_magnetism_28_0.png" src="../_images/tutorials_magnetism_28_0.png" />
+</div>
+</div>
 </section>
 <section id="EasyReflectometry-with-and-without-magnetism-but-no-magnetic-layers">
 <h2>EasyReflectometry with and without magnetism but no magnetic layers<a class="headerlink" href="#EasyReflectometry-with-and-without-magnetism-but-no-magnetic-layers" title="Link to this heading">#</a></h2>
 <p>We also want to confirm that we can enable the ability to account for magnetism without causing any significant changes to the reflectivity as determined for a sample without any magnetic layers.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># With Magnitism</span>
@@ -754,14 +808,29 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_magnetism_30_0.png" src="../_images/tutorials_magnetism_30_0.png" />
+</div>
+</div>
 <p>We don’t see any significant change in the determined reflectivity when enabling the ability to account for magnetism. However, there is a small difference, which is due to the fact that we are using <code class="docutils literal notranslate"><span class="pre">PolarizedQProbe</span></code> (Refl1d) when handling magnetic samples whereas non-magnetic samples are handled with a <code class="docutils literal notranslate"><span class="pre">QProbe</span></code> (Refl1d).</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">model_data_no_magnetism</span> <span class="o">-</span> <span class="n">model_data_magnetism</span><span class="p">)))</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0
+</pre></div></div>
 </div>
 </section>
 </section>

@@ -351,7 +351,7 @@
 <p>A common system that is studied with neutron and X-ray reflectometry are surfactant monolayers. In this tutorial, we will look at how the <code class="docutils literal notranslate"><span class="pre">easyreflectometry</span></code> assembly <code class="docutils literal notranslate"><span class="pre">SurfactantLayer</span></code> (<a class="reference internal" href="../../sample/assemblies_library.html#surfactantlayer"><span class="std std-ref">detailed here</span></a>) can be used to model a phospholipid bilayer. First, we will import the relevant packages and functions.</p>
 <p>First configure matplotlib to place figures in notebook and import needed modules</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
@@ -372,15 +372,15 @@
 <span class="kn">from</span> <span class="nn">easyreflectometry.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.model</span> <span class="kn">import</span> <span class="n">Model</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.model</span> <span class="kn">import</span> <span class="n">PercentageFwhm</span>
-<span class="kn">from</span> <span class="nn">easyreflectometry.fitting</span> <span class="kn">import</span> <span class="n">Fitter</span>
+<span class="kn">from</span> <span class="nn">easyreflectometry.fitting</span> <span class="kn">import</span> <span class="n">MultiFitter</span>
 <span class="kn">from</span> <span class="nn">easyreflectometry.plot</span> <span class="kn">import</span> <span class="n">plot</span>
 <span class="kn">from</span> <span class="nn">easyscience.fitting</span> <span class="kn">import</span> <span class="n">AvailableMinimizers</span>
 <br/></pre></div>
 </div>
 </div>
 <p>Next, as usual we print the versions of the software packages.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;easyreflectometry: </span><span class="si">{</span><span class="n">easyreflectometry</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -388,12 +388,21 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+easyreflectometry: 1.3.0
+refnx: 0.1.50
+</pre></div></div>
+</div>
 <section id="Reading-in-experimental-data">
 <h2>Reading in experimental data<a class="headerlink" href="#Reading-in-experimental-data" title="Link to this heading">#</a></h2>
 <p>As has been <a class="reference internal" href="../fitting/simple_fitting.html"><span class="doc">shown previously</span></a>, we use the <code class="docutils literal notranslate"><span class="pre">load</span></code> function to read in our experimental data. For this tutorial we will be looking at <a class="reference external" href="https://en.wikipedia.org/wiki/Distearoylphosphatidylcholine">DSPC</a>, a phospholipid molecule that will self-assemble into a monolayer at the air-water interface. The data being used has kindly been shared by the authors of previous work on the system. We use <code class="docutils literal notranslate"><span class="pre">pooch</span></code> to fetch the file from our
 repository.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_path</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
@@ -404,6 +413,21 @@ repository.</p>
 <span class="n">data</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 <span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Downloading data from &#39;https://raw.githubusercontent.com/EasyScience/EasyReflectometryLib/master/docs/src/tutorials/sample/d70d2o.ort&#39; to file &#39;/home/runner/.cache/pooch/c55555303da21cfb37decae1846ecc81-d70d2o.ort&#39;.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_sample_monolayer_6_1.png" src="../../_images/tutorials_sample_monolayer_6_1.png" />
 </div>
 </div>
 </section>
@@ -420,7 +444,7 @@ repository.</p>
 <p>Finally, we can constrain the roughness between head-tail and tail-superphase layers to be the same value, as it is unlikely that it would be different.</p>
 <p>Before we create the <code class="docutils literal notranslate"><span class="pre">SurfactantLayer</span></code> object, we will create simple <code class="docutils literal notranslate"><span class="pre">Material</span></code> objects for the sub- and super-phase.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d2o</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span><span class="n">sld</span><span class="o">=</span><span class="mf">6.36</span><span class="p">,</span> <span class="n">isld</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;D2O&#39;</span><span class="p">)</span>
@@ -435,7 +459,7 @@ repository.</p>
 </center><center><p>The chemical structure for the DSPC molecule. By Graeme Bartlett - Self Drawn, CC0</p>
 </center><p>The chemical structure for the DSPC molecule is shown above, where the head group is everything to the right of (and including) the ester group as this is the hydrophilic component. While, everything to the left hand side is the tail group (both chains are included). We want to define the chemical formula for each of these subunits.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">head_formula</span> <span class="o">=</span> <span class="s1">&#39;C10H18NO8P&#39;</span>
@@ -445,7 +469,7 @@ repository.</p>
 </div>
 <p>Next we define estimates for the thickness of each layer, for this we will use values from a previous work, as we will not be varying these parameters.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">head_thickness</span> <span class="o">=</span> <span class="mf">12.9</span>
@@ -455,7 +479,7 @@ repository.</p>
 </div>
 <p>We expect the head layer to be solvated with some of the D2O present, however it is unlikely that there will be any solvent surface coverage (by D2O or air) in the tighly packed tails.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">head_solvent_fraction</span> <span class="o">=</span> <span class="mf">0.5</span>
@@ -465,7 +489,7 @@ repository.</p>
 </div>
 <p>Finally, we define the values for the area per molecule and roughness for the whole surfactant layer.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">area_per_molecule</span> <span class="o">=</span> <span class="mi">45</span>
@@ -474,8 +498,8 @@ repository.</p>
 </div>
 </div>
 <p>Having created the necessary initial values, we can use these to create a <code class="docutils literal notranslate"><span class="pre">SurfactantLayer</span></code> object. Note that the area per molecule and roughness for both layers are the same. We can also print information about our surfactant system.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tail_layer</span> <span class="o">=</span> <span class="n">LayerAreaPerMolecule</span><span class="p">(</span>
@@ -504,9 +528,58 @@ repository.</p>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+EasySurfactantLayer:
+  head_layer:
+    EasyLayerAreaPerMolecule:
+      material:
+        C10H18NO8P in D2O:
+          solvent_fraction: 0.500 dimensionless
+          sld: 3.697e-6 1/Å^2
+          isld: 0.000e-6 1/Å^2
+          material:
+            C10H18NO8P:
+              sld: 1.035e-6 1/Å^2
+              isld: 0.000e-6 1/Å^2
+          solvent:
+            D2O:
+              sld: 6.360e-6 1/Å^2
+              isld: 0.000e-6 1/Å^2
+      thickness: 12.900 Å
+      roughness: 3.000 Å
+    molecular_formula: C10H18NO8P
+    area_per_molecule: 45.00 Å^2
+  tail_layer:
+    EasyLayerAreaPerMolecule:
+      material:
+        C34D70 in Air:
+          solvent_fraction: 0.000 dimensionless
+          sld: 8.753e-6 1/Å^2
+          isld: 0.000e-6 1/Å^2
+          material:
+            C34D70:
+              sld: 8.753e-6 1/Å^2
+              isld: 0.000e-6 1/Å^2
+          solvent:
+            Air:
+              sld: 0.000e-6 1/Å^2
+              isld: 0.000e-6 1/Å^2
+      thickness: 17.600 Å
+      roughness: 3.000 Å
+    molecular_formula: C34D70
+    area_per_molecule: 45.00 Å^2
+  area per molecule constrained: true
+  conformal roughness: true
+</pre></div></div>
+</div>
 <p>The layers for the sub- and super-phase are then created.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d2o_layer</span> <span class="o">=</span> <span class="n">Layer</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">d2o</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;D2O Subphase&#39;</span><span class="p">)</span>
@@ -516,7 +589,7 @@ repository.</p>
 </div>
 <p>For the surfactant layer, the roughness is typically defined by the roughness between the water-head layers. Therefore, it is desirable to add this constraint to our model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dspc</span><span class="o">.</span><span class="n">constrain_solvent_roughness</span><span class="p">(</span><span class="n">d2o_layer</span><span class="o">.</span><span class="n">roughness</span><span class="p">)</span>
@@ -525,7 +598,7 @@ repository.</p>
 </div>
 <p>Now that the surfactant layer and sub- and super-phases are available and the necessary constraints present, we construct our <code class="docutils literal notranslate"><span class="pre">Sample</span></code> and <code class="docutils literal notranslate"><span class="pre">Model</span></code> objects.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resolution_function</span> <span class="o">=</span> <span class="n">PercentageFwhm</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -546,7 +619,7 @@ repository.</p>
 <h2>Defining bounds and performing the optimisation<a class="headerlink" href="#Defining-bounds-and-performing-the-optimisation" title="Link to this heading">#</a></h2>
 <p>The varying parameters can then be defined, in this case we will let the scale factor, the background, the surfactant area per molecule, and head layer solvent surface coverage vary with the bounds shown below.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
@@ -557,35 +630,116 @@ repository.</p>
 </pre></div>
 </div>
 </div>
-<p>Finally, as with other <a class="reference external" href="./tutorials.rst">tutorials</a>, we create the <code class="docutils literal notranslate"><span class="pre">CalculatorFactory</span></code> (and connect this to our model) and <code class="docutils literal notranslate"><span class="pre">Fitter</span></code> objects and perform the fit.</p>
+<p>Finally, as with other <a class="reference external" href="./tutorials.rst">tutorials</a>, we create the <code class="docutils literal notranslate"><span class="pre">CalculatorFactory</span></code> (and connect this to our model) and <code class="docutils literal notranslate"><span class="pre">MultiFitter</span></code> objects and perform the fit.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">CalculatorFactory</span><span class="p">()</span>
 <span class="n">model</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">calculator</span>
-<span class="n">fitter</span> <span class="o">=</span> <span class="n">Fitter</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">fitter</span> <span class="o">=</span> <span class="n">MultiFitter</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="n">fitter</span><span class="o">.</span><span class="n">switch_minimizer</span><span class="p">(</span><span class="n">AvailableMinimizers</span><span class="o">.</span><span class="n">LMFit_differential_evolution</span><span class="p">)</span>
 <span class="n">analysed</span> <span class="o">=</span> <span class="n">fitter</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>The result can then be plotted, before we investigate the results.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">analysed</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_sample_monolayer_30_0.png" src="../../_images/tutorials_sample_monolayer_30_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+EasyModel:
+  scale: 0.14026181877055022
+  background: 8.871220945152713e-07
+  resolution: 5 %
+  color: black
+  sample:
+    EasySample:
+    - EasyMultilayer:
+        Air Superphase:
+        - Air Superphase:
+            material:
+              Air:
+                sld: 0.000e-6 1/Å^2
+                isld: 0.000e-6 1/Å^2
+            thickness: 0.000 Å
+            roughness: 0.000 Å
+    - EasySurfactantLayer:
+        head_layer:
+          EasyLayerAreaPerMolecule:
+            material:
+              C10H18NO8P in D2O:
+                solvent_fraction: 0.611 dimensionless
+                sld: 4.306e-6 1/Å^2
+                isld: 0.000e-6 1/Å^2
+                material:
+                  C10H18NO8P:
+                    sld: 1.084e-6 1/Å^2
+                    isld: 0.000e-6 1/Å^2
+                solvent:
+                  D2O:
+                    sld: 6.360e-6 1/Å^2
+                    isld: 0.000e-6 1/Å^2
+            thickness: 12.900 Å
+            roughness: 3.000 Å
+          molecular_formula: C10H18NO8P
+          area_per_molecule: 42.98 Å^2
+        tail_layer:
+          EasyLayerAreaPerMolecule:
+            material:
+              C34D70 in Air:
+                solvent_fraction: 0.000 dimensionless
+                sld: 8.753e-6 1/Å^2
+                isld: 0.000e-6 1/Å^2
+                material:
+                  C34D70:
+                    sld: 8.753e-6 1/Å^2
+                    isld: 0.000e-6 1/Å^2
+                solvent:
+                  Air:
+                    sld: 0.000e-6 1/Å^2
+                    isld: 0.000e-6 1/Å^2
+            thickness: 17.600 Å
+            roughness: 3.000 Å
+          molecular_formula: C34D70
+          area_per_molecule: 42.98 Å^2
+        area per molecule constrained: true
+        conformal roughness: true
+    - EasyMultilayer:
+        D2O Subphase:
+        - D2O Subphase:
+            material:
+              D2O:
+                sld: 6.360e-6 1/Å^2
+                isld: 0.000e-6 1/Å^2
+            thickness: 0.000 Å
+            roughness: 3.000 Å
+</pre></div></div>
 </div>
 <p>We can see above that the solvent surface coverage of the surfactant was found to be around 60 % (solvent_fraction in head_layer) and the area per molecule around 50 Å2, in agreement with previous investigations.</p>
 </section>
