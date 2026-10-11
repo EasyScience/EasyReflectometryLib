@@ -53,8 +53,23 @@ See the
 [contrasts tutorial](../tutorials/advancedfitting/contrasts.ipynb) for a
 worked example.
 
-::: easyreflectometry.contrasts options: members: - CHEMISTRY -
-ReplaceMaterial - ReplaceFormula - derive_contrast -
-substitution_candidates - UnsupportedSubstitution - plan_link -
-LinkPlan - LinkRow - LinkRecord - LayoutMismatch - follows -
-tie_corresponding - snapshot - restore
+<!-- prettier-ignore-start -->
+::: easyreflectometry.contrasts
+    options:
+      members:
+        - CHEMISTRY
+        - ReplaceMaterial
+        - ReplaceFormula
+        - derive_contrast
+        - substitution_candidates
+        - UnsupportedSubstitution
+        - plan_link
+        - LinkPlan
+        - LinkRow
+        - LinkRecord
+        - LayoutMismatch
+        - follows
+        - tie_corresponding
+        - snapshot
+        - restore
+<!-- prettier-ignore-end -->
