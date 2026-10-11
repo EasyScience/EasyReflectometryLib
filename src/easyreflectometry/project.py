@@ -10,6 +10,7 @@ import tempfile
 import warnings
 import weakref
 from dataclasses import dataclass
+from dataclasses import field
 from pathlib import Path
 from typing import Dict
 from typing import List
@@ -62,6 +63,7 @@ from easyreflectometry.fitting import FitRun
 from easyreflectometry.fitting import FitScopeError
 from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.fitting import PreparedFit
+from easyreflectometry.fitting import _free_roots
 from easyreflectometry.inequality_constraints import InequalityEvaluation
 from easyreflectometry.inequality_constraints import InequalitySpec
 from easyreflectometry.inequality_constraints import build_constraints_factory
@@ -128,6 +130,9 @@ class ModelRemoval:
     dependents: List[Parameter]
     #: Inequality constraints on parameters only this model owns.
     inequality_constraints: List[InequalitySpec]
+    #: Old key to new key of every remaining experiment, once :meth:`Project.remove_model_at_index`
+    #: removed the experiments (as :meth:`Project.remove_experiment` returns); empty otherwise.
+    remap: Dict[int, int] = field(default_factory=dict)
 
 
 def _weak_constraints_provider(project: 'Project'):
@@ -488,6 +493,30 @@ class Project:
             experiment for experiment in experiments for _ in (getattr(experiment, 'available_channels', None) or [None])
         ]
         return prepared
+
+    def fit_parameters(self, experiments: Optional[list] = None) -> List[Parameter]:
+        """The parameters a fit of `experiments` varies, each once; nothing is prepared.
+
+        The free parameters of their models, and the free parameters of other
+        models those follow (see :meth:`prepare_fit`). Experiments without a
+        model of this project contribute nothing.
+
+        Parameters
+        ----------
+        experiments : list, optional
+            By default, the loaded ones whose ``include_in_fit`` is set.
+        """
+        if experiments is None:
+            experiments = [self._experiments[key] for key in sorted(self._experiments) if self._experiments[key].include_in_fit]
+        models = []
+        for experiment in experiments:
+            index = self._model_index(experiment.model)
+            if index is not None and not any(model is self._models[index] for model in models):
+                models.append(self._models[index])
+        parameters = {id(parameter): parameter for model in models for parameter in model.get_free_parameters()}
+        for root in _free_roots(models):
+            parameters.setdefault(id(root), root)
+        return list(parameters.values())
 
     def record_fit(self, prepared: PreparedFit, results: Optional[list] = None, status: str = 'completed') -> FitRun:
         """Record the outcome of a run prepared by :meth:`prepare_fit`; see :attr:`last_fit`.
@@ -2320,7 +2349,7 @@ class Project:
         Returns
         -------
         ModelRemoval
-            What was affected.
+            What was affected; its ``remap`` keys the remaining experiments.
 
         Raises
         ------
@@ -2346,9 +2375,11 @@ class Project:
         removed = self._models[index]
         self._links = [link for link in self._links if removed not in (link.follower, link.reference)]
         self._contrasts = [pair for pair in self._contrasts if removed not in pair]
+        remap = {key: key for key in self._experiments}
         if experiments == 'remove':
             for key in reversed(plan.experiments):
-                self.remove_experiment(key)
+                step = self.remove_experiment(key)
+                remap = {old: step[new] for old, new in remap.items() if new in step}
         elif plan.experiments:
             for key in plan.experiments:
                 self._experiments[key].model = self._models[experiments]
@@ -2364,7 +2395,7 @@ class Project:
         # Reset assembly and layer indices for the new current model
         self._current_assembly_index = 0
         self._current_layer_index = 0
-        return plan
+        return ModelRemoval(plan.experiments, plan.dependents, plan.inequality_constraints, remap)
 
     def move_model(self, index: int, new_index: int) -> None:
         """Move the model at `index` to `new_index`, keeping inequality constraints on their parameters."""

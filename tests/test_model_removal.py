@@ -102,6 +102,19 @@ class TestRemove:
         _film(loaded.models[0]).thickness.value = 60.0
         assert _film(loaded.models[1]).thickness.value == pytest.approx(120.0)
 
+    def test_removing_its_experiments_reports_the_remaining_keys(self):
+        project = _project(2)
+        model = project.models[1]
+        project.experiments = {
+            0: _dataset(project.models[0]),
+            1: _dataset(model),
+            2: _dataset(model),
+            3: _dataset(project.models[0]),
+        }
+        removal = project.remove_model_at_index(1, experiments='remove')
+        assert removal.experiments == [1, 2]
+        assert removal.remap == {0: 0, 3: 1}
+
     def test_experiments_are_rebound_on_request(self):
         project = _project()
         survivor = project.models[2]

@@ -467,6 +467,22 @@ class TestFitScope:
         assert len(prepared.fitted) == 1  # the excluded data is not in the objective
         assert prepared.experiments == [follower_data]
 
+    def test_fit_parameters_are_those_the_prepared_run_varies(self):
+        project = _two_layouts()
+        root = project.models[0].sample[1].layers[0].thickness
+        root.fixed = False
+        project.models[1].scale.fixed = False
+        project.models[0].scale.fixed = False  # owned by the excluded model only: not in the fit
+        project.apply_link(project.plan_link(1, 0, materials='skip'))
+        project.experiments = {0: _synthetic(project, 0), 1: _synthetic(project, 1)}
+        project.experiments[0].include_in_fit = False
+
+        expected = project.prepare_fit().core_fitter.fit_object.get_fit_parameters()
+
+        assert {id(p) for p in project.fit_parameters()} == {id(p) for p in expected}
+        assert any(p is root for p in project.fit_parameters())
+        assert all(p is not project.models[0].scale for p in project.fit_parameters())
+
     def test_an_experiment_without_a_model_is_an_error_unless_skipped(self):
         project = _two_layouts()
         project.experiments = {0: _synthetic(project, 0), 1: _synthetic(project, 1)}
