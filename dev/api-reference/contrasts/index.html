@@ -2415,8 +2415,8 @@ hydrogenated tails. Each contrast is an ordinary <code>Model</code>, with its ow
 scale, background and resolution; what the contrasts have in common is
 shared in one of two ways:</p>
 <ul>
-<li><strong>by identity</strong>: an assembly or material is one object used by
-  several models, so it has one set of parameters;</li>
+<li><strong>by identity</strong>: an assembly or material is one object used by several
+  models, so it has one set of parameters;</li>
 <li><strong>by equality</strong>: a parameter of one model follows the corresponding
   parameter of another, where the objects must differ (a hydrated layer
   whose solvent differs between contrasts).</li>
@@ -2424,8 +2424,7 @@ shared in one of two ways:</p>
 <p>The <code>Project</code> offers two routes to that state. <strong>Adding a contrast</strong>
 derives a new model from a reference with <code>derive_contrast</code>: assemblies
 the substitutions do not touch are shared, touched ones are copied with
-every parameter tied to the reference's except those of the
-replacement.</p>
+every parameter tied to the reference's except those of the replacement.</p>
 <div class="language-python highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">easyreflectometry.contrasts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReplaceFormula</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">easyreflectometry.contrasts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReplaceMaterial</span>
 
@@ -2437,11 +2436,11 @@ replacement.</p>
 correspond by their path within the model, so the models need the same
 layout: the same assemblies and layers, with materials of the same kind
 (a <code>MaterialDensity</code> and a plain <code>Material</code> do not correspond);
-<code>plan_link</code> raises <code>LayoutMismatch</code> otherwise. The plan changes
-nothing: each <code>LinkRow</code> says what linking would do with one pair of
-parameters (<code>'tie'</code>, <code>'skip'</code>, <code>'already_tied'</code>, <code>'conflict'</code>), and
-with the reason. Scale and background always stay per contrast. A
-material's chemistry (<code>CHEMISTRY</code>: SLD, density, scattering lengths) is
+<code>plan_link</code> raises <code>LayoutMismatch</code> otherwise. The plan changes nothing:
+each <code>LinkRow</code> says what linking would do with one pair of parameters
+(<code>'tie'</code>, <code>'skip'</code>, <code>'already_tied'</code>, <code>'conflict'</code>), and with the
+reason. Scale and background always stay per contrast. A material's
+chemistry (<code>CHEMISTRY</code>: SLD, density, scattering lengths) is
 <code>'undecided'</code> until <code>materials='tie'</code> or <code>materials='skip'</code> is given,
 since contrasts usually differ in it.</p>
 <div class="language-python highlight"><pre><span></span><code><span class="n">plan</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">plan_link</span><span class="p">(</span><span class="n">follower_index</span><span class="p">,</span> <span class="n">reference_index</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="s1">&#39;skip&#39;</span><span class="p">)</span>
@@ -2453,8 +2452,10 @@ since contrasts usually differ in it.</p>
 outdated since it was made. <code>Project.detach</code> frees a shared parameter in
 one model, which then gets its own copy of the assembly. The derivation
 of each contrast, the links and the sharing are saved with the project.
-See the <a href="../../tutorials/advancedfitting/contrasts/">contrasts tutorial</a>
-for a worked example.</p>
+See the
+<a href="../../tutorials/advancedfitting/contrasts/">contrasts tutorial</a> for a
+worked example.</p>
+<!-- prettier-ignore-start -->
 
 
 <div class="doc doc-object doc-module">
@@ -3666,7 +3667,9 @@ parameters (:data:<code>CHEMISTRY</code>) are <code>'undecided'</code> unless <c
 
     </div>
 
-</div><!-- prettier-ignore-start -->
+</div><!-- prettier-ignore-end -->
+
+<!-- prettier-ignore-start -->
 
 <!-- prettier-ignore-end -->
 

@@ -3049,8 +3049,7 @@
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LayerCollection</span><span class="p">(</span><span class="n">BaseCollection</span><span class="p">):</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LayerCollection</span><span class="p">(</span><span class="n">BaseCollection</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">layers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Layer</span><span class="p">]],</span>
@@ -3094,8 +3093,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        index : int</span>
-<span class="sd">        layer :</span>
-<span class="sd">            Assembly to add.</span>
+<span class="sd">            Index of the layer to duplicate.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">to_be_duplicated</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="n">duplicate</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">to_be_duplicated</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;unique_name&#39;</span><span class="p">]))</span>
@@ -3306,22 +3304,7 @@
             </td>
             <td>
               <div class="doc-md-description">
-                
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>layer</code>
-            </td>
-            <td>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Assembly to add.</p>
+                <p>Index of the layer to duplicate.</p>
 <!-- prettier-ignore-start -->
 
 <!-- prettier-ignore-end -->
@@ -3348,15 +3331,13 @@
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">duplicate_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">duplicate_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Duplicate a layer in the collection.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    index : int</span>
-<span class="sd">    layer :</span>
-<span class="sd">        Assembly to add.</span>
+<span class="sd">        Index of the layer to duplicate.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">to_be_duplicated</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
     <span class="n">duplicate</span> <span class="o">=</span> <span class="n">Layer</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">to_be_duplicated</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;unique_name&#39;</span><span class="p">]))</span>
