@@ -49,6 +49,11 @@ These are basic fitting examples using the EasyReflectometry library.
 These are advanced fitting examples using the EasyReflectometry library.
 
 - [Multi-Contrast Fitting](advancedfitting/multi_contrast.ipynb)
+- [Adding & Linking Contrasts](advancedfitting/contrasts.ipynb) –
+  Deriving contrasts from a reference model (`Project.add_contrast`),
+  linking models built separately (`plan_link`, `apply_link`,
+  `unlink`), detaching a shared parameter, and a joint fit of three
+  simulated contrasts.
 - [Polarized Fitting](advancedfitting/polarized_fitting.ipynb) –
   Magnetic samples, all four spin channels, the spin-resolved depth
   profile and simultaneous fitting of several channels against one
