@@ -43,9 +43,9 @@ parameter free and are enforced as penalties on the BUMPS fit problem.
 
 ## Contrasts
 
-One structure measured under several SLD conditions: deriving a
-contrast from a reference model, and linking the corresponding
-parameters of models built separately.
+One structure measured under several SLD conditions: deriving a contrast
+from a reference model, and linking the corresponding parameters of
+models built separately.
 
 - [Contrasts](contrasts.md)
 
