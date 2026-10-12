@@ -9,13 +9,39 @@
   </picture>
 </p>
 
-**EasyReflectometry** is a software for performing reflectometry
-calculations based on a layer model and refining its parameters against
-reflectometry data.
+**EasyReflectometry** is a Python library for simulating reflectometry
+profiles from layered sample models and refining their parameters
+against experimental data.
+
+It supports multiple contrasts and simultaneous fitting, polarised
+reflectometry channels, Bayesian (MCMC) analysis, ORSO data and model
+import/export, and a choice of calculation engines (refnx or refl1d).
 
 <!-- HOME REPOSITORY SECTION -->
 
-**EasyReflectometry** is developed as a Python library.
+**EasyReflectometry** is built on the
+[EasyScience framework](https://easyscience.org) and maintained by the
+[European Spallation Source (ESS)](https://ess.eu).
+
+## Installation
+
+**EasyReflectometry** requires Python 3.11–3.13 and is available on
+PyPI:
+
+```bash
+pip install easyreflectometry
+```
+
+For binary ORSO (`.orb` / NeXus) read and write support, install the
+optional `orb` extra:
+
+```bash
+pip install "easyreflectometry[orb]"
+```
+
+See the
+[Installation & Setup](https://easyscience.github.io/reflectometry-lib/latest/installation-and-setup)
+guide for the recommended Pixi-based setup.
 
 License:
 [BSD 3-Clause](https://github.com/easyscience/reflectometry-lib/blob/master/LICENSE)
@@ -27,7 +53,7 @@ License:
 - 📖
   [Documentation](https://easyscience.github.io/reflectometry-lib/latest)
 - 🚀
-  [Getting Started](https://easyscience.github.io/reflectometry-lib/latest/introduction)
+  [Getting Started](https://easyscience.github.io/reflectometry-lib/latest/installation-and-setup)
 - 🧪
   [Tutorials](https://easyscience.github.io/reflectometry-lib/latest/tutorials)
 - 💬
