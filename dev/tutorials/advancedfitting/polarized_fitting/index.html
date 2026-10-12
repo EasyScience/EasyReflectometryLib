@@ -3438,6 +3438,7 @@ scattering); <code>theta_m = 90</code> is anti-aligned. A <strong>canted</strong
 non-spin-flip channels (<code>pp</code>, <code>mm</code>). This is why the sample below uses
 <code>theta_m = 45</code> degrees rather than a value aligned with the guide field:
 it is the only choice that makes all four channels visually distinct.</p>
+<p>Each spin channel is a dataset with its own q-resolution and is fitted with it; the model's resolution only follows the first channel. See the user guide page <a href="../../user-guide/resolution.md">Resolution</a>.</p>
 </div>
 </div>
 </div>
@@ -4003,7 +4004,7 @@ print(f'Loaded polarized experiment at index {experiment_index}, channels: {load
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>{'/tmp/easyreflectometry_polarized_qu3_b261/fe_film_uu.txt': &lt;PolarizationChannel.PP: 'pp'&gt;, '/tmp/easyreflectometry_polarized_qu3_b261/fe_film_dd.txt': &lt;PolarizationChannel.MM: 'mm'&gt;}
+<pre>{'/tmp/easyreflectometry_polarized_6ghcgjxq/fe_film_uu.txt': &lt;PolarizationChannel.PP: 'pp'&gt;, '/tmp/easyreflectometry_polarized_6ghcgjxq/fe_film_dd.txt': &lt;PolarizationChannel.MM: 'mm'&gt;}
 Loaded polarized experiment at index 0, channels: [&lt;PolarizationChannel.PP: 'pp'&gt;, &lt;PolarizationChannel.MM: 'mm'&gt;]
 </pre>
 </div>

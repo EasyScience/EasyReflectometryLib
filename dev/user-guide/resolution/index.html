@@ -2764,10 +2764,23 @@ into a single experiment:</p>
 </code></pre></div>
 <p>The points are concatenated and sorted by <span class="arithmatex">\(q\)</span> and every point keeps the
 width it was measured with; overlapping <span class="arithmatex">\(q\)</span> ranges with different widths
-are honoured because a <code>Pointwise</code> is exact at its stored points. A file
-without a resolution column contributes points smeared with the model's
-percentage resolution, and a warning says so. A polarised experiment and
-a file holding several datasets cannot be merged this way.</p>
+are honoured because a <code>Pointwise</code> is exact at its stored points. A
+polarised experiment and a file holding several datasets cannot be
+merged this way.</p>
+<p>Files without a resolution column are handled as follows:</p>
+<ul>
+<li><strong>Mixed with files that have one.</strong> Their points get the model's
+  resolution when that is a <code>PercentageFwhm</code>, and the default 5 % FWHM
+  otherwise, and a warning says so. The second case is the common one:
+  after the first measured file the model usually holds that file's
+  <code>Pointwise</code>, so a three-column file appended later is smeared with 5
+  %, not with an extrapolation of the measured widths. Set the merged
+  experiment's <code>resolution_function</code> yourself if that is not what you
+  want.</li>
+<li><strong>None of the files has one.</strong> The merged experiment has no resolution
+  of its own (<code>None</code>) and follows the model's, like a single
+  three-column file. No warning is emitted.</li>
+</ul>
 <p>For scripts working on datasets directly,
 <code>easyreflectometry.data.merge_datasets</code> does the same without a project.</p>
 <h2 id="polarised-experiments">Polarised experiments</h2>

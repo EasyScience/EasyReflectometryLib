@@ -7550,7 +7550,10 @@ or multi-contrast fits contain similarly named parameters.</p>
 <p>Parameter values and errors are saved before applying any posterior draw
 and restored in a <code>finally</code> block, so the model is not left mutated.
 The model's resolution function is never touched: a resolution passed in
-is bound to the evaluator instead.</p>
+is bound to the evaluator instead. The posterior draws themselves are
+still applied to the model's parameters for the duration of the call, so
+this is not safe to run while a fit evaluates the same model in another
+thread; only the resolution is no longer swapped.</p>
 <p>:param draws: Posterior samples, shape <code>(n_samples_posterior, n_params)</code>.
 :type draws: np.ndarray
 :param param_names: Parameter names matching the columns of <code>draws</code>.
@@ -7637,7 +7640,10 @@ is bound to the evaluator instead.</p>
 <span class="normal">1228</span>
 <span class="normal">1229</span>
 <span class="normal">1230</span>
-<span class="normal">1231</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">posterior_predictive_reflectivity</span><span class="p">(</span>
+<span class="normal">1231</span>
+<span class="normal">1232</span>
+<span class="normal">1233</span>
+<span class="normal">1234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">posterior_predictive_reflectivity</span><span class="p">(</span>
     <span class="n">draws</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">param_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">model</span><span class="p">,</span>
@@ -7650,7 +7656,10 @@ is bound to the evaluator instead.</p>
 <span class="sd">    Parameter values and errors are saved before applying any posterior draw</span>
 <span class="sd">    and restored in a ``finally`` block, so the model is not left mutated.</span>
 <span class="sd">    The model&#39;s resolution function is never touched: a resolution passed in</span>
-<span class="sd">    is bound to the evaluator instead.</span>
+<span class="sd">    is bound to the evaluator instead. The posterior draws themselves are</span>
+<span class="sd">    still applied to the model&#39;s parameters for the duration of the call, so</span>
+<span class="sd">    this is not safe to run while a fit evaluates the same model in another</span>
+<span class="sd">    thread; only the resolution is no longer swapped.</span>
 
 <span class="sd">    :param draws: Posterior samples, shape ``(n_samples_posterior, n_params)``.</span>
 <span class="sd">    :type draws: np.ndarray</span>
@@ -7736,10 +7745,7 @@ and restored in a <code>finally</code> block, so the model is not left mutated.<
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/easyreflectometry/analysis/bayesian.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1234</span>
-<span class="normal">1235</span>
-<span class="normal">1236</span>
-<span class="normal">1237</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1237</span>
 <span class="normal">1238</span>
 <span class="normal">1239</span>
 <span class="normal">1240</span>
@@ -7780,7 +7786,10 @@ and restored in a <code>finally</code> block, so the model is not left mutated.<
 <span class="normal">1275</span>
 <span class="normal">1276</span>
 <span class="normal">1277</span>
-<span class="normal">1278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">posterior_predictive_sld_profile</span><span class="p">(</span>
+<span class="normal">1278</span>
+<span class="normal">1279</span>
+<span class="normal">1280</span>
+<span class="normal">1281</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">posterior_predictive_sld_profile</span><span class="p">(</span>
     <span class="n">draws</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">param_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">model</span><span class="p">,</span>
@@ -7850,14 +7859,14 @@ and restored in a <code>finally</code> block, so the model is not left mutated.<
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/easyreflectometry/analysis/bayesian.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1288</span>
-<span class="normal">1289</span>
-<span class="normal">1290</span>
-<span class="normal">1291</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1291</span>
 <span class="normal">1292</span>
 <span class="normal">1293</span>
 <span class="normal">1294</span>
-<span class="normal">1295</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_easyreflectometry_version</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">1295</span>
+<span class="normal">1296</span>
+<span class="normal">1297</span>
+<span class="normal">1298</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_easyreflectometry_version</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the installed easyreflectometry version string.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span> <span class="k">as</span> <span class="n">_v</span>
@@ -7890,10 +7899,7 @@ and restored in a <code>finally</code> block, so the model is not left mutated.<
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/easyreflectometry/analysis/bayesian.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1298</span>
-<span class="normal">1299</span>
-<span class="normal">1300</span>
-<span class="normal">1301</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1301</span>
 <span class="normal">1302</span>
 <span class="normal">1303</span>
 <span class="normal">1304</span>
@@ -7902,7 +7908,10 @@ and restored in a <code>finally</code> block, so the model is not left mutated.<
 <span class="normal">1307</span>
 <span class="normal">1308</span>
 <span class="normal">1309</span>
-<span class="normal">1310</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_data_fingerprint</span><span class="p">(</span>
+<span class="normal">1310</span>
+<span class="normal">1311</span>
+<span class="normal">1312</span>
+<span class="normal">1313</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_data_fingerprint</span><span class="p">(</span>
     <span class="n">x_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="n">y_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="n">w_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
@@ -7956,10 +7965,7 @@ prefix; the actual files will be <code>&lt;path&gt;-chain.mc</code>,
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/easyreflectometry/analysis/bayesian.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1313</span>
-<span class="normal">1314</span>
-<span class="normal">1315</span>
-<span class="normal">1316</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1316</span>
 <span class="normal">1317</span>
 <span class="normal">1318</span>
 <span class="normal">1319</span>
@@ -8003,7 +8009,10 @@ prefix; the actual files will be <code>&lt;path&gt;-chain.mc</code>,
 <span class="normal">1357</span>
 <span class="normal">1358</span>
 <span class="normal">1359</span>
-<span class="normal">1360</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save_posterior</span><span class="p">(</span><span class="n">results</span><span class="p">:</span> <span class="s1">&#39;PosteriorResults&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">1360</span>
+<span class="normal">1361</span>
+<span class="normal">1362</span>
+<span class="normal">1363</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save_posterior</span><span class="p">(</span><span class="n">results</span><span class="p">:</span> <span class="s1">&#39;PosteriorResults&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Persist a sampling trace to disk using BUMPS&#39; native state files.</span>
 
 <span class="sd">    Writes ``&lt;path&gt;-*.mc`` (BUMPS ``save_state`` output) plus a sidecar</span>
@@ -8088,10 +8097,7 @@ to extend the chain.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/easyreflectometry/analysis/bayesian.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1363</span>
-<span class="normal">1364</span>
-<span class="normal">1365</span>
-<span class="normal">1366</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1366</span>
 <span class="normal">1367</span>
 <span class="normal">1368</span>
 <span class="normal">1369</span>
@@ -8134,7 +8140,10 @@ to extend the chain.</p>
 <span class="normal">1406</span>
 <span class="normal">1407</span>
 <span class="normal">1408</span>
-<span class="normal">1409</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_posterior</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">skip</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;PosteriorResults&#39;</span><span class="p">:</span>
+<span class="normal">1409</span>
+<span class="normal">1410</span>
+<span class="normal">1411</span>
+<span class="normal">1412</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_posterior</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">skip</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;PosteriorResults&#39;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reload a trace saved by :func:`save_posterior` into a</span>
 <span class="sd">    :class:`PosteriorResults`.</span>
 
