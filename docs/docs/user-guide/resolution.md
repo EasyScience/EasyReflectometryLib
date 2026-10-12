@@ -111,10 +111,23 @@ project.append_to_experiment_at_index(index, 'angle4.ort')
 
 The points are concatenated and sorted by $q$ and every point keeps the
 width it was measured with; overlapping $q$ ranges with different widths
-are honoured because a `Pointwise` is exact at its stored points. A file
-without a resolution column contributes points smeared with the model's
-percentage resolution, and a warning says so. A polarised experiment and
-a file holding several datasets cannot be merged this way.
+are honoured because a `Pointwise` is exact at its stored points. A
+polarised experiment and a file holding several datasets cannot be
+merged this way.
+
+Files without a resolution column are handled as follows:
+
+- **Mixed with files that have one.** Their points get the model's
+  resolution when that is a `PercentageFwhm`, and the default 5 % FWHM
+  otherwise, and a warning says so. The second case is the common one:
+  after the first measured file the model usually holds that file's
+  `Pointwise`, so a three-column file appended later is smeared with 5
+  %, not with an extrapolation of the measured widths. Set the merged
+  experiment's `resolution_function` yourself if that is not what you
+  want.
+- **None of the files has one.** The merged experiment has no resolution
+  of its own (`None`) and follows the model's, like a single
+  three-column file. No warning is emitted.
 
 For scripts working on datasets directly,
 `easyreflectometry.data.merge_datasets` does the same without a project.

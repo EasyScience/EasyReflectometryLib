@@ -357,6 +357,18 @@ class _FitInput:
     fit_func: Callable | None = None
 
 
+def _curve_ids(data: sc.DataGroup) -> list[str]:
+    """The ``<n>`` of every ``Qz_<n>`` coordinate of a ``DataGroup``, in numeric order.
+
+    Curve *k* is paired with model *k* (or dataset *k*) by this order, so it
+    follows the key numbers rather than the order the keys were inserted in,
+    and ``Qz_10`` comes after ``Qz_2``. Suffixes that are not numbers keep
+    their insertion order, after the numbered ones.
+    """
+    ids = [key[3:] for key in data['coords'].keys() if key.startswith('Qz_')]
+    return sorted(ids, key=lambda suffix: (0, int(suffix)) if suffix.isdigit() else (1, 0))
+
+
 @dataclass
 class PreparedFit:
     """Everything one fit run needs, fixed when it is prepared.
@@ -564,6 +576,9 @@ class MultiFitter:
         # to, and the spin channel each one is evaluated on (None = unpolarized).
         self.fit_datasets: list[DataSet1D] = []
         self.fit_channels: list[Any] = []
+        # Names of the experiments `Project.prepare_sample(skip_invalid=True)`
+        # left out (no model in the project); empty otherwise.
+        self.skipped: list[str] = []
         # Optional zero-argument callable returning the ``constraints_factory``
         # for the next fit (or ``None``). ``Project.fitter`` binds it to
         # ``Project.build_constraints_factory`` so inequality constraints
@@ -753,8 +768,11 @@ class MultiFitter:
         :attr:`fit_datasets` (one per dataset, one per spin channel of a
         polarized experiment) and keeps that dataset's model, channel and own
         resolution; only the arrays come from the ``DataGroup``.
+
+        Curves are taken in the order of their ``Qz_<n>`` numbers, not of the
+        ``DataGroup``'s insertion order (see :func:`_curve_ids`).
         """
-        refl_nums = [k[3:] for k in data['coords'].keys() if k.startswith('Qz_')]
+        refl_nums = _curve_ids(data)
         if self.fit_datasets:
             experiment_inputs = self._experiment_inputs()
             if len(refl_nums) != len(experiment_inputs):
@@ -987,10 +1005,21 @@ class MultiFitter:
     ) -> sc.DataGroup:
         """Perform the fitting and populate the DataGroups with the result.
 
+        On a fitter built with the models, curve *k* (the *k*-th ``Qz_<n>``
+        by number) is fitted with model *k* and its resolution. On a fitter
+        built with :meth:`for_experiments`, curve *k* is fitted as entry *k*
+        of :attr:`fit_datasets`: that dataset's model, spin channel and own
+        resolution, with the arrays taken from the ``DataGroup``. Each
+        curve's model curve, SLD profile and model are written back for that
+        curve's own model.
+
         Parameters
         ----------
         data : sc.DataGroup
-            DataGroup to be fitted to and populated.
+            DataGroup to be fitted to and populated. For a
+            :meth:`for_experiments` fitter it holds one curve per entry of
+            :attr:`fit_datasets` (one per spin channel of a polarized
+            experiment), in the same order.
         id : int, optional
             Unused parameter kept for backward compatibility. By default, 0.
         objective : str | None, optional
@@ -1005,6 +1034,12 @@ class MultiFitter:
         -------
         sc.DataGroup
             A new DataGroup with fitted model curves, SLD profiles, and fit statistics.
+
+        Raises
+        ------
+        ValueError
+            On a :meth:`for_experiments` fitter, when the number of curves
+            differs from the number of entries of :attr:`fit_datasets`.
         """
         refl_nums, inputs = self._datagroup_inputs(data)
         prepared = self.prepare(inputs, objective=objective)

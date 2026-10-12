@@ -145,18 +145,28 @@
   experiment) with its own resolution; given a `DataGroup`, curve _k_ is
   sampled as dataset _k_ (its model, channel and resolution) rather than
   as model _k_, and a curve count that differs from the datasets is
-  refused. `Project.prepare_sample()` builds that fitter with the
-  project's settings and inequality constraints, like `prepare_fit`.
-  Previously every curve was smeared with its model's resolution, so the
-  posterior disagreed with the classical fit whenever a model had
-  several datasets. `MultiFitter.fit` on a `for_experiments` fitter
-  writes each curve's model to the `DataGroup` too.
+  refused. `Project.prepare_sample()` builds that fitter with a snapshot
+  of the project's settings taken when it is called (as `prepare_fit`
+  does) and its inequality constraints; experiments left out by
+  `skip_invalid` are listed in the fitter's `skipped`. Previously every
+  curve was smeared with its model's resolution, so the posterior
+  disagreed with the classical fit whenever a model had several
+  datasets.
+- Fixed: `MultiFitter.fit(data)` on a `for_experiments` fitter with two
+  datasets on one model failed on the second curve (it indexed the
+  de-duplicated model list by curve). Each curve's model curve, SLD
+  profile and model are now written for that curve's own model.
+- Behaviour change: the curves of a `DataGroup` are paired with models
+  (or datasets) in the order of their `Qz_<n>` numbers, so `Qz_10` comes
+  after `Qz_2` and a `DataGroup` built out of order is no longer
+  mis-paired. Curves whose suffix is not a number keep their order.
 - `Project.sample_data_for_model_at_index` and
   `posterior_predictive_reflectivity` bind the resolution they need to
   the one calculation instead of swapping the model's resolution and
   restoring it afterwards. The model's resolution is calculator state
   that a fit running in another thread reads, so the swap could smear a
-  fit evaluation with zero width.
+  fit evaluation with zero width. The posterior band still applies the
+  draws to the model's parameters while it runs.
 - New user-guide page _Resolution_: which resolution a model, a dataset,
   a fit and a polarized experiment use, loading several files as one
   contrast, and getting an unsmeared curve.

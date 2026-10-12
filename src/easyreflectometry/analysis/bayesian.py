@@ -1179,7 +1179,10 @@ def posterior_predictive_reflectivity(
     Parameter values and errors are saved before applying any posterior draw
     and restored in a ``finally`` block, so the model is not left mutated.
     The model's resolution function is never touched: a resolution passed in
-    is bound to the evaluator instead.
+    is bound to the evaluator instead. The posterior draws themselves are
+    still applied to the model's parameters for the duration of the call, so
+    this is not safe to run while a fit evaluates the same model in another
+    thread; only the resolution is no longer swapped.
 
     :param draws: Posterior samples, shape ``(n_samples_posterior, n_params)``.
     :type draws: np.ndarray

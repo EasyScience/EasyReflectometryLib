@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 EasyScience contributors <https://github.com/easyscience>
 # SPDX-License-Identifier: BSD-3-Clause
 
+import copy
 import datetime
 import json
 import logging
@@ -512,15 +513,22 @@ class Project:
         Returns
         -------
         MultiFitter
-            The fitter, built with :meth:`MultiFitter.for_experiments`.
+            The fitter, built with :meth:`MultiFitter.for_experiments`. Its
+            ``settings`` are a snapshot of :attr:`fit_settings` taken here, as
+            :meth:`prepare_fit` takes one: an edit made before ``mcmc_sample()``
+            runs applies to the next sampling, not to this one. Its
+            ``skipped`` lists the names of the experiments left out by
+            ``skip_invalid``, like ``PreparedFit.skipped``.
 
         Raises
         ------
         FitScopeError
             Nothing to sample, or an experiment has no model in this project.
         """
-        experiments, _ = self._fit_scope(experiments, skip_invalid, action='sample')
-        return self._fitter_for(experiments)
+        experiments, invalid = self._fit_scope(experiments, skip_invalid, action='sample')
+        fitter = self._fitter_for(experiments)
+        fitter.skipped = [experiment.name for experiment in invalid]
+        return fitter
 
     def _fit_scope(self, experiments: Optional[list], skip_invalid: bool, action: str) -> tuple[list, list]:
         """The experiments a fit or sampling covers, and the ones left out for lack of a model.
@@ -540,9 +548,14 @@ class Project:
         return experiments, invalid
 
     def _fitter_for(self, experiments: list) -> MultiFitter:
-        """A `for_experiments` fitter over `experiments`, with this project's settings and constraints."""
+        """A `for_experiments` fitter over `experiments`, with a snapshot of this project's settings and its constraints.
+
+        The snapshot is taken now, so a fit or a sampling prepared here is not
+        changed by a settings edit made before it runs (sampling prepares its
+        run only when ``mcmc_sample()`` is called, possibly in another thread).
+        """
         fitter = MultiFitter.for_experiments(experiments, constraints_factory_provider=_weak_constraints_provider(self))
-        fitter.settings = self._fit_settings
+        fitter.settings = copy.deepcopy(self._fit_settings)
         return fitter
 
     def fit_parameters(self, experiments: Optional[list] = None) -> List[Parameter]:

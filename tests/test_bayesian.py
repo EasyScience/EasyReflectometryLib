@@ -929,18 +929,30 @@ class TestPosteriorPredictiveReflectivityResolution:
     @staticmethod
     def _mock_model(fit_func=None, fit_func_for=None):
         from unittest.mock import MagicMock
+        from unittest.mock import PropertyMock
 
         class _Interface:
-            """Only the two evaluator accessors, so a setter on anything else is an error."""
+            """Only the two evaluator accessors: assigning any other attribute raises."""
+
+            __slots__ = ('fit_func', 'fit_func_for')
 
         model = MagicMock()
         model.unique_name = 'test_model'
-        model.resolution_function = object()
+        # A property mock records every read *and* every write, so a swap that
+        # restores the same object in a `finally` is still caught (an identity
+        # check on the final value is not enough).
+        model.resolution_property = PropertyMock(return_value=object())
+        type(model).resolution_function = model.resolution_property
         model.interface = _Interface()
         model.interface.fit_func = fit_func if fit_func is not None else MagicMock(return_value=np.ones(50))
         model.interface.fit_func_for = fit_func_for if fit_func_for is not None else MagicMock()
         model.get_parameters = MagicMock(return_value=[])
         return model
+
+    @staticmethod
+    def _assert_resolution_never_set(model):
+        writes = [call for call in model.resolution_property.call_args_list if call.args]
+        assert writes == [], f'the model resolution was assigned: {writes}'
 
     def test_dataset_resolution_is_bound_to_the_evaluator_not_set_on_the_model(self, sample_draws):
         """With a resolution the band is smeared like the fit smeared that dataset."""
@@ -952,17 +964,18 @@ class TestPosteriorPredictiveReflectivityResolution:
         resolution = object()
         bound = MagicMock(return_value=np.ones(50))
         mock_model = self._mock_model(fit_func_for=MagicMock(return_value=bound))
-        original_resolution = mock_model.resolution_function
 
         median, _lower, _upper = posterior_predictive_reflectivity(
             draws, param_names, mock_model, np.linspace(0.01, 0.3, 50), n_samples=5, resolution_function=resolution
         )
 
+        # The load-bearing assertion: the resolution reaches the calculator only
+        # through the bound evaluator. Do not simplify it away.
         mock_model.interface.fit_func_for.assert_called_once_with(resolution_function=resolution)
         assert bound.call_count == 5
         assert all(call.args[1] == 'test_model' for call in bound.call_args_list)
         assert not mock_model.interface.fit_func.called
-        assert mock_model.resolution_function is original_resolution
+        self._assert_resolution_never_set(mock_model)
         np.testing.assert_allclose(median, 1.0)
 
     def test_the_model_is_left_alone_when_evaluation_raises(self, sample_draws):
@@ -973,27 +986,25 @@ class TestPosteriorPredictiveReflectivityResolution:
         draws, param_names = sample_draws
         failing = MagicMock(side_effect=RuntimeError('calculator failed'))
         mock_model = self._mock_model(fit_func_for=MagicMock(return_value=failing))
-        original_resolution = mock_model.resolution_function
 
         with pytest.raises(RuntimeError, match='calculator failed'):
             posterior_predictive_reflectivity(
                 draws, param_names, mock_model, np.linspace(0.01, 0.3, 50), n_samples=5, resolution_function=object()
             )
 
-        assert mock_model.resolution_function is original_resolution
+        self._assert_resolution_never_set(mock_model)
 
     def test_without_resolution_the_models_own_evaluator_is_used(self, sample_draws):
         from easyreflectometry.analysis.bayesian import posterior_predictive_reflectivity
 
         draws, param_names = sample_draws
         mock_model = self._mock_model()
-        original_resolution = mock_model.resolution_function
 
         posterior_predictive_reflectivity(draws, param_names, mock_model, np.linspace(0.01, 0.3, 50), n_samples=5)
 
         assert mock_model.interface.fit_func.call_count == 5
         assert not mock_model.interface.fit_func_for.called
-        assert mock_model.resolution_function is original_resolution
+        self._assert_resolution_never_set(mock_model)
 
     @pytest.mark.parametrize('calculator', ['refnx', 'refl1d'])
     def test_real_interface_band_uses_the_given_resolution(self, calculator):
