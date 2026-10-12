@@ -1178,23 +1178,23 @@ def posterior_predictive_reflectivity(
 
     Parameter values and errors are saved before applying any posterior draw
     and restored in a ``finally`` block, so the model is not left mutated.
-    The same holds for the model's resolution function when a different one
-    is passed in.
+    The model's resolution function is never touched: a resolution passed in
+    is bound to the evaluator instead.
 
     :param draws: Posterior samples, shape ``(n_samples_posterior, n_params)``.
     :type draws: np.ndarray
     :param param_names: Parameter names matching the columns of ``draws``.
     :type param_names: list[str]
-    :param model: A reflectometry model with ``interface.fit_func``.
+    :param model: A reflectometry model whose ``interface`` provides
+        ``fit_func`` and ``fit_func_for``.
     :param q_values: Q values at which to evaluate reflectivity.
     :type q_values: np.ndarray
     :param n_samples: Number of posterior draws to use (last ``n_samples``).
     :type n_samples: int
     :param resolution_function: Resolution to smear with, typically the
-        measured resolution of the dataset the band is drawn over, as
-        :class:`~easyreflectometry.project.Project` registers it on the
-        model when the experiment is loaded (``model.resolution_function``).
-        ``None`` uses the model's current resolution.
+        dataset's own (``DataSet1D.resolution_function``), so the band sits on
+        the curve the fit compared that dataset to rather than on a
+        differently smeared one. ``None`` uses the model's current resolution.
     :type resolution_function: ResolutionFunction | None
     :return: Tuple of ``(median, lower_95, upper_95)`` reflectivity arrays.
     :rtype: tuple[np.ndarray, np.ndarray, np.ndarray]
@@ -1206,26 +1206,22 @@ def posterior_predictive_reflectivity(
     n_use = min(n_samples, n_total)
     sample_indices = range(n_total - n_use, n_total)
 
-    fit_func = model.interface.fit_func
+    # The evaluator carries the resolution; the model's own (calculator state
+    # registered through the model, shared with a fit possibly running in
+    # another thread) is left alone.
+    if resolution_function is None:
+        fit_func = model.interface.fit_func
+    else:
+        fit_func = model.interface.fit_func_for(resolution_function=resolution_function)
 
     saved_state = _save_parameter_state(model)
-    # The resolution is calculator state registered through the model, so a
-    # different one is swapped in for the duration of the band and restored
-    # afterwards (the pattern `Project.sample_data_for_model_at_index` uses).
-    # It gives the band the same smearing the fit used for this dataset, so
-    # it sits on the fitted curve rather than on a differently smeared one.
-    original_resolution_function = model.resolution_function
     try:
-        if resolution_function is not None:
-            model.resolution_function = resolution_function
         reflectivity_samples = []
         for i in sample_indices:
             _apply_draw(model, draws, param_names, i)
             r_calc = fit_func(q_values, model.unique_name)
             reflectivity_samples.append(np.asarray(r_calc))
     finally:
-        if resolution_function is not None:
-            model.resolution_function = original_resolution_function
         _restore_parameter_state(model, saved_state)
 
     reflectivity_samples = np.array(reflectivity_samples)

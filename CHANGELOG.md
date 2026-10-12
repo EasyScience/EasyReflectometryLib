@@ -139,6 +139,27 @@
   percentage resolution and warns.
 - `easyreflectometry.data.resolution_from_dataset` gives a dataset's
   measured resolution, or `None`.
+- Bayesian sampling follows suit. `MultiFitter.mcmc_sample()` can be
+  called without a `DataGroup` on a fitter built with `for_experiments`
+  and then samples each dataset (each spin channel of a polarized
+  experiment) with its own resolution; given a `DataGroup`, curve _k_ is
+  sampled as dataset _k_ (its model, channel and resolution) rather than
+  as model _k_, and a curve count that differs from the datasets is
+  refused. `Project.prepare_sample()` builds that fitter with the
+  project's settings and inequality constraints, like `prepare_fit`.
+  Previously every curve was smeared with its model's resolution, so the
+  posterior disagreed with the classical fit whenever a model had
+  several datasets. `MultiFitter.fit` on a `for_experiments` fitter
+  writes each curve's model to the `DataGroup` too.
+- `Project.sample_data_for_model_at_index` and
+  `posterior_predictive_reflectivity` bind the resolution they need to
+  the one calculation instead of swapping the model's resolution and
+  restoring it afterwards. The model's resolution is calculator state
+  that a fit running in another thread reads, so the swap could smear a
+  fit evaluation with zero width.
+- New user-guide page _Resolution_: which resolution a model, a dataset,
+  a fit and a polarized experiment use, loading several files as one
+  contrast, and getting an unsmeared curve.
 
 ## Volume fraction profiles
 
@@ -195,8 +216,8 @@
 - `posterior_predictive_reflectivity` takes an optional
   `resolution_function`, so the posterior predictive band can be smeared
   with the resolution the fit used for a dataset rather than the model's
-  current one. The model's resolution is swapped for the duration of the
-  calculation and restored afterwards.
+  current one. The resolution is bound to the evaluator; the model is
+  not touched.
 
 # Version 1.8.0 (18 Sept 2026)
 

@@ -17,10 +17,13 @@ Three things are pinned here:
 
 import os
 import warnings
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 import numpy as np
 import pytest
 from easyscience import global_object
+from easyscience.fitting.minimizers.factory import AvailableMinimizers
 from numpy.testing import assert_allclose
 
 from easyreflectometry.calculators import CalculatorFactory
@@ -30,6 +33,7 @@ from easyreflectometry.data import PolarizedDataSet
 from easyreflectometry.data import load_as_dataset
 from easyreflectometry.data import merge_datasets
 from easyreflectometry.data import resolution_from_dataset
+from easyreflectometry.fitting import FitScopeError
 from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
@@ -552,6 +556,104 @@ class TestResolutionFromDataset:
 # ----------------------------------------------------------------------------
 # Project: loading, combining, plotting, persistence
 # ----------------------------------------------------------------------------
+
+
+class TestUnsmearedCurveLeavesTheModelAlone:
+    """`sample_data_for_model_at_index` binds a zero width to one calculation; it no longer swaps the model's."""
+
+    def test_sample_data_for_model_at_index_does_not_touch_the_model(self):
+        project = Project()
+        project.default_model()
+        model = project.models[0]
+        smeared = project.model_data_for_model_at_index(0, Q)
+        before = model.resolution_function
+        wrapper = project._calculator()._wrapper
+
+        with patch.object(wrapper, 'set_resolution_function', wraps=wrapper.set_resolution_function) as registered:
+            sharp = project.sample_data_for_model_at_index(0, Q)
+
+        assert not registered.called
+        assert model.resolution_function is before
+        assert wrapper.resolution_function_for(model.unique_name) is before
+        assert not np.allclose(sharp.y, smeared.y)
+        assert_allclose(project.model_data_for_model_at_index(0, Q).y, smeared.y, rtol=1e-12)
+
+
+# ----------------------------------------------------------------------------
+# Bayesian sampling
+# ----------------------------------------------------------------------------
+
+
+class TestSamplingUsesDatasetResolution:
+    """`Project.prepare_sample` + `mcmc_sample()` compare each dataset to the curve the fit does."""
+
+    @staticmethod
+    def _two_files(tmp_path, relative_sigmas):
+        return TestProjectResolution._two_files(tmp_path, relative_sigmas=relative_sigmas)
+
+    def _project_with_two_datasets(self, tmp_path):
+        paths = self._two_files(tmp_path, relative_sigmas=(0.002, 0.08))
+        project = Project()
+        project.models = ModelCollection(_film_model())
+        project.load_new_experiment(paths[0])
+        project.load_new_experiment(paths[1])
+        project.minimizer = AvailableMinimizers.Bumps_simplex
+        return project
+
+    @staticmethod
+    def _run_sampling(fitter, monkeypatch) -> dict:
+        """Run `mcmc_sample()` with the DREAM sampler stubbed out; returns what was prepared."""
+        seen = {}
+        original = MultiFitter.prepare
+
+        def prepare(self, inputs=None, **kwargs):
+            seen['prepared'] = original(self, inputs, **kwargs)
+            return seen['prepared']
+
+        monkeypatch.setattr(MultiFitter, 'prepare', prepare)
+        sampler = MagicMock()
+        sampler.sample.return_value = MagicMock(draws=np.ones((4, 1)), param_names=['p'], state=None, logp=np.zeros(4))
+        with patch('easyreflectometry.fitting.Sampler', return_value=sampler) as sampler_class:
+            fitter.mcmc_sample(samples=4, burn=1, thin=1)
+        seen['sampler_kwargs'] = sampler_class.call_args.kwargs
+        return seen
+
+    def test_each_dataset_is_sampled_against_the_curve_the_fit_sees(self, tmp_path, monkeypatch):
+        project = self._project_with_two_datasets(tmp_path)
+        fitter = project.prepare_sample()
+        assert fitter.settings is project.fit_settings
+
+        seen = self._run_sampling(fitter, monkeypatch)
+
+        prepared = seen['prepared']
+        for index in (0, 1):
+            x = project.experiments[index].x
+            assert_allclose(seen['sampler_kwargs']['x'][index], x)
+            assert_allclose(prepared.fit_funcs[index](x), project.model_data_for_experiment_at_index(index).y, rtol=1e-12)
+        # The model follows the first dataset, so the model's own curve is not
+        # what the broader second dataset is compared to.
+        x = project.experiments[1].x
+        assert not np.allclose(prepared.fit_funcs[1](x), project.model_data_for_model_at_index(0, q_range=x).y)
+
+    def test_prepare_sample_covers_the_included_experiments_with_a_model(self, tmp_path):
+        project = Project()
+        project.models = ModelCollection(_film_model())
+        with pytest.raises(FitScopeError, match='No experiment to sample'):
+            project.prepare_sample()
+
+        paths = self._two_files(tmp_path, relative_sigmas=(0.01, 0.03))
+        project.load_new_experiment(paths[0])
+        project.load_new_experiment(paths[1])
+        project.experiments[1].include_in_fit = False
+        fitter = project.prepare_sample()
+        assert len(fitter.fit_datasets) == 1
+        assert fitter.fit_datasets[0] is project.experiments[0]
+
+        foreign = DataSet1D(name='foreign', x=Q, y=np.ones_like(Q), ye=np.ones_like(Q), model=_film_model('foreign'))
+        with pytest.raises(FitScopeError, match="'foreign' cannot be sampled"):
+            project.prepare_sample([project.experiments[0], foreign])
+        fitter = project.prepare_sample([project.experiments[0], foreign], skip_invalid=True)
+        assert [dataset is project.experiments[0] for dataset in fitter.fit_datasets] == [True]
 
 
 class TestProjectResolution:

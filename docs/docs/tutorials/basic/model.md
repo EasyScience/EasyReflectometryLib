@@ -42,6 +42,12 @@ neighboring Q-point, which weights are by a normal distribution. This
 normal distribution is then defined by a Q-point dependent Full Width at
 the Half Maximum (FWHM) that is given by the resolution function.
 
+The resolution set on a model is used for simulations and for datasets
+without a resolution of their own; a measured dataset keeps the
+resolution of its file and is fitted with it. Which resolution applies
+where, and how to combine several files of one contrast, is described in
+the user guide's [Resolution](../../user-guide/resolution.md) page.
+
 ### PercentageFwhm
 
 Often we rely on a resolution function that has a simple functional

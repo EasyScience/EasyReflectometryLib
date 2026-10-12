@@ -919,7 +919,30 @@ class TestMetadataHelpers:
 
 
 class TestPosteriorPredictiveReflectivityResolution:
-    def test_dataset_resolution_is_swapped_in_during_the_band_and_restored(self, sample_draws):
+    """A resolution passed in is bound to the evaluator; the model's own is never touched.
+
+    The model's resolution is calculator state shared with a fit that may be
+    running in another thread, so swapping it for the duration of the band
+    (what an earlier version did) is not an option.
+    """
+
+    @staticmethod
+    def _mock_model(fit_func=None, fit_func_for=None):
+        from unittest.mock import MagicMock
+
+        class _Interface:
+            """Only the two evaluator accessors, so a setter on anything else is an error."""
+
+        model = MagicMock()
+        model.unique_name = 'test_model'
+        model.resolution_function = object()
+        model.interface = _Interface()
+        model.interface.fit_func = fit_func if fit_func is not None else MagicMock(return_value=np.ones(50))
+        model.interface.fit_func_for = fit_func_for if fit_func_for is not None else MagicMock()
+        model.get_parameters = MagicMock(return_value=[])
+        return model
+
+    def test_dataset_resolution_is_bound_to_the_evaluator_not_set_on_the_model(self, sample_draws):
         """With a resolution the band is smeared like the fit smeared that dataset."""
         from unittest.mock import MagicMock
 
@@ -927,41 +950,30 @@ class TestPosteriorPredictiveReflectivityResolution:
 
         draws, param_names = sample_draws
         resolution = object()
-        original_resolution = object()
-        mock_model = MagicMock()
-        mock_model.unique_name = 'test_model'
-        mock_model.resolution_function = original_resolution
-        seen_resolutions = []
-
-        def fit_func(_q, _model_id):
-            seen_resolutions.append(mock_model.resolution_function)
-            return np.ones(50)
-
-        mock_model.interface = MagicMock()
-        mock_model.interface.fit_func = fit_func
-        mock_model.get_parameters = MagicMock(return_value=[])
+        bound = MagicMock(return_value=np.ones(50))
+        mock_model = self._mock_model(fit_func_for=MagicMock(return_value=bound))
+        original_resolution = mock_model.resolution_function
 
         median, _lower, _upper = posterior_predictive_reflectivity(
             draws, param_names, mock_model, np.linspace(0.01, 0.3, 50), n_samples=5, resolution_function=resolution
         )
 
-        assert seen_resolutions == [resolution] * 5
+        mock_model.interface.fit_func_for.assert_called_once_with(resolution_function=resolution)
+        assert bound.call_count == 5
+        assert all(call.args[1] == 'test_model' for call in bound.call_args_list)
+        assert not mock_model.interface.fit_func.called
         assert mock_model.resolution_function is original_resolution
         np.testing.assert_allclose(median, 1.0)
 
-    def test_resolution_is_restored_when_evaluation_raises(self, sample_draws):
+    def test_the_model_is_left_alone_when_evaluation_raises(self, sample_draws):
         from unittest.mock import MagicMock
 
         from easyreflectometry.analysis.bayesian import posterior_predictive_reflectivity
 
         draws, param_names = sample_draws
-        original_resolution = object()
-        mock_model = MagicMock()
-        mock_model.unique_name = 'test_model'
-        mock_model.resolution_function = original_resolution
-        mock_model.interface = MagicMock()
-        mock_model.interface.fit_func = MagicMock(side_effect=RuntimeError('calculator failed'))
-        mock_model.get_parameters = MagicMock(return_value=[])
+        failing = MagicMock(side_effect=RuntimeError('calculator failed'))
+        mock_model = self._mock_model(fit_func_for=MagicMock(return_value=failing))
+        original_resolution = mock_model.resolution_function
 
         with pytest.raises(RuntimeError, match='calculator failed'):
             posterior_predictive_reflectivity(
@@ -970,23 +982,17 @@ class TestPosteriorPredictiveReflectivityResolution:
 
         assert mock_model.resolution_function is original_resolution
 
-    def test_without_resolution_the_model_is_left_alone(self, sample_draws):
-        from unittest.mock import MagicMock
-
+    def test_without_resolution_the_models_own_evaluator_is_used(self, sample_draws):
         from easyreflectometry.analysis.bayesian import posterior_predictive_reflectivity
 
         draws, param_names = sample_draws
-        original_resolution = object()
-        mock_model = MagicMock()
-        mock_model.unique_name = 'test_model'
-        mock_model.resolution_function = original_resolution
-        mock_model.interface = MagicMock()
-        mock_model.interface.fit_func = MagicMock(return_value=np.ones(50))
-        mock_model.get_parameters = MagicMock(return_value=[])
+        mock_model = self._mock_model()
+        original_resolution = mock_model.resolution_function
 
         posterior_predictive_reflectivity(draws, param_names, mock_model, np.linspace(0.01, 0.3, 50), n_samples=5)
 
         assert mock_model.interface.fit_func.call_count == 5
+        assert not mock_model.interface.fit_func_for.called
         assert mock_model.resolution_function is original_resolution
 
     @pytest.mark.parametrize('calculator', ['refnx', 'refl1d'])

@@ -745,8 +745,35 @@ class MultiFitter:
         return inputs
 
     def _datagroup_inputs(self, data: sc.DataGroup) -> tuple[list[str], list[_FitInput]]:
-        """Inputs for the reflectivity curves of a ``DataGroup``; curve *k* belongs to model *k*."""
+        """Inputs for the reflectivity curves of a ``DataGroup``.
+
+        For a fitter built with the models, curve *k* belongs to model *k* and
+        is smeared with that model's resolution. For a fitter built with
+        :meth:`for_experiments`, curve *k* belongs to entry *k* of
+        :attr:`fit_datasets` (one per dataset, one per spin channel of a
+        polarized experiment) and keeps that dataset's model, channel and own
+        resolution; only the arrays come from the ``DataGroup``.
+        """
         refl_nums = [k[3:] for k in data['coords'].keys() if k.startswith('Qz_')]
+        if self.fit_datasets:
+            experiment_inputs = self._experiment_inputs()
+            if len(refl_nums) != len(experiment_inputs):
+                raise ValueError(
+                    f'The DataGroup holds {len(refl_nums)} reflectivity curve(s) but the fitter was built for '
+                    f'{len(experiment_inputs)} dataset(s); pass one curve per dataset (per spin channel of a '
+                    'polarized experiment), in the same order, or call without a DataGroup.'
+                )
+            inputs = [
+                dataclasses.replace(
+                    item,
+                    x=data['coords'][f'Qz_{i}'].values,
+                    y=data['data'][f'R_{i}'].values,
+                    variances=data['data'][f'R_{i}'].variances,
+                    label=f'reflectivity {i}',
+                )
+                for item, i in zip(experiment_inputs, refl_nums)
+            ]
+            return refl_nums, inputs
         inputs = [
             _FitInput(
                 x=data['coords'][f'Qz_{i}'].values,
@@ -987,12 +1014,13 @@ class MultiFitter:
         new_data = data.copy()
         for i, _ in enumerate(result):
             id = refl_nums[i]
+            model = inputs[i].model
             model_curve = prepared.curve_funcs[i](data['coords'][f'Qz_{id}'].values)
             new_data[f'R_{id}_model'] = sc.array(dims=[f'Qz_{id}'], values=model_curve)
-            sld_profile = self.easy_science_multi_fitter._fit_objects[i].interface.sld_profile(self._models[i].unique_name)
+            sld_profile = model.interface.sld_profile(model.unique_name)
             new_data[f'SLD_{id}'] = sc.array(dims=[f'z_{id}'], values=sld_profile[1] * 1e-6, unit=sc.Unit('1/angstrom') ** 2)
             if 'attrs' in new_data:
-                new_data['attrs'][f'R_{id}_model'] = {'model': sc.scalar(self._models[i].as_dict())}
+                new_data['attrs'][f'R_{id}_model'] = {'model': sc.scalar(model.as_dict())}
             new_data['coords'][f'z_{id}'] = sc.array(
                 dims=[f'z_{id}'],
                 values=sld_profile[0],
@@ -1126,7 +1154,7 @@ class MultiFitter:
 
     def mcmc_sample(
         self,
-        data: sc.DataGroup,
+        data: sc.DataGroup | None = None,
         samples: int = 10000,
         burn: int = 2000,
         thin: int = 10,
@@ -1142,7 +1170,13 @@ class MultiFitter:
         Requires that the minimizer is a BUMPS instance (i.e. the minimizer was
         switched to ``AvailableMinimizers.Bumps``).
 
-        :param data: DataGroup with reflectivity data.
+        :param data: DataGroup with reflectivity data. May be left out for a
+            fitter built with :meth:`for_experiments`: the sampler then runs
+            on :attr:`fit_datasets`, each dataset (each spin channel of a
+            polarized experiment) smeared with its own resolution, exactly as
+            :meth:`prepare` fits them. With a ``DataGroup`` and such a fitter,
+            curve *k* must be dataset *k*; its arrays are sampled with that
+            dataset's model, channel and resolution.
         :param samples: Number of retained DREAM samples requested from BUMPS.
         :param burn: Burn-in steps.
         :param thin: Thinning interval.
@@ -1161,6 +1195,9 @@ class MultiFitter:
         :return: Dictionary with keys ``'draws'``, ``'param_names'``, ``'state'``,
             and ``'logp'``.
         :raises RuntimeError: If the current minimizer is not a BUMPS instance.
+        :raises ValueError: Without ``data`` on a fitter not built with
+            :meth:`for_experiments`, or with a ``DataGroup`` whose curve count
+            differs from the fitter's datasets.
 
         The sampler reads none of the generic settings (tolerance, budget):
         only the minimizer, which must be a BUMPS one.
@@ -1181,11 +1218,16 @@ class MultiFitter:
                 '``fitter.switch_minimizer(AvailableMinimizers.Bumps_simplex)``.'
             )
         obj = self._resolve_objective(objective, self.settings)
-        refl_nums, inputs = self._datagroup_inputs(data)
-        for i, item in zip(refl_nums, inputs):
+        if data is None:
+            if not self.fit_datasets:
+                raise ValueError('mcmc_sample needs a DataGroup unless the fitter was built with MultiFitter.for_experiments.')
+            inputs = self._experiment_inputs()
+        else:
+            _, inputs = self._datagroup_inputs(data)
+        for item in inputs:
             if obj != 'mighell' and np.all(np.asarray(item.variances) <= 0.0):
                 raise ValueError(
-                    f'Cannot run Bayesian sampling on reflectivity {i}: all points have zero variance. '
+                    f'Cannot run Bayesian sampling on {item.label}: all points have zero variance. '
                     'The likelihood is undefined without measurement uncertainties. Supply uncertainties, '
                     "or explicitly opt in to the Mighell transform with objective='mighell' "
                     '(a chi-square bias correction, not a true likelihood).'
