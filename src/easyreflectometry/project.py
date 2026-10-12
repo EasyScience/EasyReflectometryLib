@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 EasyScience contributors <https://github.com/easyscience>
 # SPDX-License-Identifier: BSD-3-Clause
 
+import copy
 import datetime
 import json
 import logging
@@ -476,23 +477,86 @@ class Project:
         FitPreconditionError
             If a free parameter's bounds are unusable for the minimizer.
         """
-        if experiments is None:
-            experiments = [self._experiments[key] for key in sorted(self._experiments) if self._experiments[key].include_in_fit]
-        invalid = [experiment for experiment in experiments if self._model_index(experiment.model) is None]
-        if invalid and not skip_invalid:
-            names = ', '.join(f"'{experiment.name}'" for experiment in invalid)
-            raise FitScopeError(f'{names} cannot be fitted: no model of this project is assigned.')
-        experiments = [experiment for experiment in experiments if experiment not in invalid]
-        if not experiments:
-            raise FitScopeError('No experiment to fit: include at least one experiment that has a model.')
-        fitter = MultiFitter.for_experiments(experiments, constraints_factory_provider=_weak_constraints_provider(self))
-        fitter.settings = self._fit_settings
+        experiments, invalid = self._fit_scope(experiments, skip_invalid, action='fit')
+        fitter = self._fitter_for(experiments)
         prepared = fitter.prepare(objective=objective)
         prepared.skipped = [experiment.name for experiment in invalid]
         prepared.experiments = [
             experiment for experiment in experiments for _ in (getattr(experiment, 'available_channels', None) or [None])
         ]
         return prepared
+
+    def prepare_sample(
+        self,
+        experiments: Optional[list] = None,
+        *,
+        skip_invalid: bool = False,
+    ) -> MultiFitter:
+        """A fitter ready for Bayesian sampling of the experiments, with :attr:`fit_settings`.
+
+        The sampling is not run: call ``mcmc_sample()`` on the result (with
+        no ``DataGroup``), from a worker thread if need be. Each dataset --
+        each spin channel of a polarized experiment -- is sampled with the
+        resolution it was measured with, exactly as :meth:`prepare_fit` fits
+        it, so the posterior and the classical fit agree on what the model
+        is compared to. Inequality constraints are resolved when it runs.
+
+        Parameters
+        ----------
+        experiments : list, optional
+            The experiments to sample, in order. By default, the loaded ones
+            whose ``include_in_fit`` is set.
+        skip_invalid : bool, optional
+            Leave out experiments that have no model in this project instead
+            of raising. By default, False.
+
+        Returns
+        -------
+        MultiFitter
+            The fitter, built with :meth:`MultiFitter.for_experiments`. Its
+            ``settings`` are a snapshot of :attr:`fit_settings` taken here, as
+            :meth:`prepare_fit` takes one: an edit made before ``mcmc_sample()``
+            runs applies to the next sampling, not to this one. Its
+            ``skipped`` lists the names of the experiments left out by
+            ``skip_invalid``, like ``PreparedFit.skipped``.
+
+        Raises
+        ------
+        FitScopeError
+            Nothing to sample, or an experiment has no model in this project.
+        """
+        experiments, invalid = self._fit_scope(experiments, skip_invalid, action='sample')
+        fitter = self._fitter_for(experiments)
+        fitter.skipped = [experiment.name for experiment in invalid]
+        return fitter
+
+    def _fit_scope(self, experiments: Optional[list], skip_invalid: bool, action: str) -> tuple[list, list]:
+        """The experiments a fit or sampling covers, and the ones left out for lack of a model.
+
+        `action` is the verb for the messages: ``'fit'`` or ``'sample'``.
+        """
+        if experiments is None:
+            experiments = [self._experiments[key] for key in sorted(self._experiments) if self._experiments[key].include_in_fit]
+        invalid = [experiment for experiment in experiments if self._model_index(experiment.model) is None]
+        if invalid and not skip_invalid:
+            names = ', '.join(f"'{experiment.name}'" for experiment in invalid)
+            done = {'fit': 'fitted', 'sample': 'sampled'}[action]
+            raise FitScopeError(f'{names} cannot be {done}: no model of this project is assigned.')
+        experiments = [experiment for experiment in experiments if experiment not in invalid]
+        if not experiments:
+            raise FitScopeError(f'No experiment to {action}: include at least one experiment that has a model.')
+        return experiments, invalid
+
+    def _fitter_for(self, experiments: list) -> MultiFitter:
+        """A `for_experiments` fitter over `experiments`, with a snapshot of this project's settings and its constraints.
+
+        The snapshot is taken now, so a fit or a sampling prepared here is not
+        changed by a settings edit made before it runs (sampling prepares its
+        run only when ``mcmc_sample()`` is called, possibly in another thread).
+        """
+        fitter = MultiFitter.for_experiments(experiments, constraints_factory_provider=_weak_constraints_provider(self))
+        fitter.settings = copy.deepcopy(self._fit_settings)
+        return fitter
 
     def fit_parameters(self, experiments: Optional[list] = None) -> List[Parameter]:
         """The parameters a fit of `experiments` varies, each once; nothing is prepared.
@@ -1922,13 +1986,13 @@ class Project:
         }
 
     def sample_data_for_model_at_index(self, index: int = 0, q_range: Optional[np.array] = None) -> DataSet1D:
-        """Sample data for model at index."""
-        original_resolution_function = self.models[index].resolution_function
-        self.models[index].resolution_function = PercentageFwhm(0)
-        reflectivity_data = self.model_data_for_model_at_index(index, q_range)
-        self.models[index].resolution_function = original_resolution_function
+        """The unsmeared reflectivity of the model at `index`: the sample alone, no resolution.
 
-        return reflectivity_data
+        The zero-width resolution is bound to this one calculation; the
+        model's own resolution, which is calculator state shared with a fit
+        possibly running in another thread, is not touched.
+        """
+        return self.model_data_for_model_at_index(index, q_range, resolution_function=PercentageFwhm(0))
 
     def model_data_for_model_at_index(
         self,

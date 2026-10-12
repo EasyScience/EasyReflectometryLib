@@ -41,7 +41,8 @@ We are working to add more, in particular
 
 A model combines a sample and calculator. The model is also responsible
 for including instrumental effects such as background, scale, and
-resolution.
+resolution. A measured dataset keeps the resolution of its own file and
+is fitted with it; see [Resolution](resolution.md).
 
 ### Assemblies
 

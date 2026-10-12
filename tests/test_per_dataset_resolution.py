@@ -17,10 +17,13 @@ Three things are pinned here:
 
 import os
 import warnings
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 import numpy as np
 import pytest
 from easyscience import global_object
+from easyscience.fitting.minimizers.factory import AvailableMinimizers
 from numpy.testing import assert_allclose
 
 from easyreflectometry.calculators import CalculatorFactory
@@ -30,6 +33,8 @@ from easyreflectometry.data import PolarizedDataSet
 from easyreflectometry.data import load_as_dataset
 from easyreflectometry.data import merge_datasets
 from easyreflectometry.data import resolution_from_dataset
+from easyreflectometry.fit_settings import FitSettings
+from easyreflectometry.fitting import FitScopeError
 from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
@@ -552,6 +557,340 @@ class TestResolutionFromDataset:
 # ----------------------------------------------------------------------------
 # Project: loading, combining, plotting, persistence
 # ----------------------------------------------------------------------------
+
+
+class TestUnsmearedCurveLeavesTheModelAlone:
+    """`sample_data_for_model_at_index` binds a zero width to one calculation; it no longer swaps the model's."""
+
+    def test_sample_data_for_model_at_index_does_not_touch_the_model(self):
+        project = Project()
+        project.default_model()
+        model = project.models[0]
+        smeared = project.model_data_for_model_at_index(0, Q)
+        before = model.resolution_function
+        wrapper = project._calculator()._wrapper
+
+        with patch.object(wrapper, 'set_resolution_function', wraps=wrapper.set_resolution_function) as registered:
+            sharp = project.sample_data_for_model_at_index(0, Q)
+
+        assert not registered.called
+        assert model.resolution_function is before
+        assert wrapper.resolution_function_for(model.unique_name) is before
+        assert not np.allclose(sharp.y, smeared.y)
+        assert_allclose(project.model_data_for_model_at_index(0, Q).y, smeared.y, rtol=1e-12)
+
+
+# ----------------------------------------------------------------------------
+# Bayesian sampling
+# ----------------------------------------------------------------------------
+
+
+class TestSamplingUsesDatasetResolution:
+    """`Project.prepare_sample` + `mcmc_sample()` compare each dataset to the curve the fit does."""
+
+    @staticmethod
+    def _two_files(tmp_path, relative_sigmas):
+        return TestProjectResolution._two_files(tmp_path, relative_sigmas=relative_sigmas)
+
+    def _project_with_two_datasets(self, tmp_path):
+        paths = self._two_files(tmp_path, relative_sigmas=(0.002, 0.08))
+        project = Project()
+        project.models = ModelCollection(_film_model())
+        project.load_new_experiment(paths[0])
+        project.load_new_experiment(paths[1])
+        project.minimizer = AvailableMinimizers.Bumps_simplex
+        return project
+
+    @staticmethod
+    def _run_sampling(fitter, monkeypatch) -> dict:
+        """Run `mcmc_sample()` with the DREAM sampler stubbed out; returns what was prepared."""
+        seen = {}
+        original = MultiFitter.prepare
+
+        def prepare(self, inputs=None, **kwargs):
+            seen['prepared'] = original(self, inputs, **kwargs)
+            return seen['prepared']
+
+        monkeypatch.setattr(MultiFitter, 'prepare', prepare)
+        sampler = MagicMock()
+        sampler.sample.return_value = MagicMock(draws=np.ones((4, 1)), param_names=['p'], state=None, logp=np.zeros(4))
+        with patch('easyreflectometry.fitting.Sampler', return_value=sampler) as sampler_class:
+            fitter.mcmc_sample(samples=4, burn=1, thin=1)
+        seen['sampler_kwargs'] = sampler_class.call_args.kwargs
+        return seen
+
+    def test_each_dataset_is_sampled_against_the_curve_the_fit_sees(self, tmp_path, monkeypatch):
+        project = self._project_with_two_datasets(tmp_path)
+        fitter = project.prepare_sample()
+        assert fitter.skipped == []
+
+        seen = self._run_sampling(fitter, monkeypatch)
+
+        prepared = seen['prepared']
+        for index in (0, 1):
+            x = project.experiments[index].x
+            assert_allclose(seen['sampler_kwargs']['x'][index], x)
+            assert_allclose(prepared.fit_funcs[index](x), project.model_data_for_experiment_at_index(index).y, rtol=1e-12)
+        # The model follows the first dataset, so the model's own curve is not
+        # what the broader second dataset is compared to.
+        x = project.experiments[1].x
+        assert not np.allclose(prepared.fit_funcs[1](x), project.model_data_for_model_at_index(0, q_range=x).y)
+
+    def test_prepare_sample_covers_the_included_experiments_with_a_model(self, tmp_path):
+        project = Project()
+        project.models = ModelCollection(_film_model())
+        with pytest.raises(FitScopeError, match='No experiment to sample'):
+            project.prepare_sample()
+
+        paths = self._two_files(tmp_path, relative_sigmas=(0.01, 0.03))
+        project.load_new_experiment(paths[0])
+        project.load_new_experiment(paths[1])
+        project.experiments[1].include_in_fit = False
+        fitter = project.prepare_sample()
+        assert len(fitter.fit_datasets) == 1
+        assert fitter.fit_datasets[0] is project.experiments[0]
+
+        foreign = DataSet1D(name='foreign', x=Q, y=np.ones_like(Q), ye=np.ones_like(Q), model=_film_model('foreign'))
+        with pytest.raises(FitScopeError, match="'foreign' cannot be sampled"):
+            project.prepare_sample([project.experiments[0], foreign])
+        fitter = project.prepare_sample([project.experiments[0], foreign], skip_invalid=True)
+        assert [dataset is project.experiments[0] for dataset in fitter.fit_datasets] == [True]
+        # Reported like `PreparedFit.skipped`, not dropped silently.
+        assert fitter.skipped == ['foreign']
+
+    def test_settings_are_snapshotted_when_sampling_is_prepared(self, tmp_path):
+        """An edit between `prepare_sample()` and `mcmc_sample()` waits for the next run, as for `prepare_fit()`."""
+        project = self._project_with_two_datasets(tmp_path)
+        prepared = project.prepare_fit()
+        fitter = project.prepare_sample()
+        assert fitter.settings is not project.fit_settings
+        assert fitter.settings.minimizer == AvailableMinimizers.Bumps_simplex
+
+        project.minimizer = AvailableMinimizers.LMFit_leastsq
+
+        assert prepared.settings.minimizer == AvailableMinimizers.Bumps_simplex
+        assert fitter.settings.minimizer == AvailableMinimizers.Bumps_simplex
+
+
+# ----------------------------------------------------------------------------
+# Through the real core Sampler, up to the BUMPS problem
+# ----------------------------------------------------------------------------
+
+
+class TestSamplerBoundary:
+    """The likelihood the BUMPS sampler is handed, not just the inputs `prepare` saw.
+
+    The core ``Sampler`` reshapes the datasets and wraps the evaluators before
+    BUMPS sees them. Only ``Bumps.mcmc_sample`` is replaced: it builds the BUMPS
+    curve exactly as the real one does and reports its chi-square instead of
+    running DREAM. Each dataset's data are 1.05 times its correctly smeared
+    curve with sigma 0.1 times that curve, so every residual is 0.5 -- but only
+    if each dataset is evaluated with its own resolution.
+    """
+
+    @staticmethod
+    def _sampled_chi2(fitter, data=None, **kwargs) -> tuple[float, int]:
+        from easyscience.fitting.minimizers.minimizer_bumps import Bumps
+
+        seen = {}
+
+        def mcmc_sample(self, x, y, weights, **_):
+            curve = self._make_model()(np.asarray(x), np.asarray(y), np.asarray(weights))
+            residuals = np.asarray(curve.residuals())
+            seen['chi2'] = float(np.sum(residuals**2))
+            seen['points'] = residuals.size
+            return {'draws': np.zeros((1, 1)), 'param_names': ['p'], 'logp': np.zeros(1), 'internal_bumps_object': None}
+
+        with patch.object(Bumps, 'mcmc_sample', mcmc_sample):
+            fitter.mcmc_sample(data, samples=4, burn=1, thin=1, **kwargs)
+        return seen['chi2'], seen['points']
+
+    @staticmethod
+    def _bumps(fitter: MultiFitter) -> MultiFitter:
+        fitter.settings = FitSettings()
+        fitter.switch_minimizer(AvailableMinimizers.Bumps)
+        return fitter
+
+    @staticmethod
+    def _offset_dataset(name, curve, resolution, model=None):
+        return DataSet1D(
+            name=name,
+            x=Q,
+            y=1.05 * curve,
+            ye=(0.1 * curve) ** 2,
+            model=model,
+            auto_background=False,
+            resolution_function=resolution,
+        )
+
+    def _two_unpolarized(self):
+        interface = CalculatorFactory()
+        model = _film_model('model', interface=interface)
+        model.resolution_function = PercentageFwhm(5)
+        calculator = interface()
+        return [
+            self._offset_dataset(
+                name, calculator.reflectity_profile(Q, model.unique_name, resolution_function=resolution), resolution, model
+            )
+            for name, resolution in (('sharp', _sharp()), ('broad', _broad()))
+        ]
+
+    def test_each_dataset_reaches_the_sampler_with_its_own_resolution(self):
+        datasets = self._two_unpolarized()
+
+        chi2, points = self._sampled_chi2(self._bumps(MultiFitter.for_experiments(datasets)))
+
+        assert points == 2 * len(Q)
+        assert_allclose(chi2, points * 0.25, rtol=1e-9)
+
+    def test_a_datagroup_reaches_the_sampler_with_the_datasets_resolutions(self):
+        import scipp as sc
+
+        datasets = self._two_unpolarized()
+        data = sc.DataGroup({
+            'coords': {f'Qz_{i}': sc.array(dims=[f'Qz_{i}'], values=d.x) for i, d in enumerate(datasets)},
+            'data': {f'R_{i}': sc.array(dims=[f'Qz_{i}'], values=d.y, variances=d.ye) for i, d in enumerate(datasets)},
+        })
+
+        chi2, points = self._sampled_chi2(self._bumps(MultiFitter.for_experiments(datasets)), data)
+
+        assert points == 2 * len(Q)
+        assert_allclose(chi2, points * 0.25, rtol=1e-9)
+
+    def test_the_models_resolution_would_not_fit(self):
+        """Guards the tests above: with the model's 5 % the residuals are not all 0.5."""
+        datasets = self._two_unpolarized()
+        for dataset in datasets:
+            dataset.resolution_function = None
+
+        chi2, points = self._sampled_chi2(self._bumps(MultiFitter.for_experiments(datasets)))
+
+        assert not np.isclose(chi2, points * 0.25, rtol=1e-3)
+
+    def test_polarized_channels_reach_the_sampler_with_their_own_resolution(self):
+        interface = CalculatorFactory()
+        interface.switch('refl1d')
+        model = _film_model('magnetic', magnetism=LayerMagnetism(rho_m=1.5, theta_m=270.0), interface=interface)
+        model.resolution_function = PercentageFwhm(5)
+        calculator = interface()
+        channels = {
+            channel: self._offset_dataset(
+                channel,
+                calculator.reflectivity_profile_channel(Q, model.unique_name, channel, resolution_function=resolution),
+                resolution,
+            )
+            for channel, resolution in (('pp', _sharp()), ('mm', _broad()))
+        }
+        data = PolarizedDataSet(name='polarized', channels=channels, model=model)
+
+        chi2, points = self._sampled_chi2(self._bumps(MultiFitter.for_experiments([data])))
+
+        assert points == 2 * len(Q)
+        assert_allclose(chi2, points * 0.25, rtol=1e-9)
+
+    def test_masked_merged_dataset_keeps_each_points_width(self):
+        """`legacy_mask` drops a point of a merged dataset whose q repeat with different widths."""
+        interface, merged = TestMaskedFitKeepsPointWidths._merged_truth()
+        merged.model = _film_model('model', interface=interface)
+
+        with pytest.warns(UserWarning, match='Masked 1'):
+            chi2, points = self._sampled_chi2(self._bumps(MultiFitter.for_experiments([merged])), objective='legacy_mask')
+
+        assert points == 2 * len(Q) - 1
+        # The data are the exact curves, so any q-interpolated width shows up here.
+        assert chi2 < 1e-12
+
+
+# ----------------------------------------------------------------------------
+# MultiFitter.fit with a DataGroup on a for_experiments fitter
+# ----------------------------------------------------------------------------
+
+
+class TestDataGroupFitOnExperiments:
+    """Curve *k* of a fitted ``DataGroup`` is written back for dataset *k*'s own model.
+
+    Two datasets share the first model and a third belongs to a second model,
+    so the per-curve result index and the de-duplicated model list differ (the
+    old code indexed the latter by the former and failed on the second curve).
+    """
+
+    def test_shared_model_curves_are_written_for_their_own_models(self):
+        import scipp as sc
+
+        interface = CalculatorFactory()
+        first = _film_model('first', interface=interface)
+        second = _film_model('second', interface=interface)
+        second.sample[1].layers[0].thickness.value = 60.0
+        calculator = interface()
+        datasets = []
+        for name, model, resolution in (('a', first, _sharp()), ('b', first, _broad()), ('c', second, _sharp())):
+            curve = calculator.reflectity_profile(Q, model.unique_name, resolution_function=resolution)
+            datasets.append(
+                DataSet1D(
+                    name=name,
+                    x=Q,
+                    y=curve,
+                    ye=(0.05 * curve) ** 2,
+                    model=model,
+                    auto_background=False,
+                    resolution_function=resolution,
+                )
+            )
+        data = sc.DataGroup({
+            'coords': {f'Qz_{i}': sc.array(dims=[f'Qz_{i}'], values=Q, unit=sc.Unit('1/angstrom')) for i in range(3)},
+            'data': {f'R_{i}': sc.array(dims=[f'Qz_{i}'], values=d.y, variances=d.ye) for i, d in enumerate(datasets)},
+            'attrs': {},
+        })
+        fitter = MultiFitter.for_experiments(datasets)
+
+        result = fitter.fit(data)
+
+        for i, dataset in enumerate(datasets):
+            assert_allclose(result[f'R_{i}_model'].values, fitter._fit_func[i](Q), rtol=1e-12)
+            z, sld = dataset.model.interface.sld_profile(dataset.model.unique_name)
+            assert_allclose(result['coords'][f'z_{i}'].values, z)
+            assert_allclose(result[f'SLD_{i}'].values, sld * 1e-6)
+            assert result['attrs'][f'R_{i}_model']['model'].value['name'] == dataset.model.name
+        # The two models really give different SLD profiles here.
+        sld_first, sld_second = result['SLD_1'].values, result['SLD_2'].values
+        assert sld_first.shape != sld_second.shape or not np.allclose(sld_first, sld_second)
+
+    def test_curves_pair_with_datasets_by_number_not_insertion_order(self):
+        import scipp as sc
+
+        interface = CalculatorFactory()
+        datasets = [
+            DataSet1D(
+                name=name,
+                x=Q,
+                y=np.ones_like(Q),
+                ye=np.ones_like(Q),
+                model=_film_model(name, interface=interface),
+                auto_background=False,
+            )
+            for name in ('zero', 'one')
+        ]
+        fitter = MultiFitter.for_experiments(datasets)
+        # Inserted as 1, 0: curve 0 is still dataset 0.
+        data = sc.DataGroup({
+            'coords': {f'Qz_{i}': sc.array(dims=[f'Qz_{i}'], values=Q * (i + 1)) for i in (1, 0)},
+            'data': {f'R_{i}': sc.array(dims=[f'Qz_{i}'], values=np.ones_like(Q), variances=np.ones_like(Q)) for i in (1, 0)},
+        })
+
+        refl_nums, inputs = fitter._datagroup_inputs(data)
+
+        assert refl_nums == ['0', '1']
+        assert [item.model.name for item in inputs] == ['zero', 'one']
+        assert_allclose(inputs[1].x, 2 * Q)
+
+    def test_curve_numbers_sort_numerically(self):
+        import scipp as sc
+
+        from easyreflectometry.fitting import _curve_ids
+
+        data = sc.DataGroup({'coords': {f'Qz_{i}': sc.array(dims=['q'], values=Q) for i in (10, 2, 0)}, 'data': {}})
+
+        assert _curve_ids(data) == ['0', '2', '10']
 
 
 class TestProjectResolution:

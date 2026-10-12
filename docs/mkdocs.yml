@@ -176,6 +176,7 @@ nav:
       - Installation & Setup: installation-and-setup/index.md
   - User Guide:
       - User Guide: user-guide/index.md
+      - Resolution: user-guide/resolution.md
   - Tutorials:
       - Tutorials: tutorials/index.md
       - Getting Started:
