@@ -49,7 +49,6 @@ class Sample(BaseCollection):
         unique_name : Optional[str], optional
             By default, None.
         *assemblies : Optional[List[BaseAssembly]]
-        args :
             The assemblies in the sample.
         name : str, optional
             Name of the sample. By default, 'EasySample'.
@@ -95,13 +94,12 @@ class Sample(BaseCollection):
         self.append(assembly)
 
     def duplicate_assembly(self, index: int):
-        """Add an assembly to the sample.
+        """Duplicate an assembly of the sample.
 
         Parameters
         ----------
         index : int
-        assembly :
-            Assembly to add.
+            Index of the assembly to duplicate.
         """
         # Order matters: RepeatingMultilayer and SurfactantLayer are subclasses of
         # BaseAssembly but not Multilayer; however a RepeatingMultilayer IS a
