@@ -219,7 +219,8 @@ nav:
       - Elements:
           - Layers:
               - Layer: api-reference/elements/layer.md
-              - Layer Area Per Molecule: api-reference/elements/layer_area_per_molecule.md
+              - Layer Area Per Molecule:
+                  api-reference/elements/layer_area_per_molecule.md
               - Layer Magnetism: api-reference/elements/layer_magnetism.md
           - Materials:
               - Material: api-reference/elements/material.md
