@@ -32,11 +32,13 @@ PyPI:
 pip install easyreflectometry
 ```
 
-For binary ORSO (`.orb` / NeXus) read and write support, install the
-optional `orb` extra:
+The `dev` extra is only needed if you want to contribute to the library
+or build the documentation. It adds the tooling for testing (pytest),
+linting and formatting (ruff, pre-commit), building the docs (mkdocs)
+and running the tutorial notebooks. To install it from PyPI:
 
 ```bash
-pip install "easyreflectometry[orb]"
+pip install 'easyreflectometry[dev]'
 ```
 
 See the
