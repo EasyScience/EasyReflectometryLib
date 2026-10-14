@@ -37,11 +37,10 @@ dependencies = [
   'asteval',
   'pooch',
   'plotly',
+  'h5py',
 ]
 
 [project.optional-dependencies]
-# Binary ORSO (.orb / NeXus) read and write support (orsopy uses h5py for it)
-orb = ['h5py']
 dev = [
   'GitPython',                       # Interact with Git repositories
   'build',                           # Building the package

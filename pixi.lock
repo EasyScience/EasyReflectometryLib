@@ -8316,6 +8316,7 @@ packages:
   - asteval
   - bumps
   - easyscience>=2.5.1,<3
+  - h5py
   - orsopy>=1.2
   - plotly
   - pooch
@@ -8359,7 +8360,6 @@ packages:
   - spdx-headers ; extra == 'dev'
   - validate-pyproject[all] ; extra == 'dev'
   - versioningit ; extra == 'dev'
-  - h5py ; extra == 'orb'
   requires_python: '>=3.11'
 - pypi: https://files.pythonhosted.org/packages/00/bb/90ba423612b6aa0adccc6b1874bcd4a9b44b660c0c16f346611e00f64ac3/backrefs-7.0-py313-none-any.whl
   name: backrefs
