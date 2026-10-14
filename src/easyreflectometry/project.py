@@ -86,6 +86,7 @@ from easyreflectometry.sample import paths
 from easyreflectometry.sample import references
 from easyreflectometry.sample import volume_fraction_profile
 from easyreflectometry.sample.collections.base_collection import BaseCollection
+from easyreflectometry.special.calculations import field_frame_components
 
 logger = logging.getLogger(__name__)
 
@@ -93,11 +94,8 @@ Q_MIN = 0.001
 Q_MAX = 0.3
 Q_RESOLUTION = 500
 
-# Guide-field angle A in degrees, used to project the moment onto the neutron
-# quantisation axis for the spin-up/spin-down potentials and nothing else.
-# refl1d's default (`Aguide = 270`), which is what every model the library can
-# currently build uses — `Aguide` is not exposed as a parameter yet. Keep this
-# the single source of the value: exposing it later is a change here only.
+# Default guide-field angle in degrees (refl1d's `Aguide = 270`: the field in the
+# sample plane). The operative value is each model's `guide_field_angle`.
 GUIDE_FIELD_ANGLE = 270.0
 
 # Points whose spin-asymmetry denominator (R⁺⁺ + R⁻⁻) is smaller than this
@@ -244,6 +242,14 @@ class Project:
                         # they are never in `disabled_ids`; theta_m carries
                         # explicit 0-360 bounds and needs no default window.
                         self._sync_layer_parameter_state(magnetism.rho_m, 'rho_m', disabled_ids)
+
+        # The field only acts on a magnetic model under a magnetic calculator;
+        # elsewhere it is inert and must not show up as a fit control.
+        supports_magnetism = self.calculator_supports_magnetism
+        for model in self._models:
+            active = supports_magnetism and model.has_magnetism
+            for parameter in (model.guide_field_angle, model.applied_field):
+                parameter.enabled = active
 
     def _sync_layer_parameter_state(self, parameter: Parameter, kind: str, disabled_ids: set[int]) -> None:
         """Update a layer parameter's enabled state and pending default limits."""
@@ -872,6 +878,7 @@ class Project:
 
         for model in self._models:
             model.generate_bindings()
+        self._sync_parameter_states()
 
         # The cached fitter holds fit functions bound to the previous backend.
         self._invalidate_fitter()
@@ -1870,7 +1877,7 @@ class Project:
         except (IndexError, AttributeError):
             return False
 
-    def magnetic_sld_data_for_model_at_index(self, index: int = 0) -> Dict[str, DataSet1D]:
+    def magnetic_sld_data_for_model_at_index(self, index: int = 0) -> Dict[str, Union[DataSet1D, float]]:
         """Nuclear and magnetic depth profiles of a magnetic model.
 
         Parameters
@@ -1891,9 +1898,18 @@ class Project:
               vector is meaningless, so points below
               :data:`MAGNETIC_MOMENT_FLOOR_FRACTION` of the largest ρM are left
               out instead of drawing an arbitrary angle through vacuum;
-            - ``'spin_up'`` / ``'spin_down'``: the potentials each spin state
-              sees, ρ(z) ± ρM(z)·cos(θM(z) − A), where A is the guide-field
-              angle :data:`GUIDE_FIELD_ANGLE`.
+            - ``'rho_m_perp'``: magnitude of the magnetic SLD transverse to the
+              field, |ρM⊥|(z);
+            - ``'spin_up'`` / ``'spin_down'``: nuclear plus / minus the
+              longitudinal magnetic SLD, ρ(z) ± ρM∥(z), with ρM∥ the component
+              along the field (see
+              :func:`~easyreflectometry.special.calculations.field_frame_components`).
+              These are the potentials of the two spin states only when the
+              moment is collinear with the field and the applied field is zero;
+              with a transverse moment the eigenmodes split by ±|ρM| instead.
+              The applied field is not included.
+
+            plus the floats ``'guide_field_angle'`` and ``'applied_field'`` of the model.
 
         Raises
         ------
@@ -1914,9 +1930,8 @@ class Project:
         sld = np.asarray(sld, dtype=float)
         rho_m = np.asarray(rho_m, dtype=float)
         theta_m = np.asarray(theta_m, dtype=float)
-        # Component of the moment along the guide field: what the neutron spin
-        # states add to / subtract from the nuclear potential.
-        projection = rho_m * np.cos(np.radians(theta_m - GUIDE_FIELD_ANGLE))
+        guide_field_angle = float(model.guide_field_angle.value)
+        parallel, perpendicular = field_frame_components(rho_m, theta_m, guide_field_angle)
         # Only report the angle where there is a moment to have an angle, and
         # make it continuous along z: 359° followed by 1° is a 2° turn, but a
         # plotted line through the wrapped values sweeps the whole circle.
@@ -1927,8 +1942,11 @@ class Project:
             'sld': DataSet1D(name=f'SLD for Model {index}', x=z, y=sld),
             'rho_m': DataSet1D(name=f'Magnetic SLD for Model {index}', x=z, y=rho_m),
             'theta_m': DataSet1D(name=f'Moment angle for Model {index}', x=z[has_moment], y=theta_display[has_moment]),
-            'spin_up': DataSet1D(name=f'Spin-up potential for Model {index}', x=z, y=sld + projection),
-            'spin_down': DataSet1D(name=f'Spin-down potential for Model {index}', x=z, y=sld - projection),
+            'rho_m_perp': DataSet1D(name=f'Transverse magnetic SLD for Model {index}', x=z, y=perpendicular),
+            'spin_up': DataSet1D(name=f'Nuclear + longitudinal magnetic SLD for Model {index}', x=z, y=sld + parallel),
+            'spin_down': DataSet1D(name=f'Nuclear - longitudinal magnetic SLD for Model {index}', x=z, y=sld - parallel),
+            'guide_field_angle': guide_field_angle,
+            'applied_field': float(model.applied_field.value),
         }
 
     def volume_fraction_data_for_model_at_index(

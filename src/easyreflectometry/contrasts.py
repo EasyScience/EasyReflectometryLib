@@ -147,7 +147,7 @@ def derive_contrast(
         name=name,
         resolution_function=ResolutionFunction.from_dict(reference.resolution_function.as_dict()),
     )
-    for attribute in ('scale', 'background'):
+    for attribute in ('scale', 'background', 'guide_field_angle', 'applied_field'):
         restore(getattr(model, attribute), snapshot(getattr(reference, attribute)))
     return model
 

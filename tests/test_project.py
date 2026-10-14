@@ -1045,8 +1045,9 @@ class TestProject:
         # Then
         parameters = project.parameters
 
-        # Expect: 14 layer/material/model parameters + the model's derived total thickness
-        assert len(parameters) == 15
+        # Expect: 14 layer/material/model parameters, the model's derived total
+        # thickness and its (disabled, non-magnetic) guide field angle and applied field
+        assert len(parameters) == 17
         assert isinstance(parameters[0], Parameter)
         assert any(parameter is project.models[0].total_thickness for parameter in parameters)
 

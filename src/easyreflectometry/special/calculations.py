@@ -2,9 +2,18 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 
+import numpy as np
 import periodictable as pt
 
 from easyreflectometry.special.parsing import parse_formula
+
+AVOGADRO = 6.02214076e23  # 1 / mole
+
+# Magnetic scattering length of one Bohr magneton in angstrom,
+# p = m_n |mu_n| mu_0 mu_B / (2 pi hbar^2) (CODATA 2018). The often quoted
+# gamma * r_0 / 2 = 2.6955e-5 drops the factor m_n / m_p; orsopy's `rho_of_M`
+# corresponds to 2.646e-5.
+MAGNETIC_SCATTERING_LENGTH = 2.69913559e-5
 
 
 def weighted_average(a: float, b: float, p: float) -> float:
@@ -96,6 +105,16 @@ def area_per_molecule_to_scattering_length_density(
     return scattering_length / (thickness * area_per_molecule) * 1e6
 
 
+def number_density_from_mass_density(density: float, molecular_weight: float) -> float:
+    """Number density of formula units in 1/angstrom^3 from a mass density in g/cm^3."""
+    return AVOGADRO * density / molecular_weight * 1e-24
+
+
+def mass_density_from_number_density(number_density: float, molecular_weight: float) -> float:
+    """Mass density in g/cm^3 from a number density of formula units in 1/angstrom^3."""
+    return number_density * molecular_weight / AVOGADRO * 1e24
+
+
 def density_to_sld(scattering_length: float, molecular_weight: float, density: float) -> float:
     """Find the scattering length density from the mass density of a material.
 
@@ -115,3 +134,34 @@ def density_to_sld(scattering_length: float, molecular_weight: float, density: f
     """
     # 0.602214076 is avogadros constant times 1e-24
     return 0.602214076e6 * density * scattering_length / molecular_weight
+
+
+def field_frame_components(rho_m, theta_m, guide_field_angle: float) -> tuple:
+    """Split an in-plane magnetic SLD into its parts along and across the field.
+
+    Uses refl1d's public convention: ``theta_m`` is the in-plane moment angle
+    and ``guide_field_angle`` (refl1d's ``Aguide``) tilts the field about the
+    beam axis, 270 degrees being in the sample plane. In the field frame the
+    moment is ``(rho_m cos t, rho_m sin t cos A, rho_m sin t sin A)``, the last
+    component lying along the field.
+
+    Parameters
+    ----------
+    rho_m : float or array
+        Magnetic scattering length density.
+    theta_m : float or array
+        In-plane moment angle in degrees.
+    guide_field_angle : float
+        Field angle about the beam axis in degrees.
+
+    Returns
+    -------
+    tuple
+        ``(parallel, perpendicular)``: the signed component along the field
+        and the magnitude of the component transverse to it.
+    """
+    theta = np.radians(theta_m)
+    tilt = np.radians(guide_field_angle)
+    parallel = rho_m * np.sin(theta) * np.sin(tilt)
+    perpendicular = np.hypot(rho_m * np.cos(theta), rho_m * np.sin(theta) * np.cos(tilt))
+    return parallel, perpendicular

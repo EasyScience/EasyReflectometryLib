@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 EasyScience contributors <https://github.com/easyscience>
 # SPDX-License-Identifier: BSD-3-Clause
 
-
+import warnings
 from typing import Optional
 from typing import Union
 
@@ -9,6 +9,7 @@ import numpy as np
 from easyscience import global_object
 from easyscience.variable import Parameter
 
+from easyreflectometry.constraints import unconstrain
 from easyreflectometry.utils import get_as_parameter
 
 from ...base_core import BaseCore
@@ -47,6 +48,7 @@ class Layer(BaseCore):
         unique_name: Optional[str] = None,
         interface=None,
         magnetism: Union[LayerMagnetism, None] = None,
+        rho_m_coupled: bool = False,
     ):
         """Constructor.
 
@@ -63,6 +65,9 @@ class Layer(BaseCore):
         magnetism : Union[LayerMagnetism, None], optional
             Magnetic properties of the layer; None for a non-magnetic layer.
             By default, None.
+        rho_m_coupled : bool, optional
+            Take the magnetic SLD from the material (see :attr:`rho_m_coupled`).
+            By default, False.
         name : str, optional
             Name of the layer. By default, 'EasyLayer'.
         interface :
@@ -97,6 +102,9 @@ class Layer(BaseCore):
         self._thickness = thickness
         self._roughness = roughness
         self._magnetism = magnetism
+        self._rho_m_coupled = False
+        if rho_m_coupled:
+            self.rho_m_coupled = True
 
         if interface is not None:
             self.interface = interface
@@ -126,7 +134,9 @@ class Layer(BaseCore):
 
     @material.setter
     def material(self, value: Material) -> None:
+        coupled = self.rho_m_coupled
         self._material = value
+        self._reconcile_rho_m_coupling(coupled)
 
     @property
     def thickness(self) -> Parameter:
@@ -157,20 +167,79 @@ class Layer(BaseCore):
         backend (and switches calculator magnetism off entirely when this was the
         last magnetic layer).
         """
-        if value is None and self._magnetism is not None:
-            if self.interface is not None:
+        previous = self._magnetism
+        coupled = self.rho_m_coupled
+        if previous is not None and previous is not value:
+            if value is None and self.interface is not None:
                 self.interface().remove_layer_magnetism(self.unique_name)
-            # Detach the calculator callbacks of the removed parameters so later
-            # value changes on the detached object no longer reach the backend.
+            # The detached object must not follow the material any more...
+            if coupled:
+                _release(previous.rho_m)
+            # ...and its value changes must no longer reach the backend.
             # `property()` (fget/fset/fdel all None) is easyscience's own "no
             # callback" sentinel -- `Parameter.__copy__` sets it the same way --
             # so a later `fset` guard in `Parameter` cleanly no-ops.
-            self._magnetism.rho_m._callback = property()
-            self._magnetism.theta_m._callback = property()
+            previous.rho_m._callback = property()
+            previous.theta_m._callback = property()
         self._magnetism = value
+        self._reconcile_rho_m_coupling(coupled)
         if value is not None and self.interface is not None:
             self._enable_calculator_magnetism()
             self.generate_bindings()
+
+    @property
+    def rho_m_coupled(self) -> bool:
+        """Whether the layer's magnetic SLD is the material's ``rho_m``
+        (a :class:`~easyreflectometry.sample.MaterialMagnetic`).
+
+        When True, ``magnetism.rho_m`` is a dependent parameter following the
+        current material; the layer keeps its own ``theta_m``. Opt-in: layers of
+        one material may carry different net moments. Setting it attaches a
+        default :class:`LayerMagnetism` when the layer has none, and requires a
+        material with ``rho_m``. Uncoupling keeps the current value. Removing
+        the magnetism, or a user ``unconstrain`` of ``rho_m``, uncouples.
+        """
+        return self._rho_m_coupled and self._magnetism is not None and not self._magnetism.rho_m.independent
+
+    @rho_m_coupled.setter
+    def rho_m_coupled(self, couple: bool) -> None:
+        couple = bool(couple)
+        if couple and getattr(self._material, 'rho_m', None) is None:
+            raise ValueError(f'The material of layer {self.name!r} has no magnetic SLD to couple to.')
+        if couple and self._magnetism is None:
+            self.magnetism = LayerMagnetism()
+        if not couple and self.rho_m_coupled:
+            _release(self._magnetism.rho_m)
+        self._reconcile_rho_m_coupling(couple)
+
+    def _reconcile_rho_m_coupling(self, couple: bool) -> None:
+        """Re-establish the invariant of :attr:`rho_m_coupled` after a change of
+        material, magnetism or coupling: coupled means the current magnetism's
+        ``rho_m`` follows the current material's ``rho_m``.
+
+        `couple` is the state to keep, read *before* the change (afterwards the
+        dependency may point at a replaced object).
+        """
+        self._rho_m_coupled = False
+        if not couple or self._magnetism is None:
+            return
+        rho_m = self._magnetism.rho_m
+        source = getattr(self._material, 'rho_m', None)
+        if source is None:
+            warnings.warn(
+                f'The material of layer {self.name!r} has no magnetic SLD; '
+                'the layer keeps its current rho_m and is no longer coupled.',
+                UserWarning,
+                stacklevel=3,
+            )
+            if not rho_m.independent:
+                _release(rho_m)
+            return
+        # Drops any previous dependency, including a stale user-constraint marker
+        # that would make the project persist this internal wiring.
+        unconstrain(rho_m)
+        rho_m.make_dependent_on(dependency_expression='rho_m', dependency_map={'rho_m': source})
+        self._rho_m_coupled = True
 
     def assign_material(self, material: Material) -> None:
         """Assign a material to the layer interface.
@@ -180,7 +249,9 @@ class Layer(BaseCore):
         material : Material
             The material to assign to the layer.
         """
+        coupled = self.rho_m_coupled
         self._material = material
+        self._reconcile_rho_m_coupling(coupled)
         if self.interface is not None:
             self.interface().assign_material_to_layer(self.material.unique_name, self.unique_name)
 
@@ -198,3 +269,16 @@ class Layer(BaseCore):
         if self._magnetism is not None:
             this_dict[self.name]['magnetism'] = self._magnetism._dict_repr
         return this_dict
+
+
+def _release(rho_m: Parameter) -> None:
+    """Make a coupled magnetic SLD an ordinary parameter again, keeping its value.
+
+    The dependency cleared `fixed` and narrowed the bounds; give back what a new
+    `LayerMagnetism` starts with (fixed, project default limits), so uncoupling
+    never silently adds a free parameter to the next fit.
+    """
+    rho_m.make_independent()
+    rho_m.fixed = True
+    rho_m.min, rho_m.max = -np.inf, np.inf
+    rho_m.default_limits_pending = True

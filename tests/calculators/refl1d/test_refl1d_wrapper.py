@@ -124,7 +124,7 @@ class TestRefl1d(unittest.TestCase):
     def test_create_model(self):
         p = Refl1dWrapper()
         p.create_model('MyModel')
-        assert_equal(p.storage['model']['MyModel'], {'scale': 1, 'bkg': 0, 'items': []})
+        assert_equal(p.storage['model']['MyModel'], {'scale': 1, 'bkg': 0, 'Aguide': 270.0, 'H': 0.0, 'items': []})
 
     def test_update_model(self):
         p = Refl1dWrapper()
@@ -332,6 +332,8 @@ def test_get_probe():
     storage = {'model': {model_name: {}}}
     storage['model'][model_name]['scale'] = 10.0
     storage['model'][model_name]['bkg'] = 20.0
+    storage['model'][model_name]['Aguide'] = 45.0
+    storage['model'][model_name]['H'] = 0.5
 
     # Then
     probe = _get_probe(q_array=q, dq_array=dq, model_name=model_name, storage=storage)
@@ -353,6 +355,8 @@ def test_get_probe_oversampling():
     storage = {'model': {model_name: {}}}
     storage['model'][model_name]['scale'] = 10.0
     storage['model'][model_name]['bkg'] = 20.0
+    storage['model'][model_name]['Aguide'] = 45.0
+    storage['model'][model_name]['H'] = 0.5
 
     # Then
     probe = _get_probe(q_array=q, dq_array=dq, model_name=model_name, storage=storage, oversampling_factor=2)
@@ -370,6 +374,8 @@ def test_get_polarized_probe():
     storage = {'model': {model_name: {}}}
     storage['model'][model_name]['scale'] = 10.0
     storage['model'][model_name]['bkg'] = 20.0
+    storage['model'][model_name]['Aguide'] = 45.0
+    storage['model'][model_name]['H'] = 0.5
 
     # Then
     probe = _get_polarized_probe(q_array=q, dq_array=dq, model_name=model_name, storage=storage)
@@ -380,6 +386,9 @@ def test_get_polarized_probe():
     assert all(probe.dQ == dq)
     assert len(probe.calc_Q) == len(q)
     assert len(probe.xs) == 4
+    # The model's field reaches the probe.
+    assert probe.Aguide.value == 45.0
+    assert probe.H.value == 0.5
     for cross_section in probe.xs:
         assert cross_section is not None
         assert cross_section.intensity.value == 10
@@ -396,6 +405,8 @@ def test_get_polarized_probe_oversampling():
     storage = {'model': {model_name: {}}}
     storage['model'][model_name]['scale'] = 10.0
     storage['model'][model_name]['bkg'] = 20.0
+    storage['model'][model_name]['Aguide'] = 45.0
+    storage['model'][model_name]['H'] = 0.5
 
     # Then
     probe = _get_polarized_probe(q_array=q, dq_array=dq, model_name=model_name, storage=storage, oversampling_factor=2)

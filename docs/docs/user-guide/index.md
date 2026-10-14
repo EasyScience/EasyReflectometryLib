@@ -32,7 +32,8 @@ EasyReflectometry offers two calculation engines:
 - [**Refl1D**](https://refl1d.readthedocs.io/en/latest/)
 
 Refl1D is the engine to choose for magnetic samples and polarized data;
-refnx does not model magnetism.
+refnx does not model magnetism. See [Magnetism](magnetism.md) for the
+conventions and limitations.
 
 We are working to add more, in particular
 [**GenX**](https://aglavic.github.io/genx/doc/).
@@ -74,6 +75,8 @@ material with given physical properties:
 - `Material` – Simple material defined by SLD (real and imaginary)
 - `MaterialDensity` – Material defined by mass density and chemical
   formula
+- `MaterialMagnetic` – `MaterialDensity` with a magnetic moment per
+  formula unit; see [Magnetism](magnetism.md)
 - `MaterialSolvated` – Material mixed with a solvent in a given ratio
 - `MaterialMixture` – Mixture of two materials
 

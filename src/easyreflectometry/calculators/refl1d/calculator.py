@@ -30,6 +30,8 @@ class Refl1d(CalculatorBase):
     _model_link = {
         'scale': 'scale',
         'background': 'bkg',
+        'guide_field_angle': 'Aguide',
+        'applied_field': 'H',
     }
 
     def __init__(self):

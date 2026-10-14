@@ -644,7 +644,10 @@ class TestMaterialAndUnitFallbacks:
         model = _orso_sample_model('air | Ni | Si', layers)
         with pytest.warns(UserWarning, match="Unknown ORSO mass density unit 'stone/gallon'"):
             sample = _sample_from(_write_ort(tmp_path / 'density_unit.ort', model))
-        assert sample[1].layers[0].material.density.value == pytest.approx(8.9)
+        # Never reinterpreted as g/cm^3: a guessed unit can be off by orders of magnitude.
+        material = sample[1].layers[0].material
+        assert not isinstance(material, MaterialDensity)
+        assert material.sld.value == 0.0
 
 
 class TestBannerDiscriminatorEdgeCases:
