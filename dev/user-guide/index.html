@@ -431,6 +431,8 @@
       
         
       
+        
+      
     
     
     
@@ -499,6 +501,36 @@
     
   
     Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="magnetism/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 7v6a9 9 0 0 0 9 9 9 9 0 0 0 9-9V7h-4v6a5 5 0 0 1-5 5 5 5 0 0 1-5-5V7m10-2h4V2h-4M3 5h4V2H3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Magnetism
   
 
     
@@ -2631,7 +2663,8 @@ might have different capabilities and limitations.</p>
 <li><a href="https://refl1d.readthedocs.io/en/latest/"><strong>Refl1D</strong></a></li>
 </ul>
 <p>Refl1D is the engine to choose for magnetic samples and polarized data;
-refnx does not model magnetism.</p>
+refnx does not model magnetism. See <a href="magnetism/">Magnetism</a> for the
+conventions and limitations.</p>
 <p>We are working to add more, in particular
 <a href="https://aglavic.github.io/genx/doc/"><strong>GenX</strong></a>.</p>
 <h3 id="model">Model</h3>
@@ -2666,6 +2699,8 @@ material with given physical properties:</p>
 <li><code>Material</code> – Simple material defined by SLD (real and imaginary)</li>
 <li><code>MaterialDensity</code> – Material defined by mass density and chemical
   formula</li>
+<li><code>MaterialMagnetic</code> – <code>MaterialDensity</code> with a magnetic moment per
+  formula unit; see <a href="magnetism/">Magnetism</a></li>
 <li><code>MaterialSolvated</code> – Material mixed with a solvent in a given ratio</li>
 <li><code>MaterialMixture</code> – Mixture of two materials</li>
 </ul>

@@ -429,6 +429,8 @@
       
         
       
+        
+      
     
     
     
@@ -497,6 +499,36 @@
     
   
     Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/magnetism/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 7v6a9 9 0 0 0 9 9 9 9 0 0 0 9-9V7h-4v6a5 5 0 0 1-5 5 5 5 0 0 1-5-5V7m10-2h4V2h-4M3 5h4V2H3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Magnetism
   
 
     
@@ -3253,7 +3285,7 @@ Scale, background and resolution are copied by value and stay independent.</p>
         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
         <span class="n">resolution_function</span><span class="o">=</span><span class="n">ResolutionFunction</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">resolution_function</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()),</span>
     <span class="p">)</span>
-    <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="s1">&#39;background&#39;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="s1">&#39;background&#39;</span><span class="p">,</span> <span class="s1">&#39;guide_field_angle&#39;</span><span class="p">,</span> <span class="s1">&#39;applied_field&#39;</span><span class="p">):</span>
         <span class="n">restore</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">attribute</span><span class="p">),</span> <span class="n">snapshot</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">model</span>
 </code></pre></div></td></tr></table></div>
