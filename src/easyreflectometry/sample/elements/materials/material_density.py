@@ -10,9 +10,11 @@ from easyscience.variable import DescriptorNumber
 from easyscience.variable import Parameter
 
 from easyreflectometry.constraints import unconstrain
+from easyreflectometry.special.calculations import AVOGADRO
 from easyreflectometry.special.calculations import density_to_sld
 from easyreflectometry.special.calculations import molecular_weight
 from easyreflectometry.special.calculations import neutron_scattering_length
+from easyreflectometry.special.calculations import number_density_from_mass_density
 from easyreflectometry.utils import get_as_parameter
 
 from .material import DEFAULTS as MATERIAL_DEFAULTS
@@ -60,7 +62,7 @@ DEFAULTS = {
     'avogadro': {
         'description': 'The Avogadro constant.',
         'url': 'https://en.wikipedia.org/wiki/Avogadro_constant',
-        'value': 6.02214076e23,
+        'value': AVOGADRO,
         'unit': '1 / mole',
     },
 }
@@ -370,6 +372,14 @@ class MaterialDensity(Material):
         fittable parameter: it is a constant of the chemical formula and is
         recomputed whenever :attr:`chemical_structure` is assigned."""
         return self._molecular_weight
+
+    @property
+    def number_density(self) -> float:
+        """Number density of formula units in 1/angstrom^3, derived from the
+        density and the formula. Read-only: `density` is the fit parameter;
+        convert a number density with
+        :func:`~easyreflectometry.special.calculations.mass_density_from_number_density`."""
+        return number_density_from_mass_density(self._density.value, self._molecular_weight.value)
 
     @property
     def scattering_length_real(self) -> Parameter:

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import copy
+import warnings
 from numbers import Number
 from typing import Optional
 from typing import Union
@@ -41,6 +42,26 @@ DEFAULTS = {
     'resolution': {
         'value': 5.0,
     },
+    'guide_field_angle': {
+        'description': 'Angle of the applied field about the beam axis (refl1d Aguide): '
+        '270 or -90 degrees is in the sample plane, 0 or 180 along the surface normal.',
+        'url': 'https://refl1d.readthedocs.io/en/latest/guide/magnetism.html',
+        'value': 270.0,
+        'unit': 'degree',
+        'min': -360.0,
+        'max': 360.0,
+        'fixed': True,
+    },
+    'applied_field': {
+        'description': 'Magnitude of the applied field (refl1d H). It adds a Zeeman term along the field '
+        'direction, so its effect depends on the field and its orientation relative to the moments.',
+        'url': 'https://refl1d.readthedocs.io/en/latest/guide/magnetism.html',
+        'value': 0.0,
+        'unit': 'T',
+        'min': 0.0,
+        'max': 10.0,
+        'fixed': True,
+    },
 }
 
 COLORS = [
@@ -73,6 +94,8 @@ class Model(BaseCore):
         color: str = COLORS[0],
         unique_name: Optional[str] = None,
         interface=None,
+        guide_field_angle: Union[Parameter, Number, None] = None,
+        applied_field: Union[Parameter, Number, None] = None,
     ):
         """Constructor.
 
@@ -92,6 +115,10 @@ class Model(BaseCore):
             Name of the model. By default, 'Model'.
         resolution_function : Union[ResolutionFunction, None], optional
             Resolution function. By default, None.
+        guide_field_angle : Union[Parameter, Number, None], optional
+            Field angle about the beam axis in degrees (refl1d ``Aguide``). By default, 270 (in-plane).
+        applied_field : Union[Parameter, Number, None], optional
+            Applied field in tesla (refl1d ``H``). By default, 0.
         interface :
             Calculator interface. By default, None.
         """
@@ -106,6 +133,8 @@ class Model(BaseCore):
         scale = get_as_parameter('scale', scale, DEFAULTS)
         apply_default_limits(scale, 'scale')
         background = get_as_parameter('background', background, DEFAULTS)
+        guide_field_angle = get_as_parameter('guide_field_angle', guide_field_angle, DEFAULTS)
+        applied_field = get_as_parameter('applied_field', applied_field, DEFAULTS)
         self.color = color
         self._is_default = False
         self._resolution_function = resolution_function
@@ -114,6 +143,8 @@ class Model(BaseCore):
         self._sample = sample
         self._scale = scale
         self._background = background
+        self._guide_field_angle = guide_field_angle
+        self._applied_field = applied_field
 
         # Derived, read-only "calculation" parameter (see `total_thickness`).
         # Rebuilt by every constructor call — including `from_dict` — and
@@ -159,6 +190,24 @@ class Model(BaseCore):
     @background.setter
     def background(self, value: float) -> None:
         self._background.value = value
+
+    @property
+    def guide_field_angle(self) -> Parameter:
+        """Field angle about the beam axis in degrees (refl1d ``Aguide``); only magnetic calculators use it."""
+        return self._guide_field_angle
+
+    @guide_field_angle.setter
+    def guide_field_angle(self, value: float) -> None:
+        self._guide_field_angle.value = value
+
+    @property
+    def applied_field(self) -> Parameter:
+        """Applied field in tesla (refl1d ``H``); only magnetic calculators use it."""
+        return self._applied_field
+
+    @applied_field.setter
+    def applied_field(self, value: float) -> None:
+        self._applied_field.value = value
 
     # ----- derived parameters -----
 
@@ -361,6 +410,12 @@ class Model(BaseCore):
 
         from easyreflectometry.orso_utils import sample_to_orso_model
 
+        if self.guide_field_angle.value != 270.0 or self.applied_field.value != 0.0:
+            warnings.warn(
+                'The guide field angle and applied field are not written: the ORSO model language has no field.',
+                UserWarning,
+                stacklevel=2,
+            )
         return Header.asdict(sample_to_orso_model(self.sample))
 
     @classmethod

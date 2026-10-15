@@ -23,6 +23,8 @@ OVERSAMPLING_FACTOR = 21
 # refl1d convention: with the default guide field (Aguide = 270 deg) a moment at
 # thetaM = 270 deg is aligned with the field, i.e. produces no spin-flip.
 DEFAULT_THETA_M = 270.0
+# refl1d's BASE_GUIDE_ANGLE: the field lies in the sample plane.
+DEFAULT_GUIDE_FIELD_ANGLE = 270.0
 
 
 class Refl1dWrapper(WrapperBase):
@@ -197,7 +199,7 @@ class Refl1dWrapper(WrapperBase):
         name : str
             Name for the model.
         """
-        self.storage['model'][name] = {'scale': 1, 'bkg': 0, 'items': []}
+        self.storage['model'][name] = {'scale': 1, 'bkg': 0, 'Aguide': DEFAULT_GUIDE_FIELD_ANGLE, 'H': 0.0, 'items': []}
 
     def update_model(self, name: str, **kwargs):
         """Update the non-structural parameters of the model.
@@ -378,7 +380,7 @@ class Refl1dWrapper(WrapperBase):
         changes, since the token would compare equal.
         """
         model = self.storage['model'][model_name]
-        values: list = [model['scale'], model['bkg']]
+        values: list = [model['scale'], model['bkg'], model['Aguide'], model['H']]
         for item in model['items']:
             values.append(item.repeat.value)
             for slab in item.stack:
@@ -603,7 +605,13 @@ def _get_polarized_probe(
     storage: dict,
     oversampling_factor: int = 1,
 ) -> names.PolarizedNeutronQProbe:
-    """Get polarized probe with all four cross-sections (pp, pm, mp, mm)."""
+    """Get polarized probe with all four cross-sections (pp, pm, mp, mm).
+
+    The guide field angle (`Aguide`) and applied field (`H`) come from the model.
+    The sub-probes keep `theta_offset = 0` (no alignment correction).
+    """
+    model = storage['model'][model_name]
+    field = {'Aguide': model['Aguide'], 'H': model['H']}
     four_probes = [
         _get_probe(
             q_array=q_array,
@@ -617,7 +625,7 @@ def _get_polarized_probe(
     ]
 
     try:
-        polarized_probe = names.PolarizedNeutronQProbe(xs=four_probes, name='polarized')
+        polarized_probe = names.PolarizedNeutronQProbe(xs=four_probes, name='polarized', **field)
     except AttributeError:
         # refl1d 1.0.0 bug: PolarizedQProbe.__init__ calls _calculate_union(), which
         # reads self._union_cache_key before the attribute is ever assigned (the
@@ -626,7 +634,7 @@ def _get_polarized_probe(
         # the workaround self-removing once refl1d fixes the initialization.
         polarized_probe = names.PolarizedNeutronQProbe.__new__(names.PolarizedNeutronQProbe)
         polarized_probe._union_cache_key = None
-        polarized_probe.__init__(xs=four_probes, name='polarized')
+        polarized_probe.__init__(xs=four_probes, name='polarized', **field)
     return polarized_probe
 
 

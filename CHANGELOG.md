@@ -221,6 +221,74 @@
   all-or-nothing: freeing only one of `sld`/`isld` is session-only and
   restores as both independent.
 
+## Magnetism
+
+See the new user guide page `user-guide/magnetism.md` for the
+conventions and limitations.
+
+- `Model.guide_field_angle` (degrees, refl1d's `Aguide`, default 270: in
+  the sample plane) and `Model.applied_field` (tesla, refl1d's `H`,
+  default 0) set the field of the polarized calculation. Both are fixed
+  parameters by default and are saved with the model; older files load
+  with the defaults. A derived contrast keeps them. They are disabled
+  (`enabled = False`) unless the model is magnetic and the calculator
+  models magnetism; refnx ignores them.
+- `Project.magnetic_sld_data_for_model_at_index` follows the model's
+  field. `spin_up`/`spin_down` are now described and named as the
+  nuclear SLD plus or minus the magnetic SLD _along the field_; they are
+  the spin potentials only for a moment parallel to the field. New
+  entries: `rho_m_perp` (the magnetic SLD across the field) and the
+  model's `guide_field_angle` and `applied_field`.
+  `easyreflectometry.special.calculations.field_frame_components` does
+  the projection. `easyreflectometry.project.GUIDE_FIELD_ANGLE` remains
+  as the default value only.
+- New `MaterialMagnetic`: a `MaterialDensity` with a fittable
+  `magnetic_moment` in Bohr magnetons per formula unit and a derived
+  `rho_m = N * moment * p`, with `p = 2.6991e-5 angstrom`
+  (`special.calculations.MAGNETIC_SCATTERING_LENGTH`). Defaults are bulk
+  iron. The magnetic SLD stays derived when `sld_coupled` is off.
+- New `Layer.rho_m_coupled`: the layer's `magnetism.rho_m` follows the
+  material's `rho_m`, while the layer keeps its own `theta_m`. Replacing
+  the material or the magnetism, removing the magnetism or
+  unconstraining `rho_m` keeps the coupling consistent; uncoupling keeps
+  the value and makes `rho_m` an ordinary fixed parameter again. Saved
+  with the layer.
+- New read-only `MaterialDensity.number_density` (formula units per
+  angstrom^3), and
+  `special.calculations.number_density_from_mass_density` /
+  `mass_density_from_number_density`.
+- ORSO model import reads `magnetic_moment` (with a mass or number
+  density and a formula: a `MaterialMagnetic` with a coupled layer; with
+  an SLD and a number density only: a direct `rho_m`) and
+  `number_density`. Behaviour change: formula materials given by number
+  density, including those orsopy resolves from its database, previously
+  imported with SLD 0. An unknown density or moment unit is now ignored
+  with a warning instead of being read as the default unit; a mass
+  density in an unknown unit previously counted as g/cm^3.
+  `relative_density`, disagreeing densities and repeated magnetic layers
+  are warned about. A negative moment, or one above the default fit
+  bounds, imports with its value: `MaterialMagnetic` widens the bounds
+  of an explicitly given moment instead of refusing it.
+- `Project.add_sample_from_orso` and `replace_models_from_orso` refuse a
+  sample with magnetic layers when the calculator cannot model magnetism
+  (`NotImplementedError`), before the project is changed; they used to
+  add or replace the model and then fail.
+- A user constraint on a coupled layer's `rho_m` now reads as
+  `rho_m_coupled = False`: it is exported, saved and kept on a material
+  change as the user constraint it is, instead of being taken for the
+  material coupling and overwritten.
+- `Project._sync_parameter_states` fixes parameters that act on nothing:
+  the field of a model that is not magnetic or whose calculator cannot
+  model magnetism, and the moment (and, with the nuclear SLD decoupled,
+  the density) of a `MaterialMagnetic` no layer is coupled to, unless a
+  user constraint refers to it. They used to stay free and enter the
+  fit.
+- ORSO model export writes the moment of magnetic layers on
+  density-defined materials, and the manual SLD of a decoupled
+  `MaterialDensity`. Losses (a magnetic SLD without a density to convert
+  with, a moment direction other than 270, a non-default field in
+  `Model.as_orso`) are warned about.
+
 ## Analysis
 
 - `posterior_predictive_reflectivity` takes an optional

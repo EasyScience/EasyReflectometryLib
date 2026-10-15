@@ -41,7 +41,7 @@ def test_count_fixed_parameters():
     count = count_fixed_parameters(project)
 
     # Expect
-    assert count == 13
+    assert count == 15
 
 
 def test_count_parameter_user_constraints_counts_only_user_constraints():

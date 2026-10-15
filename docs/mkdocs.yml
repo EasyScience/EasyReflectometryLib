@@ -177,6 +177,7 @@ nav:
   - User Guide:
       - User Guide: user-guide/index.md
       - Resolution: user-guide/resolution.md
+      - Magnetism: user-guide/magnetism.md
   - Tutorials:
       - Tutorials: tutorials/index.md
       - Getting Started:
