@@ -2759,9 +2759,9 @@ every moment is collinear with the field (parallel or antiparallel) and
 the applied field is zero</strong>. With a moment across the field the two spin
 states mix; at zero applied field their potentials then split by
 <span class="arithmatex">\(\pm|\rho_M|\)</span> whatever the field direction. For example, a moment fully
-across the field gives two identical curves, yet the critical edges still
-move. With an applied field the kernel combines field and magnetisation,
-and the applied field is not included in the curves.</p>
+across the field gives two identical curves, yet the critical edges
+still move. With an applied field the kernel combines field and
+magnetisation, and the applied field is not included in the curves.</p>
 <h2 id="two-ways-to-set-the-magnetic-sld">Two ways to set the magnetic SLD</h2>
 <p><strong>Directly</strong>, by setting <code>LayerMagnetism.rho_m</code> in units of <span class="arithmatex">\(10^{-6}\)</span>
 Å⁻², like any other SLD.</p>
@@ -2819,8 +2819,8 @@ SLD only. The magnetic SLD stays derived from density and moment.</p>
   moment, so free one of the two, not both.</li>
 <li>A material's moment has no effect unless some layer is coupled to it.
   The project fixes such a moment, and the density of such a material
-  with a decoupled nuclear SLD, so neither enters a fit by accident.
-  The field of a model that is not magnetic, or whose calculator cannot
+  with a decoupled nuclear SLD, so neither enters a fit by accident. The
+  field of a model that is not magnetic, or whose calculator cannot
   model magnetism, is fixed as well as disabled.</li>
 <li>A moment <span class="arithmatex">\(\mu\)</span> at <span class="arithmatex">\(\theta_M\)</span> and <span class="arithmatex">\(-\mu\)</span> at <span class="arithmatex">\(\theta_M + 180°\)</span> are the
   same state. <code>magnetic_moment</code> has fit bounds [0, 10] by default, and
