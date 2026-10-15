@@ -1,6 +1,7 @@
 # Architecture
 
-**Analysis Date:** 2026-10-15 **Branch analysed:** `develop` @ `66adaf54`
+**Analysis Date:** 2026-10-15 **Branch analysed:** `develop` @
+`66adaf54`
 
 ## Pattern Overview
 
@@ -27,8 +28,8 @@ is computed by pluggable engine wrappers (refnx, refl1d) behind
 - Inequality constraints are enforced by patching the BUMPS driver in
   the core's namespace, because the core offers no hook
 - Shared objects (one material in two layers, one assembly in two
-  models) serialize once through `sample/references.py` (`file_format`
-  3)
+  models) serialize once through `sample/references.py`
+  (`file_format` 3)
 
 ## Layers
 
@@ -64,14 +65,16 @@ is computed by pluggable engine wrappers (refnx, refl1d) behind
 - Purpose: Post-hoc posterior analysis and chain persistence
 - Location: `src/easyreflectometry/analysis/bayesian.py`
 - Contains: `PosteriorResults` (summary, corner, trace, distribution,
-  credible_interval, gelman_rubin, save), `posterior_predictive_*`,
-  `save_posterior` / `load_posterior` with fingerprinted sidecar
+  credible*interval, gelman_rubin, save),
+  `posterior_predictive*\*`, `save_posterior`/`load_posterior` with
+  fingerprinted sidecar
 - Depends on: plotly (required), arviz (optional), numpy
 
 **Model / Sample Layer:**
 
 - Purpose: Physical description of the sample and measurement
-- Location: `src/easyreflectometry/model/`, `src/easyreflectometry/sample/`
+- Location: `src/easyreflectometry/model/`,
+  `src/easyreflectometry/sample/`
 - Contains: `Model` (scale, background, resolution, `total_thickness`
   derived parameter), `Sample` and assemblies/layers/materials,
   `LayerMagnetism`, `MaterialDensity.sld_coupled`, `volume_fraction`,
@@ -119,21 +122,22 @@ is computed by pluggable engine wrappers (refnx, refl1d) behind
 
 **Classical Fit (project path):**
 
-1. GUI/user calls `Project.prepare_fit(experiments=None, objective=None, skip_invalid=False)`
+1. GUI/user calls
+   `Project.prepare_fit(experiments=None, objective=None, skip_invalid=False)`
 2. `_fit_scope` selects experiments with `include_in_fit` and a model;
    `_fitter_for` builds `MultiFitter.for_experiments(...)` with a deep
    copy of `fit_settings` and a weak `constraints_factory_provider`
 3. `MultiFitter.prepare` applies the objective (`hybrid` default:
-   Mighell for zero-variance points, WLS otherwise), binds each dataset's
-   fit function to its own resolution (`_resolution_for_fitted_points`
-   for `legacy_mask`), collects `added_roots` (free parameters of
-   left-out models that fitted parameters follow), builds the core
-   fitter via `_core_fitter_for` + `FitSettings.configure`, checks
-   preconditions (finite bounds for engines that need them, warns on
-   starts at bounds)
+   Mighell for zero-variance points, WLS otherwise), binds each
+   dataset's fit function to its own resolution
+   (`_resolution_for_fitted_points` for `legacy_mask`), collects
+   `added_roots` (free parameters of left-out models that fitted
+   parameters follow), builds the core fitter via `_core_fitter_for` +
+   `FitSettings.configure`, checks preconditions (finite bounds for
+   engines that need them, warns on starts at bounds)
 4. Caller runs `prepared.execute(**kwargs)` or `core_fitter.fit(...)` in
-   a thread; the `_ConstrainedEasyScienceMultiFitter.fit` property
-   wraps the call in `_bumps_constraints.applied(factory)`
+   a thread; the `_ConstrainedEasyScienceMultiFitter.fit` property wraps
+   the call in `_bumps_constraints.applied(factory)`
 5. `Project.record_fit(prepared, results, status)` computes classical
    metrics from the measured arrays (`prepared.finalize`), stores a
    `FitRun` on `last_fit` and pushes results to `project.fitter`
@@ -148,9 +152,9 @@ is computed by pluggable engine wrappers (refnx, refl1d) behind
 
 **Polarized Fit:**
 
-- `fit_polarized(polarized_dataset)` or `for_experiments([...])`: one fit
-  function per spin channel, all against one model, each bound to its
-  channel via `CalculatorFactory.fit_func_for(channel, resolution)`.
+- `fit_polarized(polarized_dataset)` or `for_experiments([...])`: one
+  fit function per spin channel, all against one model, each bound to
+  its channel via `CalculatorFactory.fit_func_for(channel, resolution)`.
   Structural parameters shared, magnetic parameters constrained by all
   channels.
 
@@ -158,12 +162,13 @@ is computed by pluggable engine wrappers (refnx, refl1d) behind
 
 1. `Project.prepare_sample()` → `for_experiments` fitter with settings
    snapshot; or `fitter.mcmc_sample(data)` directly
-2. `mcmc_sample` requires a BUMPS minimizer (`minimizer.package ==
-'bumps'`), refuses all-zero variances unless `objective='mighell'`,
-   calls `prepare(action='sampling')`
+2. `mcmc_sample` requires a BUMPS minimizer
+   (`minimizer.package == 'bumps'`), refuses all-zero variances unless
+   `objective='mighell'`, calls `prepare(action='sampling')`
 3. Builds `Sampler(core_fitter, x, y, weights)` inside the constraints
-   context, patches `sampler.extend` to re-enter it, keeps the sampler on
-   `fitter.sampler`, runs `sampler.sample(samples, burn, thin, population, sampler_kwargs, progress_callback, abort_test)`
+   context, patches `sampler.extend` to re-enter it, keeps the sampler
+   on `fitter.sampler`, runs
+   `sampler.sample(samples, burn, thin, population, sampler_kwargs, progress_callback, abort_test)`
 4. Returns `{'draws', 'param_names', 'state', 'logp'}`; user wraps in
    `PosteriorResults` or calls `save_posterior`
 
@@ -191,10 +196,10 @@ is computed by pluggable engine wrappers (refnx, refl1d) behind
 
 ## Key Abstractions
 
-**`PreparedFit` (fitting.py):** Snapshot pattern. Everything a run needs,
-fixed at prepare time; owns copies of measured arrays, the configured
-core fitter and both full-resolution (`curve_funcs`) and fitted-point
-(`fit_funcs`) evaluators.
+**`PreparedFit` (fitting.py):** Snapshot pattern. Everything a run
+needs, fixed at prepare time; owns copies of measured arrays, the
+configured core fitter and both full-resolution (`curve_funcs`) and
+fitted-point (`fit_funcs`) evaluators.
 
 **`FitRun` (fitting.py):** Frozen record of a run (status, minimizer,
 objective, inputs by experiment key, pooled and per-dataset statistics).
@@ -205,10 +210,10 @@ Outlives model changes; `remapped()` follows experiment re-keying.
 validated by `MinimizerOption` schemas). `configure(fitter)` and
 `engine_kwargs()` are the two consumers.
 
-**`_ConstrainedEasyScienceMultiFitter` / `_bumps_constraints`:** Property
-override plus monkeypatch. The subclass overrides the core's read-only
-`fit` property so the raw `easy_science_multi_fitter.fit(...)` path
-resolves the owner's constraints provider in the calling thread and
+**`_ConstrainedEasyScienceMultiFitter` / `_bumps_constraints`:**
+Property override plus monkeypatch. The subclass overrides the core's
+read-only `fit` property so the raw `easy_science_multi_fitter.fit(...)`
+path resolves the owner's constraints provider in the calling thread and
 consumes an explicit `constraints_factory` keyword (the core would
 swallow it via `**kwargs`). `install()`, run at import of
 `_bumps_constraints`, wraps `minimizer_bumps.FitDriver` so each
@@ -220,15 +225,16 @@ Non-BUMPS engines raise `NON_BUMPS_ERROR`.
 restricted symbol table; `build_constraints_factory` returns BUMPS
 penalty callables.
 
-**Contrasts (`contrasts.py`):** A contrast is an ordinary `Model` sharing
-structure with a reference by identity or by `constrain_equal`.
+**Contrasts (`contrasts.py`):** A contrast is an ordinary `Model`
+sharing structure with a reference by identity or by `constrain_equal`.
 `derive_contrast` copies touched assemblies, shares the rest and ties
 parameters; `plan_link` / `apply_link` / `unlink` manage equalities
 between two models of one layout with full state snapshots.
 
 **`CalculatorBase` / `WrapperBase` / `CalculatorFactory`:** Template +
-Adapter + Factory. Items are claimed per calculator (`_claim`), per-model
-resolution registry, magnetism toggles, channel-bound fit functions.
+Adapter + Factory. Items are claimed per calculator (`_claim`),
+per-model resolution registry, magnetism toggles, channel-bound fit
+functions.
 
 **`references` (sample/references.py):** Context-managed shared-object
 serialization (`writing()`, `reading(report)`, `suspended()`), with
@@ -278,8 +284,8 @@ issues; refuse silent degradation.
 handler configured. `warnings` is the main user-facing channel.
 
 **Validation:** `FitSettings.validate`, `MinimizerOption.validate`,
-`InequalitySpec.validate_syntax` + `check_units`, ORSO column validation,
-`_check_fit_preconditions`.
+`InequalitySpec.validate_syntax` + `check_units`, ORSO column
+validation, `_check_fit_preconditions`.
 
 **Threading:** The constraints factory lives in a `contextvars`
 variable, resolved in the calling thread; `PreparedFit` owns array

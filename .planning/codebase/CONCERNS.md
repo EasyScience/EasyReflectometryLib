@@ -1,6 +1,7 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-10-15 **Branch analysed:** `develop` @ `66adaf54`
+**Analysis Date:** 2026-10-15 **Branch analysed:** `develop` @
+`66adaf54`
 
 ## Summary
 
@@ -24,12 +25,13 @@ goes through the core `Sampler`. The concerns below are what remains.
 inside the core's `minimizer_bumps` namespace and inspects
 `problem.models[0].pars`. Any core refactor (importing `FitDriver`
 differently, building the problem elsewhere, renaming `.pars`) silently
-disables every inequality constraint; the shim passes untouched
-problems through without complaint.
+disables every inequality constraint; the shim passes untouched problems
+through without complaint.
 
 **Files:** `src/easyreflectometry/_bumps_constraints.py`,
 `src/easyreflectometry/fitting.py` (`_constraints`,
-`_keep_constraints_on_extend`), `tests/unit/test_bumps_constraints_shim.py`
+`_keep_constraints_on_extend`),
+`tests/unit/test_bumps_constraints_shim.py`
 
 **Impact:** High. Physics silently dropped on a core upgrade.
 
@@ -53,8 +55,8 @@ against, and 3.0 is excluded by the pin.
 core release ships.
 
 **Fix approach:** Add a CI job (allowed to fail) installing core from
-`release-3.0`; list the library's core API surface
-(`Sampler`, `MultiFitter._precompute_reshaping`, `MINIMIZER_PARAMETER_PREFIX`,
+`release-3.0`; list the library's core API surface (`Sampler`,
+`MultiFitter._precompute_reshaping`, `MINIMIZER_PARAMETER_PREFIX`,
 `InterfaceFactoryTemplate`, `minimizer_bumps.FitDriver`) and check it
 against the branch.
 
@@ -66,7 +68,8 @@ against the branch.
 `ItemContainer` from `interface_factory` are not public core API.
 
 **Files:** `analysis/bayesian.py`, `project.py`,
-`sample/collections/base_collection.py`, `calculators/calculator_base.py`
+`sample/collections/base_collection.py`,
+`calculators/calculator_base.py`
 
 **Impact:** Medium.
 
@@ -96,9 +99,9 @@ helpers). Keep `Project` as the facade.
 ### `fitting.py` (1428 lines) and `analysis/bayesian.py` (1412 lines)
 
 **Issue:** `bayesian.py` is mostly plotly styling constants and
-hand-rolled contour/density code for corner plots; `fitting.py`
-combines data preparation, settings, constraints wiring and five public
-fit paths.
+hand-rolled contour/density code for corner plots; `fitting.py` combines
+data preparation, settings, constraints wiring and five public fit
+paths.
 
 **Impact:** Low-Medium.
 
@@ -128,7 +131,8 @@ shared objects, an experiment left out of the fit, duplicate model
 names. A user may save a file in 1.9 that 1.8 refuses without an obvious
 reason.
 
-**Files:** `project.py` (`_needs_new_format`, `_as_dict_add_experiments`)
+**Files:** `project.py` (`_needs_new_format`,
+`_as_dict_add_experiments`)
 
 **Impact:** Medium. Document in release notes; already in CHANGELOG.
 
@@ -175,8 +179,9 @@ slow cases) under `integration/`.
 
 **Issue:** `fitter.sampler.extend()` after constraints, and
 `save_posterior`/`load_posterior` fingerprint mismatch handling, have
-limited coverage (`TestMCMCSample*` in `test_fitting.py`, `test_bayesian.py`);
-all real DREAM runs are `slow` and only run on PRs/develop.
+limited coverage (`TestMCMCSample*` in `test_fitting.py`,
+`test_bayesian.py`); all real DREAM runs are `slow` and only run on
+PRs/develop.
 
 **Impact:** Medium.
 
@@ -230,9 +235,9 @@ and an accidental `git add .` would commit them.
 
 **Impact:** Low.
 
-**Fix approach:** Add `.planning/`, `.claude/`, `MD/` to `.gitignore` (or
-a global excludes file); decide whether `examples/` and `integration/`
-belong in the repo.
+**Fix approach:** Add `.planning/`, `.claude/`, `MD/` to `.gitignore`
+(or a global excludes file); decide whether `examples/` and
+`integration/` belong in the repo.
 
 ### Docstring tooling disabled
 

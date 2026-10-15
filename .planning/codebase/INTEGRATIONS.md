@@ -1,6 +1,7 @@
 # External Integrations
 
-**Analysis Date:** 2026-10-15 **Branch analysed:** `develop` @ `66adaf54`
+**Analysis Date:** 2026-10-15 **Branch analysed:** `develop` @
+`66adaf54`
 
 ## APIs & External Services
 
@@ -14,8 +15,8 @@
   `fitter.sampler` for `extend()`, `save()`, `load_state()`
 - `easyscience.fitting.AvailableMinimizers`, `FitResults`
 - `easyscience.fitting.minimizers.minimizer_bumps` - Its module-level
-  `FitDriver` name is wrapped by `_bumps_constraints.install()` to attach
-  `FitProblem.constraints`
+  `FitDriver` name is wrapped by `_bumps_constraints.install()` to
+  attach `FitProblem.constraints`
 - `easyscience.fitting.minimizers.minimizer_base.MINIMIZER_PARAMETER_PREFIX` -
   Stripped from parameter names in `analysis/bayesian.py`
 - `easyscience.variable.Parameter` / `DescriptorNumber` and
@@ -25,8 +26,8 @@
   `easyscience.io.SerializerComponent` / `SerializerBase` - Base classes
   for `BaseCore`, `BaseCollection`, `DataSet1D`, `CalculatorBase`
 - `easyscience.global_object` - Unique-name registry and undo stack
-- `easyscience.fitting.calculators.interface_factory.InterfaceFactoryTemplate` /
-  `ItemContainer` - `CalculatorFactory` base
+- `easyscience.fitting.calculators.interface_factory.InterfaceFactoryTemplate`
+  / `ItemContainer` - `CalculatorFactory` base
 - Auth: None (Python import)
 
 **Reflectivity Calculators (pluggable via `CalculatorFactory`):**
@@ -69,8 +70,8 @@
 
 **Plotting / Reports:**
 
-- plotly - Corner, trace, distribution plots (`analysis/bayesian.py`) and
-  interactive summary figures; plotly is a hard dependency
+- plotly - Corner, trace, distribution plots (`analysis/bayesian.py`)
+  and interactive summary figures; plotly is a hard dependency
 - matplotlib - `plot.py`, static summary figures, `plot_volume_fraction`
 - xhtml2pdf (`pisa`) - `Summary.save_pdf_summary`; stderr silenced via
   `_silence_pdf_converter`
@@ -136,9 +137,10 @@
 
 - PyPI (`pypi-publish.yml` on tag push, via `pixi run default-build`;
   legacy `python-publish.yml` also present)
-- GitHub Pages via mike (`docs.yml`): `dev` alias from develop, versioned
-  + `latest` on release; a quality dashboard is published by
-  `dashboard.yml` (badgery + radon + interrogate)
+- GitHub Pages via mike (`docs.yml`): `dev` alias from develop,
+  versioned
+  - `latest` on release; a quality dashboard is published by
+    `dashboard.yml` (badgery + radon + interrogate)
 
 **CI Pipeline (`.github/workflows/`, 24 workflows):**
 
@@ -157,8 +159,8 @@
 - `docs.yml`, `dashboard.yml` - site and metrics publishing
 - `security.yml` / `codeql-analysis.yml` / `ossar-analysis.yml` - CodeQL
   and OSSAR scans
-- `release-drafter.yml`, `release-notes.yml`, `release-pr.yml`
-  (develop → master), `backmerge.yml` (master → develop),
+- `release-drafter.yml`, `release-notes.yml`, `release-pr.yml` (develop
+  → master), `backmerge.yml` (master → develop),
   `release-drafter-verify-pr-labels.yml`, `pr-labels.yml`,
   `issues-labels.yml`, `cleanup.yml`
 - `python-ci.yml`, `python-package.yml` - Older pip-based matrices that

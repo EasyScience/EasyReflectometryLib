@@ -1,8 +1,9 @@
 # Technology Stack
 
-**Analysis Date:** 2026-10-15 **Branch analysed:** `develop` @ `66adaf54`
-(tag `v1.7.0-51`; last release `v1.8.0` on 2026-09-18, develop carries
-the unreleased 1.9 work listed under "Unreleased" in `CHANGELOG.md`)
+**Analysis Date:** 2026-10-15 **Branch analysed:** `develop` @
+`66adaf54` (tag `v1.7.0-51`; last release `v1.8.0` on 2026-09-18,
+develop carries the unreleased 1.9 work listed under "Unreleased" in
+`CHANGELOG.md`)
 
 ## Languages
 
@@ -80,7 +81,8 @@ the unreleased 1.9 work listed under "Unreleased" in `CHANGELOG.md`)
   `force-single-line`)
 - pre-commit, prettier (non-Python formatting), pydoclint /
   format-docstring (configured but disabled via `exclude = '\.'`),
-  interrogate (`fail-under = 0`), radon, spdx-headers, validate-pyproject
+  interrogate (`fail-under = 0`), radon, spdx-headers,
+  validate-pyproject
 - copier (`.copier-answers.yml`) - repo scaffold synced from
   `gh:easyscience/templates` (`template_type=lib`)
 - MkDocs Material + mkdocstrings + mkdocs-jupyter + mike (versioned docs

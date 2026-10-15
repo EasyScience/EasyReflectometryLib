@@ -1,6 +1,7 @@
 # Codebase Structure
 
-**Analysis Date:** 2026-10-15 **Branch analysed:** `develop` @ `66adaf54`
+**Analysis Date:** 2026-10-15 **Branch analysed:** `develop` @
+`66adaf54`
 
 ## Directory Layout
 
@@ -164,16 +165,15 @@ Untracked in the working copy (not on `develop`): `.planning/`,
 
 ## Naming Conventions
 
-**Files:** snake_case modules; tests `test_<module>.py`; private module
-`_bumps_constraints.py`.
+**Files:** snake*case modules; tests
+`test*<module>.py`; private module `\_bumps_constraints.py`.
 
 **Classes:** PascalCase (`MultiFitter`, `PreparedFit`, `FitRun`,
 `InequalitySpec`, `PolarizedDataSet`); core import aliased as
 `EasyScienceMultiFitter`; private subclasses prefixed `_`.
 
-**Functions:** snake_case; private helpers `_`-prefixed; `Project`
-exposes `*_at_index` accessors for GUI use
-(`model_data_for_experiment_at_index`).
+**Functions:** snake*case; private helpers
+`*`-prefixed; `Project`exposes`\*\_at_index` accessors for GUI use (`model_data_for_experiment_at_index`).
 
 **Constants:** UPPER_SNAKE (`DEFAULT_MINIMIZER`, `GUIDE_FIELD_ANGLE`,
 `DEFAULT_THETA_M`, `SIGMA_TO_FWHM`, `USER_CONSTRAINT_FLAG`).
@@ -192,9 +192,10 @@ records).
 
 **New constraint kind:**
 
-- Equality: `constraints.py` + persistence in `Project._user_constraints`
-  / `_restore_user_constraints`. Inequality: `inequality_constraints.py`
-  + `Project.add_inequality_constraint`. Tests under `tests/unit/`.
+- Equality: `constraints.py` + persistence in
+  `Project._user_constraints` / `_restore_user_constraints`. Inequality:
+  `inequality_constraints.py`
+  - `Project.add_inequality_constraint`. Tests under `tests/unit/`.
 
 **New calculator backend:**
 
