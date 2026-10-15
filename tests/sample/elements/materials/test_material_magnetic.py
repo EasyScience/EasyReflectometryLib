@@ -114,3 +114,21 @@ class TestMaterialMagnetic:
         # N changes with the molecular weight, and rho_m with it.
         ratio = iron.molecular_weight.value / substituted.molecular_weight.value
         assert substituted.rho_m.value == pytest.approx(FE_RHO_M * ratio)
+
+
+class TestMomentBounds:
+    def test_default_bounds(self):
+        moment = MaterialMagnetic().magnetic_moment
+        assert (moment.min, moment.max) == (0.0, 10.0)
+
+    @pytest.mark.parametrize(('value', 'bounds'), [(-1.3, (-1.3, 10.0)), (22.0, (0.0, 22.0)), (0.0, (0.0, 10.0))])
+    def test_an_explicit_moment_widens_the_bounds(self, value, bounds):
+        moment = MaterialMagnetic(chemical_structure='Fe10', magnetic_moment=value).magnetic_moment
+        assert moment.value == value
+        assert (moment.min, moment.max) == bounds
+
+    def test_a_parameter_keeps_its_own_bounds(self):
+        from easyscience.variable import Parameter
+
+        given = Parameter(name='magnetic_moment', value=1.0, min=0.5, max=2.0)
+        assert MaterialMagnetic(magnetic_moment=given).magnetic_moment is given

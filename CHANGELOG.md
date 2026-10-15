@@ -266,7 +266,22 @@ conventions and limitations.
   with a warning instead of being read as the default unit; a mass
   density in an unknown unit previously counted as g/cm^3.
   `relative_density`, disagreeing densities and repeated magnetic layers
-  are warned about.
+  are warned about. A negative moment, or one above the default fit
+  bounds, imports with its value: `MaterialMagnetic` widens the bounds of
+  an explicitly given moment instead of refusing it.
+- `Project.add_sample_from_orso` and `replace_models_from_orso` refuse a
+  sample with magnetic layers when the calculator cannot model
+  magnetism (`NotImplementedError`), before the project is changed; they
+  used to add or replace the model and then fail.
+- A user constraint on a coupled layer's `rho_m` now reads as
+  `rho_m_coupled = False`: it is exported, saved and kept on a material
+  change as the user constraint it is, instead of being taken for the
+  material coupling and overwritten.
+- `Project._sync_parameter_states` fixes parameters that act on nothing:
+  the field of a model that is not magnetic or whose calculator cannot
+  model magnetism, and the moment (and, with the nuclear SLD decoupled,
+  the density) of a `MaterialMagnetic` no layer is coupled to, unless a
+  user constraint refers to it. They used to stay free and enter the fit.
 - ORSO model export writes the moment of magnetic layers on
   density-defined materials, and the manual SLD of a decoupled
   `MaterialDensity`. Losses (a magnetic SLD without a density to convert

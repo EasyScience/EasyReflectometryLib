@@ -9,6 +9,7 @@ import numpy as np
 from easyscience import global_object
 from easyscience.variable import Parameter
 
+from easyreflectometry.constraints import USER_CONSTRAINT_FLAG
 from easyreflectometry.constraints import unconstrain
 from easyreflectometry.utils import get_as_parameter
 
@@ -198,8 +199,21 @@ class Layer(BaseCore):
         default :class:`LayerMagnetism` when the layer has none, and requires a
         material with ``rho_m``. Uncoupling keeps the current value. Removing
         the magnetism, or a user ``unconstrain`` of ``rho_m``, uncouples.
+
+        Only the layer's own wiring counts: a user constraint placed on
+        ``rho_m`` (:func:`~easyreflectometry.constraints.constrain`) reads as
+        uncoupled, is saved as the user constraint it is, and is left alone
+        when the material is later replaced. Setting this to True explicitly
+        replaces such a constraint with the coupling.
         """
-        return self._rho_m_coupled and self._magnetism is not None and not self._magnetism.rho_m.independent
+        if not self._rho_m_coupled or self._magnetism is None:
+            return False
+        rho_m = self._magnetism.rho_m
+        if rho_m.independent or getattr(rho_m, USER_CONSTRAINT_FLAG, False):
+            return False
+        source = getattr(self._material, 'rho_m', None)
+        dependency_map = rho_m.dependency_map
+        return source is not None and len(dependency_map) == 1 and dependency_map.get('rho_m') is source
 
     @rho_m_coupled.setter
     def rho_m_coupled(self, couple: bool) -> None:

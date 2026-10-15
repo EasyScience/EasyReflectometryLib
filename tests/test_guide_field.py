@@ -225,3 +225,96 @@ class TestFieldEnablement:
 
         assert not any(parameter.enabled for parameter in self._field(project))
         assert_allclose(project.model_data_for_model_at_index(0, Q).y, reference, rtol=1e-3)
+
+
+class TestInactiveParametersLeaveTheFit:
+    """`enabled = False` is display; the fitter reads `fixed`."""
+
+    def setup_method(self):
+        global_object.map._clear()
+
+    @staticmethod
+    def _in_fit(model, parameter):
+        return any(candidate is parameter for candidate in model.get_fit_parameters())
+
+    def test_field_is_fixed_when_the_last_magnetic_layer_goes(self):
+        project = TestFieldEnablement._project(LayerMagnetism(rho_m=2.5))
+        model = project.models[0]
+        model.applied_field.fixed = False
+        model.guide_field_angle.fixed = False
+
+        model.sample[1].layers[0].magnetism = None
+        project._sync_parameter_states()
+
+        assert not self._in_fit(model, model.applied_field)
+        assert not self._in_fit(model, model.guide_field_angle)
+
+    def test_field_is_fixed_on_a_calculator_without_magnetism(self):
+        project = TestFieldEnablement._project(None)
+        model = project.models[0]
+        model.applied_field.fixed = False
+
+        project.calculator = 'refnx'
+
+        assert not self._in_fit(model, model.applied_field)
+
+    def test_field_of_a_magnetic_model_stays_free(self):
+        project = TestFieldEnablement._project(LayerMagnetism(rho_m=2.5))
+        model = project.models[0]
+        model.applied_field.fixed = False
+
+        project._sync_parameter_states()
+
+        assert self._in_fit(model, model.applied_field)
+
+
+class TestUnusedMagneticMaterialInputs:
+    def setup_method(self):
+        global_object.map._clear()
+
+    @staticmethod
+    def _project():
+        from easyreflectometry.sample import MaterialMagnetic
+
+        project = TestFieldEnablement._project(None)
+        film = project.models[0].sample[1].layers[0]
+        iron = MaterialMagnetic(name='Fe')
+        film.material = iron
+        film.rho_m_coupled = True
+        project._sync_parameter_states()
+        return project, film, iron
+
+    def test_moment_is_fixed_when_the_last_layer_uncouples(self):
+        project, film, iron = self._project()
+        iron.magnetic_moment.fixed = False
+        project._sync_parameter_states()
+        assert not iron.magnetic_moment.fixed
+
+        film.rho_m_coupled = False
+        project._sync_parameter_states()
+
+        assert iron.magnetic_moment.fixed
+
+    def test_density_of_a_decoupled_unused_material_is_fixed(self):
+        project, film, iron = self._project()
+        iron.sld_coupled = False
+        iron.density.fixed = False
+        project._sync_parameter_states()
+        assert not iron.density.fixed  # still drives the coupled layer's rho_m
+
+        film.rho_m_coupled = False
+        project._sync_parameter_states()
+
+        assert iron.density.fixed
+
+    def test_a_moment_a_user_constraint_uses_stays_free(self):
+        from easyreflectometry.constraints import constrain
+
+        project, film, iron = self._project()
+        iron.magnetic_moment.fixed = False
+        film.rho_m_coupled = False
+        constrain(film.magnetism.rho_m, '2 * mu', mu=iron.magnetic_moment)
+
+        project._sync_parameter_states()
+
+        assert not iron.magnetic_moment.fixed

@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2026 EasyScience contributors <https://github.com/easyscience>
 # SPDX-License-Identifier: BSD-3-Clause
 
+from copy import deepcopy
+from numbers import Number
 from typing import Optional
 from typing import Union
 
@@ -38,6 +40,19 @@ DEFAULTS = {
     },
 }
 
+
+def _moment_defaults(magnetic_moment) -> dict:
+    """The moment's defaults, with the fit bounds widened to include an
+    explicitly given value (the bounds are a fitting convenience)."""
+    if not isinstance(magnetic_moment, Number) or isinstance(magnetic_moment, bool):
+        return DEFAULTS
+    defaults = deepcopy(DEFAULTS)
+    entry = defaults['magnetic_moment']
+    entry['min'] = min(entry['min'], float(magnetic_moment))
+    entry['max'] = max(entry['max'], float(magnetic_moment))
+    return defaults
+
+
 # Number density times moment times the magnetic scattering length per Bohr
 # magneton, in the library's 1e-6 SLD storage convention (see
 # `SLD_DEPENDENCY_EXPRESSION`); the units are carried by the operands.
@@ -55,7 +70,7 @@ class MaterialMagnetic(MaterialDensity):
     with ``p`` the magnetic scattering length of one Bohr magneton
     (:data:`~easyreflectometry.special.calculations.MAGNETIC_SCATTERING_LENGTH`).
     The moment is the effective in-plane net moment per formula unit, which is
-    the moment per atom only for a one-element formula.
+    the moment per atom only for a formula unit of one atom, such as Fe.
 
     A layer uses the material's ``rho_m`` when its
     :attr:`~easyreflectometry.sample.Layer.rho_m_coupled` is set. The magnetic
@@ -82,6 +97,10 @@ class MaterialMagnetic(MaterialDensity):
             Mass density in g/cm^3. By default, 7.874 (iron).
         magnetic_moment : Union[Parameter, float, None], optional
             Moment in Bohr magnetons per formula unit. By default, 2.2 (iron).
+            The default fit bounds are [0, 10]; a number outside them widens
+            the bounds to include it rather than being refused, since a
+            signed moment (an imported reversed magnetic SLD) or a formula
+            unit of many atoms is a valid state, not a fitting choice.
         name : str, optional
             Identifier. By default, 'EasyMaterialMagnetic'.
         unique_name : Optional[str], optional
@@ -101,7 +120,7 @@ class MaterialMagnetic(MaterialDensity):
         self._magnetic_moment = get_as_parameter(
             name='magnetic_moment',
             value=magnetic_moment,
-            default_dict=DEFAULTS,
+            default_dict=_moment_defaults(magnetic_moment),
             unique_name_prefix=f'{unique_name}_MagneticMoment',
         )
         self._rho_m = get_as_parameter(

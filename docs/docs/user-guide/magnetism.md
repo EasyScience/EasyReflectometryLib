@@ -73,12 +73,13 @@ The last two are the nuclear SLD plus or minus the part of the magnetic
 SLD along the field.
 
 Those two curves are the potentials the two spin states see **only when
-every moment is parallel to the field and the applied field is zero**.
-With a moment across the field the two spin states mix, and their
-potentials split by $\pm|\rho_M|$ whatever the field direction. For
-example, a moment fully across the field gives two identical curves, yet
-the critical edges still move. The applied field is not included in the
-curves.
+every moment is collinear with the field (parallel or antiparallel) and
+the applied field is zero**. With a moment across the field the two spin
+states mix; at zero applied field their potentials then split by
+$\pm|\rho_M|$ whatever the field direction. For example, a moment fully
+across the field gives two identical curves, yet the critical edges still
+move. With an applied field the kernel combines field and magnetisation,
+and the applied field is not included in the curves.
 
 ## Two ways to set the magnetic SLD
 
@@ -97,7 +98,8 @@ film.magnetism.rho_m.value  # 5.042, i.e. 5.042e-6 1/Å^2
 
 `MaterialMagnetic` is a `MaterialDensity` with a `magnetic_moment` in
 Bohr magnetons **per formula unit**. That is the moment per atom only
-for a one-element formula. Its magnetic SLD is derived:
+for a formula unit of one atom, such as Fe (Fe2 is one element but two
+atoms). Its magnetic SLD is derived:
 
 $$
 \rho_M = N \mu p, \qquad N = \frac{N_A d}{M}, \qquad
@@ -127,8 +129,13 @@ coupling is dropped when:
 
 - the layer gets a material without a moment, with a warning;
 - its magnetism is removed;
-- `rho_m` is unconstrained by hand;
+- `rho_m` is unconstrained by hand, or given a user constraint with
+  `constrain`;
 - `rho_m_coupled` is set to `False`.
+
+A user constraint on `rho_m` reads as uncoupled, is saved as a user
+constraint, and is kept when the layer's material is later replaced.
+Setting `rho_m_coupled = True` again replaces it with the coupling.
 
 When the coupling is dropped, `rho_m` keeps its value and becomes an
 ordinary fixed parameter again.
@@ -143,9 +150,15 @@ SLD only. The magnetic SLD stays derived from density and moment.
 - When the nuclear SLD is decoupled, the data only constrain density ×
   moment, so free one of the two, not both.
 - A material's moment has no effect unless some layer is coupled to it.
+  The project fixes such a moment, and the density of such a material
+  with a decoupled nuclear SLD, so neither enters a fit by accident.
+  The field of a model that is not magnetic, or whose calculator cannot
+  model magnetism, is fixed as well as disabled.
 - A moment $\mu$ at $\theta_M$ and $-\mu$ at $\theta_M + 180°$ are the
-  same state. `magnetic_moment` is non-negative by default, and the
-  direction is `theta_m`. A layer's `rho_m` stays signed.
+  same state. `magnetic_moment` has fit bounds [0, 10] by default, and
+  the direction is `theta_m`. A layer's `rho_m` stays signed. A moment
+  given outside those bounds, for example a negative one read from an
+  ORSO file, widens them instead of being refused.
 
 ## ORSO model files
 
@@ -164,6 +177,10 @@ On import:
   unit is unknown, is skipped with a warning.
 - An explicitly unknown unit is never read as the default unit.
 - `relative_density` is not applied, and the importer warns about it.
+- A negative moment, written for a reversed magnetic SLD, imports with
+  its sign; so does a moment above 10 µB per formula unit.
+- A sample with magnetic layers is refused, before the project changes,
+  when the current calculator cannot model magnetism.
 
 On export:
 

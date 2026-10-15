@@ -244,12 +244,58 @@ class Project:
                         self._sync_layer_parameter_state(magnetism.rho_m, 'rho_m', disabled_ids)
 
         # The field only acts on a magnetic model under a magnetic calculator;
-        # elsewhere it is inert and must not show up as a fit control.
+        # elsewhere it is inert and must not show up as a fit control. The
+        # fitter reads `fixed`, not `enabled`, so an inert field is fixed too.
         supports_magnetism = self.calculator_supports_magnetism
         for model in self._models:
             active = supports_magnetism and model.has_magnetism
             for parameter in (model.guide_field_angle, model.applied_field):
                 parameter.enabled = active
+                if not active:
+                    _fix_if_free(parameter)
+        self._fix_unused_magnetic_material_inputs()
+
+    def _fix_unused_magnetic_material_inputs(self) -> None:
+        """Keep the inputs of a magnetic material that acts on nothing out of the fit.
+
+        A :class:`MaterialMagnetic`'s moment only reaches the reflectivity
+        through a layer coupled to it (``Layer.rho_m_coupled``); with its nuclear
+        SLD decoupled, its density is in the same position. Either one left
+        free after the last coupled layer goes would be a zero-sensitivity fit
+        parameter, so it is fixed here, on every path that re-syncs the
+        project (layer and coupling edits, engine switches, loading).
+        """
+        coupled: set[int] = set()
+        magnetic: dict[int, object] = {}
+        for model in self._models:
+            for assembly in model.sample:
+                for layer in assembly.layers:
+                    material = getattr(layer, 'material', None)
+                    if getattr(material, 'magnetic_moment', None) is not None:
+                        magnetic[id(material)] = material
+                    if getattr(layer, 'rho_m_coupled', False):
+                        coupled.add(id(material))
+        for material in self._materials or []:
+            if getattr(material, 'magnetic_moment', None) is not None:
+                magnetic.setdefault(id(material), material)
+        if not magnetic:
+            return
+        # A moment or density another parameter depends on (a user constraint)
+        # still acts; the material's own derived SLDs do not count.
+        own = {id(parameter) for material in magnetic.values() for parameter in (material.rho_m, material.sld, material.isld)}
+        referenced = {
+            id(source)
+            for parameter in self.parameters
+            if not parameter.independent and id(parameter) not in own
+            for source in parameter.dependency_map.values()
+        }
+        for material_id, material in magnetic.items():
+            if material_id in coupled:
+                continue
+            if id(material.magnetic_moment) not in referenced:
+                _fix_if_free(material.magnetic_moment)
+            if not material.sld_coupled and id(material.density) not in referenced:
+                _fix_if_free(material.density)
 
     def _sync_layer_parameter_state(self, parameter: Parameter, kind: str, disabled_ids: set[int]) -> None:
         """Update a layer parameter's enabled state and pending default limits."""
@@ -1272,6 +1318,7 @@ class Project:
         """
         if sample is None:
             raise ValueError('The ORSO file does not contain a valid sample model definition.')
+        self._check_sample_calculable(sample)
         # Take the collection's next colour: a supplied model keeps its own
         # colour, and the Model default would give every loaded sample the
         # same first palette colour.
@@ -1304,6 +1351,7 @@ class Project:
         """
         if sample is None:
             raise ValueError('The ORSO file does not contain a valid sample model definition.')
+        self._check_sample_calculable(sample)
         model = Model(sample=sample)
         if sample.name:
             model.user_data['original_name'] = sample.name  # Store original name for reference
@@ -1311,6 +1359,25 @@ class Project:
         model.interface = self._calculator
         self._materials = self._get_materials_from_model(model)
         self.current_model_index = 0
+
+    def _check_sample_calculable(self, sample: Sample) -> None:
+        """Refuse a sample the current calculator cannot model, before the
+        project is changed: binding a magnetic sample to a calculator without
+        magnetism fails only after the model was already added or the old
+        models replaced.
+
+        Raises
+        ------
+        NotImplementedError
+            The sample has magnetic layers and the calculator cannot model them.
+        """
+        magnetic = any(getattr(layer, 'magnetism', None) is not None for assembly in sample for layer in assembly.layers)
+        if magnetic and not self.calculator_supports_magnetism:
+            engines = ', '.join(self.calculators_supporting_magnetism) or 'none of the available engines'
+            raise NotImplementedError(
+                f'The sample has magnetic layers, which the {self.calculator} calculation engine cannot model; '
+                f'switch to {engines} and load it again.'
+            )
 
     def _get_materials_from_model(self, model: Model) -> 'MaterialCollection':
         """Get all materials from a single model's sample."""
@@ -3227,3 +3294,9 @@ def _spin_asymmetry(
         'low_significance_points': int(np.count_nonzero(insignificant)),
     }
     return asymmetry, variance, keep, reasons
+
+
+def _fix_if_free(parameter: Parameter) -> None:
+    """Fix an independent parameter that is free; dependent ones never fit."""
+    if parameter.independent and not parameter.fixed:
+        parameter.fixed = True

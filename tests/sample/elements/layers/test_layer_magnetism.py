@@ -413,3 +413,61 @@ class TestRhoMCoupling:
         wrapper = interface()._wrapper
         assert wrapper.get_layer_value(coupled.unique_name, 'magnetism_rhoM') == pytest.approx(FE_RHO_M / 2)
         assert wrapper.get_layer_value(uncoupled.unique_name, 'magnetism_rhoM') == pytest.approx(1.0)
+
+
+class TestRhoMUserConstraint:
+    """A user constraint on a coupled ``rho_m`` replaces the coupling; it is not the coupling."""
+
+    @staticmethod
+    def _constrained_film(scaled_to_material: bool):
+        from easyscience.variable import Parameter
+
+        from easyreflectometry.constraints import constrain
+        from easyreflectometry.sample import MaterialMagnetic
+
+        iron = MaterialMagnetic(name='Fe')
+        film = Layer(material=iron, thickness=100, name='film', rho_m_coupled=True)
+        if scaled_to_material:
+            source = iron.rho_m
+            constrain(film.magnetism.rho_m, '0.5 * m', m=source)
+        else:
+            source = Parameter(name='external', value=1.0, unit='1/angstrom^2')
+            constrain(film.magnetism.rho_m, 'x', x=source)
+        return film, source
+
+    @pytest.mark.parametrize('scaled_to_material', [False, True])
+    def test_reads_as_uncoupled(self, scaled_to_material):
+        film, _ = self._constrained_film(scaled_to_material)
+        assert not film.rho_m_coupled
+
+    def test_survives_a_material_change(self):
+        from easyreflectometry.sample import MaterialMagnetic
+
+        film, external = self._constrained_film(scaled_to_material=False)
+        film.material = MaterialMagnetic(chemical_structure='Ni', density=8.908, magnetic_moment=0.6, name='Ni')
+
+        external.value = 2.0
+        assert film.magnetism.rho_m.value == pytest.approx(2.0)
+        assert not film.rho_m_coupled
+
+    def test_export_writes_the_layer_value(self):
+        from easyreflectometry.orso_utils import _layer_material_to_orso
+        from easyreflectometry.special.calculations import MAGNETIC_SCATTERING_LENGTH
+
+        film, _ = self._constrained_film(scaled_to_material=False)
+        moment = _layer_material_to_orso(film).magnetic_moment.magnitude
+        assert moment * film.material.number_density * MAGNETIC_SCATTERING_LENGTH * 1e6 == pytest.approx(1.0)
+
+    def test_explicit_coupling_replaces_the_constraint(self):
+        film, external = self._constrained_film(scaled_to_material=False)
+
+        film.rho_m_coupled = True
+
+        assert film.rho_m_coupled
+        assert film.magnetism.rho_m.value == pytest.approx(FE_RHO_M)
+        external.value = 2.0
+        assert film.magnetism.rho_m.value == pytest.approx(FE_RHO_M)
+
+    def test_saved_as_uncoupled(self):
+        film, _ = self._constrained_film(scaled_to_material=False)
+        assert film.as_dict()['rho_m_coupled'] is False

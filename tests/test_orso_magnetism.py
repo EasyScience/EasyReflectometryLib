@@ -197,3 +197,76 @@ class TestExport:
         model = Model(guide_field_angle=0.0)
         with pytest.warns(UserWarning, match='guide field angle and applied field are not written'):
             model.as_orso()
+
+
+class TestSignedAndLargeMoments:
+    def test_negative_direct_rho_m_round_trips(self, tmp_path):
+        film = Layer(
+            material=MaterialDensity(chemical_structure='Fe', density=7.874, name='Fe'),
+            thickness=100,
+            name='Fe',
+            magnetism=LayerMagnetism(rho_m=-3.0),
+        )
+
+        loaded = _round_trip(tmp_path, film)
+
+        assert loaded.magnetism.rho_m.value == pytest.approx(-3.0)
+        assert loaded.material.magnetic_moment.value < 0
+
+    def test_widened_signed_material_moment_round_trips(self, tmp_path):
+        iron = MaterialMagnetic(name='Fe')
+        iron.magnetic_moment.min = -10.0
+        iron.magnetic_moment.value = -1.1
+        film = Layer(material=iron, thickness=100, name='Fe', rho_m_coupled=True)
+
+        loaded = _round_trip(tmp_path, film)
+
+        assert loaded.rho_m_coupled
+        assert loaded.magnetism.rho_m.value == pytest.approx(-FE_RHO_M / 2)
+
+    def test_moment_above_ten_per_formula_unit(self, tmp_path):
+        film = _film_from(tmp_path, formula='Fe10', mass_density=Value(7.874, 'g/cm^3'), magnetic_moment=22.0)
+
+        assert film.material.magnetic_moment.value == pytest.approx(22.0)
+        # Ten iron atoms of 2.2 muB each: the same magnetisation as Fe at 2.2.
+        assert film.magnetism.rho_m.value == pytest.approx(FE_RHO_M)
+
+    def test_zero_moment(self, tmp_path):
+        film = _film_from(tmp_path, formula='Fe', mass_density=Value(7.874, 'g/cm^3'), magnetic_moment=0.0)
+        assert film.magnetism.rho_m.value == pytest.approx(0.0)
+
+
+class TestProjectRefusesMagneticSamplesItCannotCalculate:
+    @staticmethod
+    def _project_and_sample(tmp_path, calculator):
+        from easyreflectometry.project import Project
+
+        project = Project()
+        project.calculator = calculator
+        project.default_model()
+        film = Layer(material=MaterialMagnetic(name='Fe'), thickness=100, name='Fe', rho_m_coupled=True)
+        path = _write_ort(tmp_path / 'magnetic.ort', sample_to_orso_model(_sample(film)))
+        return project, _sample_from(path)
+
+    @pytest.mark.parametrize('method', ['add_sample_from_orso', 'replace_models_from_orso'])
+    def test_refnx_refuses_before_changing_the_project(self, tmp_path, method):
+        project, sample = self._project_and_sample(tmp_path, 'refnx')
+        models = list(project.models)
+        materials = list(project._materials)
+
+        with pytest.raises(NotImplementedError, match='switch to refl1d'):
+            getattr(project, method)(sample)
+
+        assert list(project.models) == models
+        assert list(project._materials) == materials
+        assert project.current_model_index == 0
+
+    @pytest.mark.parametrize('method', ['add_sample_from_orso', 'replace_models_from_orso'])
+    def test_refl1d_loads_it(self, tmp_path, method):
+        project, sample = self._project_and_sample(tmp_path, 'refl1d')
+
+        getattr(project, method)(sample)
+
+        film = project.models[project.current_model_index].sample[1].layers[0]
+        assert film.rho_m_coupled
+        assert project.model_data_for_model_at_index(project.current_model_index).y.size > 0
