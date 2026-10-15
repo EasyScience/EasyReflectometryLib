@@ -77,9 +77,9 @@ every moment is collinear with the field (parallel or antiparallel) and
 the applied field is zero**. With a moment across the field the two spin
 states mix; at zero applied field their potentials then split by
 $\pm|\rho_M|$ whatever the field direction. For example, a moment fully
-across the field gives two identical curves, yet the critical edges still
-move. With an applied field the kernel combines field and magnetisation,
-and the applied field is not included in the curves.
+across the field gives two identical curves, yet the critical edges
+still move. With an applied field the kernel combines field and
+magnetisation, and the applied field is not included in the curves.
 
 ## Two ways to set the magnetic SLD
 
@@ -151,8 +151,8 @@ SLD only. The magnetic SLD stays derived from density and moment.
   moment, so free one of the two, not both.
 - A material's moment has no effect unless some layer is coupled to it.
   The project fixes such a moment, and the density of such a material
-  with a decoupled nuclear SLD, so neither enters a fit by accident.
-  The field of a model that is not magnetic, or whose calculator cannot
+  with a decoupled nuclear SLD, so neither enters a fit by accident. The
+  field of a model that is not magnetic, or whose calculator cannot
   model magnetism, is fixed as well as disabled.
 - A moment $\mu$ at $\theta_M$ and $-\mu$ at $\theta_M + 180°$ are the
   same state. `magnetic_moment` has fit bounds [0, 10] by default, and
