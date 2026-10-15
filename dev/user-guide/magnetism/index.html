@@ -2755,12 +2755,13 @@ versus depth: the nuclear SLD, <span class="arithmatex">\(\rho_M\)</span>, <span
 The last two are the nuclear SLD plus or minus the part of the magnetic
 SLD along the field.</p>
 <p>Those two curves are the potentials the two spin states see <strong>only when
-every moment is parallel to the field and the applied field is zero</strong>.
-With a moment across the field the two spin states mix, and their
-potentials split by <span class="arithmatex">\(\pm|\rho_M|\)</span> whatever the field direction. For
-example, a moment fully across the field gives two identical curves, yet
-the critical edges still move. The applied field is not included in the
-curves.</p>
+every moment is collinear with the field (parallel or antiparallel) and
+the applied field is zero</strong>. With a moment across the field the two spin
+states mix; at zero applied field their potentials then split by
+<span class="arithmatex">\(\pm|\rho_M|\)</span> whatever the field direction. For example, a moment fully
+across the field gives two identical curves, yet the critical edges still
+move. With an applied field the kernel combines field and magnetisation,
+and the applied field is not included in the curves.</p>
 <h2 id="two-ways-to-set-the-magnetic-sld">Two ways to set the magnetic SLD</h2>
 <p><strong>Directly</strong>, by setting <code>LayerMagnetism.rho_m</code> in units of <span class="arithmatex">\(10^{-6}\)</span>
 Å⁻², like any other SLD.</p>
@@ -2773,7 +2774,8 @@ curves.</p>
 </code></pre></div>
 <p><code>MaterialMagnetic</code> is a <code>MaterialDensity</code> with a <code>magnetic_moment</code> in
 Bohr magnetons <strong>per formula unit</strong>. That is the moment per atom only
-for a one-element formula. Its magnetic SLD is derived:</p>
+for a formula unit of one atom, such as Fe (Fe2 is one element but two
+atoms). Its magnetic SLD is derived:</p>
 <div class="arithmatex">\[
 \rho_M = N \mu p, \qquad N = \frac{N_A d}{M}, \qquad
 p = \frac{m_n |\mu_n| \mu_0 \mu_B}{2\pi\hbar^2} = 2.6991 \times 10^{-5}\ \text{Å}
@@ -2798,9 +2800,13 @@ coupling is dropped when:</p>
 <ul>
 <li>the layer gets a material without a moment, with a warning;</li>
 <li>its magnetism is removed;</li>
-<li><code>rho_m</code> is unconstrained by hand;</li>
+<li><code>rho_m</code> is unconstrained by hand, or given a user constraint with
+  <code>constrain</code>;</li>
 <li><code>rho_m_coupled</code> is set to <code>False</code>.</li>
 </ul>
+<p>A user constraint on <code>rho_m</code> reads as uncoupled, is saved as a user
+constraint, and is kept when the layer's material is later replaced.
+Setting <code>rho_m_coupled = True</code> again replaces it with the coupling.</p>
 <p>When the coupling is dropped, <code>rho_m</code> keeps its value and becomes an
 ordinary fixed parameter again.</p>
 <p>Switching off <code>sld_coupled</code> on a <code>MaterialMagnetic</code> frees the nuclear
@@ -2811,10 +2817,16 @@ SLD only. The magnetic SLD stays derived from density and moment.</p>
   coupled layer.</li>
 <li>When the nuclear SLD is decoupled, the data only constrain density ×
   moment, so free one of the two, not both.</li>
-<li>A material's moment has no effect unless some layer is coupled to it.</li>
+<li>A material's moment has no effect unless some layer is coupled to it.
+  The project fixes such a moment, and the density of such a material
+  with a decoupled nuclear SLD, so neither enters a fit by accident.
+  The field of a model that is not magnetic, or whose calculator cannot
+  model magnetism, is fixed as well as disabled.</li>
 <li>A moment <span class="arithmatex">\(\mu\)</span> at <span class="arithmatex">\(\theta_M\)</span> and <span class="arithmatex">\(-\mu\)</span> at <span class="arithmatex">\(\theta_M + 180°\)</span> are the
-  same state. <code>magnetic_moment</code> is non-negative by default, and the
-  direction is <code>theta_m</code>. A layer's <code>rho_m</code> stays signed.</li>
+  same state. <code>magnetic_moment</code> has fit bounds [0, 10] by default, and
+  the direction is <code>theta_m</code>. A layer's <code>rho_m</code> stays signed. A moment
+  given outside those bounds, for example a negative one read from an
+  ORSO file, widens them instead of being refused.</li>
 </ul>
 <h2 id="orso-model-files">ORSO model files</h2>
 <p>The ORSO model language describes a material by formula, density and
@@ -2831,6 +2843,10 @@ and no field.</p>
   unit is unknown, is skipped with a warning.</li>
 <li>An explicitly unknown unit is never read as the default unit.</li>
 <li><code>relative_density</code> is not applied, and the importer warns about it.</li>
+<li>A negative moment, written for a reversed magnetic SLD, imports with
+  its sign; so does a moment above 10 µB per formula unit.</li>
+<li>A sample with magnetic layers is refused, before the project changes,
+  when the current calculator cannot model magnetism.</li>
 </ul>
 <p>On export:</p>
 <ul>

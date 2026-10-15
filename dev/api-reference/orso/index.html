@@ -8135,8 +8135,7 @@ By default a 500-point grid spanning the sample.</p>
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>src/easyreflectometry/sample/elements/layers/layer.py</code></summary>
-                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 41</span>
-<span class="normal"> 42</span>
+                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 42</span>
 <span class="normal"> 43</span>
 <span class="normal"> 44</span>
 <span class="normal"> 45</span>
@@ -8365,7 +8364,21 @@ By default a 500-point grid spanning the sample.</p>
 <span class="normal">268</span>
 <span class="normal">269</span>
 <span class="normal">270</span>
-<span class="normal">271</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Layer</span><span class="p">(</span><span class="n">BaseCore</span><span class="p">):</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Layer</span><span class="p">(</span><span class="n">BaseCore</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">material</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Material</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -8525,8 +8538,21 @@ By default a 500-point grid spanning the sample.</p>
 <span class="sd">        default :class:`LayerMagnetism` when the layer has none, and requires a</span>
 <span class="sd">        material with ``rho_m``. Uncoupling keeps the current value. Removing</span>
 <span class="sd">        the magnetism, or a user ``unconstrain`` of ``rho_m``, uncouples.</span>
+
+<span class="sd">        Only the layer&#39;s own wiring counts: a user constraint placed on</span>
+<span class="sd">        ``rho_m`` (:func:`~easyreflectometry.constraints.constrain`) reads as</span>
+<span class="sd">        uncoupled, is saved as the user constraint it is, and is left alone</span>
+<span class="sd">        when the material is later replaced. Setting this to True explicitly</span>
+<span class="sd">        replaces such a constraint with the coupling.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_m_coupled</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magnetism</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magnetism</span><span class="o">.</span><span class="n">rho_m</span><span class="o">.</span><span class="n">independent</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_m_coupled</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magnetism</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">rho_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magnetism</span><span class="o">.</span><span class="n">rho_m</span>
+        <span class="k">if</span> <span class="n">rho_m</span><span class="o">.</span><span class="n">independent</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">rho_m</span><span class="p">,</span> <span class="n">USER_CONSTRAINT_FLAG</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material</span><span class="p">,</span> <span class="s1">&#39;rho_m&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">dependency_map</span> <span class="o">=</span> <span class="n">rho_m</span><span class="o">.</span><span class="n">dependency_map</span>
+        <span class="k">return</span> <span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">dependency_map</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">dependency_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rho_m&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="n">source</span>
 
     <span class="nd">@rho_m_coupled</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">rho_m_coupled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">couple</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -8634,6 +8660,11 @@ one material may carry different net moments. Setting it attaches a
 default :class:<code>LayerMagnetism</code> when the layer has none, and requires a
 material with <code>rho_m</code>. Uncoupling keeps the current value. Removing
 the magnetism, or a user <code>unconstrain</code> of <code>rho_m</code>, uncouples.</p>
+<p>Only the layer's own wiring counts: a user constraint placed on
+<code>rho_m</code> (:func:<code>~easyreflectometry.constraints.constrain</code>) reads as
+uncoupled, is saved as the user constraint it is, and is left alone
+when the material is later replaced. Setting this to True explicitly
+replaces such a constraint with the coupling.</p>
 <!-- prettier-ignore-start -->
 
 <!-- prettier-ignore-end -->
@@ -8832,8 +8863,7 @@ By default, False.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/easyreflectometry/sample/elements/layers/layer.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 42</span>
-<span class="normal"> 43</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 43</span>
 <span class="normal"> 44</span>
 <span class="normal"> 45</span>
 <span class="normal"> 46</span>
@@ -8900,7 +8930,8 @@ By default, False.</p>
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">110</span>
+<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">material</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Material</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">thickness</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -8995,14 +9026,14 @@ enables magnetism on the calculator (raising if it does not support it).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/easyreflectometry/sample/elements/layers/layer.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
-<span class="normal">115</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
 <span class="normal">120</span>
-<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@BaseCore</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">setter</span>
+<span class="normal">121</span>
+<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@BaseCore</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">setter</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_interface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the interface; runs `generate_bindings` and, for a magnetic layer,</span>
 <span class="sd">    enables magnetism on the calculator (raising if it does not support it).</span>
@@ -9069,19 +9100,19 @@ enables magnetism on the calculator (raising if it does not support it).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/easyreflectometry/sample/elements/layers/layer.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assign_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material</span><span class="p">:</span> <span class="n">Material</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assign_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material</span><span class="p">:</span> <span class="n">Material</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Assign a material to the layer interface.</span>
 
 <span class="sd">    Parameters</span>
@@ -11296,7 +11327,7 @@ a derived magnetic SLD</p>
 <p>with <code>p</code> the magnetic scattering length of one Bohr magneton
 (:data:<code>~easyreflectometry.special.calculations.MAGNETIC_SCATTERING_LENGTH</code>).
 The moment is the effective in-plane net moment per formula unit, which is
-the moment per atom only for a one-element formula.</p>
+the moment per atom only for a formula unit of one atom, such as Fe.</p>
 <p>A layer uses the material's <code>rho_m</code> when its
 :attr:<code>~easyreflectometry.sample.Layer.rho_m_coupled</code> is set. The magnetic
 SLD stays derived when :attr:<code>sld_coupled</code> is switched off, which affects
@@ -11314,22 +11345,7 @@ the nuclear <code>sld</code>/<code>isld</code> only.</p>
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>src/easyreflectometry/sample/elements/materials/material_magnetic.py</code></summary>
-                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 47</span>
-<span class="normal"> 48</span>
-<span class="normal"> 49</span>
-<span class="normal"> 50</span>
-<span class="normal"> 51</span>
-<span class="normal"> 52</span>
-<span class="normal"> 53</span>
-<span class="normal"> 54</span>
-<span class="normal"> 55</span>
-<span class="normal"> 56</span>
-<span class="normal"> 57</span>
-<span class="normal"> 58</span>
-<span class="normal"> 59</span>
-<span class="normal"> 60</span>
-<span class="normal"> 61</span>
-<span class="normal"> 62</span>
+                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 62</span>
 <span class="normal"> 63</span>
 <span class="normal"> 64</span>
 <span class="normal"> 65</span>
@@ -11436,7 +11452,26 @@ the nuclear <code>sld</code>/<code>isld</code> only.</p>
 <span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
-<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MaterialMagnetic</span><span class="p">(</span><span class="n">MaterialDensity</span><span class="p">):</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MaterialMagnetic</span><span class="p">(</span><span class="n">MaterialDensity</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A density-defined material carrying a magnetic moment.</span>
 
 <span class="sd">    Adds :attr:`magnetic_moment` (µB per formula unit, the fit parameter) and</span>
@@ -11447,7 +11482,7 @@ the nuclear <code>sld</code>/<code>isld</code> only.</p>
 <span class="sd">    with ``p`` the magnetic scattering length of one Bohr magneton</span>
 <span class="sd">    (:data:`~easyreflectometry.special.calculations.MAGNETIC_SCATTERING_LENGTH`).</span>
 <span class="sd">    The moment is the effective in-plane net moment per formula unit, which is</span>
-<span class="sd">    the moment per atom only for a one-element formula.</span>
+<span class="sd">    the moment per atom only for a formula unit of one atom, such as Fe.</span>
 
 <span class="sd">    A layer uses the material&#39;s ``rho_m`` when its</span>
 <span class="sd">    :attr:`~easyreflectometry.sample.Layer.rho_m_coupled` is set. The magnetic</span>
@@ -11474,6 +11509,10 @@ the nuclear <code>sld</code>/<code>isld</code> only.</p>
 <span class="sd">            Mass density in g/cm^3. By default, 7.874 (iron).</span>
 <span class="sd">        magnetic_moment : Union[Parameter, float, None], optional</span>
 <span class="sd">            Moment in Bohr magnetons per formula unit. By default, 2.2 (iron).</span>
+<span class="sd">            The default fit bounds are [0, 10]; a number outside them widens</span>
+<span class="sd">            the bounds to include it rather than being refused, since a</span>
+<span class="sd">            signed moment (an imported reversed magnetic SLD) or a formula</span>
+<span class="sd">            unit of many atoms is a valid state, not a fitting choice.</span>
 <span class="sd">        name : str, optional</span>
 <span class="sd">            Identifier. By default, &#39;EasyMaterialMagnetic&#39;.</span>
 <span class="sd">        unique_name : Optional[str], optional</span>
@@ -11493,7 +11532,7 @@ the nuclear <code>sld</code>/<code>isld</code> only.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_magnetic_moment</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;magnetic_moment&#39;</span><span class="p">,</span>
             <span class="n">value</span><span class="o">=</span><span class="n">magnetic_moment</span><span class="p">,</span>
-            <span class="n">default_dict</span><span class="o">=</span><span class="n">DEFAULTS</span><span class="p">,</span>
+            <span class="n">default_dict</span><span class="o">=</span><span class="n">_moment_defaults</span><span class="p">(</span><span class="n">magnetic_moment</span><span class="p">),</span>
             <span class="n">unique_name_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">unique_name</span><span class="si">}</span><span class="s1">_MagneticMoment&#39;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rho_m</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span>
@@ -11701,7 +11740,11 @@ the nuclear <code>sld</code>/<code>isld</code> only.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Moment in Bohr magnetons per formula unit. By default, 2.2 (iron).</p>
+                <p>Moment in Bohr magnetons per formula unit. By default, 2.2 (iron).
+The default fit bounds are [0, 10]; a number outside them widens
+the bounds to include it rather than being refused, since a
+signed moment (an imported reversed magnetic SLD) or a formula
+unit of many atoms is a valid state, not a fitting choice.</p>
 <!-- prettier-ignore-start -->
 
 <!-- prettier-ignore-end -->
@@ -11773,22 +11816,7 @@ the nuclear <code>sld</code>/<code>isld</code> only.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/easyreflectometry/sample/elements/materials/material_magnetic.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 81</span>
 <span class="normal"> 82</span>
 <span class="normal"> 83</span>
 <span class="normal"> 84</span>
@@ -11829,7 +11857,26 @@ the nuclear <code>sld</code>/<code>isld</code> only.</p>
 <span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
-<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">chemical_structure</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Fe&#39;</span><span class="p">,</span>
     <span class="n">density</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="mf">7.874</span><span class="p">,</span>
@@ -11848,6 +11895,10 @@ the nuclear <code>sld</code>/<code>isld</code> only.</p>
 <span class="sd">        Mass density in g/cm^3. By default, 7.874 (iron).</span>
 <span class="sd">    magnetic_moment : Union[Parameter, float, None], optional</span>
 <span class="sd">        Moment in Bohr magnetons per formula unit. By default, 2.2 (iron).</span>
+<span class="sd">        The default fit bounds are [0, 10]; a number outside them widens</span>
+<span class="sd">        the bounds to include it rather than being refused, since a</span>
+<span class="sd">        signed moment (an imported reversed magnetic SLD) or a formula</span>
+<span class="sd">        unit of many atoms is a valid state, not a fitting choice.</span>
 <span class="sd">    name : str, optional</span>
 <span class="sd">        Identifier. By default, &#39;EasyMaterialMagnetic&#39;.</span>
 <span class="sd">    unique_name : Optional[str], optional</span>
@@ -11867,7 +11918,7 @@ the nuclear <code>sld</code>/<code>isld</code> only.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_magnetic_moment</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;magnetic_moment&#39;</span><span class="p">,</span>
         <span class="n">value</span><span class="o">=</span><span class="n">magnetic_moment</span><span class="p">,</span>
-        <span class="n">default_dict</span><span class="o">=</span><span class="n">DEFAULTS</span><span class="p">,</span>
+        <span class="n">default_dict</span><span class="o">=</span><span class="n">_moment_defaults</span><span class="p">(</span><span class="n">magnetic_moment</span><span class="p">),</span>
         <span class="n">unique_name_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">unique_name</span><span class="si">}</span><span class="s1">_MagneticMoment&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_rho_m</span> <span class="o">=</span> <span class="n">get_as_parameter</span><span class="p">(</span>
