@@ -1,4 +1,4 @@
-# Unreleased
+# Version 1.9.0 (19 Oct 2026)
 
 ## Multiple contrasts
 
