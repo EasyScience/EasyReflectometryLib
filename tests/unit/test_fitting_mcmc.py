@@ -18,10 +18,13 @@ from easyscience import global_object
 from easyscience.fitting.minimizers.factory import AvailableMinimizers
 
 from easyreflectometry.calculators import CalculatorFactory
+from easyreflectometry.data import DataSet1D
+from easyreflectometry.fit_settings import FitSettings
 from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.fitting import _fit_result_reduced_chi
 from easyreflectometry.fitting import _flatten_list
 from easyreflectometry.model import Model
+from easyreflectometry.model import PercentageFwhm
 
 
 @pytest.fixture(autouse=True)
@@ -90,6 +93,22 @@ class TestMCMCSampleGuards:
 
         with pytest.raises(RuntimeError, match='Bayesian sampling requires a BUMPS minimizer'):
             fitter.mcmc_sample(data)
+
+    def test_engine_is_checked_before_the_data_is_prepared(self, monkeypatch):
+        fitter = _make_fitter()
+        fitter.settings = FitSettings()  # LMFit, as a project's fitter carries
+        monkeypatch.setattr(MultiFitter, 'prepare', MagicMock(side_effect=AssertionError('prepared')))
+        with pytest.raises(RuntimeError, match='project.minimizer'):
+            fitter.mcmc_sample(_make_data(np.zeros(10)), objective='mighell')
+
+    def test_a_switch_through_the_settings_passes_the_engine_check(self):
+        fitter = _make_fitter()
+        fitter.settings = FitSettings()
+        fitter.switch_minimizer(AvailableMinimizers.Bumps)
+        capture = {}
+        with _patch_sampler(capture):
+            fitter.mcmc_sample(_make_data(np.ones(10) * 0.01), samples=10, burn=2, thin=1)
+        assert capture['instance'].sample.called
 
     def test_all_zero_variance_raises_value_error(self):
         """Sampling without any uncertainties has no defined likelihood."""
@@ -192,6 +211,90 @@ class TestMCMCSampleDispatch:
             fitter.mcmc_sample(data, samples=100, burn=20, thin=2)
 
         assert fitter.sampler is capture['instance']
+
+
+class TestMCMCSampleOnExperiments:
+    """A `for_experiments` fitter samples each dataset with its own resolution.
+
+    Without a ``DataGroup`` the datasets themselves are sampled; with one,
+    curve *k* takes the model, channel and resolution of dataset *k*.
+    """
+
+    @staticmethod
+    def _fitter_and_datasets():
+        model = Model()
+        model.interface = CalculatorFactory()
+        q = np.linspace(0.01, 0.3, 10)
+        datasets = [
+            DataSet1D(name=name, x=q, y=np.ones(10), ye=np.ones(10) * 0.01, model=model, resolution_function=resolution)
+            for name, resolution in (('sharp', PercentageFwhm(0.5)), ('broad', PercentageFwhm(8.0)))
+        ]
+        fitter = MultiFitter.for_experiments(datasets)
+        fitter.settings = FitSettings()
+        fitter.switch_minimizer(AvailableMinimizers.Bumps)
+        return fitter, datasets
+
+    @staticmethod
+    def _spy_on_prepare(monkeypatch) -> dict:
+        seen = {}
+        original = MultiFitter.prepare
+
+        def prepare(self, inputs=None, **kwargs):
+            seen['inputs'] = inputs
+            seen['prepared'] = original(self, inputs, **kwargs)
+            return seen['prepared']
+
+        monkeypatch.setattr(MultiFitter, 'prepare', prepare)
+        return seen
+
+    def test_without_a_datagroup_the_datasets_are_sampled_with_their_own_resolution(self, monkeypatch):
+        fitter, datasets = self._fitter_and_datasets()
+        seen = self._spy_on_prepare(monkeypatch)
+
+        capture = {}
+        with _patch_sampler(capture):
+            fitter.mcmc_sample(samples=10, burn=2, thin=1)
+
+        inputs = seen['inputs']
+        assert [item.resolution_function for item in inputs] == [dataset.resolution_function for dataset in datasets]
+        assert [item.label for item in inputs] == ['sharp', 'broad']
+        assert all(item.channel is None for item in inputs)
+        assert len(capture['x']) == 2
+        np.testing.assert_allclose(capture['x'][1], datasets[1].x)
+        assert capture['instance'].sample.called
+
+    def test_a_datagroup_curve_is_sampled_as_its_dataset(self, monkeypatch):
+        fitter, datasets = self._fitter_and_datasets()
+        seen = self._spy_on_prepare(monkeypatch)
+        q = np.linspace(0.02, 0.2, 10)
+        data = sc.DataGroup({
+            'coords': {f'Qz_{i}': sc.array(dims=[f'Qz_{i}'], values=q) for i in range(2)},
+            'data': {
+                f'R_{i}': sc.array(dims=[f'Qz_{i}'], values=np.full(10, 2.0 + i), variances=np.ones(10) * 0.01)
+                for i in range(2)
+            },
+        })
+
+        with _patch_sampler({}):
+            fitter.mcmc_sample(data, samples=10, burn=2, thin=1)
+
+        inputs = seen['inputs']
+        assert [item.resolution_function for item in inputs] == [dataset.resolution_function for dataset in datasets]
+        assert all(item.model is datasets[0].model for item in inputs)
+        assert [item.label for item in inputs] == ['reflectivity 0', 'reflectivity 1']
+        # The arrays are the DataGroup's, not the datasets'.
+        np.testing.assert_allclose(inputs[1].x, q)
+        np.testing.assert_allclose(inputs[1].y, 3.0)
+
+    def test_a_datagroup_must_hold_one_curve_per_dataset(self):
+        fitter, _ = self._fitter_and_datasets()
+        with pytest.raises(ValueError, match='one curve per dataset'):
+            fitter.mcmc_sample(_make_data(np.ones(10) * 0.01))
+
+    def test_without_a_datagroup_a_fitter_built_from_models_is_refused(self):
+        fitter = _make_bumps_fitter()
+        with pytest.raises(ValueError, match='for_experiments'):
+            fitter.mcmc_sample()
 
 
 class TestMultiFitterHelpers:

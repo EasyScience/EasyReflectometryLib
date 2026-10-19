@@ -225,3 +225,249 @@ class TestMagnetismThroughCalculator:
 
         assert result.success
         assert_allclose(rho_m.value, 2.5, atol=0.01)
+
+
+FE_RHO_M = 5.0420761  # 1e-6 / angstrom^2: 7.874 g/cm^3, 2.2 muB per atom
+
+
+class TestRhoMCoupling:
+    """`Layer.rho_m_coupled`: the layer's magnetic SLD follows a `MaterialMagnetic`."""
+
+    @staticmethod
+    def _coupled_model():
+        from easyreflectometry.sample import MaterialMagnetic
+
+        model = _magnetic_model(None)
+        film = model.sample[1].layers[0]
+        film.material = MaterialMagnetic(name='Fe')
+        film.rho_m_coupled = True
+        interface = CalculatorFactory()
+        interface.switch('refl1d')
+        model.interface = interface
+        return model, film
+
+    @staticmethod
+    def _backend_rho_m(film):
+        return film.interface()._wrapper.get_layer_value(film.unique_name, 'magnetism_rhoM')
+
+    def test_coupling_attaches_magnetism_and_follows_the_material(self):
+        model, film = self._coupled_model()
+
+        assert film.rho_m_coupled
+        assert film.magnetism.theta_m.value == 270.0
+        assert film.magnetism.rho_m.value == pytest.approx(FE_RHO_M)
+        film.material.magnetic_moment = 1.1
+        assert self._backend_rho_m(film) == pytest.approx(FE_RHO_M / 2)
+
+    def test_material_without_rho_m_cannot_couple(self):
+        layer = Layer(material=Material(sld=4.0), magnetism=LayerMagnetism())
+        with pytest.raises(ValueError, match='no magnetic SLD'):
+            layer.rho_m_coupled = True
+
+    def test_uncoupling_keeps_the_value_and_is_idempotent(self):
+        _, film = self._coupled_model()
+
+        film.rho_m_coupled = False
+        film.rho_m_coupled = False
+
+        rho_m = film.magnetism.rho_m
+        assert rho_m.independent and rho_m.fixed
+        assert rho_m.value == pytest.approx(FE_RHO_M)
+        film.material.magnetic_moment = 1.1
+        assert rho_m.value == pytest.approx(FE_RHO_M)
+
+    @pytest.mark.parametrize('replace', ['property', 'assign_material'])
+    def test_replacing_the_material_rewires(self, replace):
+        from easyreflectometry.sample import MaterialMagnetic
+
+        _, film = self._coupled_model()
+        old = film.material
+        nickel = MaterialMagnetic(chemical_structure='Ni', density=8.908, magnetic_moment=0.6, name='Ni')
+
+        if replace == 'property':
+            film.material = nickel
+        else:
+            nickel.interface = film.interface  # `assign_material` expects a bound material
+            film.assign_material(nickel)
+
+        assert film.rho_m_coupled
+        assert film.magnetism.rho_m.value == pytest.approx(nickel.rho_m.value)
+        old.magnetic_moment = 0.1
+        assert film.magnetism.rho_m.value == pytest.approx(nickel.rho_m.value)
+
+    def test_non_magnetic_material_uncouples_with_a_warning(self):
+        _, film = self._coupled_model()
+        with pytest.warns(UserWarning, match='no longer coupled'):
+            film.material = Material(sld=4.0)
+        assert not film.rho_m_coupled
+        assert film.magnetism.rho_m.value == pytest.approx(FE_RHO_M)
+
+    def test_removing_magnetism_uncouples(self):
+        _, film = self._coupled_model()
+        removed = film.magnetism
+
+        film.magnetism = None
+
+        assert not film.rho_m_coupled
+        assert removed.rho_m.independent
+
+    def test_replacing_magnetism_keeps_the_coupling(self):
+        _, film = self._coupled_model()
+        old = film.magnetism
+
+        film.magnetism = LayerMagnetism(theta_m=0.0)
+        film.material.magnetic_moment = 1.1
+
+        assert film.rho_m_coupled
+        assert film.magnetism.rho_m.value == pytest.approx(FE_RHO_M / 2)
+        assert self._backend_rho_m(film) == pytest.approx(FE_RHO_M / 2)
+        # The detached object neither follows the material nor reaches the backend.
+        assert old.rho_m.independent
+        old.rho_m.value = 9.0
+        assert self._backend_rho_m(film) == pytest.approx(FE_RHO_M / 2)
+
+    def test_unconstrain_reads_as_uncoupled_and_stays_so(self):
+        from easyreflectometry.constraints import unconstrain
+        from easyreflectometry.sample import MaterialMagnetic
+
+        _, film = self._coupled_model()
+        unconstrain(film.magnetism.rho_m)
+
+        assert not film.rho_m_coupled
+        film.material = MaterialMagnetic(name='Fe2')
+        assert film.magnetism.rho_m.independent
+
+    def test_round_trip_keeps_the_coupling(self):
+        model, film = self._coupled_model()
+
+        restored = Model.from_dict(model.as_dict())
+        restored_film = restored.sample[1].layers[0]
+        restored_film.material.magnetic_moment = 1.1
+
+        assert restored_film.rho_m_coupled
+        assert restored_film.magnetism.rho_m.value == pytest.approx(FE_RHO_M / 2)
+
+    def test_project_round_trip_shares_one_material(self, tmp_path):
+        from easyscience import global_object
+
+        from easyreflectometry.model import ModelCollection
+        from easyreflectometry.project import Project
+
+        model, film = self._coupled_model()
+        second = Layer(material=film.material, thickness=50, name='second', rho_m_coupled=True)
+        model.sample[1].layers.append(second)
+        project = Project()
+        project.set_path_project_parent(tmp_path)
+        project.calculator = 'refl1d'
+        project.models = ModelCollection(model)
+        project.save_as_json()
+
+        global_object.map._clear()
+        reloaded = Project()
+        reloaded.load_from_json(project.path_json)
+        first, other = reloaded.models[0].sample[1].layers
+        first.material.magnetic_moment = 1.1
+
+        assert first.material is other.material
+        assert first.rho_m_coupled and other.rho_m_coupled
+        assert other.magnetism.rho_m.value == pytest.approx(FE_RHO_M / 2)
+
+    def test_fit_recovers_the_moment(self):
+        from easyreflectometry.data import DataSet1D
+        from easyreflectometry.fitting import MultiFitter
+
+        truth, _ = self._coupled_model()
+        reflectivity = truth.interface().polarized_reflectivity_profiles(Q, truth.unique_name)['pp']
+        data = DataSet1D(name='synthetic_pp', x=Q, y=reflectivity, ye=(0.01 * reflectivity) ** 2)
+
+        model, film = self._coupled_model()
+        moment = film.material.magnetic_moment
+        moment.value = 1.0
+        moment.fixed = False  # density stays fixed: the data constrain density x moment
+
+        result = MultiFitter(model).fit_single_data_set_1d(data)
+
+        assert result.success
+        assert_allclose(moment.value, 2.2, atol=0.01)
+
+    def test_material_moment_never_reaches_an_uncoupled_layer(self):
+        from easyreflectometry.sample import MaterialMagnetic
+
+        model = _magnetic_model(LayerMagnetism(rho_m=1.0))
+        uncoupled = model.sample[1].layers[0]
+        iron = MaterialMagnetic(name='Fe')
+        uncoupled.material = iron
+        coupled = Layer(material=iron, thickness=50, name='coupled', magnetism=LayerMagnetism())
+        model.sample[1].layers.append(coupled)
+        interface = CalculatorFactory()
+        interface.switch('refl1d')
+        model.interface = interface
+
+        # Coupling a bound layer takes the material's value at once.
+        coupled.rho_m_coupled = True
+        assert coupled.magnetism.rho_m.value == pytest.approx(FE_RHO_M)
+        assert iron.rho_m.value == pytest.approx(FE_RHO_M)
+
+        iron.magnetic_moment = 1.1
+
+        wrapper = interface()._wrapper
+        assert wrapper.get_layer_value(coupled.unique_name, 'magnetism_rhoM') == pytest.approx(FE_RHO_M / 2)
+        assert wrapper.get_layer_value(uncoupled.unique_name, 'magnetism_rhoM') == pytest.approx(1.0)
+
+
+class TestRhoMUserConstraint:
+    """A user constraint on a coupled ``rho_m`` replaces the coupling; it is not the coupling."""
+
+    @staticmethod
+    def _constrained_film(scaled_to_material: bool):
+        from easyscience.variable import Parameter
+
+        from easyreflectometry.constraints import constrain
+        from easyreflectometry.sample import MaterialMagnetic
+
+        iron = MaterialMagnetic(name='Fe')
+        film = Layer(material=iron, thickness=100, name='film', rho_m_coupled=True)
+        if scaled_to_material:
+            source = iron.rho_m
+            constrain(film.magnetism.rho_m, '0.5 * m', m=source)
+        else:
+            source = Parameter(name='external', value=1.0, unit='1/angstrom^2')
+            constrain(film.magnetism.rho_m, 'x', x=source)
+        return film, source
+
+    @pytest.mark.parametrize('scaled_to_material', [False, True])
+    def test_reads_as_uncoupled(self, scaled_to_material):
+        film, _ = self._constrained_film(scaled_to_material)
+        assert not film.rho_m_coupled
+
+    def test_survives_a_material_change(self):
+        from easyreflectometry.sample import MaterialMagnetic
+
+        film, external = self._constrained_film(scaled_to_material=False)
+        film.material = MaterialMagnetic(chemical_structure='Ni', density=8.908, magnetic_moment=0.6, name='Ni')
+
+        external.value = 2.0
+        assert film.magnetism.rho_m.value == pytest.approx(2.0)
+        assert not film.rho_m_coupled
+
+    def test_export_writes_the_layer_value(self):
+        from easyreflectometry.orso_utils import _layer_material_to_orso
+        from easyreflectometry.special.calculations import MAGNETIC_SCATTERING_LENGTH
+
+        film, _ = self._constrained_film(scaled_to_material=False)
+        moment = _layer_material_to_orso(film).magnetic_moment.magnitude
+        assert moment * film.material.number_density * MAGNETIC_SCATTERING_LENGTH * 1e6 == pytest.approx(1.0)
+
+    def test_explicit_coupling_replaces_the_constraint(self):
+        film, external = self._constrained_film(scaled_to_material=False)
+
+        film.rho_m_coupled = True
+
+        assert film.rho_m_coupled
+        assert film.magnetism.rho_m.value == pytest.approx(FE_RHO_M)
+        external.value = 2.0
+        assert film.magnetism.rho_m.value == pytest.approx(FE_RHO_M)
+
+    def test_saved_as_uncoupled(self):
+        film, _ = self._constrained_film(scaled_to_material=False)
+        assert film.as_dict()['rho_m_coupled'] is False

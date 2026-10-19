@@ -7,10 +7,14 @@ from __future__ import annotations
 import hashlib
 import json
 import warnings
+from typing import TYPE_CHECKING
 from typing import Any
 
 import numpy as np
 from easyscience.fitting.minimizers.minimizer_base import MINIMIZER_PARAMETER_PREFIX
+
+if TYPE_CHECKING:
+    from easyreflectometry.model import ResolutionFunction
 
 try:
     import arviz as _arviz
@@ -1168,21 +1172,33 @@ def posterior_predictive_reflectivity(
     model,
     q_values: np.ndarray,
     n_samples: int = 200,
+    resolution_function: ResolutionFunction | None = None,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Compute the posterior predictive reflectivity with credible intervals.
 
     Parameter values and errors are saved before applying any posterior draw
     and restored in a ``finally`` block, so the model is not left mutated.
+    The model's resolution function is never touched: a resolution passed in
+    is bound to the evaluator instead. The posterior draws themselves are
+    still applied to the model's parameters for the duration of the call, so
+    this is not safe to run while a fit evaluates the same model in another
+    thread; only the resolution is no longer swapped.
 
     :param draws: Posterior samples, shape ``(n_samples_posterior, n_params)``.
     :type draws: np.ndarray
     :param param_names: Parameter names matching the columns of ``draws``.
     :type param_names: list[str]
-    :param model: A reflectometry model with ``interface.fit_func``.
+    :param model: A reflectometry model whose ``interface`` provides
+        ``fit_func`` and ``fit_func_for``.
     :param q_values: Q values at which to evaluate reflectivity.
     :type q_values: np.ndarray
     :param n_samples: Number of posterior draws to use (last ``n_samples``).
     :type n_samples: int
+    :param resolution_function: Resolution to smear with, typically the
+        dataset's own (``DataSet1D.resolution_function``), so the band sits on
+        the curve the fit compared that dataset to rather than on a
+        differently smeared one. ``None`` uses the model's current resolution.
+    :type resolution_function: ResolutionFunction | None
     :return: Tuple of ``(median, lower_95, upper_95)`` reflectivity arrays.
     :rtype: tuple[np.ndarray, np.ndarray, np.ndarray]
     """
@@ -1193,12 +1209,20 @@ def posterior_predictive_reflectivity(
     n_use = min(n_samples, n_total)
     sample_indices = range(n_total - n_use, n_total)
 
+    # The evaluator carries the resolution; the model's own (calculator state
+    # registered through the model, shared with a fit possibly running in
+    # another thread) is left alone.
+    if resolution_function is None:
+        fit_func = model.interface.fit_func
+    else:
+        fit_func = model.interface.fit_func_for(resolution_function=resolution_function)
+
     saved_state = _save_parameter_state(model)
     try:
         reflectivity_samples = []
         for i in sample_indices:
             _apply_draw(model, draws, param_names, i)
-            r_calc = model.interface.fit_func(q_values, model.unique_name)
+            r_calc = fit_func(q_values, model.unique_name)
             reflectivity_samples.append(np.asarray(r_calc))
     finally:
         _restore_parameter_state(model, saved_state)

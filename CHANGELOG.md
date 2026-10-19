@@ -1,3 +1,302 @@
+# Version 1.9.0 (19 Oct 2026)
+
+## Multiple contrasts
+
+- New `easyreflectometry.contrasts`: a contrast is an ordinary model
+  whose structure is shared with another model, by identity (one
+  assembly or material object in both) or by equality
+  (`constrain_equal`).
+  `Project.add_contrast(reference_index, name, substitutions)` builds
+  one: `ReplaceMaterial(old, new)` swaps a material or a mixture's
+  component (e.g. the solvent of every hydrated layer and the bulk at
+  once), `ReplaceFormula(target, formula)` re-formulates a
+  `LayerAreaPerMolecule` or `MaterialDensity` (isotopic substitution).
+  Untouched assemblies are shared; a touched one is copied with its
+  other materials shared and its parameters tied to the reference's.
+  `substitution_candidates(model)` lists what can be substituted;
+  `Project.contrast_reference` gives the model a contrast was derived
+  from.
+- `Project.plan_link(follower, reference)` lays out the equalities tying
+  two models of one layout, row by row with a reason (scale and
+  background stay per contrast, material chemistry is left to the
+  caller); `apply_link` ties all of them or none and `unlink` removes
+  them again, restoring each parameter's value, bounds and fixed state.
+  `Project.detach(model_index, parameter)` frees one parameter for one
+  model, copying a shared assembly for that model when needed.
+  `Project.parameter_models(parameter)` lists the models a parameter
+  belongs to.
+- `SurfactantLayer`/`Bilayer.constrain_multiple_contrast` ties are now
+  user constraints, so they are saved with the project.
+
+## Project persistence
+
+- Behaviour change: objects used in several places (a material in two
+  layers, an assembly in two models, a solvent inside mixtures) are
+  saved once and are one object again after loading; previously each
+  place came back as an independent copy, so edits no longer reached the
+  other places and the materials list filled with duplicates. A file an
+  older release would read as another project is written as
+  `file_format=3`, which it refuses: the models share objects, an
+  experiment is left out of the fit, or an experiment's model has a name
+  several models have (older releases pair by name). Other files keep
+  `file_format=2`.
+- The materials list is saved in order, unused materials included
+  (`materials`), whatever `include_materials_not_in_model` says.
+- An experiment's model is saved by index (`experiments_model_indices`)
+  as well as by name, so models with equal names keep their experiments.
+  Older files, an ambiguous name or an experiment without a model are
+  reported in `Project.load_report` instead of raising or binding
+  silently.
+- `Project.load_report` now collects every warning of a load; it used to
+  keep only the fit settings' ones.
+- Contrast provenance, links and each experiment's `include_in_fit` are
+  saved.
+- A shared object of the wrong class in a file is reported in
+  `Project.load_report` and replaced by a default, like a missing one.
+
+## Experiments and models
+
+- Behaviour change: a loaded dataset gives its model a background and a
+  resolution only when no other experiment uses that model; loading a
+  second contrast or angle onto a model no longer overwrites what the
+  first set. Each dataset keeps its own measured resolution as before.
+  Loading several datasets from one file adds all of them or none.
+- `Project.remove_experiment(index)` removes an experiment, keeps the
+  keys contiguous and returns the old-to-new key table;
+  `set_model_for_experiment`, `model_index_for_experiment` and
+  `experiments_for_model` replace reaching into `experiments`.
+- Behaviour change: `Project.remove_model_at_index` no longer removes
+  the experiment at the same index. Experiments bound to the model are
+  removed or rebound only on request (`experiments='remove'` or a model
+  index; a `ValueError` without it); parameters of other models tied to
+  it become independent, inequality constraints on it are removed and
+  the others are re-pathed. `plan_model_removal` reports all of that
+  beforehand, and `move_model` re-paths inequality constraints too.
+- Fixed: a model with conformal roughness or thickness can be assigned
+  to `Project.models` (default limits were applied to the dependent
+  layers).
+
+## Fitting
+
+- `DataSet1D.include_in_fit` / `PolarizedDataSet.include_in_fit`:
+  `Project.prepare_fit()` fits the included experiments. A parameter of
+  a fitted model that follows a free parameter of a model left out of
+  the fit keeps it free (`prepared.added_roots`); the left-out data does
+  not enter the fit. An experiment without a model raises
+  `FitScopeError` unless `skip_invalid=True`.
+- `Project.record_fit(prepared, results, status)` keeps a `FitRun`
+  record (`Project.last_fit`) of the last run: its datasets by
+  experiment key, pooled objective and classical chi-square, degrees of
+  freedom and reduced chi-square, and per-dataset chi-square, chi-square
+  per point and share of the objective. It no longer depends on the
+  current model.
+- Behaviour change: `PreparedFit.finalize` no longer gives per-dataset
+  reduced chi-square values (their degrees of freedom belong to the
+  pooled fit); `MultiFitter.fit` writes the pooled statistics to the
+  `DataGroup`.
+- The summary counts the parameters of every model, lists them all with
+  their model's name and reports the goodness of fit of `last_fit`.
+
+## Resolution functions
+
+- The resolution function now follows the model and the dataset, not the
+  calculator. One calculator serves every model of a project but held a
+  single resolution function, so when two models (two contrasts) had
+  different `Pointwise` resolutions both were smeared with whichever was
+  set last. The calculator keeps one resolution per model
+  (`set_resolution_function(resolution, model_id)`), `Model` registers
+  its own on every interface assignment and engine switch (which
+  previously reverted the model to the 5% default until the resolution
+  was set again), and `reflectity_profile`,
+  `reflectivity_profile_channel` and `polarized_reflectivity_profiles`
+  accept an explicit `resolution_function`. The per-model
+  `CalculatorFactory()` workaround in the multi-contrast tutorial is no
+  longer needed.
+- A `DataSet1D` carries the resolution it was measured with
+  (`resolution_function`, a `Pointwise` built from its sQz column on
+  load; `None` means the model's resolution applies).
+  `MultiFitter.for_experiments`, `fit_polarized` and
+  `fit_single_data_set_1d` smear each dataset with its own resolution,
+  so several datasets of one model — different angles, contrasts or spin
+  channels — are each fitted with the width they were measured with.
+  Each channel of a polarized experiment keeps its own resolution;
+  previously the first channel's was used for all of them.
+  `Project.model_data_for_experiment_at_index` returns the curve the fit
+  compares an experiment (or one of its channels) to, and
+  `model_data_for_model_at_index` takes an optional
+  `resolution_function`. Project files store a dataset's resolution next
+  to its arrays (a fifth entry, a sixth per polarized channel); older
+  files derive it from the stored `xe` on load.
+- Several measured curves of one contrast can be combined into a single
+  experiment: `Project.load_experiment_from_files(paths)` and
+  `Project.append_to_experiment_at_index(index, path)`, built on
+  `easyreflectometry.data.merge_datasets`. Points are concatenated
+  sorted by q and every point keeps its own width; `Pointwise.smearing`
+  returns the stored per-point widths exactly when evaluated at the data
+  points (so overlapping angles with different widths at the same q are
+  honoured) and interpolates from sorted points otherwise. Mixing files
+  with and without a resolution column fills the latter from the model's
+  percentage resolution and warns.
+- `easyreflectometry.data.resolution_from_dataset` gives a dataset's
+  measured resolution, or `None`.
+- Bayesian sampling follows suit. `MultiFitter.mcmc_sample()` can be
+  called without a `DataGroup` on a fitter built with `for_experiments`
+  and then samples each dataset (each spin channel of a polarized
+  experiment) with its own resolution; given a `DataGroup`, curve _k_ is
+  sampled as dataset _k_ (its model, channel and resolution) rather than
+  as model _k_, and a curve count that differs from the datasets is
+  refused. `Project.prepare_sample()` builds that fitter with a snapshot
+  of the project's settings taken when it is called (as `prepare_fit`
+  does) and its inequality constraints; experiments left out by
+  `skip_invalid` are listed in the fitter's `skipped`. Previously every
+  curve was smeared with its model's resolution, so the posterior
+  disagreed with the classical fit whenever a model had several
+  datasets.
+- Fixed: `MultiFitter.fit(data)` on a `for_experiments` fitter with two
+  datasets on one model failed on the second curve (it indexed the
+  de-duplicated model list by curve). Each curve's model curve, SLD
+  profile and model are now written for that curve's own model.
+- Behaviour change: the curves of a `DataGroup` are paired with models
+  (or datasets) in the order of their `Qz_<n>` numbers, so `Qz_10` comes
+  after `Qz_2` and a `DataGroup` built out of order is no longer
+  mis-paired. Curves whose suffix is not a number keep their order.
+- `Project.sample_data_for_model_at_index` and
+  `posterior_predictive_reflectivity` bind the resolution they need to
+  the one calculation instead of swapping the model's resolution and
+  restoring it afterwards. The model's resolution is calculator state
+  that a fit running in another thread reads, so the swap could smear a
+  fit evaluation with zero width. The posterior band still applies the
+  draws to the model's parameters while it runs.
+- New user-guide page _Resolution_: which resolution a model, a dataset,
+  a fit and a polarized experiment use, loading several files as one
+  contrast, and getting an unsmeared curve.
+
+## Volume fraction profiles
+
+- New volume fraction (occupancy) profiles:
+  `Sample.volume_fraction_profile()` /
+  `easyreflectometry.sample.volume_fraction_profile()` return the volume
+  fraction of every component of a sample versus depth, built from the
+  sample tree alone and smeared with the same error-function kernel as
+  the SLD profile, so the fractions sum to one and reproduce the SLD
+  profile. `Project.volume_fraction_data_for_model_at_index` returns
+  them as `DataSet1D` objects and
+  `easyreflectometry.plot.plot_volume_fraction` draws them. Materials
+  with equal name and SLD are merged by default; `profile.grouped(...)`
+  merges and renames traces for presentation. A `VolumeFractionWarning`
+  reports fractions below zero (very unequal roughness around a thin
+  layer) instead of clipping them.
+
+## Collections
+
+- Collections (`LayerCollection`, `MaterialCollection`, `Sample`, ...)
+  now deserialize each item through the item's own `from_dict`. The
+  generic `EasyList.from_dict` path called every item's constructor with
+  the stored keys, so a collection holding a `MaterialDensity` (whose
+  `sld_coupled` key is not a constructor argument), or any nested item
+  that restores state in `from_dict`, failed to load or lost that state.
+  Copying such a collection (`copy.deepcopy`) is fixed the same way.
+- A collection constructed with an explicit `protected_types` list no
+  longer has those classes swallowed as items by the legacy list-valued
+  keyword handling, so a collection declaring protected types now
+  round-trips through `as_dict`/`from_dict`.
+
+## Materials
+
+- Behaviour change: `MaterialDensity.sld_coupled` now reports the live
+  state. Removing the density dependency from `sld`/`isld` directly,
+  with `unconstrain()` or a raw `make_independent()`, makes it read
+  `False` (it kept reporting `True`), so the manually entered values are
+  saved instead of being dropped, and setting `sld_coupled = True`
+  afterwards restores the density coupling instead of being a no-op. A
+  user constraint placed on a decoupled `sld` still reads as decoupled.
+- Behaviour change: setting `sld_coupled = True` on a decoupled material
+  whose `sld`/`isld` carry a user constraint (`constrain`,
+  `constrain_equal`) now replaces that constraint with the density
+  coupling; the setter used to return without restoring it. The
+  constraint's persistence marker is removed with it, so a saved project
+  no longer records the material's internal density formula as a user
+  constraint, which on reload overrode the correct coupling with a
+  wrongly scaled value and a frozen molecular weight. The coupling is
+  all-or-nothing: freeing only one of `sld`/`isld` is session-only and
+  restores as both independent.
+
+## Magnetism
+
+See the new user guide page `user-guide/magnetism.md` for the
+conventions and limitations.
+
+- `Model.guide_field_angle` (degrees, refl1d's `Aguide`, default 270: in
+  the sample plane) and `Model.applied_field` (tesla, refl1d's `H`,
+  default 0) set the field of the polarized calculation. Both are fixed
+  parameters by default and are saved with the model; older files load
+  with the defaults. A derived contrast keeps them. They are disabled
+  (`enabled = False`) unless the model is magnetic and the calculator
+  models magnetism; refnx ignores them.
+- `Project.magnetic_sld_data_for_model_at_index` follows the model's
+  field. `spin_up`/`spin_down` are now described and named as the
+  nuclear SLD plus or minus the magnetic SLD _along the field_; they are
+  the spin potentials only for a moment parallel to the field. New
+  entries: `rho_m_perp` (the magnetic SLD across the field) and the
+  model's `guide_field_angle` and `applied_field`.
+  `easyreflectometry.special.calculations.field_frame_components` does
+  the projection. `easyreflectometry.project.GUIDE_FIELD_ANGLE` remains
+  as the default value only.
+- New `MaterialMagnetic`: a `MaterialDensity` with a fittable
+  `magnetic_moment` in Bohr magnetons per formula unit and a derived
+  `rho_m = N * moment * p`, with `p = 2.6991e-5 angstrom`
+  (`special.calculations.MAGNETIC_SCATTERING_LENGTH`). Defaults are bulk
+  iron. The magnetic SLD stays derived when `sld_coupled` is off.
+- New `Layer.rho_m_coupled`: the layer's `magnetism.rho_m` follows the
+  material's `rho_m`, while the layer keeps its own `theta_m`. Replacing
+  the material or the magnetism, removing the magnetism or
+  unconstraining `rho_m` keeps the coupling consistent; uncoupling keeps
+  the value and makes `rho_m` an ordinary fixed parameter again. Saved
+  with the layer.
+- New read-only `MaterialDensity.number_density` (formula units per
+  angstrom^3), and
+  `special.calculations.number_density_from_mass_density` /
+  `mass_density_from_number_density`.
+- ORSO model import reads `magnetic_moment` (with a mass or number
+  density and a formula: a `MaterialMagnetic` with a coupled layer; with
+  an SLD and a number density only: a direct `rho_m`) and
+  `number_density`. Behaviour change: formula materials given by number
+  density, including those orsopy resolves from its database, previously
+  imported with SLD 0. An unknown density or moment unit is now ignored
+  with a warning instead of being read as the default unit; a mass
+  density in an unknown unit previously counted as g/cm^3.
+  `relative_density`, disagreeing densities and repeated magnetic layers
+  are warned about. A negative moment, or one above the default fit
+  bounds, imports with its value: `MaterialMagnetic` widens the bounds
+  of an explicitly given moment instead of refusing it.
+- `Project.add_sample_from_orso` and `replace_models_from_orso` refuse a
+  sample with magnetic layers when the calculator cannot model magnetism
+  (`NotImplementedError`), before the project is changed; they used to
+  add or replace the model and then fail.
+- A user constraint on a coupled layer's `rho_m` now reads as
+  `rho_m_coupled = False`: it is exported, saved and kept on a material
+  change as the user constraint it is, instead of being taken for the
+  material coupling and overwritten.
+- `Project._sync_parameter_states` fixes parameters that act on nothing:
+  the field of a model that is not magnetic or whose calculator cannot
+  model magnetism, and the moment (and, with the nuclear SLD decoupled,
+  the density) of a `MaterialMagnetic` no layer is coupled to, unless a
+  user constraint refers to it. They used to stay free and enter the
+  fit.
+- ORSO model export writes the moment of magnetic layers on
+  density-defined materials, and the manual SLD of a decoupled
+  `MaterialDensity`. Losses (a magnetic SLD without a density to convert
+  with, a moment direction other than 270, a non-default field in
+  `Model.as_orso`) are warned about.
+
+## Analysis
+
+- `posterior_predictive_reflectivity` takes an optional
+  `resolution_function`, so the posterior predictive band can be smeared
+  with the resolution the fit used for a dataset rather than the model's
+  current one. The resolution is bound to the evaluator; the model is
+  not touched.
+
 # Version 1.8.0 (18 Sept 2026)
 
 ## Project persistence
@@ -87,6 +386,20 @@
   symbol, used to be accepted as an empty formula with zero scattering
   length. An unknown element already raised, but only after the formula
   string had been stored, leaving the material half-updated.
+- The unit metadata of a `MaterialDensity` is now dimensionally correct
+  (issue #377, dimensional part). `sld` and `isld` reported the unit
+  `kmol/m^5`, and `scattering_length_real`/`scattering_length_imag`
+  carried the SLD unit `1/angstrom^2` although they are lengths. The
+  scattering lengths are now in `angstrom` and the derived SLDs in
+  `1/angstrom^2`, like those of every other material. Values are
+  unchanged; only code that read the `unit` of these parameters, or the
+  unit in the material's string representation, sees a difference. The
+  library-wide convention that SLD _values_ are stored in units of 1e-6
+  `1/angstrom^2` while the declared unit is `1/angstrom^2` is not
+  changed by this fix: EasyScience strips numeric scale factors from
+  units, so `1e-6/angstrom^2` cannot be declared, and storing true
+  `1/angstrom^2` values would change the public API, every saved project
+  and the calculator boundaries. That part of #377 stays open.
 - `MaterialCollection.duplicate_material` keeps the type of the material
   it copies. It always built a plain `Material`, so duplicating a
   `MaterialDensity`, `MaterialMixture` or `MaterialSolvated` lost the

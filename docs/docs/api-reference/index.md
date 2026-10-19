@@ -41,6 +41,14 @@ parameter free and are enforced as penalties on the BUMPS fit problem.
 - [Constraints](constraints.md)
 - [Inequality Constraints](inequality_constraints.md)
 
+## Contrasts
+
+One structure measured under several SLD conditions: deriving a contrast
+from a reference model, and linking the corresponding parameters of
+models built separately.
+
+- [Contrasts](contrasts.md)
+
 ## Bayesian Analysis
 
 Posterior analysis of a DREAM sampling run: convergence diagnostics,
@@ -108,3 +116,4 @@ Summaries of a project and its fit results, and the plotting helpers.
 
 - [Summary](summary.md)
 - [Plotting](plot.md)
+- [Volume Fraction Profile](volume_fraction.md)

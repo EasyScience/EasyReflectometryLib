@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 EasyScience contributors <https://github.com/easyscience>
 # SPDX-License-Identifier: BSD-3-Clause
 
+import copy
 import datetime
 import json
 import logging
@@ -9,10 +10,14 @@ import stat
 import tempfile
 import warnings
 import weakref
+from dataclasses import dataclass
+from dataclasses import field
 from pathlib import Path
 from typing import Dict
 from typing import List
+from typing import Mapping
 from typing import Optional
+from typing import Sequence
 from typing import Union
 
 import numpy as np
@@ -29,16 +34,37 @@ from easyreflectometry.calculators.calculator_base import CalculatorBase
 from easyreflectometry.constraints import SUM_PARTNER_MAX_BACKUP
 from easyreflectometry.constraints import USER_CONSTRAINT_FLAG
 from easyreflectometry.constraints import constrain
+from easyreflectometry.constraints import constrain_equal
+from easyreflectometry.constraints import unconstrain
+from easyreflectometry.contrasts import LinkPlan
+from easyreflectometry.contrasts import LinkRecord
+from easyreflectometry.contrasts import ReplaceFormula
+from easyreflectometry.contrasts import ReplaceMaterial
+from easyreflectometry.contrasts import derive_contrast
+from easyreflectometry.contrasts import follows
+from easyreflectometry.contrasts import kept_children
+from easyreflectometry.contrasts import plan_link
+from easyreflectometry.contrasts import restore
+from easyreflectometry.contrasts import snapshot
+from easyreflectometry.contrasts import tie_corresponding
 from easyreflectometry.data import DataSet1D
 from easyreflectometry.data import PolarizedDataSet
 from easyreflectometry.data import detect_polarization_channel
 from easyreflectometry.data import detect_polarization_channels_per_dataset
 from easyreflectometry.data import load_as_dataset
+from easyreflectometry.data import merge_datasets
+from easyreflectometry.data import resolution_from_dataset
 from easyreflectometry.data.measurement import dataset_from_datagroup
 from easyreflectometry.data.measurement import extract_orso_title
 from easyreflectometry.data.measurement import load as load_measurement_file
 from easyreflectometry.data.measurement import load_data_from_orso_file
+from easyreflectometry.fit_settings import DEFAULT_MINIMIZER  # noqa: F401 (re-exported)
+from easyreflectometry.fit_settings import FitSettings
+from easyreflectometry.fitting import FitRun
+from easyreflectometry.fitting import FitScopeError
 from easyreflectometry.fitting import MultiFitter
+from easyreflectometry.fitting import PreparedFit
+from easyreflectometry.fitting import _free_roots
 from easyreflectometry.inequality_constraints import InequalityEvaluation
 from easyreflectometry.inequality_constraints import InequalitySpec
 from easyreflectometry.inequality_constraints import build_constraints_factory
@@ -48,7 +74,7 @@ from easyreflectometry.limits import apply_default_limits
 from easyreflectometry.model import Model
 from easyreflectometry.model import ModelCollection
 from easyreflectometry.model import PercentageFwhm
-from easyreflectometry.model import Pointwise
+from easyreflectometry.model import ResolutionFunction
 from easyreflectometry.orso_utils import is_orso_file
 from easyreflectometry.orso_utils import save_orso_experiment
 from easyreflectometry.sample import Layer
@@ -56,7 +82,11 @@ from easyreflectometry.sample import Material
 from easyreflectometry.sample import MaterialCollection
 from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import Sample
+from easyreflectometry.sample import paths
+from easyreflectometry.sample import references
+from easyreflectometry.sample import volume_fraction_profile
 from easyreflectometry.sample.collections.base_collection import BaseCollection
+from easyreflectometry.special.calculations import field_frame_components
 
 logger = logging.getLogger(__name__)
 
@@ -64,11 +94,8 @@ Q_MIN = 0.001
 Q_MAX = 0.3
 Q_RESOLUTION = 500
 
-# Guide-field angle A in degrees, used to project the moment onto the neutron
-# quantisation axis for the spin-up/spin-down potentials and nothing else.
-# refl1d's default (`Aguide = 270`), which is what every model the library can
-# currently build uses — `Aguide` is not exposed as a parameter yet. Keep this
-# the single source of the value: exposing it later is a change here only.
+# Default guide-field angle in degrees (refl1d's `Aguide = 270`: the field in the
+# sample plane). The operative value is each model's `guide_field_angle`.
 GUIDE_FIELD_ANGLE = 270.0
 
 # Points whose spin-asymmetry denominator (R⁺⁺ + R⁻⁻) is smaller than this
@@ -91,13 +118,20 @@ SPIN_ASYMMETRY_CANCELLATION_FRACTION = 1e-3
 # roughness leaves a small erf tail everywhere.
 MAGNETIC_MOMENT_FLOOR_FRACTION = 0.01
 
-DEFAULT_MINIMIZER = AvailableMinimizers.LMFit_leastsq
 
-#: Properties not descended into when *generating* structural parameter
-#: paths: non-structural objects and convenience aliases of ``layers[i]``
-#: (so a layer parameter is always addressed as ``.../layers/<i>/...``).
-#: ``resolve_parameter_path`` still accepts them.
-_PATH_SKIPPED_PROPERTIES = frozenset({'interface', 'parent', 'front_layer', 'back_layer', 'head_layer', 'tail_layer'})
+@dataclass(frozen=True)
+class ModelRemoval:
+    """What removing a model affects (see :meth:`Project.plan_model_removal`)."""
+
+    #: Keys of the experiments bound to the model.
+    experiments: List[int]
+    #: Parameters of other models that follow a parameter only this model owns.
+    dependents: List[Parameter]
+    #: Inequality constraints on parameters only this model owns.
+    inequality_constraints: List[InequalitySpec]
+    #: Old key to new key of every remaining experiment, once :meth:`Project.remove_model_at_index`
+    #: removed the experiments (as :meth:`Project.remove_experiment` returns); empty otherwise.
+    remap: Dict[int, int] = field(default_factory=dict)
 
 
 def _weak_constraints_provider(project: 'Project'):
@@ -120,7 +154,9 @@ class Project:
         self._calculator = CalculatorFactory()
         self._experiments: Dict[DataGroup] = {}
         self._fitter: MultiFitter = None
-        self._minimizer_selection: AvailableMinimizers = DEFAULT_MINIMIZER
+        self._fit_settings = FitSettings()
+        #: Warnings from the last :meth:`from_dict`, for the user; cleared by each load.
+        self.load_report: list[str] = []
         self._colors: list[str] = None
         self._report = None
         self._q_min: float = None
@@ -133,6 +169,10 @@ class Project:
         self._fitter_model_index = None
         self._current_experiment_index = 0
         self._inequality_constraints: List[InequalitySpec] = []
+        self._last_fit = None
+        #: (derived model, the model it was derived from), see :meth:`add_contrast`.
+        self._contrasts: List[tuple] = []
+        self._links: List[LinkRecord] = []
 
         # Project flags
         self._created = False
@@ -203,6 +243,60 @@ class Project:
                         # explicit 0-360 bounds and needs no default window.
                         self._sync_layer_parameter_state(magnetism.rho_m, 'rho_m', disabled_ids)
 
+        # The field only acts on a magnetic model under a magnetic calculator;
+        # elsewhere it is inert and must not show up as a fit control. The
+        # fitter reads `fixed`, not `enabled`, so an inert field is fixed too.
+        supports_magnetism = self.calculator_supports_magnetism
+        for model in self._models:
+            active = supports_magnetism and model.has_magnetism
+            for parameter in (model.guide_field_angle, model.applied_field):
+                parameter.enabled = active
+                if not active:
+                    _fix_if_free(parameter)
+        self._fix_unused_magnetic_material_inputs()
+
+    def _fix_unused_magnetic_material_inputs(self) -> None:
+        """Keep the inputs of a magnetic material that acts on nothing out of the fit.
+
+        A :class:`MaterialMagnetic`'s moment only reaches the reflectivity
+        through a layer coupled to it (``Layer.rho_m_coupled``); with its nuclear
+        SLD decoupled, its density is in the same position. Either one left
+        free after the last coupled layer goes would be a zero-sensitivity fit
+        parameter, so it is fixed here, on every path that re-syncs the
+        project (layer and coupling edits, engine switches, loading).
+        """
+        coupled: set[int] = set()
+        magnetic: dict[int, object] = {}
+        for model in self._models:
+            for assembly in model.sample:
+                for layer in assembly.layers:
+                    material = getattr(layer, 'material', None)
+                    if getattr(material, 'magnetic_moment', None) is not None:
+                        magnetic[id(material)] = material
+                    if getattr(layer, 'rho_m_coupled', False):
+                        coupled.add(id(material))
+        for material in self._materials or []:
+            if getattr(material, 'magnetic_moment', None) is not None:
+                magnetic.setdefault(id(material), material)
+        if not magnetic:
+            return
+        # A moment or density another parameter depends on (a user constraint)
+        # still acts; the material's own derived SLDs do not count.
+        own = {id(parameter) for material in magnetic.values() for parameter in (material.rho_m, material.sld, material.isld)}
+        referenced = {
+            id(source)
+            for parameter in self.parameters
+            if not parameter.independent and id(parameter) not in own
+            for source in parameter.dependency_map.values()
+        }
+        for material_id, material in magnetic.items():
+            if material_id in coupled:
+                continue
+            if id(material.magnetic_moment) not in referenced:
+                _fix_if_free(material.magnetic_moment)
+            if not material.sld_coupled and id(material.density) not in referenced:
+                _fix_if_free(material.density)
+
     def _sync_layer_parameter_state(self, parameter: Parameter, kind: str, disabled_ids: set[int]) -> None:
         """Update a layer parameter's enabled state and pending default limits."""
         if id(parameter) in disabled_ids:
@@ -211,7 +305,8 @@ class Project:
 
         if getattr(parameter, 'default_limits_pending', False):
             delattr(parameter, 'default_limits_pending')
-            if getattr(parameter, 'enabled', True):
+            # A dependent parameter (a conformal follower) takes its bounds from its leader.
+            if getattr(parameter, 'enabled', True) and parameter.independent:
                 parameter.min = -np.inf
                 parameter.max = np.inf
                 apply_default_limits(parameter, kind)
@@ -345,81 +440,232 @@ class Project:
     def models(self, models: ModelCollection) -> None:
         """Models function."""
         self._replace_collection(models, self._models)
+        self._invalidate_fitter()
         # Use setter to update indicies for current model, assembly and layer
         self.current_model_index = 0
         # Only track materials not already in the project's material collection
         # (e.g. layers built from self._materials, as in default_model(), would
         # otherwise be re-added and trigger a spurious duplicate-item warning).
-        new_materials = [material for material in self._get_materials_in_models() if material not in self._materials]
-        self._materials.extend(new_materials)
+        self._extend_palette_from_models()
         for model in self._models:
             model.interface = self._calculator
         self._sync_parameter_states()
 
     @property
     def fitter(self) -> MultiFitter:
-        """Fitter function."""
+        """The fitter of the current model, configured from :attr:`fit_settings`.
+
+        Every hand-out writes the project's settings onto it, so configure the
+        fit through :attr:`fit_settings` (or :attr:`minimizer`), not through
+        the returned fitter's core fitter.
+        """
         if len(self._models):
             if (self._fitter is None) or (self._fitter_model_index != self._current_model_index):
                 self._fitter = MultiFitter(self._models[self._current_model_index])
-                self._fitter.easy_science_multi_fitter.switch_minimizer(self._minimizer_selection)
+                self._fitter.settings = self._fit_settings
                 self._fitter_model_index = self._current_model_index
                 # Fits run through this fitter pick up the project's inequality
                 # constraints automatically (resolved at fit time). A weak
                 # reference avoids a project -> fitter -> project cycle that
                 # would keep a discarded project (and its unique names) alive.
                 self._fitter.constraints_factory_provider = _weak_constraints_provider(self)
+            self._fit_settings.configure(self._fitter.easy_science_multi_fitter)
         return self._fitter
+
+    def _invalidate_fitter(self) -> None:
+        """Drop the cached fitter; the next :attr:`fitter` access builds a new one."""
+        self._fitter = None
+        self._fitter_model_index = None
+
+    @property
+    def fit_settings(self) -> FitSettings:
+        """The project's fit configuration; edits apply to the next fit prepared."""
+        return self._fit_settings
+
+    @fit_settings.setter
+    def fit_settings(self, settings: FitSettings) -> None:
+        settings.validate()
+        self._fit_settings = settings
+        if self._fitter is not None:
+            self._fitter.settings = settings
+
+    def prepare_fit(
+        self,
+        experiments: Optional[list] = None,
+        *,
+        objective: Optional[str] = None,
+        skip_invalid: bool = False,
+    ) -> PreparedFit:
+        """Prepare a fit of the experiments with a snapshot of :attr:`fit_settings`.
+
+        The run is not executed: call :meth:`PreparedFit.execute`, or run its
+        ``core_fitter`` in a worker thread, then hand the results to
+        :meth:`record_fit`. Inequality constraints are resolved when it executes.
+
+        A parameter of a fitted model that follows a free parameter of a model
+        left out of the fit keeps following it, and that parameter is varied
+        too (``prepared.added_roots``); the left-out data does not enter the fit.
+
+        Parameters
+        ----------
+        experiments : list, optional
+            The experiments to fit, in order. By default, the loaded ones
+            whose ``include_in_fit`` is set.
+        objective : str, optional
+            Zero-variance objective overriding the settings' one.
+        skip_invalid : bool, optional
+            Leave out experiments that have no model in this project (listed
+            in ``prepared.skipped``) instead of raising. By default, False.
+
+        Returns
+        -------
+        PreparedFit
+            The prepared run.
+
+        Raises
+        ------
+        FitScopeError
+            Nothing to fit, or an experiment has no model in this project.
+        FitPreconditionError
+            If a free parameter's bounds are unusable for the minimizer.
+        """
+        experiments, invalid = self._fit_scope(experiments, skip_invalid, action='fit')
+        fitter = self._fitter_for(experiments)
+        prepared = fitter.prepare(objective=objective)
+        prepared.skipped = [experiment.name for experiment in invalid]
+        prepared.experiments = [
+            experiment for experiment in experiments for _ in (getattr(experiment, 'available_channels', None) or [None])
+        ]
+        return prepared
+
+    def prepare_sample(
+        self,
+        experiments: Optional[list] = None,
+        *,
+        skip_invalid: bool = False,
+    ) -> MultiFitter:
+        """A fitter ready for Bayesian sampling of the experiments, with :attr:`fit_settings`.
+
+        The sampling is not run: call ``mcmc_sample()`` on the result (with
+        no ``DataGroup``), from a worker thread if need be. Each dataset --
+        each spin channel of a polarized experiment -- is sampled with the
+        resolution it was measured with, exactly as :meth:`prepare_fit` fits
+        it, so the posterior and the classical fit agree on what the model
+        is compared to. Inequality constraints are resolved when it runs.
+
+        Parameters
+        ----------
+        experiments : list, optional
+            The experiments to sample, in order. By default, the loaded ones
+            whose ``include_in_fit`` is set.
+        skip_invalid : bool, optional
+            Leave out experiments that have no model in this project instead
+            of raising. By default, False.
+
+        Returns
+        -------
+        MultiFitter
+            The fitter, built with :meth:`MultiFitter.for_experiments`. Its
+            ``settings`` are a snapshot of :attr:`fit_settings` taken here, as
+            :meth:`prepare_fit` takes one: an edit made before ``mcmc_sample()``
+            runs applies to the next sampling, not to this one. Its
+            ``skipped`` lists the names of the experiments left out by
+            ``skip_invalid``, like ``PreparedFit.skipped``.
+
+        Raises
+        ------
+        FitScopeError
+            Nothing to sample, or an experiment has no model in this project.
+        """
+        experiments, invalid = self._fit_scope(experiments, skip_invalid, action='sample')
+        fitter = self._fitter_for(experiments)
+        fitter.skipped = [experiment.name for experiment in invalid]
+        return fitter
+
+    def _fit_scope(self, experiments: Optional[list], skip_invalid: bool, action: str) -> tuple[list, list]:
+        """The experiments a fit or sampling covers, and the ones left out for lack of a model.
+
+        `action` is the verb for the messages: ``'fit'`` or ``'sample'``.
+        """
+        if experiments is None:
+            experiments = [self._experiments[key] for key in sorted(self._experiments) if self._experiments[key].include_in_fit]
+        invalid = [experiment for experiment in experiments if self._model_index(experiment.model) is None]
+        if invalid and not skip_invalid:
+            names = ', '.join(f"'{experiment.name}'" for experiment in invalid)
+            done = {'fit': 'fitted', 'sample': 'sampled'}[action]
+            raise FitScopeError(f'{names} cannot be {done}: no model of this project is assigned.')
+        experiments = [experiment for experiment in experiments if experiment not in invalid]
+        if not experiments:
+            raise FitScopeError(f'No experiment to {action}: include at least one experiment that has a model.')
+        return experiments, invalid
+
+    def _fitter_for(self, experiments: list) -> MultiFitter:
+        """A `for_experiments` fitter over `experiments`, with a snapshot of this project's settings and its constraints.
+
+        The snapshot is taken now, so a fit or a sampling prepared here is not
+        changed by a settings edit made before it runs (sampling prepares its
+        run only when ``mcmc_sample()`` is called, possibly in another thread).
+        """
+        fitter = MultiFitter.for_experiments(experiments, constraints_factory_provider=_weak_constraints_provider(self))
+        fitter.settings = copy.deepcopy(self._fit_settings)
+        return fitter
+
+    def fit_parameters(self, experiments: Optional[list] = None) -> List[Parameter]:
+        """The parameters a fit of `experiments` varies, each once; nothing is prepared.
+
+        The free parameters of their models, and the free parameters of other
+        models those follow (see :meth:`prepare_fit`). Experiments without a
+        model of this project contribute nothing.
+
+        Parameters
+        ----------
+        experiments : list, optional
+            By default, the loaded ones whose ``include_in_fit`` is set.
+        """
+        if experiments is None:
+            experiments = [self._experiments[key] for key in sorted(self._experiments) if self._experiments[key].include_in_fit]
+        models = []
+        for experiment in experiments:
+            index = self._model_index(experiment.model)
+            if index is not None and not any(model is self._models[index] for model in models):
+                models.append(self._models[index])
+        parameters = {id(parameter): parameter for model in models for parameter in model.get_free_parameters()}
+        for root in _free_roots(models):
+            parameters.setdefault(id(root), root)
+        return list(parameters.values())
+
+    def record_fit(self, prepared: PreparedFit, results: Optional[list] = None, status: str = 'completed') -> FitRun:
+        """Record the outcome of a run prepared by :meth:`prepare_fit`; see :attr:`last_fit`.
+
+        A completed run's results also reach :attr:`fitter`'s goodness-of-fit
+        properties. A failed or cancelled one is recorded without statistics.
+        """
+        completed = status == 'completed' and bool(results)
+        metrics = prepared.finalize(results) if completed else None
+        # The run's own settings; the project's may have changed since it was prepared.
+        settings = prepared.settings or self._fit_settings
+        # Experiments may have been removed since too: the keys are those of now.
+        keys = {id(experiment): key for key, experiment in self._experiments.items()}
+        inputs = [
+            (keys.get(id(experiment)), experiment.name, None if channel is None else channel.value)
+            for experiment, channel in zip(prepared.experiments, prepared.channels)
+        ]
+        self._last_fit = FitRun.from_results(prepared, results, status, settings.minimizer.name, metrics, inputs)
+        if completed:
+            self.fitter.record_fit_results(results, metrics)
+        return self._last_fit
+
+    @property
+    def last_fit(self) -> Optional[FitRun]:
+        """The record of the latest fit recorded with :meth:`record_fit`, or None."""
+        return self._last_fit
 
     # ----- structural parameter paths -----
 
-    @staticmethod
-    def _child_candidates(obj) -> list:
-        """``(token, child)`` pairs to descend into from `obj`."""
-        from collections.abc import Sequence
-
-        from easyreflectometry.sample.base_core import BaseCore
-        from easyreflectometry.sample.collections.base_collection import BaseCollection
-
-        if isinstance(obj, (BaseCollection, list, tuple)) or (isinstance(obj, Sequence) and not isinstance(obj, str)):
-            return [(str(index), item) for index, item in enumerate(obj)]
-        if isinstance(obj, BaseCore) or hasattr(obj, 'get_all_parameters'):
-            candidates = []
-            for attr_name in dir(type(obj)):
-                if attr_name.startswith('_') or attr_name in _PATH_SKIPPED_PROPERTIES:
-                    continue
-                class_attr = getattr(type(obj), attr_name, None)
-                if not isinstance(class_attr, property):
-                    continue
-                try:
-                    value = getattr(obj, attr_name)
-                except Exception as exception:
-                    logger.debug("Skipping property '%s' on %r: %s", attr_name, obj, exception)
-                    continue
-                if isinstance(value, (DescriptorNumberType, BaseCore, BaseCollection, list, tuple)):
-                    candidates.append((attr_name, value))
-            return candidates
-        return []
-
     def _walk_parameters(self):
-        """Yield ``(structural path, parameter)`` for every parameter under the models.
-
-        Each object is descended into once, so parent back-references cannot
-        recurse forever.
-        """
-        visited: set[int] = set()
-
-        def _walk(obj, tokens: List[str]):
-            if isinstance(obj, DescriptorNumberType):
-                yield '/'.join(tokens), obj
-                return
-            if id(obj) in visited:
-                return
-            visited.add(id(obj))
-            for token, child in self._child_candidates(obj):
-                yield from _walk(child, tokens + [token])
-
-        yield from _walk(self._models, ['models'])
+        """Yield ``(structural path, parameter)`` for every parameter under the models;
+        a parameter of an object shared by several models at its first path only."""
+        yield from paths.walk(self._models, ['models'])
 
     def parameter_path(self, parameter) -> Optional[str]:
         """Structural path of `parameter` within this project, e.g.
@@ -678,10 +924,10 @@ class Project:
 
         for model in self._models:
             model.generate_bindings()
+        self._sync_parameter_states()
 
         # The cached fitter holds fit functions bound to the previous backend.
-        self._fitter = None
-        self._fitter_model_index = None
+        self._invalidate_fitter()
 
     @property
     def calculator_supports_magnetism(self) -> bool:
@@ -721,25 +967,17 @@ class Project:
 
     @property
     def minimizer(self) -> AvailableMinimizers:
-        """Minimizer function."""
-        if self._fitter is not None:
-            return self._fitter.easy_science_multi_fitter.minimizer.enum
-        return self._minimizer_selection
+        """The selected minimizer; an alias for ``fit_settings.minimizer``."""
+        return self._fit_settings.minimizer
 
     @minimizer.setter
     def minimizer(self, minimizer: AvailableMinimizers) -> None:
-        """Minimizer function."""
-        old_name = getattr(self._minimizer_selection, 'name', str(self._minimizer_selection))
-        new_name = getattr(minimizer, 'name', str(minimizer))
-        logger.info(
-            'Minimizer changed from %s to %s (fitter active: %s)',
-            old_name,
-            new_name,
-            self._fitter is not None,
-        )
-        self._minimizer_selection = minimizer
-        if self._fitter is not None:
-            self._fitter.easy_science_multi_fitter.switch_minimizer(minimizer)
+        """Select the minimizer; it applies to the next fit."""
+        if not isinstance(minimizer, AvailableMinimizers):
+            raise ValueError(f'minimizer must be an AvailableMinimizers member, got {minimizer!r}.')
+        previous = self._fit_settings.minimizer
+        self._fit_settings.minimizer = minimizer
+        logger.info('Minimizer changed from %s to %s', previous.name, self._fit_settings.minimizer.name)
 
     @property
     def experiments(self) -> Dict[int, Union[DataSet1D, PolarizedDataSet]]:
@@ -750,6 +988,233 @@ class Project:
     def experiments(self, experiments: Dict[int, Union[DataSet1D, PolarizedDataSet]]) -> None:
         """Experiments function."""
         self._experiments = experiments
+
+    def remove_experiment(self, index: int) -> Dict[int, int]:
+        """Remove the experiment at `index`; the later ones move down a key.
+
+        Keys stay ``0..n-1`` and equal to display positions, so a caller that
+        keeps per-experiment state (a selection, visibility) remaps it with
+        the returned table.
+
+        Returns
+        -------
+        Dict[int, int]
+            Old key to new key of every remaining experiment.
+
+        Raises
+        ------
+        IndexError
+            No experiment at `index`.
+        """
+        if index not in self._experiments:
+            raise IndexError(f'No experiment at index {index}')
+        remaining = [key for key in sorted(self._experiments) if key != index]
+        remap = {old: new for new, old in enumerate(remaining)}
+        self._experiments = {remap[key]: self._experiments[key] for key in remaining}
+        current = self._current_experiment_index
+        self._current_experiment_index = remap.get(current, min(current, len(remaining) - 1)) if remaining else 0
+        self._with_experiments = bool(self._experiments)
+        if self._last_fit is not None:
+            self._last_fit = self._last_fit.remapped(remap)
+        return remap
+
+    def model_index_for_experiment(self, index: int) -> Optional[int]:
+        """Index of the model the experiment at `index` is bound to, or None when it has none."""
+        return self._model_index_for_experiment(self._experiments[index])
+
+    def set_model_for_experiment(self, index: int, model_index: int) -> None:
+        """Bind the experiment at `index` to the model at `model_index`."""
+        self._experiments[index].model = self._models[model_index]
+
+    def experiments_for_model(self, model_index: int) -> List[int]:
+        """Keys of the experiments bound to the model at `model_index`."""
+        model = self._models[model_index]
+        return [key for key, experiment in sorted(self._experiments.items()) if experiment.model is model]
+
+    # ----- contrasts -----
+
+    def add_contrast(
+        self,
+        reference_index: int,
+        name: str,
+        substitutions: Optional[Sequence[Union[ReplaceMaterial, ReplaceFormula]]] = None,
+    ) -> int:
+        """Add a contrast of the model at `reference_index`; see :func:`easyreflectometry.contrasts.derive_contrast`.
+
+        Replacement materials join the materials palette. Returns the index of the new model.
+        """
+        reference = self._models[reference_index]
+        model = derive_contrast(reference, name=name, substitutions=substitutions)
+        model.color = self._models.next_color()
+        self._models.append(model)
+        model.interface = self._calculator
+        self._extend_palette_from_models()
+        self._sync_parameter_states()
+        self._contrasts.append((model, reference))
+        self._invalidate_fitter()
+        return len(self._models) - 1
+
+    def contrast_reference(self, model_index: int) -> Optional[int]:
+        """Index of the model the model at `model_index` was derived from, if it was and still exists."""
+        model = self._models[model_index]
+        return self._model_index(next((reference for derived, reference in self._contrasts if derived is model), None))
+
+    def parameter_models(self, parameter: Parameter) -> List[int]:
+        """Indices of the models `parameter` belongs to (several when an object is shared)."""
+        return self._parameter_owners().get(id(parameter), [])
+
+    def _parameter_owners(self) -> Dict[int, List[int]]:
+        owners: Dict[int, List[int]] = {}
+        for index, model in enumerate(self._models):
+            for parameter in {id(p): p for p in model.get_all_parameters()}.values():
+                owners.setdefault(id(parameter), []).append(index)
+        return owners
+
+    @property
+    def links(self) -> List[LinkRecord]:
+        """The links made by :meth:`apply_link` (a copy of the list)."""
+        return list(self._links)
+
+    def plan_link(self, follower_index: int, reference_index: int, materials: Optional[str] = None) -> LinkPlan:
+        """What tying the model at `follower_index` to the one at `reference_index` would do; see
+        :func:`easyreflectometry.contrasts.plan_link`. Nothing is changed."""
+        owners = self._parameter_owners()
+        return plan_link(
+            self._models[follower_index],
+            self._models[reference_index],
+            owners=lambda parameter: owners.get(id(parameter), []),
+            follower_index=follower_index,
+            materials=materials,
+        )
+
+    def apply_link(self, plan: LinkPlan) -> LinkRecord:
+        """Tie the rows of `plan` marked ``'tie'``, all or none.
+
+        Raises
+        ------
+        ValueError
+            A row is still ``'undecided'``, or the project changed since the plan
+            was made so that a row can no longer be tied as planned (it was applied
+            already, a model now shares the parameter, ...). Nothing is tied then.
+        """
+        undecided = [row.path for row in plan.rows if row.action == 'undecided']
+        if undecided:
+            raise ValueError(f'Decide whether to tie {", ".join(undecided)} before linking.')
+        # The project may have changed since the plan was made (a model now shares a
+        # parameter, the plan was applied already): plan again and compare.
+        follower_index, reference_index = self._model_index(plan.follower), self._model_index(plan.reference)
+        if follower_index is None or reference_index is None:
+            raise ValueError('The plan refers to a model that is no longer in the project; plan the link again.')
+        outdated = plan.outdated(self.plan_link(follower_index, reference_index))
+        if outdated:
+            raise ValueError(f'The plan is out of date at {", ".join(outdated)}; plan the link again.')
+        pairs = []
+        try:
+            for row in plan.rows:
+                if row.action == 'tie':
+                    state = snapshot(row.follower)
+                    constrain_equal(row.follower, row.reference)
+                    pairs.append((row.follower, row.reference, state))
+        except Exception:
+            for follower, _, state in pairs:
+                unconstrain(follower)
+                restore(follower, state)
+            raise
+        record = LinkRecord(plan.follower, plan.reference, pairs)
+        self._links.append(record)
+        return record
+
+    def unlink(self, record: LinkRecord, restore_state: bool = True) -> List[int]:
+        """Remove the ties `record` made. Each follower gets back its value, bounds and
+        fixed state from before the link (`restore_state`), or keeps its current ones.
+        Returns the indices of the models whose parameters were freed."""
+        freed = []
+        for follower, reference, state in record.pairs:
+            if follows(follower, reference):
+                unconstrain(follower)
+                if restore_state:
+                    restore(follower, state)
+                freed.append(follower)
+        self._links = [link for link in self._links if link is not record]
+        owners = self._parameter_owners()
+        return sorted({index for parameter in freed for index in owners.get(id(parameter), [])})
+
+    def detach(self, parameter: Parameter, model_index: Optional[int] = None) -> None:
+        """Make `parameter` independent (in the model at `model_index` only, when it is shared).
+
+        A tie is removed (with the state from before it, when a link made it).
+        A parameter of an assembly shared with other models gets a copy of that
+        assembly in the model at `model_index`, with every other parameter tied
+        to the shared one, so only `parameter`'s counterpart is free.
+
+        A tie on a shared parameter is one tie: removing it frees the parameter
+        in every model sharing it, so that is done without a `model_index`.
+
+        Raises
+        ------
+        ValueError
+            The parameter is derived; `model_index` is not one of its models; it
+            is shared and `model_index` is not given; it is shared and tied and
+            `model_index` is given; or it belongs to a material the model shares
+            (assign the layer another material instead).
+        """
+        owners = self.parameter_models(parameter)
+        if model_index is not None and model_index not in owners:
+            name = self._models[model_index].name if 0 <= model_index < len(self._models) else model_index
+            raise ValueError(f"'{parameter.name}' is not part of '{name}'.")
+        if not parameter.independent:
+            if not getattr(parameter, USER_CONSTRAINT_FLAG, False):
+                raise ValueError(f"'{parameter.name}' is derived from other parameters; it cannot be detached.")
+            if len(owners) > 1 and model_index is not None:
+                raise ValueError(
+                    f"'{parameter.name}' is one parameter of {len(owners)} models and follows another one; "
+                    'removing the tie frees it in all of them, so detach it without a model.'
+                )
+            self._untie(parameter)
+            return
+        if len(owners) < 2:
+            return
+        if model_index is None:
+            raise ValueError(f"'{parameter.name}' is shared by several models; say which one to detach it in.")
+        model = self._models[model_index]
+        positions = [
+            position
+            for position, assembly in enumerate(model.sample)
+            if any(p is parameter for p in assembly.get_all_parameters())
+        ]
+        if len(positions) != 1:
+            raise ValueError(
+                f"'{parameter.name}' is part of '{model.name}' at several positions ({positions}); "
+                'give them their own assemblies first.'
+            )
+        position = positions[0]
+        assembly = model.sample[position]
+        kept = kept_children(assembly, {}, set())
+        if any(parameter is p for material in kept.values() for p in material.get_all_parameters()):
+            raise ValueError(f"'{parameter.name}' belongs to a shared material; give the layer its own material instead.")
+        copy = references.rebuild(assembly, kept)
+        twin = dict(paths.walk(copy, []))[next(path for path, p in paths.walk(assembly, []) if p is parameter)]
+        tie_corresponding(copy, assembly, excluded={id(twin)})
+        model.sample[position] = copy
+        model.interface = self._calculator
+        self._sync_parameter_states()
+        self._invalidate_fitter()
+
+    def _untie(self, parameter: Parameter) -> None:
+        """Make `parameter` independent; when a link tied it, with its state from before the link."""
+        unconstrain(parameter)
+        for record in self._links:
+            for pair in record.pairs:
+                if pair[0] is parameter:
+                    record.pairs.remove(pair)
+                    restore(parameter, pair[2])
+                    self._links = [link for link in self._links if link.pairs]
+                    return
+
+    def _extend_palette_from_models(self) -> None:
+        """Add the models' materials the palette does not hold yet."""
+        new_materials = [material for material in self._get_materials_in_models() if material not in self._materials]
+        self._materials.extend(new_materials)
 
     @property
     def path_json(self):
@@ -853,6 +1318,7 @@ class Project:
         """
         if sample is None:
             raise ValueError('The ORSO file does not contain a valid sample model definition.')
+        self._check_sample_calculable(sample)
         # Take the collection's next colour: a supplied model keeps its own
         # colour, and the Model default would give every loaded sample the
         # same first palette colour.
@@ -885,6 +1351,7 @@ class Project:
         """
         if sample is None:
             raise ValueError('The ORSO file does not contain a valid sample model definition.')
+        self._check_sample_calculable(sample)
         model = Model(sample=sample)
         if sample.name:
             model.user_data['original_name'] = sample.name  # Store original name for reference
@@ -892,6 +1359,25 @@ class Project:
         model.interface = self._calculator
         self._materials = self._get_materials_from_model(model)
         self.current_model_index = 0
+
+    def _check_sample_calculable(self, sample: Sample) -> None:
+        """Refuse a sample the current calculator cannot model, before the
+        project is changed: binding a magnetic sample to a calculator without
+        magnetism fails only after the model was already added or the old
+        models replaced.
+
+        Raises
+        ------
+        NotImplementedError
+            The sample has magnetic layers and the calculator cannot model them.
+        """
+        magnetic = any(getattr(layer, 'magnetism', None) is not None for assembly in sample for layer in assembly.layers)
+        if magnetic and not self.calculator_supports_magnetism:
+            engines = ', '.join(self.calculators_supporting_magnetism) or 'none of the available engines'
+            raise NotImplementedError(
+                f'The sample has magnetic layers, which the {self.calculator} calculation engine cannot model; '
+                f'switch to {engines} and load it again.'
+            )
 
     def _get_materials_from_model(self, model: Model) -> 'MaterialCollection':
         """Get all materials from a single model's sample."""
@@ -946,11 +1432,17 @@ class Project:
         experiment: DataSet1D,
         model: Model,
     ) -> None:
-        """Set the resolution function on *model* based on variance data in *experiment*.
+        """Set the resolution of *experiment*, and of *model*, from the experiment's variance data.
 
         Uses the measured per-point q-resolution (``Pointwise``) when the
         experiment carries q-variance data (``xe``, i.e. sQz²); otherwise
         falls back to the default 5% FWHM percentage resolution.
+
+        The measured resolution is stored on the experiment itself, so every
+        dataset is fitted and plotted with the resolution it was measured
+        with even when several datasets share one model. The model's
+        resolution is set as well: it is what simulations, the GUI's
+        resolution field and datasets without a measured resolution use.
 
         Parameters
         ----------
@@ -959,18 +1451,36 @@ class Project:
         model : Model
             The model whose resolution function is set.
         """
-        # nan-robust gate: nan is truthy for np.any, but a nan-carrying xe must
-        # not build a Pointwise (np.interp would propagate the nan everywhere).
-        if experiment.xe is not None and np.any(np.nan_to_num(experiment.xe) > 0):
-            model.resolution_function = Pointwise(q_data_points=[experiment.x, experiment.y, experiment.xe])
-        else:
-            model.resolution_function = PercentageFwhm(5.0)
+        measured = resolution_from_dataset(experiment)
+        experiment.resolution_function = measured
+        model.resolution_function = PercentageFwhm(5.0) if measured is None else measured
 
     @staticmethod
     def _auto_set_background(experiment: DataSet1D) -> None:
         """Set the model background to the minimum y-value of the experiment data."""
         if experiment.model is not None and len(experiment.y) > 0:
             experiment.model.background = max(np.min(experiment.y), 1e-10)
+
+    def _model_in_use(self, model: Model, ignoring=None) -> bool:
+        """Whether a loaded experiment other than `ignoring` is bound to `model`."""
+        return any(experiment.model is model for experiment in self._experiments.values() if experiment is not ignoring)
+
+    def _bind_loaded_dataset(self, experiment: DataSet1D, model: Model, replacing=None) -> None:
+        """Bind a freshly loaded dataset to `model`.
+
+        The dataset keeps the resolution it was measured with. The model takes
+        its background and resolution from the dataset only while no other
+        experiment uses it, so loading another contrast or angle onto a model
+        leaves what its first dataset (or the user) set. A background set by
+        hand before the first dataset is loaded is replaced by that dataset's.
+        """
+        configure_model = not self._model_in_use(model, ignoring=replacing)
+        experiment.model = model
+        if configure_model:
+            self._auto_set_background(experiment)
+            self._apply_resolution_function(experiment, model)
+        else:
+            experiment.resolution_function = resolution_from_dataset(experiment)
 
     def load_new_experiment(self, path: Union[Path, str], data_group=None) -> None:
         """Load new experiment.
@@ -993,11 +1503,9 @@ class Project:
             model_index = new_index
 
         self._apply_experiment_metadata(path, new_experiment, f'Experiment {new_index}', data_group=data_group)
-        new_experiment.model = self.models[model_index]
-        self._auto_set_background(new_experiment)
+        self._bind_loaded_dataset(new_experiment, self.models[model_index])
         self._experiments[new_index] = new_experiment
         self._with_experiments = True
-        self._apply_resolution_function(new_experiment, self.models[model_index])
 
     def count_datasets_in_file(self, path: Union[Path, str]) -> int:
         """Return the number of datasets contained in the file at *path*.
@@ -1048,26 +1556,143 @@ class Project:
             self.load_new_experiment(path, data_group=data_group)
             return 1
 
-        model_index = self._current_model_index
-        for data_key in data_keys:
-            new_index = len(self._experiments)
-
+        # Every dataset is built before any is added, so a failure adds none.
+        new_experiments = []
+        for offset, data_key in enumerate(data_keys):
+            fallback_name = f'Experiment {len(self._experiments) + offset}'
             new_experiment = dataset_from_datagroup(data_group, data_key=data_key)
-            new_experiment.name = f'Experiment {new_index}'
-            self._apply_experiment_metadata(
-                path,
-                new_experiment,
-                f'Experiment {new_index}',
-                data_group=data_group,
-                data_key=data_key,
-            )
-            new_experiment.model = self.models[model_index]
-            self._auto_set_background(new_experiment)
-            self._experiments[new_index] = new_experiment
-            self._apply_resolution_function(new_experiment, self.models[model_index])
+            new_experiment.name = fallback_name
+            self._apply_experiment_metadata(path, new_experiment, fallback_name, data_group=data_group, data_key=data_key)
+            new_experiments.append(new_experiment)
 
+        model = self.models[self._current_model_index]
+        for new_experiment in new_experiments:
+            self._bind_loaded_dataset(new_experiment, model)
+            self._experiments[len(self._experiments)] = new_experiment
         self._with_experiments = True
         return len(data_keys)
+
+    def _load_single_dataset(self, path: Union[Path, str]) -> DataSet1D:
+        """Load a file that holds exactly one dataset, keeping its ORSO title as name."""
+        data_group = load_measurement_file(str(path))
+        if len(data_group['data']) > 1:
+            raise ValueError(
+                f"File '{path}' contains multiple datasets; a contrast is combined from single-dataset files "
+                '(use load_all_experiments_from_file to load each dataset of this file as its own experiment).'
+            )
+        dataset = load_as_dataset(str(path), data_group=data_group)
+        self._apply_experiment_metadata(path, dataset, Path(path).name, data_group=data_group)
+        return dataset
+
+    def load_experiment_from_files(
+        self,
+        paths: List[Union[Path, str]],
+        model_index: Optional[int] = None,
+        name: Optional[str] = None,
+    ) -> int:
+        """Load several files measured on one contrast as a single experiment.
+
+        A contrast is often measured as several curves -- one per incident
+        angle or wavelength band -- each with its own q-resolution. The files
+        are concatenated (sorted by q) into one experiment whose every point
+        keeps the resolution it was measured with, so the fit smears each
+        point correctly. See :func:`easyreflectometry.data.merge_datasets`.
+
+        Parameters
+        ----------
+        paths : List[Union[Path, str]]
+            The files, one dataset each.
+        model_index : Optional[int], optional
+            Index of the model the experiment belongs to. By default, the
+            current model.
+        name : Optional[str], optional
+            Name of the experiment. By default, the ORSO title of the first
+            file, or ``'Experiment N'``.
+
+        Returns
+        -------
+        int
+            Index of the newly loaded experiment.
+        """
+        if not paths:
+            raise ValueError('At least one file is required.')
+        if model_index is None:
+            model_index = self._current_model_index
+        model = self.models[model_index]
+        new_index = len(self._experiments)
+
+        datasets = [self._load_single_dataset(path) for path in paths]
+        # 'Series' is the DataSet1D default that _apply_experiment_metadata
+        # replaces by the ORSO title of the first file, or else the fallback.
+        experiment = merge_datasets(
+            datasets, name='Series' if name is None else name, fill_resolution=self._fill_resolution_for(model)
+        )
+        if name is None:
+            self._apply_experiment_metadata(paths[0], experiment, f'Experiment {new_index}')
+
+        # The merged resolution is kept as merge_datasets built it from the
+        # inputs' own resolutions; only a model no other experiment uses follows it.
+        configure_model = not self._model_in_use(model)
+        experiment.model = model
+        if configure_model:
+            self._auto_set_background(experiment)
+            model.resolution_function = (
+                PercentageFwhm(5.0) if experiment.resolution_function is None else experiment.resolution_function
+            )
+        self._experiments[new_index] = experiment
+        self._with_experiments = True
+        return new_index
+
+    def append_to_experiment_at_index(self, index: int, path: Union[Path, str]) -> None:
+        """Add another measured curve of the same contrast to an existing experiment.
+
+        The file's points are merged into the experiment at *index* (sorted by
+        q), each keeping its own resolution: the file's measured one, and the
+        experiment's ``resolution_function`` as currently assigned. The
+        experiment's name and model are kept.
+
+        Parameters
+        ----------
+        index : int
+            Index of the experiment to extend.
+        path : Union[Path, str]
+            The file to add, one dataset.
+
+        Raises
+        ------
+        IndexError
+            No experiment is loaded at *index*.
+        ValueError
+            The experiment is polarized (extend its channels one file at a
+            time instead), or the file holds several datasets.
+        """
+        if index not in self._experiments:
+            raise IndexError(f'No experiment at index {index}')
+        experiment = self._experiments[index]
+        if isinstance(experiment, PolarizedDataSet):
+            raise ValueError('Cannot append a file to a polarized experiment; its channels are separate datasets.')
+        model = experiment.model
+        addition = self._load_single_dataset(path)
+        merged = merge_datasets([experiment, addition], name=experiment.name, fill_resolution=self._fill_resolution_for(model))
+        merged.model = model
+        merged.include_in_fit = experiment.include_in_fit
+        # merge_datasets kept the experiment's own resolution (measured or
+        # explicitly assigned) for its points; the model follows the merged
+        # one unless another experiment uses it. Without any, the experiment
+        # keeps using the model's as it is.
+        if model is not None and merged.resolution_function is not None and not self._model_in_use(model, ignoring=experiment):
+            model.resolution_function = merged.resolution_function
+        self._experiments[index] = merged
+
+    @staticmethod
+    def _fill_resolution_for(model: Optional[Model]) -> Optional[ResolutionFunction]:
+        """The resolution to assume for merged points that carry none: the model's, unless that is itself measured."""
+        if model is None:
+            return None
+        resolution_function = model.resolution_function
+        if isinstance(resolution_function, PercentageFwhm):
+            return resolution_function
+        return None
 
     def suggest_polarized_channel_assignment(self, paths: List[Union[Path, str]]) -> Dict[str, Optional[PolarizationChannel]]:
         """Suggest a spin-channel assignment for a set of data files.
@@ -1210,9 +1835,11 @@ class Project:
     def _register_polarized_experiment(self, channels, model_index, title_path, title_data_group) -> int:
         """Shared tail of the polarized loaders: build, name, and register the experiment.
 
-        Background and resolution follow the first (in canonical order)
-        channel; per-channel resolution functions are not supported (one per
-        experiment).
+        The background follows the first (in canonical order) channel. Every
+        channel keeps the resolution it was measured with (its own
+        ``Pointwise`` when the file carries sQz), which the fit and the
+        per-channel model curves use; the model's resolution follows the
+        first channel for simulations and the GUI's resolution field.
 
         Parameters
         ----------
@@ -1245,9 +1872,14 @@ class Project:
             title_path, experiment, f'Polarized experiment {new_index}', data_group=title_data_group
         )
 
-        first_dataset = experiment[experiment.available_channels[0]]
-        self._auto_set_background(first_dataset)
-        self._apply_resolution_function(first_dataset, model)
+        configure_model = not self._model_in_use(model)
+        for channel in experiment.available_channels:
+            experiment[channel].resolution_function = resolution_from_dataset(experiment[channel])
+        if configure_model:
+            # The model follows the first channel, see `_bind_loaded_dataset`.
+            first_dataset = experiment[experiment.available_channels[0]]
+            self._auto_set_background(first_dataset)
+            self._apply_resolution_function(first_dataset, model)
 
         self._experiments[new_index] = experiment
         self._with_experiments = True
@@ -1279,11 +1911,9 @@ class Project:
         experiment = load_as_dataset(str(path), data_group=data_group)
 
         self._apply_experiment_metadata(path, experiment, f'Experiment {index}', data_group=data_group)
-        experiment.model = self.models[index]
-        self._auto_set_background(experiment)
+        self._bind_loaded_dataset(experiment, self.models[index], replacing=self._experiments.get(index))
         self._experiments[index] = experiment
         self._with_experiments = True
-        self._apply_resolution_function(experiment, self._models[index])
 
     def _bind_calculator(self, model) -> None:
         """Bind the project's calculator to a model unless it already is.
@@ -1314,7 +1944,7 @@ class Project:
         except (IndexError, AttributeError):
             return False
 
-    def magnetic_sld_data_for_model_at_index(self, index: int = 0) -> Dict[str, DataSet1D]:
+    def magnetic_sld_data_for_model_at_index(self, index: int = 0) -> Dict[str, Union[DataSet1D, float]]:
         """Nuclear and magnetic depth profiles of a magnetic model.
 
         Parameters
@@ -1335,9 +1965,18 @@ class Project:
               vector is meaningless, so points below
               :data:`MAGNETIC_MOMENT_FLOOR_FRACTION` of the largest ρM are left
               out instead of drawing an arbitrary angle through vacuum;
-            - ``'spin_up'`` / ``'spin_down'``: the potentials each spin state
-              sees, ρ(z) ± ρM(z)·cos(θM(z) − A), where A is the guide-field
-              angle :data:`GUIDE_FIELD_ANGLE`.
+            - ``'rho_m_perp'``: magnitude of the magnetic SLD transverse to the
+              field, |ρM⊥|(z);
+            - ``'spin_up'`` / ``'spin_down'``: nuclear plus / minus the
+              longitudinal magnetic SLD, ρ(z) ± ρM∥(z), with ρM∥ the component
+              along the field (see
+              :func:`~easyreflectometry.special.calculations.field_frame_components`).
+              These are the potentials of the two spin states only when the
+              moment is collinear with the field and the applied field is zero;
+              with a transverse moment the eigenmodes split by ±|ρM| instead.
+              The applied field is not included.
+
+            plus the floats ``'guide_field_angle'`` and ``'applied_field'`` of the model.
 
         Raises
         ------
@@ -1358,9 +1997,8 @@ class Project:
         sld = np.asarray(sld, dtype=float)
         rho_m = np.asarray(rho_m, dtype=float)
         theta_m = np.asarray(theta_m, dtype=float)
-        # Component of the moment along the guide field: what the neutron spin
-        # states add to / subtract from the nuclear potential.
-        projection = rho_m * np.cos(np.radians(theta_m - GUIDE_FIELD_ANGLE))
+        guide_field_angle = float(model.guide_field_angle.value)
+        parallel, perpendicular = field_frame_components(rho_m, theta_m, guide_field_angle)
         # Only report the angle where there is a moment to have an angle, and
         # make it continuous along z: 359° followed by 1° is a 2° turn, but a
         # plotted line through the wrapped values sweeps the whole circle.
@@ -1371,24 +2009,82 @@ class Project:
             'sld': DataSet1D(name=f'SLD for Model {index}', x=z, y=sld),
             'rho_m': DataSet1D(name=f'Magnetic SLD for Model {index}', x=z, y=rho_m),
             'theta_m': DataSet1D(name=f'Moment angle for Model {index}', x=z[has_moment], y=theta_display[has_moment]),
-            'spin_up': DataSet1D(name=f'Spin-up potential for Model {index}', x=z, y=sld + projection),
-            'spin_down': DataSet1D(name=f'Spin-down potential for Model {index}', x=z, y=sld - projection),
+            'rho_m_perp': DataSet1D(name=f'Transverse magnetic SLD for Model {index}', x=z, y=perpendicular),
+            'spin_up': DataSet1D(name=f'Nuclear + longitudinal magnetic SLD for Model {index}', x=z, y=sld + parallel),
+            'spin_down': DataSet1D(name=f'Nuclear - longitudinal magnetic SLD for Model {index}', x=z, y=sld - parallel),
+            'guide_field_angle': guide_field_angle,
+            'applied_field': float(model.applied_field.value),
+        }
+
+    def volume_fraction_data_for_model_at_index(
+        self,
+        index: int = 0,
+        *,
+        z: Optional[np.ndarray] = None,
+        max_delta_z: Optional[float] = None,
+        merge_equivalent: bool = True,
+        groups: Optional[Mapping[str, Sequence[str]]] = None,
+    ) -> Dict[str, DataSet1D]:
+        """Volume fraction (occupancy) depth profiles of the components of a model.
+
+        Built from the sample alone, so no calculator binding is needed. See
+        :func:`easyreflectometry.sample.volume_fraction.volume_fraction_profile`
+        for the depth convention and the caveats.
+
+        Parameters
+        ----------
+        index : int
+            Index of the model.
+        z : np.ndarray, optional
+            Depths (Å) to evaluate at; ``z = 0`` is the superphase / first
+            layer interface. By default a 500-point grid spanning the sample,
+            the same grid the refnx calculator uses for its SLD profile.
+        max_delta_z : float, optional
+            Maximum spacing of the default grid. Cannot be combined with ``z``.
+        merge_equivalent : bool, optional
+            Merge materials with equal name and SLD into one component. By default, True.
+        groups : Mapping[str, Sequence[str]], optional
+            Presentation groups forwarded to
+            :meth:`~easyreflectometry.sample.VolumeFractionProfile.grouped`,
+            e.g. ``{'Water': ['D2O', 'H2O']}``.
+
+        Returns
+        -------
+        Dict[str, DataSet1D]
+            One profile per component, keyed by its stable component key (or
+            group label) in front-to-back order; the display label is in the
+            dataset's ``name``. The ``y`` values sum to one at every ``x``.
+        """
+        model = self.models[index]
+        profile = volume_fraction_profile(model.sample, z, max_delta_z=max_delta_z, merge_equivalent=merge_equivalent)
+        if groups:
+            profile = profile.grouped(groups)
+        return {
+            key: DataSet1D(
+                name=f'{profile.labels[key]} volume fraction for Model {index}',
+                x=profile.z,
+                y=values,
+                x_label='z (Å)',
+                y_label='Volume fraction',
+            )
+            for key, values in profile.fractions.items()
         }
 
     def sample_data_for_model_at_index(self, index: int = 0, q_range: Optional[np.array] = None) -> DataSet1D:
-        """Sample data for model at index."""
-        original_resolution_function = self.models[index].resolution_function
-        self.models[index].resolution_function = PercentageFwhm(0)
-        reflectivity_data = self.model_data_for_model_at_index(index, q_range)
-        self.models[index].resolution_function = original_resolution_function
+        """The unsmeared reflectivity of the model at `index`: the sample alone, no resolution.
 
-        return reflectivity_data
+        The zero-width resolution is bound to this one calculation; the
+        model's own resolution, which is calculator state shared with a fit
+        possibly running in another thread, is not touched.
+        """
+        return self.model_data_for_model_at_index(index, q_range, resolution_function=PercentageFwhm(0))
 
     def model_data_for_model_at_index(
         self,
         index: int = 0,
         q_range: Optional[np.array] = None,
         channel: Optional[Union[PolarizationChannel, str]] = None,
+        resolution_function: Optional[ResolutionFunction] = None,
     ) -> DataSet1D:
         """Model data for model at index.
 
@@ -1404,23 +2100,75 @@ class Project:
             magnetic model (except 'pp', which falls back to the unpolarized
             calculation) and a calculator supporting magnetism, otherwise the
             calculator raises.
+        resolution_function : Optional[ResolutionFunction]
+            Resolution to smear with; the model's by default. Pass a dataset's
+            own resolution to get the curve the fit compares that dataset to
+            (see :meth:`model_data_for_experiment_at_index`).
         """
         if q_range is None:
             q_range = np.linspace(self.q_min, self.q_max, self.q_resolution)
         self._bind_calculator(self.models[index])
+        interface = self.models[index].interface()
+        unique_name = self._models[index].unique_name
         if channel is None:
-            reflectivity = self.models[index].interface().reflectity_profile(q_range, self._models[index].unique_name)
+            reflectivity = interface.reflectity_profile(q_range, unique_name, resolution_function=resolution_function)
             name = f'Reflectivity for Model {index}'
         else:
             channel = PolarizationChannel(channel)
-            reflectivity = (
-                self.models[index].interface().reflectivity_profile_channel(q_range, self._models[index].unique_name, channel)
+            reflectivity = interface.reflectivity_profile_channel(
+                q_range, unique_name, channel, resolution_function=resolution_function
             )
             name = f'Reflectivity ({channel.value}) for Model {index}'
         return DataSet1D(
             name=name,
             x=q_range,
             y=reflectivity,
+        )
+
+    def model_data_for_experiment_at_index(
+        self,
+        index: int = 0,
+        channel: Optional[Union[PolarizationChannel, str]] = None,
+        q_range: Optional[np.array] = None,
+    ) -> DataSet1D:
+        """The model curve an experiment is compared to: its model, at its q, with its resolution.
+
+        Parameters
+        ----------
+        index : int
+            Index of the experiment.
+        channel : Optional[Union[PolarizationChannel, str]]
+            Spin channel of a polarized experiment; required for one, not
+            allowed for an unpolarized one.
+        q_range : Optional[np.array]
+            Points to calculate at; the experiment's own q by default.
+
+        Raises
+        ------
+        IndexError
+            No experiment is loaded at `index`.
+        ValueError
+            The experiment has no model, or `channel` does not match the
+            experiment's kind.
+        """
+        experiment = self.experimental_data_for_model_at_index(index)
+        if isinstance(experiment, PolarizedDataSet):
+            if channel is None:
+                raise ValueError(f'Experiment at index {index} is polarized; a channel is required.')
+            dataset = experiment[channel]
+        else:
+            if channel is not None:
+                raise ValueError(f'Experiment at index {index} is not polarized; it has no channel.')
+            dataset = experiment
+        model = experiment.model
+        if model is None:
+            raise ValueError(f'Experiment at index {index} has no model.')
+        model_index = next(i for i, candidate in enumerate(self.models) if candidate is model)
+        return self.model_data_for_model_at_index(
+            model_index,
+            q_range=np.asarray(dataset.x) if q_range is None else q_range,
+            channel=channel,
+            resolution_function=getattr(dataset, 'resolution_function', None),
         )
 
     def experimental_data_for_model_at_index(
@@ -1639,13 +2387,7 @@ class Project:
 
     def _model_index_for_experiment(self, experiment) -> Optional[int]:
         """Index of the model an experiment is bound to, or None."""
-        model = getattr(experiment, 'model', None)
-        if model is None:
-            return None
-        for model_index, candidate in enumerate(self._models):
-            if candidate is model:
-                return model_index
-        return None
+        return self._model_index(getattr(experiment, 'model', None))
 
     def default_model(self):
         """Default model."""
@@ -1702,48 +2444,96 @@ class Project:
 
         return self._models[index].is_default
 
-    def remove_model_at_index(self, index: int) -> None:
-        """Remove the model at the given index.
+    def plan_model_removal(self, index: int) -> 'ModelRemoval':
+        """What removing the model at `index` would affect; nothing is changed.
 
-        Removes the model from the model collection, removes the experiment at the
-        same index (if any), and reindexes experiments above the removed index so
-        model/experiment indices stay aligned.
+        Raises
+        ------
+        IndexError :
+            If the index is out of range.
+        """
+        if index < 0 or index >= len(self._models):
+            raise IndexError(f'Model index {index} out of range')
+        model = self._models[index]
+        survivors = [other for other in self._models if other is not model]
+        surviving = {id(parameter) for other in survivors for parameter in other.get_all_parameters()}
+        # Parameters only this model owns; one shared with a surviving model stays.
+        removed = {id(parameter) for parameter in model.get_all_parameters() if id(parameter) not in surviving}
+        dependents = [
+            parameter
+            for other in survivors
+            for parameter in other.get_all_parameters()
+            if not parameter.independent and any(id(leader) in removed for leader in parameter.dependency_map.values())
+        ]
+        inequality_constraints = [
+            spec
+            for spec in self._inequality_constraints
+            if any(id(self._parameter_or_none(path)) in removed for path in spec.paths.values())
+        ]
+        return ModelRemoval(
+            experiments=self.experiments_for_model(index),
+            dependents=list({id(parameter): parameter for parameter in dependents}.values()),
+            inequality_constraints=inequality_constraints,
+        )
 
-        Adjusts the current model index if necessary.
+    def remove_model_at_index(self, index: int, experiments: Union[str, int, None] = None) -> 'ModelRemoval':
+        """Remove the model at `index`, resolving everything that refers to it.
+
+        Parameters of other models that follow a parameter only this model
+        owns become independent, keeping their current value (or getting back
+        the one from before the link, when :meth:`apply_link` made the tie). Inequality
+        constraints on such parameters are removed; the others are re-pathed.
+        Objects the model shares with other models stay with them. See
+        :meth:`plan_model_removal`.
 
         Parameters
         ----------
         index : int
             Index of the model to remove.
+        experiments : Union[str, int, None], optional
+            What happens to the experiments bound to the model: ``'remove'``
+            removes them, an int rebinds them to the model at that index
+            (counted before the removal). Required when there are any.
+
+        Returns
+        -------
+        ModelRemoval
+            What was affected; its ``remap`` keys the remaining experiments.
 
         Raises
         ------
         IndexError :
             If the index is out of range.
         ValueError :
-            If trying to remove the last remaining model.
+            If trying to remove the last remaining model, or experiments are
+            bound to it and `experiments` does not say what to do with them.
+            Nothing is changed then.
         """
-        if index < 0 or index >= len(self._models):
-            raise IndexError(f'Model index {index} out of range')
-
+        plan = self.plan_model_removal(index)
         if len(self._models) <= 1:
             raise ValueError('Cannot remove the last model from the project')
+        if plan.experiments and experiments != 'remove':
+            if not isinstance(experiments, int) or experiments == index or not 0 <= experiments < len(self._models):
+                raise ValueError(
+                    f'Experiments {plan.experiments} use the model; pass experiments="remove" '
+                    'or the index of another model to bind them to.'
+                )
 
-        # Remove the model from the collection
-        self._models.pop(index)
-
-        # Remove experiment mapped to the removed model index.
-        if index in self._experiments:
-            self._experiments.pop(index)
-
-        # Reindex experiments above the removed model index to keep mapping aligned.
-        reindexed_experiments: dict[int, DataSet1D] = {}
-        for exp_index, experiment in sorted(self._experiments.items()):
-            if exp_index > index:
-                reindexed_experiments[exp_index - 1] = experiment
-            else:
-                reindexed_experiments[exp_index] = experiment
-        self._experiments = reindexed_experiments
+        for parameter in plan.dependents:
+            self._untie(parameter)
+        removed = self._models[index]
+        self._links = [link for link in self._links if removed not in (link.follower, link.reference)]
+        self._contrasts = [pair for pair in self._contrasts if removed not in pair]
+        remap = {key: key for key in self._experiments}
+        if experiments == 'remove':
+            for key in reversed(plan.experiments):
+                step = self.remove_experiment(key)
+                remap = {old: step[new] for old, new in remap.items() if new in step}
+        elif plan.experiments:
+            for key in plan.experiments:
+                self._experiments[key].model = self._models[experiments]
+        self._keeping_inequality_paths(lambda: self._models.pop(index))
+        self._invalidate_fitter()
 
         # Adjust current model index if necessary
         if self._current_model_index >= len(self._models):
@@ -1754,6 +2544,44 @@ class Project:
         # Reset assembly and layer indices for the new current model
         self._current_assembly_index = 0
         self._current_layer_index = 0
+        return ModelRemoval(plan.experiments, plan.dependents, plan.inequality_constraints, remap)
+
+    def move_model(self, index: int, new_index: int) -> None:
+        """Move the model at `index` to `new_index`, keeping inequality constraints on their parameters."""
+        if index == new_index:
+            return
+        current = self._models[self._current_model_index]
+        self._keeping_inequality_paths(lambda: self._models.insert(new_index, self._models.pop(index)))
+        self._current_model_index = self._model_index(current)
+        self._invalidate_fitter()
+
+    def _parameter_or_none(self, path: str):
+        try:
+            return self.resolve_parameter_path(path)
+        except KeyError:
+            return None
+
+    def _keeping_inequality_paths(self, edit) -> List[InequalitySpec]:
+        """Run a structural `edit`, then re-path every inequality constraint to the
+        parameters it referred to before. Constraints whose parameters are gone are
+        removed and returned."""
+        targets = [
+            (spec, {alias: self._parameter_or_none(path) for alias, path in spec.paths.items()})
+            for spec in self._inequality_constraints
+        ]
+        edit()
+        locations = {id(parameter): path for path, parameter in self._walk_parameters()}
+        kept, removed = [], []
+        for spec, parameters in targets:
+            new_paths = {alias: locations.get(id(parameter)) for alias, parameter in parameters.items()}
+            if None in new_paths.values():
+                removed.append(spec)
+                continue
+            spec.lhs_paths = {alias: new_paths[alias] for alias in spec.lhs_paths}
+            spec.rhs_paths = {alias: new_paths[alias] for alias in spec.rhs_paths}
+            kept.append(spec)
+        self._inequality_constraints = kept
+        return removed
 
     def add_material(self, material: Material) -> None:
         """Add a material to the project material collection.
@@ -1898,24 +2726,41 @@ class Project:
     #: Material, MaterialMixture, MaterialSolvated, LayerAreaPerMolecule, etc.)
     #: changed in a way that is not backward-compatible with v1 files.
     FILE_FORMAT = 2
+    #: Written instead of :attr:`FILE_FORMAT` when an older reader would load another
+    #: project: the models share objects (reference nodes, see
+    #: :mod:`easyreflectometry.sample.references`), an experiment is left out of the fit,
+    #: or an experiment's model is found by a name several models have. Readers that
+    #: predate it refuse the file rather than misread it.
+    FILE_FORMAT_SHARED = 3
 
     def as_dict(self, include_materials_not_in_model=False):
-        """As dict."""
+        """As dict.
+
+        Objects used in several places (a material in two layers, an assembly
+        in two models) are written once and referred to elsewhere. The
+        materials palette is written in order under ``materials``.
+        ``include_materials_not_in_model`` adds the unused materials once more
+        under their older key, for readers that predate ``materials``.
+        """
         project_dict = {}
         project_dict['file_format'] = self.FILE_FORMAT
         project_dict['info'] = self._info
         project_dict['with_experiments'] = self._with_experiments
-        if self._models is not None:
-            project_dict['models'] = self._models.as_dict()
-            project_dict['models']['unique_name'] = self._models.unique_name + '_to_prevent_collisions_on_load'
+        with references.writing():
+            if self._models is not None:
+                project_dict['models'] = self._models.as_dict()
+                project_dict['models']['unique_name'] = self._models.unique_name + '_to_prevent_collisions_on_load'
+            project_dict['materials'] = [material.as_dict() for material in self._materials]
+        references.prune(project_dict)
         if include_materials_not_in_model:
             self._as_dict_add_materials_not_in_model_dict(project_dict)
         if self._with_experiments:
             self._as_dict_add_experiments(project_dict)
-        if self.fitter is not None:
-            project_dict['fitter_minimizer'] = self.fitter.easy_science_multi_fitter.minimizer.name
-        elif self._minimizer_selection is not None:
-            project_dict['fitter_minimizer'] = self._minimizer_selection.name
+        if self._needs_new_format(project_dict):
+            project_dict['file_format'] = self.FILE_FORMAT_SHARED
+        project_dict['fit_settings'] = self._fit_settings.to_dict()
+        # Kept for readers that predate `fit_settings`.
+        project_dict['fitter_minimizer'] = project_dict['fit_settings']['minimizer']
         if self._calculator is not None:
             project_dict['calculator'] = self._calculator.current_interface_name
         if self._colors is not None:
@@ -1928,7 +2773,53 @@ class Project:
         sum_partner_max_backups = self._sum_partner_max_backups()
         if sum_partner_max_backups:
             project_dict['sum_partner_max_backups'] = sum_partner_max_backups
+        self._as_dict_add_contrasts(project_dict)
         return project_dict
+
+    def _model_index(self, model: Model) -> Optional[int]:
+        return next((index for index, candidate in enumerate(self._models) if candidate is model), None)
+
+    def _as_dict_add_contrasts(self, project_dict: dict) -> None:
+        """Record contrast provenance and links by model index and parameter path.
+
+        Entries whose models, or tied parameters, are no longer in the project
+        (models replaced wholesale) are left out.
+        """
+        contrasts = [[self._model_index(derived), self._model_index(reference)] for derived, reference in self._contrasts]
+        contrasts = [pair for pair in contrasts if None not in pair]
+        if contrasts:
+            project_dict['contrasts'] = contrasts
+        parameter_paths = {id(parameter): path for path, parameter in self._walk_parameters()} if self._links else {}
+        links = []
+        for link in self._links:
+            models = [self._model_index(link.follower), self._model_index(link.reference)]
+            pairs = [
+                [parameter_paths[id(follower)], parameter_paths[id(reference)], state]
+                for follower, reference, state in link.pairs
+                if id(follower) in parameter_paths and id(reference) in parameter_paths
+            ]
+            if None not in models and pairs:
+                links.append({'follower': models[0], 'reference': models[1], 'pairs': pairs})
+        if links:
+            project_dict['links'] = links
+
+    def _from_dict_restore_contrasts(self, project_dict: dict, report: list[str]) -> None:
+        """Restore contrast provenance and links; an entry that does not fit the models is reported and dropped."""
+        self._contrasts, self._links = [], []
+        for derived, reference in project_dict.get('contrasts', []):
+            try:
+                self._contrasts.append((self._models[derived], self._models[reference]))
+            except (IndexError, TypeError):
+                report.append(f'Contrast provenance {derived} from {reference} refers to a missing model; dropped.')
+        for raw in project_dict.get('links', []):
+            try:
+                pairs = [
+                    (self.resolve_parameter_path(follower), self.resolve_parameter_path(reference), state)
+                    for follower, reference, state in raw['pairs']
+                ]
+                self._links.append(LinkRecord(self._models[raw['follower']], self._models[raw['reference']], pairs))
+            except (KeyError, IndexError, TypeError) as error:
+                report.append(f'A link between models could not be restored: {error}')
 
     def _as_dict_add_materials_not_in_model_dict(self, project_dict: dict):
         """As dict add materials not in model dict."""
@@ -1939,11 +2830,27 @@ class Project:
         if len(materials_not_in_model) > 0:
             project_dict['materials_not_in_model'] = MaterialCollection(materials_not_in_model).as_dict(skip=['interface'])
 
+    def _needs_new_format(self, project_dict: dict) -> bool:
+        """Whether a reader of :attr:`FILE_FORMAT` would load another project from `project_dict`.
+
+        Such a reader keeps no shared objects (older readers ignore ``materials``, so
+        only references inside the models count), fits every experiment, and finds an
+        experiment's model by name.
+        """
+        if references.contains_references(project_dict.get('models')):
+            return True
+        if any(included is False for included in project_dict.get('experiments_fit_scope', {}).values()):
+            return True
+        names = [model.name for model in self._models] if self._models is not None else []
+        return any(names.count(name) > 1 for name in project_dict.get('experiments_models', {}).values())
+
     def _as_dict_add_experiments(self, project_dict: dict):
         """As dict add experiments."""
         project_dict['experiments'] = {}
         project_dict['experiments_models'] = {}
+        project_dict['experiments_model_indices'] = {}
         project_dict['experiments_names'] = {}
+        project_dict['experiments_fit_scope'] = {}
 
         for key, experiment in self._experiments.items():
             if isinstance(experiment, PolarizedDataSet):
@@ -1954,14 +2861,50 @@ class Project:
                 list(experiment.y),
                 list(experiment.ye),
             ]
-            if experiment.xe is not None:
-                project_dict['experiments'][key].append(list(experiment.xe))
-            project_dict['experiments_models'][key] = experiment.model.name
-            project_dict['experiments_names'][key] = experiment.name
+            resolution = self._dataset_resolution_as_dict(experiment)
+            if experiment.xe is not None or resolution is not None:
+                # Fourth entry xe (None when cleared), fifth the dataset's own
+                # resolution. The fifth is written even when None, an explicit
+                # "use the model's resolution"; only its absence (files written
+                # before it existed) means "derive it from xe".
+                project_dict['experiments'][key].append(None if experiment.xe is None else list(experiment.xe))
+                project_dict['experiments'][key].append(resolution)
+            self._as_dict_add_experiment_model(project_dict, key, experiment)
 
     @staticmethod
-    def _as_dict_add_polarized_experiment(project_dict: dict, key: int, experiment: PolarizedDataSet) -> None:
-        """Serialize a `PolarizedDataSet`: one (name, x, y, ye, xe) array set per measured channel.
+    def _dataset_resolution_as_dict(dataset: DataSet1D) -> Optional[dict]:
+        """The dataset's own resolution, serialized, or None when it uses the model's."""
+        resolution_function = getattr(dataset, 'resolution_function', None)
+        if resolution_function is None:
+            return None
+        return resolution_function.as_dict()
+
+    @staticmethod
+    def _dataset_resolution_from_dict(dataset: DataSet1D, arrays: list, position: int) -> None:
+        """Restore a dataset's own resolution from ``arrays[position]``.
+
+        A present entry is used as it is, ``None`` included (the dataset uses
+        the model's resolution). Older files, written before the entry
+        existed, get the measured resolution derived from ``xe``.
+        """
+        if len(arrays) <= position:
+            dataset.resolution_function = resolution_from_dataset(dataset)
+        elif arrays[position] is None:
+            dataset.resolution_function = None
+        else:
+            dataset.resolution_function = ResolutionFunction.from_dict(arrays[position])
+
+    def _as_dict_add_experiment_model(self, project_dict: dict, key: int, experiment) -> None:
+        """Record the experiment's name, fit inclusion and model: by index (authoritative) and by name (older readers)."""
+        project_dict['experiments_names'][key] = experiment.name
+        project_dict['experiments_fit_scope'][key] = experiment.include_in_fit
+        model_index = self._model_index_for_experiment(experiment)
+        if model_index is not None:
+            project_dict['experiments_model_indices'][key] = model_index
+            project_dict['experiments_models'][key] = experiment.model.name
+
+    def _as_dict_add_polarized_experiment(self, project_dict: dict, key: int, experiment: PolarizedDataSet) -> None:
+        """Serialize a `PolarizedDataSet`: one (name, x, y, ye, xe, resolution) array set per measured channel.
 
         `experiments[key]` is a plain list for an ordinary `DataSet1D` (see
         `_as_dict_add_experiments`); a dict here — tagged `'polarized': True` —
@@ -1975,14 +2918,14 @@ class Project:
                     list(experiment[channel].x),
                     list(experiment[channel].y),
                     list(experiment[channel].ye),
-                    list(experiment[channel].xe),
+                    None if experiment[channel].xe is None else list(experiment[channel].xe),
+                    # Written even when None; see `_dataset_resolution_from_dict`.
+                    self._dataset_resolution_as_dict(experiment[channel]),
                 ]
                 for channel in experiment.available_channels
             },
         }
-        if experiment.model is not None:
-            project_dict['experiments_models'][key] = experiment.model.name
-            project_dict['experiments_names'][key] = experiment.name
+        self._as_dict_add_experiment_model(project_dict, key, experiment)
 
     def from_dict(self, project_dict: dict):
         """From dict."""
@@ -2000,29 +2943,40 @@ class Project:
                 'CollectionBase pipeline. Please re-create the project from its '
                 'underlying data using the current API.'
             )
-        if file_format != self.FILE_FORMAT:
+        if file_format not in (self.FILE_FORMAT, self.FILE_FORMAT_SHARED):
             raise ValueError(
                 f'Unsupported project file_format={file_format!r}; this version of '
-                f'easyreflectometry only reads file_format={self.FILE_FORMAT}. Please '
-                'either update easyreflectometry or re-create the project.'
+                f'easyreflectometry only reads file_format={self.FILE_FORMAT} and {self.FILE_FORMAT_SHARED}. '
+                'Please either update easyreflectometry or re-create the project.'
             )
+        report: list[str] = []
         self._info = project_dict['info']
         self._with_experiments = project_dict['with_experiments']
         if 'calculator' in keys:
             self._calculator.switch(project_dict['calculator'])
-        if 'models' in keys:
-            self.models = ModelCollection.from_dict(project_dict['models'])
-        self._replace_collection(self._get_materials_in_models(), self._materials)
-        if 'materials_not_in_model' in keys:
-            self._materials.extend(MaterialCollection.from_dict(project_dict['materials_not_in_model']))
-        if 'fitter_minimizer' in keys:
-            self.minimizer = AvailableMinimizers[project_dict['fitter_minimizer']]
+        with references.reading(report):
+            if 'models' in keys:
+                self.models = ModelCollection.from_dict(project_dict['models'])
+            palette = [references.deserialize(entry) for entry in project_dict.get('materials', [])]
+        if 'materials' in keys:
+            self._replace_collection(palette, self._materials)
         else:
-            self._fitter = None
+            # A file predating `materials`: the models' materials, then the unused ones.
+            self._replace_collection(self._get_materials_in_models(), self._materials)
+            if 'materials_not_in_model' in keys:
+                self._materials.extend(MaterialCollection.from_dict(project_dict['materials_not_in_model']))
+        # Settings are replaced wholesale, never merged with the previous project's.
+        # A file predating `fit_settings` only stored `fitter_minimizer`.
+        legacy = {'minimizer': project_dict.get('fitter_minimizer')}
+        self._fit_settings, settings_report = FitSettings.from_dict(project_dict.get('fit_settings', legacy))
+        report.extend(settings_report)
+        self._invalidate_fitter()
+        self._last_fit = None  # the previous contents' run, not this project's
         if 'experiments' in keys:
-            self._experiments = self._from_dict_extract_experiments(project_dict)
+            self._experiments = self._from_dict_extract_experiments(project_dict, report)
         else:
             self._experiments = {}
+        self.load_report = report
 
         # Resolve any pending parameter dependencies parked by the core
         # deserializer. Only cores that serialize nested dependencies produce
@@ -2035,6 +2989,7 @@ class Project:
         # Inequality constraints are declarative (paths), nothing to resolve yet:
         # they are bound to parameters when a fit starts.
         self._inequality_constraints = [InequalitySpec.from_dict(raw) for raw in project_dict.get('inequality_constraints', [])]
+        self._from_dict_restore_contrasts(project_dict, self.load_report)
 
     @staticmethod
     def _warn_on_unreadable_dependencies(models_dict) -> None:
@@ -2068,29 +3023,54 @@ class Project:
                 stacklevel=2,
             )
 
-    def _from_dict_extract_experiments(self, project_dict: dict) -> Dict[int, Union[DataSet1D, PolarizedDataSet]]:
+    def _from_dict_extract_experiments(self, project_dict: dict, report: list[str]) -> Dict[int, DataSet1D | PolarizedDataSet]:
         """From dict extract experiments."""
         experiments = {}
         for key, raw in project_dict['experiments'].items():
+            name = project_dict['experiments_names'].get(key, f'Experiment {key}')
+            model = self._saved_experiment_model(project_dict, key, name, report)
             if isinstance(raw, dict) and raw.get('polarized'):
-                experiments[int(key)] = self._polarized_experiment_from_dict(key, raw, project_dict)
-                continue
-            experiments[int(key)] = DataSet1D(
-                name=project_dict['experiments_names'][key],
-                x=raw[0],
-                y=raw[1],
-                ye=raw[2],
-                xe=raw[3] if len(raw) > 3 else None,
-                model=self._models[project_dict['experiments_models'][key]],
-                auto_background=False,
-            )
+                experiment = self._polarized_experiment_from_dict(name, raw, model)
+            else:
+                experiment = self._dataset_from_dict(name, raw, model)
+            experiment.include_in_fit = project_dict.get('experiments_fit_scope', {}).get(key, True) is not False
+            experiments[int(key)] = experiment
         return experiments
 
-    def _polarized_experiment_from_dict(self, key: str, raw: dict, project_dict: dict) -> PolarizedDataSet:
+    def _dataset_from_dict(self, name: str, raw: list, model: Optional[Model]) -> DataSet1D:
+        """Reconstruct an unpolarized experiment serialized by `_as_dict_add_experiments`."""
+        dataset = DataSet1D(
+            name=name,
+            x=raw[0],
+            y=raw[1],
+            ye=raw[2],
+            xe=raw[3] if len(raw) > 3 else None,
+            model=model,
+            auto_background=False,
+        )
+        self._dataset_resolution_from_dict(dataset, raw, 4)
+        return dataset
+
+    def _saved_experiment_model(self, project_dict: dict, key, name: str, report: list[str]) -> Optional[Model]:
+        """The model a saved experiment is bound to: by index, else by name (files that
+        predate the index); an ambiguous or missing one is reported."""
+        index = project_dict.get('experiments_model_indices', {}).get(key)
+        if isinstance(index, int) and 0 <= index < len(self._models):
+            return self._models[index]
+        model_name = project_dict.get('experiments_models', {}).get(key)
+        matches = [model for model in self._models if model.name == model_name]
+        if not matches:
+            report.append(f"Experiment '{name}' has no model; assign one before fitting it.")
+            return None
+        if len(matches) > 1:
+            report.append(f"Experiment '{name}': several models are named '{model_name}'; the first is used.")
+        return matches[0]
+
+    def _polarized_experiment_from_dict(self, name: str, raw: dict, model: Optional[Model]) -> PolarizedDataSet:
         """Reconstruct a `PolarizedDataSet` serialized by `_as_dict_add_polarized_experiment`."""
-        model = self._models[project_dict['experiments_models'][key]]
-        channels = {
-            channel_value: DataSet1D(
+        channels = {}
+        for channel_value, arrays in raw['channels'].items():
+            dataset = DataSet1D(
                 name=arrays[0],
                 x=arrays[1],
                 y=arrays[2],
@@ -2099,21 +3079,20 @@ class Project:
                 model=model,
                 auto_background=False,
             )
-            for channel_value, arrays in raw['channels'].items()
-        }
-        return PolarizedDataSet(
-            name=project_dict['experiments_names'][key],
-            channels=channels,
-            model=model,
-        )
+            self._dataset_resolution_from_dict(dataset, arrays, 5)
+            channels[channel_value] = dataset
+        return PolarizedDataSet(name=name, channels=channels, model=model)
 
     def _get_materials_in_models(self) -> MaterialCollection:
         """Get materials in models."""
         materials_in_model = MaterialCollection(populate_if_none=False)
+        seen: set[int] = set()
         for model in self._models:
             for assembly in model.sample:
                 for layer in assembly.layers:
-                    materials_in_model.append(layer.material)
+                    if id(layer.material) not in seen:  # one material in two layers, once
+                        seen.add(id(layer.material))
+                        materials_in_model.append(layer.material)
         return materials_in_model
 
     def _replace_collection(self, src_collection: BaseCollection, dst_collection: BaseCollection) -> None:
@@ -2315,3 +3294,9 @@ def _spin_asymmetry(
         'low_significance_points': int(np.count_nonzero(insignificant)),
     }
     return asymmetry, variance, keep, reasons
+
+
+def _fix_if_free(parameter: Parameter) -> None:
+    """Fix an independent parameter that is free; dependent ones never fit."""
+    if parameter.independent and not parameter.fixed:
+        parameter.fixed = True

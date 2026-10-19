@@ -15,7 +15,6 @@ from easyscience.fitting import AvailableMinimizers
 from easyscience.variable import Parameter
 from numpy.testing import assert_allclose
 
-import easyreflectometry
 from easyreflectometry.data import DataSet1D
 from easyreflectometry.fitting import MultiFitter
 from easyreflectometry.model import Model
@@ -29,10 +28,16 @@ from easyreflectometry.sample import MaterialCollection
 from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import Sample
 
-PATH_STATIC = os.path.join(os.path.dirname(easyreflectometry.__file__), '..', '..', 'tests', '_static')
+PATH_STATIC = os.path.join(os.path.dirname(__file__), '_static')
 
 
 class TestProject:
+    @pytest.fixture(autouse=True)
+    def _clean_map(self):
+        # A Project registers fixed unique names; one still alive from an earlier
+        # test on the same worker would collide with the next one's.
+        global_object.map._clear()
+
     def test_constructor(self):
         # When Then
         project = Project()
@@ -186,6 +191,49 @@ class TestProject:
             ]),
         )
 
+    def test_volume_fraction_data_for_model_at_index(self):
+        # When
+        project = Project()
+        project.default_model()
+
+        # Then
+        datasets = project.volume_fraction_data_for_model_at_index(0)
+        sld = project.sld_data_for_model_at_index(0)
+
+        # Expect: one dataset per component, on the refnx SLD grid, summing to one
+        assert len(datasets) == 3
+        assert [dataset.name for dataset in datasets.values()] == [
+            'Air volume fraction for Model 0',
+            'D2O volume fraction for Model 0',
+            'Si volume fraction for Model 0',
+        ]
+        for dataset in datasets.values():
+            assert_allclose(dataset.x, sld.x)
+            assert dataset.x_label == 'z (Å)'
+            assert dataset.y_label == 'Volume fraction'
+        assert_allclose(sum(dataset.y for dataset in datasets.values()), 1.0, atol=1e-12)
+
+    def test_volume_fraction_data_for_model_at_index_with_grid_and_groups(self):
+        # When
+        project = Project()
+        project.default_model()
+        model = project.models[0]
+        model.interface = None  # never bound to a calculator
+
+        # Then
+        z = np.array([-5.0, 0.0, 50.0, 500.0])
+        datasets = project.volume_fraction_data_for_model_at_index(0, z=z, groups={'Solid': ['Si', 'D2O']})
+
+        # Expect: the group first, then the remaining component (Air)
+        assert len(datasets) == 2
+        assert list(datasets)[0] == 'Solid'
+        assert datasets['Solid'].name == 'Solid volume fraction for Model 0'
+        air = list(datasets.values())[1]
+        assert air.name == 'Air volume fraction for Model 0'
+        for dataset in datasets.values():
+            assert_allclose(dataset.x, z)
+        assert_allclose(datasets['Solid'].y + air.y, 1.0, atol=1e-12)
+
     def test_sample_data_for_model_at_index(self):
         # When
         project = Project()
@@ -231,15 +279,16 @@ class TestProject:
     def test_set_minimizer(self):
         # When
         project = Project()
-        project._fitter = MagicMock()
-        project._fitter.easy_science_multi_fitter = MagicMock()
-        project._fitter.easy_science_multi_fitter.switch_minimizer = MagicMock()
+        project.default_model()
+        fitter = project.fitter
 
         # Then
-        project.minimizer = 'minimizer'
+        project.minimizer = AvailableMinimizers.Bumps_simplex
 
-        # Expect
-        project._fitter.easy_science_multi_fitter.switch_minimizer.assert_called_once_with('minimizer')
+        # Expect: the settings own it, and the fitter picks it up when handed out
+        assert project.fit_settings.minimizer is AvailableMinimizers.Bumps_simplex
+        assert project.fitter is fitter
+        assert fitter.easy_science_multi_fitter.minimizer.enum is AvailableMinimizers.Bumps_simplex
 
     def test_fitter_none(self):
         # When
@@ -401,8 +450,10 @@ class TestProject:
         assert keys == [
             'calculator',
             'file_format',
+            'fit_settings',
             'fitter_minimizer',
             'info',
+            'materials',
             'models',
             'with_experiments',
         ]
@@ -426,20 +477,21 @@ class TestProject:
         project_dict = project.as_dict()
 
         # Expect
-        def remove_interface(d):
+        # `@ref_id` tags the materials the palette refers to.
+        def remove_keys(d):
             if isinstance(d, dict):
-                if 'interface' in d:
-                    del d['interface']
+                for key in ('interface', '@ref_id'):
+                    d.pop(key, None)
                 for v in d.values():
-                    remove_interface(v)
+                    remove_keys(v)
             elif isinstance(d, list):
                 for item in d:
-                    remove_interface(item)
+                    remove_keys(item)
 
         models_dict = models.as_dict()
         models_dict['unique_name'] = 'project_models_to_prevent_collisions_on_load'
-        remove_interface(models_dict)
-        remove_interface(project_dict['models'])
+        remove_keys(models_dict)
+        remove_keys(project_dict['models'])
         assert project_dict['models'] == models_dict
 
     def test_from_dict_missing_file_format_raises(self):
@@ -497,15 +549,15 @@ class TestProject:
     def test_as_dict_minimizer(self):
         # When
         project = Project()
-        project._fitter = MagicMock()
-        project._fitter.easy_science_multi_fitter = MagicMock()
-        project._fitter.easy_science_multi_fitter.minimizer = AvailableMinimizers.LMFit
+        project.minimizer = AvailableMinimizers.LMFit
 
         # Then
         project_dict = project.as_dict()
 
         # Expect
-        assert project_dict['fitter_minimizer'] == 'LMFit'
+        # The alias is saved as the member it stands for
+        assert project_dict['fitter_minimizer'] == 'LMFit_leastsq'
+        assert project_dict['fit_settings']['minimizer'] == 'LMFit_leastsq'
 
     def test_replace_collection(self):
         # When
@@ -580,7 +632,10 @@ class TestProject:
         # Expect - name and model are recorded regardless of xe
         assert project_dict['experiments_names'][1] == 'Example data file from refnx docs'
         assert project_dict['experiments_models'][1] == project.models[1].name
-        assert len(project_dict['experiments'][1]) == 3
+        # xe is recorded as cleared; the measured resolution the experiment
+        # still fits with is kept alongside it.
+        assert project_dict['experiments'][1][3] is None
+        assert project_dict['experiments'][1][4]['smearing'] == 'Pointwise'
 
         # Then - the project loads back with the experiment attached to the same model
         global_object.map._clear()
@@ -990,8 +1045,9 @@ class TestProject:
         # Then
         parameters = project.parameters
 
-        # Expect: 14 layer/material/model parameters + the model's derived total thickness
-        assert len(parameters) == 15
+        # Expect: 14 layer/material/model parameters, the model's derived total
+        # thickness and its (disabled, non-magnetic) guide field angle and applied field
+        assert len(parameters) == 17
         assert isinstance(parameters[0], Parameter)
         assert any(parameter is project.models[0].total_thickness for parameter in parameters)
 
@@ -1345,7 +1401,7 @@ class TestProject:
         assert project._current_assembly_index == 0
         assert project._current_layer_index == 0
 
-    def test_remove_model_at_index_removes_experiment_at_same_index(self):
+    def test_remove_model_at_index_removes_its_experiments_on_request(self):
         # When
         global_object.map._clear()
         project = Project()
@@ -1367,13 +1423,16 @@ class TestProject:
         )
         project._experiments[0] = experiment
 
-        # Then
-        project.remove_model_at_index(0)
+        # Then - without a decision nothing changes
+        with pytest.raises(ValueError, match='use the model'):
+            project.remove_model_at_index(0)
+        assert len(project._models) == 2
+        project.remove_model_at_index(0, experiments='remove')
 
-        # Expect - experiment mapped to the removed model index is removed
-        assert 0 not in project._experiments
+        # Expect - the experiment bound to the removed model is removed
+        assert project._experiments == {}
 
-    def test_remove_model_at_index_reindexes_experiments_above_removed_index(self):
+    def test_remove_model_at_index_rekeys_the_remaining_experiments(self):
         # When
         global_object.map._clear()
         project = Project()
@@ -1396,12 +1455,13 @@ class TestProject:
         project._experiments[2] = DataSet1D(name='exp2', x=[0.03], y=[0.8], ye=[0.1], xe=[0.001], model=project._models[2])
 
         # Then - remove middle model
-        project.remove_model_at_index(1)
+        project.remove_model_at_index(1, experiments='remove')
 
-        # Expect - middle experiment removed and upper one shifted down
+        # Expect - its experiment removed, the others keep their models and move down a key
         assert set(project._experiments.keys()) == {0, 1}
         assert project._experiments[0].name == 'exp0'
         assert project._experiments[1].name == 'exp2'
+        assert project._experiments[1].model is model_2
 
     def test_remove_model_at_index_raises_for_last_model(self):
         # When

@@ -19,6 +19,7 @@ and with sub-stack repetitions mapped to
 """
 
 import logging
+import math
 import warnings
 from typing import List
 from typing import Optional
@@ -42,8 +43,13 @@ from .sample.assemblies.multilayer import Multilayer
 from .sample.assemblies.repeating_multilayer import RepeatingMultilayer
 from .sample.collections.sample import Sample
 from .sample.elements.layers.layer import Layer
+from .sample.elements.layers.layer_magnetism import LayerMagnetism
 from .sample.elements.materials.material import Material
 from .sample.elements.materials.material_density import MaterialDensity
+from .sample.elements.materials.material_magnetic import MaterialMagnetic
+from .special.calculations import MAGNETIC_SCATTERING_LENGTH
+from .special.calculations import mass_density_from_number_density
+from .special.calculations import molecular_weight
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -89,6 +95,22 @@ _MASS_DENSITY_UNIT_TO_G_CM3 = {
     'g/cm^3': 1.0,
     'g/ml': 1.0,
     'kg/m^3': 1.0e-3,
+}
+
+# Number density unit -> 1/angstrom^3 (the model-language default is 1/nm^3).
+_NUMBER_DENSITY_UNIT_TO_INV_ANGSTROM3 = {
+    None: 1.0e-3,
+    '1/nm^3': 1.0e-3,
+    '1/angstrom^3': 1.0,
+    '1/cm^3': 1.0e-24,
+}
+
+# Magnetic moment unit -> Bohr magnetons (per formula unit).
+_MAGNETIC_MOMENT_UNIT_TO_MUB = {
+    None: 1.0,
+    'muB': 1.0,
+    'mu_B': 1.0,
+    'bohr_magneton': 1.0,
 }
 
 
@@ -577,6 +599,12 @@ def _convert_orso_substack_to_erl(block) -> Multilayer:
         block.repetitions = original_repetitions
     erl_layers = [_convert_orso_layer_to_erl(orso_layer) for orso_layer in period]
     name = getattr(block, 'original_name', None) or 'Multilayer'
+    if repetitions > 1 and any(layer.magnetism is not None for layer in erl_layers):
+        warnings.warn(
+            f'Sub-stack "{name}" repeats magnetic layers; refl1d cannot calculate magnetism inside a repeating multilayer.',
+            UserWarning,
+            stacklevel=3,
+        )
     if repetitions > 1:
         return RepeatingMultilayer(erl_layers, repetitions=repetitions, name=name)
     return Multilayer(erl_layers, name=name)
@@ -592,7 +620,12 @@ def _convert_orso_layer_to_erl(layer):
     if m_name is None:
         m_name = 'material'
 
-    erl_material = _convert_orso_material_to_erl(material, m_name)
+    erl_material, rho_m = _convert_orso_material_to_erl(material, m_name)
+    # A moment becomes layer magnetism aligned with an in-plane field (the model
+    # language has no direction): coupled to a magnetic material, or a direct
+    # magnetic SLD when the material has no formula.
+    coupled = isinstance(erl_material, MaterialMagnetic)
+    magnetism = LayerMagnetism(rho_m=rho_m) if rho_m is not None else None
 
     # Create and return ERL layer; lengths honour the declared unit (nm default).
     return Layer(
@@ -600,55 +633,113 @@ def _convert_orso_layer_to_erl(layer):
         thickness=_length_to_angstrom(layer.thickness),
         roughness=_length_to_angstrom(layer.roughness),
         name=layer.original_name if layer.original_name is not None else m_name,
+        magnetism=magnetism,
+        rho_m_coupled=coupled,
     )
 
 
-def _convert_orso_material_to_erl(material, material_name):
-    """Convert an ORSO material to an ERL material.
+def _convert_orso_material_to_erl(material, material_name) -> tuple:
+    """Convert an ORSO material to an ERL material and a magnetic SLD.
 
-    Density-defined materials (formula + mass density, no SLD) stay
+    A formula with a density (mass density, or number density converted with
+    the formula's weight; the mass density wins when both are given) stays
     density-defined as :class:`MaterialDensity`, so formula and density remain
-    editable/recoverable instead of being flattened to a numeric SLD.
+    editable. With a magnetic moment it becomes a :class:`MaterialMagnetic`,
+    and an explicit SLD then overrides the formula's nuclear SLD. Without a
+    usable formula the material is an SLD :class:`Material`, and a moment needs
+    a number density.
+
+    Returns
+    -------
+    tuple
+        ``(material, rho_m)``: ``rho_m`` is a magnetic SLD in 1e-6/angstrom^2 for
+        the layer to carry directly, or None (non-magnetic, or the material
+        carries it).
     """
-    formula = getattr(material, 'formula', None)
-    mass_density = getattr(material, 'mass_density', None)
-    if material.sld is None and mass_density is not None and (formula or material_name):
-        magnitude = getattr(mass_density, 'magnitude', mass_density)
-        unit = getattr(mass_density, 'unit', None)
-        try:
-            factor = _MASS_DENSITY_UNIT_TO_G_CM3[unit]
-        except KeyError:
+    name = material_name
+    formula = getattr(material, 'formula', None) or name
+    mass_density = _orso_quantity(material.mass_density, _MASS_DENSITY_UNIT_TO_G_CM3, 'mass density', name)
+    number_density = _orso_quantity(material.number_density, _NUMBER_DENSITY_UNIT_TO_INV_ANGSTROM3, 'number density', name)
+    moment = _orso_quantity(material.magnetic_moment, _MAGNETIC_MOMENT_UNIT_TO_MUB, 'magnetic moment', name)
+    if material.relative_density not in (None, 1.0):
+        warnings.warn(
+            f'ORSO relative_density of "{name}" is not applied; its densities are used as given.',
+            UserWarning,
+            stacklevel=4,
+        )
+
+    weight = _formula_weight(formula)
+    if weight is not None and number_density is not None:
+        from_number_density = mass_density_from_number_density(number_density, weight)
+        if mass_density is None:
+            mass_density = from_number_density
+        elif not math.isclose(mass_density, from_number_density, rel_tol=0.01):
             warnings.warn(
-                f'Unknown ORSO mass density unit {unit!r}; value used as g/cm^3.',
+                f'ORSO mass and number density of "{name}" disagree; the mass density is used.',
                 UserWarning,
                 stacklevel=4,
             )
-            factor = 1.0
-        return MaterialDensity(
-            chemical_structure=formula if formula is not None else material_name,
-            density=float(magnitude) * factor,
-            name=material_name if material_name is not None else formula,
+
+    if mass_density is not None and weight is not None and (material.sld is None or moment is not None):
+        if moment is None:
+            erl_material = MaterialDensity(chemical_structure=formula, density=mass_density, name=name)
+        else:
+            erl_material = MaterialMagnetic(chemical_structure=formula, density=mass_density, magnetic_moment=moment, name=name)
+        if material.sld is not None:
+            erl_material.sld_coupled = False
+            erl_material.sld.value, erl_material.isld.value = _get_sld_values(material, name)
+        return erl_material, None
+
+    m_sld, m_isld = _get_sld_values(material, name)
+    erl_material = Material(sld=m_sld, isld=m_isld, name=name)
+    if moment is None:
+        return erl_material, None
+    if number_density is None:
+        warnings.warn(
+            f'Magnetic moment of "{name}" not imported: it needs a number density, or a mass density with a chemical formula.',
+            UserWarning,
+            stacklevel=4,
         )
-    m_sld, m_isld = _get_sld_values(material, material_name)
-    return Material(sld=m_sld, isld=m_isld, name=material_name)
+        return erl_material, None
+    return erl_material, number_density * moment * MAGNETIC_SCATTERING_LENGTH * 1e6
+
+
+def _orso_quantity(value, unit_factors: dict, quantity: str, material_name) -> Optional[float]:
+    """An ORSO model value in the internal unit; None when absent, or in an
+    unknown unit (warned: a guessed unit can be off by orders of magnitude)."""
+    if value is None:
+        return None
+    unit = getattr(value, 'unit', None)
+    if unit not in unit_factors:
+        warnings.warn(
+            f'Unknown ORSO {quantity} unit {unit!r} for "{material_name}"; the {quantity} is ignored.',
+            UserWarning,
+            stacklevel=5,
+        )
+        return None
+    return float(getattr(value, 'magnitude', value)) * unit_factors[unit]
+
+
+def _formula_weight(formula) -> Optional[float]:
+    """Molecular weight of a formula; None when it is not a chemical formula."""
+    try:
+        weight = molecular_weight(formula)
+    except Exception:
+        return None
+    return weight or None
 
 
 def _get_sld_values(material, material_name):
-    """Extract SLD values from material, calculating from density if needed
+    """Extract the SLD values of a material, 0 when it declares none.
+
+    Density-defined materials are converted by `_convert_orso_material_to_erl`;
+    a density reaching this point could not be used (no formula, or an unknown
+    unit) and is not reinterpreted here.
 
     Note: ORSO stores SLD in absolute units (A^-2), but the internal representation
     uses 10^-6 A^-2. When reading directly from ORSO, we multiply by 1e6 to convert.
-    When calculating from mass density, MaterialDensity already returns the correct units..
     """
-    if material.sld is None and material.mass_density is not None:
-        # Calculate SLD from mass density
-        # MaterialDensity already returns values in 10^-6 A^-2 units
-        m_density = getattr(material.mass_density, 'magnitude', material.mass_density)
-        density = MaterialDensity(chemical_structure=material_name, density=m_density)
-        m_sld = density.sld.value
-        m_isld = density.isld.value
-    elif material.sld is None:
-        # No SLD and no mass density available, default to 0.0
+    if material.sld is None:
         m_sld = 0.0
         m_isld = 0.0
     else:
@@ -707,20 +798,58 @@ def _unique_model_key(existing: dict, name: str) -> str:
     return f'{key}_{counter}'
 
 
-def _material_to_orso(material) -> model_language.Material:
-    """Convert an ERL material to an ORSO model-language material."""
-    if isinstance(material, MaterialDensity):
-        return model_language.Material(
+def _layer_material_to_orso(layer) -> model_language.Material:
+    """Convert an ERL layer's material, and its magnetism, to an ORSO material.
+
+    The model language stores a moment per formula unit, not a magnetic SLD or
+    a direction, so only part of a magnetic layer can be written; whatever is
+    lost is warned about. A layer whose material has a number density gets
+    the moment matching its magnetic SLD (the material's own moment when the
+    layer is coupled to it); the direction is always written as aligned with
+    an in-plane field.
+    """
+    material = layer.material
+    sld = ComplexValue(
+        real=float(material.sld.value) * 1e-6,
+        imag=float(material.isld.value) * 1e-6,
+        unit='1/angstrom^2',
+    )
+    if not isinstance(material, MaterialDensity):
+        orso_material = model_language.Material(sld=sld)
+    else:
+        orso_material = model_language.Material(
             formula=material.chemical_structure,
             mass_density=Value(float(material.density.value), 'g/cm^3'),
+            # A manual SLD is written too; it wins over the formula on reload.
+            sld=None if material.sld_coupled else sld,
         )
-    return model_language.Material(
-        sld=ComplexValue(
-            real=float(material.sld.value) * 1e-6,
-            imag=float(material.isld.value) * 1e-6,
-            unit='1/angstrom^2',
+
+    magnetism = layer.magnetism
+    if magnetism is None:
+        return orso_material
+    rho_m = float(magnetism.rho_m.value)
+    if not isinstance(material, MaterialDensity) or material.number_density <= 0:
+        if rho_m != 0.0:
+            warnings.warn(
+                f'Magnetic SLD of layer "{layer.name}" not written: the ORSO model language stores '
+                'moments per formula unit, and its material has no density to convert with.',
+                UserWarning,
+                stacklevel=3,
+            )
+        return orso_material
+    if layer.rho_m_coupled:
+        moment = float(material.magnetic_moment.value)
+    else:
+        moment = rho_m / (material.number_density * MAGNETIC_SCATTERING_LENGTH * 1e6)
+    orso_material.magnetic_moment = Value(moment, 'muB')
+    if not math.isclose(math.cos(math.radians(magnetism.theta_m.value - 270.0)), 1.0, abs_tol=1e-9):
+        warnings.warn(
+            f'Moment direction of layer "{layer.name}" not written (theta_m = {magnetism.theta_m.value}); '
+            'the ORSO model language has none, and it reloads aligned with an in-plane field.',
+            UserWarning,
+            stacklevel=3,
         )
-    )
+    return orso_material
 
 
 def sample_to_orso_model(sample: Sample) -> model_language.SampleModel:
@@ -748,7 +877,7 @@ def sample_to_orso_model(sample: Sample) -> model_language.SampleModel:
         layers[key] = model_language.Layer(
             thickness=Value(float(erl_layer.thickness.value), 'angstrom'),
             roughness=Value(float(erl_layer.roughness.value), 'angstrom'),
-            material=_material_to_orso(erl_layer.material),
+            material=_layer_material_to_orso(erl_layer),
         )
         return key
 

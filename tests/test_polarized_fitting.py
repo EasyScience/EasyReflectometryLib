@@ -692,7 +692,19 @@ class TestMagneticSldData:
 
         profiles = project.magnetic_sld_data_for_model_at_index(0)
 
-        assert set(profiles) == {'sld', 'rho_m', 'theta_m', 'spin_up', 'spin_down'}
+        assert set(profiles) == {
+            'sld',
+            'rho_m',
+            'rho_m_perp',
+            'theta_m',
+            'spin_up',
+            'spin_down',
+            'guide_field_angle',
+            'applied_field',
+        }
+        assert profiles['guide_field_angle'] == 270.0 and profiles['applied_field'] == 0.0
+        # Collinear with the field: nothing is transverse.
+        assert_allclose(profiles['rho_m_perp'].y, 0.0, atol=1e-10)
         sld, rho_m = profiles['sld'], profiles['rho_m']
         assert sld.x.size == rho_m.x.size and sld.x.size > 0
         assert np.allclose(profiles['spin_up'].x, sld.x)
@@ -712,6 +724,16 @@ class TestMagneticSldData:
 
         # cos(60 deg) = 0.5 of the moment is seen by the spin states.
         assert_allclose(split_canted, split_along * 0.5, rtol=1e-6)
+
+    def test_out_of_plane_field_leaves_no_longitudinal_part(self):
+        project = self._magnetic_project()
+        project.models[0].guide_field_angle = 0.0
+
+        profiles = project.magnetic_sld_data_for_model_at_index(0)
+
+        # The in-plane moment is entirely transverse to a field along the normal.
+        assert_allclose(profiles['spin_up'].y, profiles['sld'].y, atol=1e-10)
+        assert_allclose(profiles['rho_m_perp'].y, np.abs(profiles['rho_m'].y), atol=1e-10)
 
     def test_nuclear_profile_matches_the_ordinary_sld_curve(self):
         project = self._magnetic_project()

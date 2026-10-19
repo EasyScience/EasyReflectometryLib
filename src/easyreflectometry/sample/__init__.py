@@ -15,8 +15,12 @@ from .elements.layers.layer_area_per_molecule import LayerAreaPerMolecule
 from .elements.layers.layer_magnetism import LayerMagnetism
 from .elements.materials.material import Material
 from .elements.materials.material_density import MaterialDensity
+from .elements.materials.material_magnetic import MaterialMagnetic
 from .elements.materials.material_mixture import MaterialMixture
 from .elements.materials.material_solvated import MaterialSolvated
+from .volume_fraction import VolumeFractionProfile
+from .volume_fraction import VolumeFractionWarning
+from .volume_fraction import volume_fraction_profile
 
 __all__ = (
     'BaseAssembly',
@@ -29,10 +33,14 @@ __all__ = (
     'Material',
     'MaterialCollection',
     'MaterialDensity',
+    'MaterialMagnetic',
     'MaterialMixture',
     'MaterialSolvated',
     'Multilayer',
     'RepeatingMultilayer',
     'Sample',
     'SurfactantLayer',
+    'VolumeFractionProfile',
+    'VolumeFractionWarning',
+    'volume_fraction_profile',
 )

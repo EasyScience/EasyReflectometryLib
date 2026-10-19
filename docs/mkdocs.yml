@@ -176,6 +176,8 @@ nav:
       - Installation & Setup: installation-and-setup/index.md
   - User Guide:
       - User Guide: user-guide/index.md
+      - Resolution: user-guide/resolution.md
+      - Magnetism: user-guide/magnetism.md
   - Tutorials:
       - Tutorials: tutorials/index.md
       - Getting Started:
@@ -194,6 +196,7 @@ nav:
           - Solvated Material Fitting: tutorials/fitting/material_solvated.ipynb
       - Advanced Fitting:
           - Multi-Contrast Fitting: tutorials/advancedfitting/multi_contrast.ipynb
+          - Adding & Linking Contrasts: tutorials/advancedfitting/contrasts.ipynb
           - Polarized Fitting: tutorials/advancedfitting/polarized_fitting.ipynb
           - Constraints & Inequalities: tutorials/advancedfitting/constraints.ipynb
           - Bayesian Fitting: tutorials/advancedfitting/bayesian_bumps.ipynb
@@ -205,6 +208,7 @@ nav:
       - Fitting: api-reference/fitting.md
       - Constraints: api-reference/constraints.md
       - Inequality Constraints: api-reference/inequality_constraints.md
+      - Contrasts: api-reference/contrasts.md
       - Bayesian Analysis: api-reference/bayesian.md
       - Calculators: api-reference/calculators.md
       - Parameter Limits: api-reference/limits.md
@@ -228,3 +232,4 @@ nav:
       - ORSO: api-reference/orso.md
       - Summary: api-reference/summary.md
       - Plotting: api-reference/plot.md
+      - Volume Fraction Profile: api-reference/volume_fraction.md

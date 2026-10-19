@@ -10,6 +10,8 @@ from refl1d import names
 from refl1d.profile import build_profile
 from refl1d.sample.layers import Repeat
 
+from easyreflectometry.model import ResolutionFunction
+
 from ..polarization import POLARIZATION_CHANNEL_TO_INDEX
 from ..wrapper_base import WrapperBase
 
@@ -21,6 +23,8 @@ OVERSAMPLING_FACTOR = 21
 # refl1d convention: with the default guide field (Aguide = 270 deg) a moment at
 # thetaM = 270 deg is aligned with the field, i.e. produces no spin-flip.
 DEFAULT_THETA_M = 270.0
+# refl1d's BASE_GUIDE_ANGLE: the field lies in the sample plane.
+DEFAULT_GUIDE_FIELD_ANGLE = 270.0
 
 
 class Refl1dWrapper(WrapperBase):
@@ -44,6 +48,23 @@ class Refl1dWrapper(WrapperBase):
         super().reset_storage()
         self._layer_magnetism = {}
         self._polarized_cache = {}
+
+    def remove_layer(self, name: str) -> None:
+        """Forget a layer together with its stored magnetic values.
+
+        The magnetic values are the state a recycled layer name must not
+        inherit: they are only ever pushed for a magnetic layer, so a
+        non-magnetic layer given this name would otherwise keep them. Dropping
+        them goes through `remove_layer_magnetism`, which also switches
+        magnetism off when this was the last magnetic layer.
+        """
+        self.remove_layer_magnetism(name)
+        super().remove_layer(name)
+
+    def remove_model(self, name: str) -> None:
+        """Forget a model together with its cached cross-sections."""
+        super().remove_model(name)
+        self._polarized_cache.pop(name, None)
 
     def create_material(self, name: str):
         """Create a material using SLD.
@@ -178,7 +199,7 @@ class Refl1dWrapper(WrapperBase):
         name : str
             Name for the model.
         """
-        self.storage['model'][name] = {'scale': 1, 'bkg': 0, 'items': []}
+        self.storage['model'][name] = {'scale': 1, 'bkg': 0, 'Aguide': DEFAULT_GUIDE_FIELD_ANGLE, 'H': 0.0, 'items': []}
 
     def update_model(self, name: str, **kwargs):
         """Update the non-structural parameters of the model.
@@ -275,7 +296,12 @@ class Refl1dWrapper(WrapperBase):
         del self.storage['model'][model_name]['items'][item_idx]
         del self.storage['item'][item_name]
 
-    def calculate(self, q_array: np.ndarray, model_name: str) -> np.ndarray:
+    def calculate(
+        self,
+        q_array: np.ndarray,
+        model_name: str,
+        resolution_function: ResolutionFunction | None = None,
+    ) -> np.ndarray:
         """For a given q array calculate the corresponding reflectivity.
 
         Parameters
@@ -284,6 +310,8 @@ class Refl1dWrapper(WrapperBase):
             Array of data points to be calculated.
         model_name : str
             The model name.
+        resolution_function : ResolutionFunction | None, optional
+            Resolution to smear with; by default the one registered for the model.
 
         Returns
         -------
@@ -291,13 +319,13 @@ class Refl1dWrapper(WrapperBase):
             Reflectivity calculated at q.
         """
         if self._magnetism:
-            reflectivities = self._polarized_reflectivities(q_array, model_name)
+            reflectivities = self._polarized_reflectivities(q_array, model_name, resolution_function)
             # Copy: the arrays live in the polarized cache and must not be mutated.
             return reflectivities[POLARIZATION_CHANNEL_TO_INDEX[self._polarization_channel]].copy()
 
         sample = _build_sample(self.storage, model_name)
         # smearing() returns sigma, which is exactly what refl1d's probe.dQ expects.
-        dq_array = self._resolution_function.smearing(q_array)
+        dq_array = self._resolution_for(model_name, resolution_function).smearing(q_array)
         probe = _get_probe(
             q_array=q_array,
             dq_array=dq_array,
@@ -309,7 +337,12 @@ class Refl1dWrapper(WrapperBase):
         _, reflectivity = names.Experiment(probe=probe, sample=sample).reflectivity()
         return reflectivity
 
-    def calculate_polarized(self, q_array: np.ndarray, model_name: str) -> dict[str, np.ndarray]:
+    def calculate_polarized(
+        self,
+        q_array: np.ndarray,
+        model_name: str,
+        resolution_function: ResolutionFunction | None = None,
+    ) -> dict[str, np.ndarray]:
         """For a given q array calculate the reflectivity of all four spin channels.
 
         Parameters
@@ -318,6 +351,8 @@ class Refl1dWrapper(WrapperBase):
             Array of data points to be calculated.
         model_name : str
             The model name.
+        resolution_function : ResolutionFunction | None, optional
+            Resolution to smear with; by default the one registered for the model.
 
         Returns
         -------
@@ -329,7 +364,7 @@ class Refl1dWrapper(WrapperBase):
                 'Polarized reflectivity requires magnetism: enable it on this calculator first '
                 '(`include_magnetism = True` on the calculator / `magnetism = True` on the wrapper).'
             )
-        reflectivities = self._polarized_reflectivities(q_array, model_name)
+        reflectivities = self._polarized_reflectivities(q_array, model_name, resolution_function)
         # Copies: the arrays live in the polarized cache and must not be mutated.
         return {channel.value: reflectivities[index].copy() for channel, index in POLARIZATION_CHANNEL_TO_INDEX.items()}
 
@@ -345,7 +380,7 @@ class Refl1dWrapper(WrapperBase):
         changes, since the token would compare equal.
         """
         model = self.storage['model'][model_name]
-        values: list = [model['scale'], model['bkg']]
+        values: list = [model['scale'], model['bkg'], model['Aguide'], model['H']]
         for item in model['items']:
             values.append(item.repeat.value)
             for slab in item.stack:
@@ -361,7 +396,12 @@ class Refl1dWrapper(WrapperBase):
                     values.extend((slab.magnetism.rhoM.value, slab.magnetism.thetaM.value))
         return tuple(values)
 
-    def _polarized_reflectivities(self, q_array: np.ndarray, model_name: str) -> list:
+    def _polarized_reflectivities(
+        self,
+        q_array: np.ndarray,
+        model_name: str,
+        resolution_function: ResolutionFunction | None = None,
+    ) -> list:
         """Reflectivity of the four spin cross-sections, in refl1d order (mm, mp, pm, pp).
 
         The list follows `PolarizedNeutronProbe._xs_names`; use
@@ -372,7 +412,8 @@ class Refl1dWrapper(WrapperBase):
         # uniquely identify an ndarray (equal bytes can encode different
         # dtype/shape combinations), which could return a wrong-length hit.
         q_array = np.asarray(q_array, dtype=np.float64)
-        dq_array = np.asarray(self._resolution_function.smearing(q_array), dtype=np.float64)
+        smearing = self._resolution_for(model_name, resolution_function).smearing(q_array)
+        dq_array = np.asarray(smearing, dtype=np.float64)
 
         token = self._model_state_token(model_name)
         grid_key = (q_array.shape, q_array.tobytes(), dq_array.shape, dq_array.tobytes())
@@ -564,7 +605,13 @@ def _get_polarized_probe(
     storage: dict,
     oversampling_factor: int = 1,
 ) -> names.PolarizedNeutronQProbe:
-    """Get polarized probe with all four cross-sections (pp, pm, mp, mm)."""
+    """Get polarized probe with all four cross-sections (pp, pm, mp, mm).
+
+    The guide field angle (`Aguide`) and applied field (`H`) come from the model.
+    The sub-probes keep `theta_offset = 0` (no alignment correction).
+    """
+    model = storage['model'][model_name]
+    field = {'Aguide': model['Aguide'], 'H': model['H']}
     four_probes = [
         _get_probe(
             q_array=q_array,
@@ -578,7 +625,7 @@ def _get_polarized_probe(
     ]
 
     try:
-        polarized_probe = names.PolarizedNeutronQProbe(xs=four_probes, name='polarized')
+        polarized_probe = names.PolarizedNeutronQProbe(xs=four_probes, name='polarized', **field)
     except AttributeError:
         # refl1d 1.0.0 bug: PolarizedQProbe.__init__ calls _calculate_union(), which
         # reads self._union_cache_key before the attribute is ever assigned (the
@@ -587,7 +634,7 @@ def _get_polarized_probe(
         # the workaround self-removing once refl1d fixes the initialization.
         polarized_probe = names.PolarizedNeutronQProbe.__new__(names.PolarizedNeutronQProbe)
         polarized_probe._union_cache_key = None
-        polarized_probe.__init__(xs=four_probes, name='polarized')
+        polarized_probe.__init__(xs=four_probes, name='polarized', **field)
     return polarized_probe
 
 

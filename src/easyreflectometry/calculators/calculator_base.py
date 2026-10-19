@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
+import weakref
 from abc import ABCMeta
-from typing import Callable
 
 import numpy as np
 from easyscience.fitting.calculators.interface_factory import ItemContainer
@@ -12,6 +12,7 @@ from easyscience.io import SerializerComponent
 
 # if TYPE_CHECKING:
 from easyreflectometry.model import Model
+from easyreflectometry.model import ResolutionFunction
 from easyreflectometry.sample import BaseAssembly
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import Material
@@ -49,10 +50,38 @@ class CalculatorBase(SerializerComponent, metaclass=ABCMeta):
         """Init function."""
         self._namespace = {}
         self._wrapper: WrapperBase
+        # Which easyscience object each backend entry was created for, keyed
+        # like the wrapper storage (``(kind, unique_name)``). Weak so the
+        # calculator keeps nothing alive. See `_claim`.
+        self._owners: dict[tuple[str, str], weakref.ReferenceType] = {}
 
     def reset_storage(self) -> None:
         r"""Reset the storage area of the calculator."""
         self._wrapper.reset_storage()
+        self._owners = {}
+
+    def _claim(self, kind: str, model: Material | Layer | Multilayer | Model) -> None:
+        """Make *model* the owner of its backend entry, discarding a stale one first.
+
+        Backend entries are keyed by ``unique_name``, and easyscience hands the
+        name of a dead object out again (the next ``Prefix_N`` above the live
+        ones), while nothing tells the calculator that the object died. A new
+        object can thus be bound to the entry its dead namesake left behind:
+        ``create`` must not recreate the entry for an object that is merely
+        re-bound (the entry is referenced from its item's stack), so without
+        this it would keep the old one. Parameter values are pushed again on
+        binding, but state that is only pushed when present is not -- a
+        non-magnetic layer landing on a dead magnetic layer's name became
+        magnetic (GitHub issue #426). Anything not owned by *model* itself is
+        removed from the backend here, so ``create`` starts from a blank entry.
+        """
+        key = model.unique_name
+        owner = self._owners.get((kind, key))
+        if owner is not None and owner() is model:
+            return
+        if owner is not None or key in self._wrapper.storage[kind]:
+            getattr(self._wrapper, f'remove_{kind}')(key)
+        self._owners[(kind, key)] = weakref.ref(model)
 
     def create(self, model: Material | Layer | Multilayer | Model) -> list[ItemContainer]:
         """Creation function.
@@ -66,6 +95,7 @@ class CalculatorBase(SerializerComponent, metaclass=ABCMeta):
         t_ = type(model)
         if issubclass(t_, Material):
             key = model.unique_name
+            self._claim('material', model)
             if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
@@ -78,6 +108,7 @@ class CalculatorBase(SerializerComponent, metaclass=ABCMeta):
             )
         elif issubclass(t_, MaterialMixture):
             key = model.unique_name
+            self._claim('material', model)
             if key not in self._wrapper.storage['material'].keys():
                 self._wrapper.create_material(key)
             r_list.append(
@@ -90,6 +121,7 @@ class CalculatorBase(SerializerComponent, metaclass=ABCMeta):
             )
         elif issubclass(t_, Layer):
             key = model.unique_name
+            self._claim('layer', model)
             if key not in self._wrapper.storage['layer'].keys():
                 self._wrapper.create_layer(key)
             r_list.append(
@@ -116,6 +148,9 @@ class CalculatorBase(SerializerComponent, metaclass=ABCMeta):
                 self.add_layer_to_item(i.unique_name, model.unique_name)
         elif issubclass(t_, Model):
             key = model.unique_name
+            # `create_model` starts blank anyway; claiming drops what else is
+            # kept under the name (resolution function, cached cross-sections).
+            self._claim('model', model)
             self._wrapper.create_model(key)
             r_list.append(
                 ItemContainer(
@@ -189,7 +224,12 @@ class CalculatorBase(SerializerComponent, metaclass=ABCMeta):
         """
         self._wrapper.remove_item(item_id, model_id)
 
-    def reflectity_profile(self, x_array: np.ndarray, model_id: str) -> np.ndarray:
+    def reflectity_profile(
+        self,
+        x_array: np.ndarray,
+        model_id: str,
+        resolution_function: ResolutionFunction | None = None,
+    ) -> np.ndarray:
         """Determines the reflectivity profile for the given range and model.
 
         Parameters
@@ -198,10 +238,19 @@ class CalculatorBase(SerializerComponent, metaclass=ABCMeta):
             Points to be calculated at.
         model_id : str
             The model id.
+        resolution_function : ResolutionFunction | None, optional
+            Resolution to smear with; by default the one registered for the
+            model through :meth:`set_resolution_function`.
         """
-        return self._wrapper.calculate(x_array, model_id)
+        return self._wrapper.calculate(x_array, model_id, resolution_function=resolution_function)
 
-    def reflectivity_profile_channel(self, x_array: np.ndarray, model_id: str, channel) -> np.ndarray:
+    def reflectivity_profile_channel(
+        self,
+        x_array: np.ndarray,
+        model_id: str,
+        channel,
+        resolution_function: ResolutionFunction | None = None,
+    ) -> np.ndarray:
         """Determine the reflectivity profile of one explicit spin channel.
 
         Unlike `polarization_channel` (global calculator state), the channel is an
@@ -216,15 +265,22 @@ class CalculatorBase(SerializerComponent, metaclass=ABCMeta):
             The model id.
         channel : PolarizationChannel | str
             One of 'pp', 'pm', 'mp', 'mm' (or the corresponding enum member).
+        resolution_function : ResolutionFunction | None, optional
+            Resolution to smear with; by default the one registered for the model.
 
         Returns
         -------
         np.ndarray
             Reflectivity of the requested channel at q.
         """
-        return self._wrapper.calculate_channel(x_array, model_id, channel)
+        return self._wrapper.calculate_channel(x_array, model_id, channel, resolution_function=resolution_function)
 
-    def polarized_reflectivity_profiles(self, x_array: np.ndarray, model_id: str) -> dict[str, np.ndarray]:
+    def polarized_reflectivity_profiles(
+        self,
+        x_array: np.ndarray,
+        model_id: str,
+        resolution_function: ResolutionFunction | None = None,
+    ) -> dict[str, np.ndarray]:
         """Determines the reflectivity profiles of all four spin channels for the given range and model.
 
         Requires `include_magnetism` to be enabled and a calculator that supports it (refl1d).
@@ -235,13 +291,15 @@ class CalculatorBase(SerializerComponent, metaclass=ABCMeta):
             Points to be calculated at.
         model_id : str
             The model id.
+        resolution_function : ResolutionFunction | None, optional
+            Resolution to smear with; by default the one registered for the model.
 
         Returns
         -------
         dict[str, np.ndarray]
             Reflectivity per spin channel, keyed 'pp', 'pm', 'mp', 'mm' (in that order).
         """
-        return self._wrapper.calculate_polarized(x_array, model_id)
+        return self._wrapper.calculate_polarized(x_array, model_id, resolution_function=resolution_function)
 
     def sld_profile(self, model_id: str) -> tuple[np.ndarray, np.ndarray]:
         """Return the scattering length density profile.
@@ -275,9 +333,22 @@ class CalculatorBase(SerializerComponent, metaclass=ABCMeta):
         """
         return self._wrapper.magnetic_sld_profile(model_id)
 
-    def set_resolution_function(self, resolution_function: Callable[[np.array], np.array]) -> None:
-        """Set resolution function."""
-        return self._wrapper.set_resolution_function(resolution_function)
+    def set_resolution_function(self, resolution_function: ResolutionFunction, model_id: str | None = None) -> None:
+        """Set the resolution function of one model, or the default for all others.
+
+        Parameters
+        ----------
+        resolution_function : ResolutionFunction
+            The resolution function.
+        model_id : str | None, optional
+            The model id. ``None`` sets the default used by every model that
+            has not registered a resolution of its own.
+        """
+        return self._wrapper.set_resolution_function(resolution_function, model_id)
+
+    def resolution_function_for(self, model_id: str | None = None) -> ResolutionFunction:
+        """The resolution function used when calculating the model with *model_id*."""
+        return self._wrapper.resolution_function_for(model_id)
 
     @property
     def supports_magnetism(self) -> bool:

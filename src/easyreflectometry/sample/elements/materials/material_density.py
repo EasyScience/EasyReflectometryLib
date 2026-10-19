@@ -9,9 +9,12 @@ from easyscience import global_object
 from easyscience.variable import DescriptorNumber
 from easyscience.variable import Parameter
 
+from easyreflectometry.constraints import unconstrain
+from easyreflectometry.special.calculations import AVOGADRO
 from easyreflectometry.special.calculations import density_to_sld
 from easyreflectometry.special.calculations import molecular_weight
 from easyreflectometry.special.calculations import neutron_scattering_length
+from easyreflectometry.special.calculations import number_density_from_mass_density
 from easyreflectometry.utils import get_as_parameter
 
 from .material import DEFAULTS as MATERIAL_DEFAULTS
@@ -38,8 +41,39 @@ DEFAULTS = {
         'value': 28.02,
         'unit': 'g / mole',
     },
+    'scattering_length_real': {
+        'description': 'The real scattering length for a chemical formula in angstrom.',
+        'url': 'https://www.ncnr.nist.gov/resources/activation/',
+        'value': 4.1507e-5,
+        'unit': 'angstrom',
+        'min': -np.inf,
+        'max': np.inf,
+        'fixed': True,
+    },
+    'scattering_length_imag': {
+        'description': 'The imaginary scattering length for a chemical formula in angstrom.',
+        'url': 'https://www.ncnr.nist.gov/resources/activation/',
+        'value': 0.0,
+        'unit': 'angstrom',
+        'min': -np.inf,
+        'max': np.inf,
+        'fixed': True,
+    },
+    'avogadro': {
+        'description': 'The Avogadro constant.',
+        'url': 'https://en.wikipedia.org/wiki/Avogadro_constant',
+        'value': AVOGADRO,
+        'unit': '1 / mole',
+    },
 }
 DEFAULTS.update(MATERIAL_DEFAULTS)
+
+# EasyScience evaluates dependency expressions with units, so the expression
+# is the physical formula: g/cm^3 * angstrom / (g/mol) * 1/mol is a true
+# inverse area, which `desired_unit` renders as the SLD unit. The
+# dimensionless 1e6 is the library-wide storage convention for SLDs (values
+# in 1e-6 1/angstrom^2, cf. `LayerAreaPerMolecule`), not a unit correction.
+SLD_DEPENDENCY_EXPRESSION = 'na * d * sl / mw * 1e6'
 
 
 class MaterialDensity(Material):
@@ -121,16 +155,24 @@ class MaterialDensity(Material):
             url=DEFAULTS['molecular_weight']['url'],
             unique_name=global_object.generate_unique_name(f'{unique_name}_Mw'),
         )
+        avogadro = DescriptorNumber(
+            name='avogadro',
+            value=DEFAULTS['avogadro']['value'],
+            unit=DEFAULTS['avogadro']['unit'],
+            description=DEFAULTS['avogadro']['description'],
+            url=DEFAULTS['avogadro']['url'],
+            unique_name=global_object.generate_unique_name(f'{unique_name}_Avogadro'),
+        )
         scattering_length_real = get_as_parameter(
             name='scattering_length_real',
             value=scattering_length.real,
-            default_dict=DEFAULTS['sld'],
+            default_dict=DEFAULTS,
             unique_name_prefix=f'{unique_name}_ScatteringLengthReal',
         )
         scattering_length_imag = get_as_parameter(
             name='scattering_length_imag',
             value=scattering_length.imag,
-            default_dict=DEFAULTS['isld'],
+            default_dict=DEFAULTS,
             unique_name_prefix=f'{unique_name}_ScatteringLengthImag',
         )
         sld = get_as_parameter(
@@ -146,74 +188,99 @@ class MaterialDensity(Material):
             unique_name_prefix=f'{unique_name}_Isld',
         )
 
-        dependency_expression = '1e-23*(0.602214076e6 * d * sl) / mw'
-        dependency_map = {'d': density, 'sl': scattering_length_real, 'mw': mw}
-        sld.make_dependent_on(dependency_expression=dependency_expression, dependency_map=dependency_map)
-
-        dependency_map = {'d': density, 'sl': scattering_length_imag, 'mw': mw}
-        isld.make_dependent_on(dependency_expression=dependency_expression, dependency_map=dependency_map)
+        # Wired before `Material.__init__` so the derived parameters are
+        # already dependent there and skip the default SLD limits.
+        self._make_sld_dependent(sld, density, scattering_length_real, mw, avogadro)
+        self._make_sld_dependent(isld, density, scattering_length_imag, mw, avogadro)
 
         super().__init__(sld=sld, isld=isld, name=name, unique_name=unique_name, interface=None)
 
         self._scattering_length_real = scattering_length_real
         self._scattering_length_imag = scattering_length_imag
         self._molecular_weight = mw
+        self._avogadro = avogadro
         self._density = density
         self._chemical_structure = chemical_structure
+        self._sld_coupled = True
 
         if interface is not None:
             self.interface = interface
+
+    @staticmethod
+    def _make_sld_dependent(
+        derived: Parameter,
+        density: Parameter,
+        scattering_length: Parameter,
+        mw: DescriptorNumber,
+        avogadro: DescriptorNumber,
+    ) -> None:
+        """Make `derived` (an sld or isld) depend on density, scattering length
+        and molecular weight. The single place the dependency is defined."""
+        derived.make_dependent_on(
+            dependency_expression=SLD_DEPENDENCY_EXPRESSION,
+            dependency_map={'na': avogadro, 'd': density, 'sl': scattering_length, 'mw': mw},
+            desired_unit=MATERIAL_DEFAULTS['sld']['unit'],
+        )
 
     def _setup_sld_constraints(self) -> None:
         """Wire the derived `sld` / `isld` to depend on the current density and
         scattering-length Parameters.
 
-        Idempotent — invoked once from `__init__` and again from `from_dict`
-        after :class:`ModelBase` has swapped in the saved Parameter objects.
+        Idempotent — rebuilds the wiring done in `__init__`; invoked from
+        `from_dict` after :class:`ModelBase` has swapped in the saved
+        Parameter objects, and when the coupling is restored.
         """
-        for derived in (self._sld, self._isld):
-            if not derived.independent:
-                derived.make_independent()
-
-        dependency_expression = '1e-23*(0.602214076e6 * d * sl) / mw'
-        self._sld.make_dependent_on(
-            dependency_expression=dependency_expression,
-            dependency_map={
-                'd': self._density,
-                'sl': self._scattering_length_real,
-                'mw': self._molecular_weight,
-            },
-        )
-        self._isld.make_dependent_on(
-            dependency_expression=dependency_expression,
-            dependency_map={
-                'd': self._density,
-                'sl': self._scattering_length_imag,
-                'mw': self._molecular_weight,
-            },
-        )
+        for derived, scattering_length in (
+            (self._sld, self._scattering_length_real),
+            (self._isld, self._scattering_length_imag),
+        ):
+            # Drops any previous dependency together with the user-constraint
+            # marker set by `easyreflectometry.constraints`. Left behind, the
+            # marker would make `Project` persist the internal density formula
+            # as a user constraint and replay it on load, without its unit
+            # conversion and with the molecular weight frozen as a constant.
+            unconstrain(derived)
+            self._make_sld_dependent(derived, self._density, scattering_length, self._molecular_weight, self._avogadro)
 
     @property
     def sld_coupled(self) -> bool:
         """Whether ``sld``/``isld`` are derived from formula & density (True,
         the default) or independent, directly editable/fittable parameters
-        (False). The dependency state itself is the source of truth."""
-        return not self._sld.independent
+        (False).
+
+        An explicit flag reconciled with the live dependency state, because
+        neither alone is reliable: a decoupled ``sld`` may still be made
+        dependent by a user constraint, which must not make the material read
+        as coupled again; and the density dependencies may be removed behind
+        the material's back (``unconstrain(material.sld)`` or a raw
+        ``make_independent()``), after which the flag alone would still claim
+        coupling and serialization would drop the manual values.
+
+        The coupling is all-or-nothing: ``sld`` and ``isld`` are decoupled and
+        recoupled together, and only that joint state is serialized. Freeing
+        just one of them (``unconstrain(material.sld)`` alone) reads as
+        decoupled, and a save/load restores *both* as independent with their
+        saved values; such a mixed state is session-only."""
+        return self._sld_coupled and not self._sld.independent and not self._isld.independent
 
     @sld_coupled.setter
     def sld_coupled(self, couple: bool) -> None:
-        if couple == self.sld_coupled:
-            return
-        if couple:
-            # Recomputes sld/isld from the current density/scattering
-            # length/molecular weight — manually set values are discarded.
-            self._setup_sld_constraints()
-        else:
-            # make_independent raises on an already-independent parameter,
-            # so guard each individually. Values are kept.
-            for parameter in (self._sld, self._isld):
-                if not parameter.independent:
-                    parameter.make_independent()
+        couple = bool(couple)
+        # Compared against the reconciled property, not the raw flag: a stale
+        # flag must not stop an explicit request to restore the coupling.
+        if couple != self.sld_coupled:
+            if couple:
+                # Recomputes sld/isld from the current density/scattering
+                # length/molecular weight — manually set values and any user
+                # constraint on them are discarded.
+                self._setup_sld_constraints()
+            else:
+                # make_independent raises on an already-independent parameter,
+                # so guard each individually. Values are kept.
+                for parameter in (self._sld, self._isld):
+                    if not parameter.independent:
+                        parameter.make_independent()
+        self._sld_coupled = couple
 
     def _convert_to_dict(self, d: dict, serializer, skip: Optional[list] = None, **kwargs) -> dict:
         """Serializer hook (see ``SerializerBase._convert_to_dict``).
@@ -226,7 +293,7 @@ class MaterialDensity(Material):
         if not self.sld_coupled:
             d['sld'] = self._sld.value
             d['isld'] = self._isld.value
-        return d
+        return super()._convert_to_dict(d, serializer, skip=skip, **kwargs)
 
     @classmethod
     def from_dict(cls, obj_dict: dict) -> 'MaterialDensity':
@@ -305,6 +372,14 @@ class MaterialDensity(Material):
         fittable parameter: it is a constant of the chemical formula and is
         recomputed whenever :attr:`chemical_structure` is assigned."""
         return self._molecular_weight
+
+    @property
+    def number_density(self) -> float:
+        """Number density of formula units in 1/angstrom^3, derived from the
+        density and the formula. Read-only: `density` is the fit parameter;
+        convert a number density with
+        :func:`~easyreflectometry.special.calculations.mass_density_from_number_density`."""
+        return number_density_from_mass_density(self._density.value, self._molecular_weight.value)
 
     @property
     def scattering_length_real(self) -> Parameter:
