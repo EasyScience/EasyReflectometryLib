@@ -57,6 +57,7 @@ dev = [
   'validate-pyproject[all]',         # Validate pyproject.toml
   'versioningit',                    # Automatic versioning from git tags
   'jupytext',                        # Jupyter notebook text format support
+  'jupyterlab',                      # Jupyter notebook environment
   'jupyterquiz',                     # Quizzes in Jupyter notebooks
   'plopp',                           # Plotting in Jupyter notebooks
   'pydoclint',                       # Docstring linter
